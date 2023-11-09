@@ -53,23 +53,28 @@
         <!-- Register Form -->
         <div class="register-form mt-4">
           <h6 class="mb-3 text-center">Log in to continue to PortSafe+.</h6>
-          <form>
+          <form id="loginForm" action="#" class="box">
             <div class="form-group">
               <input class="form-control"type="text" id="username" name="username" placeholder="Username">
             </div>
             <div class="form-group position-relative">
-              <input class="form-control" type="password" id="password" name="password" placeholder="Enter Password">
+              <input class="form-control" id="psw-input" name="password" type="password" placeholder="Enter Password">
               <div class="position-absolute" id="password-visibility"><i class="bi bi-eye"></i><i class="bi bi-eye-slash"></i></div>
             </div>
-            <button class="btn btn-primary w-100" type="submit" onclick="PostSignUp()">Sign In</button>
+            <button class="btn btn-primary w-100" type="submit" id="submit">Sign In</button>
+            <div>
+              <p id="error-message" class="error-message" ></p>
+          </div>
           </form>
         </div>
         <!-- Login Meta -->
         <div class="login-meta-data text-center"><a class="stretched-link forgot-password d-block mt-3 mb-1" href="page-forget-password.html">Forgot Password?</a>
-          <p class="mb-0">Didn't have an account? <a class="stretched-link" href="registrasi.html">Register Now</a></p>
+          <p class="mb-0">Didn't have an account? <a class="stretched-link" href="pages/registrasi.html">Register Now</a></p>
         </div>
       </div>
     </div>
+    <script src="js/login.js" type="module"></script>
+    <script src="js/postsignup.js" type="module"></script>
     <!-- All JavaScript Files -->
     <script src="js/bootstrap.bundle.min.js"></script>
     <script src="js/slideToggle.min.js"></script>
@@ -84,7 +89,6 @@
     <script src="js/isotope.pkgd.min.js"></script>
     <script src="js/dark-rtl.js"></script>
     <script src="js/active.js"></script>
-    <script type="module" src="js/post.js"></script>
     <!-- PWA -->
     <script src="js/pwa.js"></script>
   </body>
