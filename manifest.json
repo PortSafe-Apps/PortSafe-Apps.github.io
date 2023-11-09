@@ -1,7 +1,7 @@
 {
   "name": "PortSafe+ - PWA Mobile K3 observation reporting application",
-  "short_name": "Affan",
-  "start_url": "https://designing-world.com/affan-1.4.1/element-hero-blocks.html",
+  "short_name": "PortSafe+",
+  "start_url": "*",
   "display": "standalone",
   "background_color": "#0d5afd",
   "theme_color": "#0d5afd",
