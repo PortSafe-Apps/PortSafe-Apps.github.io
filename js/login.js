@@ -43,7 +43,7 @@ loginForm.addEventListener("submit", async (event) => {
                 //setCookieWithExpireHour("token",token,2);
                 //console.log(token);
                 // Redirect user to user.html upon successful login
-                window.location.href = "../pages/beranda.html";
+                window.location.href = "../pages/admin/beranda.html";
             } else {
                 // Handle failed login
                 errorMessage.textContent = "Userr not found"; // pesan kesalahan
