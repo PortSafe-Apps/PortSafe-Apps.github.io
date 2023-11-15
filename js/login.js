@@ -27,8 +27,6 @@ loginForm.addEventListener("submit", async (event) => {
     const username = usernameInput.value;
     const password = passwordInput.value;
 
-
-    // Kirim permintaan HTTP POST ke server Golang (sesuaikan dengan URL yang benar)
     fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/PortPost", {
         method: "POST",
         headers: {
@@ -39,17 +37,39 @@ loginForm.addEventListener("submit", async (event) => {
         .then(response => response.json())
         .then(data => {
             if (data.status === true) {
-                //const token = data.token;
-                //setCookieWithExpireHour("token",token,2);
-                //console.log(token);
-                // Redirect user to user.html upon successful login
-                window.location.href = "pages/user/beranda.html";
+                const token = data.token;
+
+                // Fetch user role using the token
+                fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/get-user-role", {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`
+                    }
+                })
+                    .then(response => response.json())
+                    .then(roleData => {
+                        const role = roleData.role;
+
+                        // Check role before redirecting
+                        if (role === "admin") {
+                            setCookieWithExpireHour("token", token, 2);
+                            window.location.href = "/pages/admin/dashboard.html";
+                        } else if (role === "user") {
+                            setCookieWithExpireHour("token", token, 2);
+                            window.location.href = "/pages/user/beranda.html";
+                        } else {
+                            errorMessage.textContent = "Role tidak dikenal";
+                        }
+                    })
+                    .catch(error => {
+                        console.error("Error:", error);
+                    });
             } else {
-                // Handle failed login
-                errorMessage.textContent = "Userr not found"; // pesan kesalahan
+                errorMessage.textContent = "Pengguna tidak ditemukan";
             }
         })
         .catch(error => {
-            console.error("Errorr:", error);
+            console.error("Error:", error);
         });
 });
