@@ -39,6 +39,8 @@ loginForm.addEventListener("submit", async (event) => {
       if (data.status === true) {
         const token = data.token;
 
+        console.log("Username : ", data.username) 
+
         // Check role before redirecting
         if ("role" in data && data.role === "admin") {
           // Jika properti "role" ada dan nilainya "admin"
