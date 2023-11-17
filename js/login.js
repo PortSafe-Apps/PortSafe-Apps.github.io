@@ -38,17 +38,16 @@ loginForm.addEventListener("submit", async (event) => {
     .then((data) => {
       if (data.status === true) {
         const token = data.token;
-        const userRole = data.role; // Ubah ini sesuai dengan respons dari server
 
         // Check role before redirecting
-        if (userRole === "admin") {
+        if ("role" in data && data.role === "admin") {
+          // Jika properti "role" ada dan nilainya "admin"
           setCookieWithExpireHour("token", token, 2);
           window.location.href = "/pages/admin/dashboard.html";
-        } else if (userRole !== "admin") { // Perubahan dilakukan di sini
+        } else {
+          // Jika properti "role" tidak ada atau nilainya bukan "admin"
           setCookieWithExpireHour("token", token, 2);
           window.location.href = "/pages/user/beranda.html";
-        } else {
-          errorMessage.textContent = "Role tidak dikenal";
         }
       } else {
         errorMessage.textContent = "Pengguna tidak ditemukan";
