@@ -39,7 +39,6 @@ loginForm.addEventListener("submit", async (event) => {
       if (data.status === true) {
         const token = data.token;
         const userRole = data.role; // Ubah ini sesuai dengan respons dari server
-        console.log("User Role:", userRole);
       
         // Check role before redirecting
         if (userRole === "admin") {
@@ -49,6 +48,7 @@ loginForm.addEventListener("submit", async (event) => {
           setCookieWithExpireHour("token", token, 2);
           window.location.href = "/pages/user/beranda.html";
         } else {
+          errorMessage.textContent = userRole
           errorMessage.textContent = "Role tidak dikenal";
         }
       } else {
