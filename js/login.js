@@ -27,7 +27,7 @@ loginForm.addEventListener("submit", async (event) => {
   const username = usernameInput.value;
   const password = passwordInput.value;
 
-  fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/PortPost", {
+  fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/PortLogin", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
