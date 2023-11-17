@@ -36,10 +36,11 @@ loginForm.addEventListener("submit", async (event) => {
   })
     .then((response) => response.json())
     .then((data) => {
+      console.log("Data dari server:", data);
       if (data.status === true) {
         const token = data.token;
-
-        console.log("Username : ", data.username) 
+        
+        console.log("Username : ", data.username);
 
         // Check role before redirecting
         if ("role" in data && data.role === "admin") {
