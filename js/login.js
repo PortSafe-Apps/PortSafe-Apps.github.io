@@ -27,7 +27,7 @@ loginForm.addEventListener("submit", async (event) => {
   const username = usernameInput.value;
   const password = passwordInput.value;
 
-  fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/PortLogin", {
+  fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -40,10 +40,10 @@ loginForm.addEventListener("submit", async (event) => {
       if (data.status === true) {
         const token = data.token;
         
-        console.log("Username : ", data.data.Username);
+        console.log("Nipp : ", data.data.Nipp);
 
         // Ganti dengan perbandingan langsung terhadap data.data.Username
-        if (data.data.Username === "admin") {
+        if (data.data.Username === "adminSPMT") {
           setCookieWithExpireHour("token", token, 2);
           window.location.href = "/pages/admin/dashboard.html";
         } else {
