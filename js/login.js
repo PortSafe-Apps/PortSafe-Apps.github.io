@@ -1,6 +1,6 @@
 import { postWithToken } from 'https://jscroot.github.io/api/croot.js';
-import { PostLogin, redirectBasedOnRole, ResponseLogin } from './config.js';
-import { URLLogin, token } from './template.js';
+import { PostLogin, redirectBasedOnRole, ResponseLogin } from './config/config.js';
+import { URLLogin, token } from './template/template.js';
 import { decodeToken } from './utils.js';
 
 document.addEventListener('DOMContentLoaded', function() {

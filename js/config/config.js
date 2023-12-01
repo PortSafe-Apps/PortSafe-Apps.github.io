@@ -1,4 +1,4 @@
-import { setTokenCookie, redirectAfterLogin } from './template.js';
+import { setTokenCookie} from '../template/template.js';
 import { decodeToken } from './utils.js';
 
 export function setToken(response) {
@@ -35,7 +35,7 @@ export function redirectBasedOnRole(decodedToken) {
     }
   }
 
-  
+
 export function GetDataForm() {
   const nipp = document.querySelector("#nipp").value;
   const nama = document.querySelector("#nama").value;
