@@ -51,22 +51,7 @@ export function getTokenFromAPI() {
   
   
   function ResponsePostLogin(response) {
-    if (response && response.token && response.role) {
-      setCookieWithExpireHour('Login', response.token, 2);
-  
-      const userRole = response.role; // Mengambil nilai peran dari respons
-  
-      if (userRole === 'user') {
-        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
-      } else if (userRole === 'admin') {
-        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin
-      } else {
-        console.error('Role tidak dikenali:', userRole);
-        // Handle jika role tidak dikenali
-      }
-    } else {
-      // alert('Login gagal. Silakan coba lagi.');
-    }
+    console.log(response);
   }
   
   export function AlertPost(value){
