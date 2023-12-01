@@ -1,60 +1,13 @@
-import { setCookieWithExpireHour } from "https://jscroot.github.io/cookie/croot.js";
+import { postWithToken } from "https://jscroot.github.io/api/croot.js";
+import { PostLogin, ResponseLogin } from "./config/config.js";
+import { URLLogin } from "./template/template.js";
+import { token } from './template/template.js';
 
-// Mengambil nilai dari elemen input pada html
-const loginForm = document.getElementById("loginForm");
-const usernameInput = document.getElementById("username");
-const passwordInput = document.getElementById("psw-input");
-const submitButton = document.getElementById("submit");
-const errorMessage = document.getElementById("error-message");
-
-// Fungsi untuk mengecek apakah form telah diisi dengan benar
-const validation = () => {
-  const username = usernameInput.value;
-  const pass = passwordInput.value;
-  if (username !== "" && pass !== "") {
-    submitButton.disabled = false;
-  } else {
-    submitButton.disabled = true;
-  }
-};
-
-// Panggil fungsi validation saat input berubah
-usernameInput.addEventListener("input", validation);
-passwordInput.addEventListener("input", validation);
-
-loginForm.addEventListener("submit", async (event) => {
-  event.preventDefault();
-  const username = usernameInput.value;
-  const password = passwordInput.value;
-
-  fetch("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({ username, password }),
-  })
-    .then((response) => response.json())
-    .then((data) => {
-      console.log("Data dari server:", data);
-      if (data.status === true) {
-        const token = data.token;
-        
-        console.log("Nipp : ", data.data.Nipp);
-
-        // Ganti dengan perbandingan langsung terhadap data.data.Username
-        if (data.data.Username === "adminSPMT") {
-          setCookieWithExpireHour("token", token, 2);
-          window.location.href = "/pages/admin/dashboard.html";
-        } else {
-          setCookieWithExpireHour("token", token, 2);
-          window.location.href = "/pages/user/beranda.html";
-        }
-      } else {
-        errorMessage.textContent = "Pengguna tidak ditemukan";
-      }
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-    });
+document.addEventListener("DOMContentLoaded", function() {
+  const form = document.getElementById("loginForm");
+  form.addEventListener("submit", function(event) {
+    event.preventDefault();
+    let data = PostLogin();
+    postWithToken(URLLogin, 'Authorization', 'Bearer ' + token, data, ResponseLogin);
+  });
 });

@@ -51,14 +51,26 @@
       <div class="custom-container">
         <div class="text-center px-4"><img class="login-intro-img" src="/img/bg-img/36.png" alt=""></div>
         <!-- Register Form -->
-        <div class="register-form mt-4">
+        <div class="register-form mt-4" >
           <h6 class="mb-3 text-center">Register to continue to PortSafe+.</h6>
-          <form action="">
+          <form action="#" method="post">
             <!-- <div class="form-group text-start mb-3">
               <input class="form-control" type="text" placeholder="Email address">
             </div> -->
             <div class="form-group text-start mb-3">
-              <input class="form-control" type="text" placeholder="Username">
+              <input class="form-control" type="text" id="nipp" name="nipp" placeholder="NIPP">
+            </div>
+            <div class="form-group text-start mb-3">
+              <input class="form-control" type="text" id="nama" name="nama" placeholder="Nama">
+            </div>
+            <div class="form-group text-start mb-3">
+              <input class="form-control" type="text" id="jabatan" name="jabatan" placeholder="Jabatan">
+            </div>
+            <div class="form-group text-start mb-3">
+              <input class="form-control" type="text" id="divisi" name="divisi" placeholder="Divisi">
+            </div>
+            <div class="form-group text-start mb-3">
+              <input class="form-control" type="text" id="bidang" name="bidang" placeholder="Bidang">
             </div>
             <div class="form-group text-start mb-3 position-relative">
               <input class="form-control" id="psw-input" type="password" placeholder="New password">
@@ -78,6 +90,7 @@
         </div>
       </div>
     </div>
+    <script src="/js/register.js" type="module"></script>
     <!-- All JavaScript Files -->
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/internet-status.js"></script>
