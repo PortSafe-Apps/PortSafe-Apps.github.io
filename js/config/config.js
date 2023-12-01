@@ -42,7 +42,7 @@ export function GetDataForm(){
 //login
 export function PostLogin() {
   const nipp = document.getElementById("nipp").value;
-  const password = document.getElementById("password").value;
+  const password = document.getElementById("psw-input").value;
 
   const data = {
     nipp: nipp,
