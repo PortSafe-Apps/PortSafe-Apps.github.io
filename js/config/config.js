@@ -1,5 +1,5 @@
 import { setTokenCookie} from '../template/template.js';
-import { decodeToken } from './utils.js';
+import { decodeToken } from '../utils.js';
 
 export function setToken(response) {
   if (response && response.token) {
