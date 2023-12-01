@@ -21,7 +21,7 @@ export function GetDataForm(){
     const jabatan = document.querySelector("#jabatan").value;
     const divisi = document.querySelector("#divisi").value;
     const bidang = document.querySelector("#bidang").value;
-    const password = document.querySelector("#password").value;
+    const password = document.querySelector("#psw-input").value;
 
     // Set nilai default role langsung di dalam fungsi
     const role = "user";
