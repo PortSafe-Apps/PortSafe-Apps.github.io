@@ -60,8 +60,9 @@ function ResponsePostLogin(response) {
     if (response && response.token) {
       setCookieWithExpireHour('Login', response.token, 2);
   
-      // Mengasumsikan peran merupakan bagian dari token
-      const userRole = response.token;
+      // Mengasumsikan peran terkandung dalam payload token JSON
+      const decodedToken = jwt_decode(response.token);
+      const userRole = decodedToken.role;
   
       if (userRole === 'user') {
         window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
