@@ -51,10 +51,10 @@ export function getTokenFromAPI() {
   
   
   function ResponsePostLogin(response) {
-    if (response && response.token) {
+    if (response && response.token && response.role) {
       setCookieWithExpireHour('Login', response.token, 2);
   
-      const userRole = response.Role; // Mengambil nilai peran dari respons
+      const userRole = response.role; // Mengambil nilai peran dari respons
   
       if (userRole === 'user') {
         window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
