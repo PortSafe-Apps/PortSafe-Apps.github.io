@@ -23,18 +23,19 @@ export function handleLoginError() {
 
 // Fungsi untuk melakukan redirect berdasarkan peran (role)
 export function redirectBasedOnRole(decodedToken) {
-  switch (decodedToken.role) {
-    case 'admin':
-      window.location.href = 'https://example.com/admin-dashboard';
-      break;
-    case 'user':
-      window.location.href = 'https://example.com/user-dashboard';
-      break;
-    default:
-      console.error('Role tidak valid atau tidak terdefinisi');
+    switch (decodedToken.role) {
+      case 'admin':
+        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
+        break;
+      case 'user':
+        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
+        break;
+      default:
+        console.error('Role tidak valid atau tidak terdefinisi');
+    }
   }
-}
 
+  
 export function GetDataForm() {
   const nipp = document.querySelector("#nipp").value;
   const nama = document.querySelector("#nama").value;

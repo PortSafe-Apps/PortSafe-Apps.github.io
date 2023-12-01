@@ -6,15 +6,3 @@ export function decodeToken(token) {
     return JSON.parse(jsonPayload);
   }
 
-  export function redirectBasedOnRole(decodedToken) {
-    switch (decodedToken.role) {
-      case 'admin':
-        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-        break;
-      case 'user':
-        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
-        break;
-      default:
-        console.error('Role tidak valid atau tidak terdefinisi');
-    }
-  }
