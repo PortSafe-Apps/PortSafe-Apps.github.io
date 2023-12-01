@@ -5,4 +5,3 @@ export function decodeToken(token) {
   
     return JSON.parse(jsonPayload);
   }
-
