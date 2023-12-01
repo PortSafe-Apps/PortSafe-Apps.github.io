@@ -39,6 +39,11 @@ export function GetDataForm(){
     return data;
 }
 
+export function AlertPost(value){
+    alert(value.message + "\nRegistrasi Berhasil")
+    window.location.href= "https://portsafe-apps.github.io/index.html"
+}
+
 //login
 export function PostLogin() {
   const nipp = document.getElementById("nipp").value;
@@ -51,18 +56,12 @@ export function PostLogin() {
   return data;
 }
 
-
-export function AlertPost(value){
-    alert(value.message + "\nRegistrasi Berhasil")
-    window.location.href= "https://portsafe-apps.github.io/index.html"
-}
-
 function ResponsePostLogin(response) {
     if (response && response.token) {
       setCookieWithExpireHour('Login', response.token, 2);
   
-      // Memeriksa role setelah login
-      const userRole = response.Role; // Ubah menjadi response.Role
+      // Mengasumsikan peran merupakan bagian dari token
+      const userRole = response.token;
   
       if (userRole === 'user') {
         window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
@@ -70,12 +69,11 @@ function ResponsePostLogin(response) {
         window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
       } else {
         console.error('Role tidak dikenali:', userRole);
-        // Mungkin ada tindakan tambahan jika role tidak dikenali
+        // Tangani peran yang tidak dikenali, jika diperlukan
       }
     } else {
-      // alert('Login gagal. Silakan coba lagi.');
       console.error('Gagal login:', response.Message);
-      // Mungkin tindakan tambahan jika login gagal
+      // Tangani kegagalan login, jika diperlukan
     }
   }
   

@@ -23,8 +23,6 @@ async function getUserWithToken() {
       const data = await response.json();
   
       if (data.status === true) {
-        const userRole = data.data.role; // Asumsikan respons memiliki properti 'role'
-        console.log('Role Pengguna:', userRole);
         displayUserData(data.data);
       } else {
         alert(data.message);
