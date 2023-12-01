@@ -2,7 +2,7 @@ async function getUserWithToken() {
     const token = getTokenFromCookies('Login'); // Get the token dari cookies via parameter
   
     if (!token) {
-      // alert("token tidak ditemukan");
+      alert("token tidak ditemukan");
       return;
     }
   
@@ -23,6 +23,8 @@ async function getUserWithToken() {
       const data = await response.json();
   
       if (data.status === true) {
+        const userRole = data.data.role; // Asumsikan respons memiliki properti 'role'
+        console.log('Role Pengguna:', userRole);
         displayUserData(data.data);
       } else {
         alert(data.message);
