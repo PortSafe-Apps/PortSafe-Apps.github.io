@@ -41,7 +41,6 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
-  try {
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -127,19 +126,18 @@ const insertObservationReport = async (event) => {
       redirect: 'follow',
   };
 
-  const response = await fetch(targetURL, requestOptions);
-  const data = await response.json();
+  try {
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
 
-  if (data.Status === false) {
-      alert(data.Message);
-  } else {
-      alert("Berhasil memasukkan data laporan!");
+    if (data.status === false) {
+      alert(data.message);
+    } else {
+      alert("Employee data inserted successfully!");
+    }
+  } catch (error) {
+    console.error('Error:', error);
   }
-} catch (error) {
-  console.error('Error:', error);
-}
 };
 
 document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
-
-  
