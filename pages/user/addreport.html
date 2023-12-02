@@ -133,14 +133,56 @@
         <div class="container">
           <!-- Element Heading -->
           <div class="element-heading">
-            <h2 class="text-center">Pelaporan Observasi</h2>
+            <h3 class="text-center">Pelaporan Observasi</h3>
             <div class="divider mt-0"></div>  
         </div>
         </div>
         <div class="container">
           <div class="card">
             <div class="card-body">
-              <form class="was-validated" id="newReportForm" novalidate>
+              <form id="newReportForm">
+                <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
+                <div class="input-group mb-3"><span class="input-group-text" id="basic-addon1">@</span>
+                    <input class="form-control" type="text" placeholder="Designing World" aria-label="Username" aria-describedby="basic-addon1">
+                  </div>
+                  <div class="input-group mb-3">
+                    <input class="form-control" type="text" placeholder="care.designingworld" aria-label="Recipient's username" aria-describedby="basic-addon2"><span class="input-group-text" id="basic-addon2">@gmail.com</span>
+                  </div>
+                  <label class="form-label" for="basic-url">Your profile URL</label>
+                  <div class="input-group mb-3"><span class="input-group-text" id="basic-addon3">themeforest.net/user/</span>
+                    <input class="form-control" id="basic-url" type="text" aria-describedby="basic-addon3" placeholder="designing-world">
+                  </div>
+                  <div class="input-group mb-3"><span class="input-group-text">Price</span>
+                    <input class="form-control" type="text" aria-label="Amount (to the nearest dollar)" placeholder="24"><span class="input-group-text">$</span>
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-text">
+                      <input class="form-check-input" type="checkbox" value="" aria-label="Checkbox for following text input">
+                    </div>
+                    <input class="form-control" type="text" aria-label="Text input with checkbox" placeholder="Checkbox">
+                  </div>
+                  <div class="input-group mb-3">
+                    <div class="input-group-text">
+                      <input class="form-check-input" type="radio" value="" aria-label="Radio button for following text input">
+                    </div>
+                    <input class="form-control" type="text" aria-label="Text input with radio button" placeholder="Radio">
+                  </div>
+                  <div class="input-group mb-3"><span class="input-group-text">Name</span>
+                    <input class="form-control" type="text" aria-label="First name" placeholder="First name">
+                    <input class="form-control" type="text" aria-label="Last name" placeholder="Last name">
+                  </div>
+                  <div class="input-group mb-3">
+                    <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">Dropdown</button>
+                    <ul class="dropdown-menu">
+                      <li><a class="dropdown-item" href="#">Action 1</a></li>
+                      <li><a class="dropdown-item" href="#">Action 2</a></li>
+                      <li><a class="dropdown-item" href="#">Action 3</a></li>
+                    </ul>
+                    <input class="form-control" type="text" aria-label="Text input with dropdown button">
+                  </div>
+                  <div class="input-group"><span class="input-group-text">Message</span>
+                    <textarea class="form-control" aria-label="With textarea" placeholder="Hello, Designing World!"></textarea>
+                  </div>
                 <h4>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h4>
                 <div class="form-group">
                     <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
@@ -197,7 +239,7 @@
     <script src="/js/slideToggle.min.js"></script>
     <script src="/js/internet-status.js"></script>
     <script src="/js/tiny-slider.js"></script>
-    <script src="js/form-autocomplete.js"></script>
+    <script src="/js/form-autocomplete.js"></script>
     <script src="/js/baguetteBox.min.js"></script>
     <script src="/js/countdown.js"></script>
     <script src="/js/rangeslider.min.js"></script>
