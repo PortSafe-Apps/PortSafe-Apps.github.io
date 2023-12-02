@@ -55,6 +55,7 @@ const fillSupervisorData = () => {
 // Panggil fungsi untuk mengisi data pengawas saat halaman dimuat
 document.addEventListener('DOMContentLoaded', fillSupervisorData);
 
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -159,17 +160,17 @@ const insertObservationReport = async (event) => {
             Bidang: userFromToken.Bidang,
         },
           Location: {
-              LocationName: document.getElementById('newLocationNameInput').value,
+              LocationName: document.getElementById('autoCompleteLocation').value,
           },
-          Description: document.getElementById('newDescriptionInput').value,
-          ObservationPhoto: document.getElementById('newObservationPhotoInput').value,
+          Description: document.getElementById('deskripsiPengamatan').value,
+          ObservationPhoto: fotoObservasiBase64, // Menggunakan data foto observasi yang sudah diambil
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
-              AreaName: document.getElementById('newAreaNameInput').value,
+              AreaName: document.getElementById('newAreaName').value,
           },
-          ImmediateAction: document.getElementById('newImmediateActionInput').value,
-          ImprovementPhoto: document.getElementById('newImprovementPhotoInput').value,
-          CorrectiveAction: document.getElementById('newCorrectiveActionInput').value,
+          ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
+          ImprovementPhoto: fotoPerbaikanBase64,
+          CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
   };
