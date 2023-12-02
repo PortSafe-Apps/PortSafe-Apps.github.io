@@ -140,7 +140,7 @@
         <div class="container">
           <div class="card">
             <div class="card-body">
-              <form id="newReportForm">
+              <form id="newReportForm" autocomplete="off">
                 <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
                 <div class="form-group">
                     <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
@@ -159,26 +159,29 @@
                     <input class="form-control" id="jabatanPengawas" type="text" placeholder="Supervisor" readonly>
                 </div>
                 <h4>Langkah 2: Berhenti dan Melihat Dengan Jelas</h4>
-                <!-- <div class="form-group">
-                    <label class="form-label" for="exampleInputtelephone">Lokasi</label>
-                    <input class="form-control" id="autoCompleteLocation" type="text" name="myLocation" placeholder="Cari Lokasimu">
-                </div> -->
+                <div class="form-group mb-0">
+                    <label class="form-label" for="autoCompleteLocation">Lokasi</label>
+                    <input class="form-control" id="autoCompleteLocation" type="text" name="location" placeholder="Cari Lokasimu">
+                </div>
                 <div class="form-group">
                     <label class="form-label" for="deskripsiPengamatan">Deskripsi Pengamatan</label>
                     <textarea class="form-control" id="deskripsiPengamatan" name="textarea" cols="3" rows="5" placeholder="....." required></textarea>
                 </div>
-                <div class="form-group form-file">
-                    <input class="form-control d-none" id="fotoPengamatan" type="file">
+                <div class="form-file">
+                    <input class="form-control d-none" id="customFile" type="file">
                     <label class="form-file-label justify-content-center" for="customFile"><span class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-image" viewBox="0 0 16 16">
-                            <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0"/>
-                            <path d="M2.002 1a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V3a2 2 0 0 0-2-2h-12zm12 1a1 1 0 0 1 1 1v6.5l-3.777-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12V3a1 1 0 0 1 1-1h12"/>
-                        </svg>Upload Foto</span></label>
-                </div>
+                        <svg class="bi bi-plus-circle me-2" width="22" height="22" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                          <path fill-rule="evenodd" d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"></path>
+                          <path fill-rule="evenodd" d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"></path>
+                        </svg>Upload File</span></label>
+                  </div>
                 <h4>Langkah 3: Pengamatan Perilaku Tidak Standar</h4>
                 <div class="form-group form-check">
                     <input class="form-check-input" id="defaultCheckbox" type="checkbox" value="">
                     <label class="form-check-label" for="defaultCheckbox">Default Checkbox</label>
+                    <input class="form-check-input" id="defaultCheckbox" type="checkbox" value="">
+               
+
                 </div>
                 <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="button">Send Message
                   <svg class="bi bi-arrow-right-short" width="24" height="24" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -191,6 +194,7 @@
         </div>
     </div>  
     <!-- All JavaScript Files -->
+    <script src="/js/form-autocomplete.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/slideToggle.min.js"></script>
     <script src="/js/internet-status.js"></script>
