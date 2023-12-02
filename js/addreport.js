@@ -65,7 +65,7 @@ const insertObservationReport = async (event) => {
       return;
   }
 
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertDataReport';
+  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
 
   const myHeaders = new Headers();
   myHeaders.append('Login', token);
