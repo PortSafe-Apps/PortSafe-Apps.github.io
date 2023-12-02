@@ -10,13 +10,6 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 
-const token = getTokenFromCookies('Login'); 
-const userInfo = getUserInfoFromToken(token);
-if (userInfo) {
-    document.getElementById('namaPengawas').value = userInfo.Nama; 
-    document.getElementById('jabatanPengawas').value = userInfo.Jabatan; 
-}
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
