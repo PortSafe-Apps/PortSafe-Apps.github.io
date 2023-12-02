@@ -11,16 +11,20 @@ const getTokenFromCookies = (cookieName) => {
 
 const getUserInfoFromToken = (token) => {
   try {
-      // Bagian ini bervariasi tergantung pada format token Anda
-      const tokenPayloadBase64 = token.split('.')[1];
-      const tokenPayload = atob(tokenPayloadBase64);
-      const userInfo = JSON.parse(tokenPayload);
+    const tokenParts = token.split('.');
+    if (tokenParts.length !== 3) {
+      throw new Error('Invalid token format');
+    }
 
-      // Diperkirakan bahwa informasi pengguna ada dalam properti 'user'
-      return userInfo.user;
+    const tokenPayloadBase64 = tokenParts[1];
+    const tokenPayload = atob(tokenPayloadBase64);
+    const userInfo = JSON.parse(tokenPayload);
+
+    // Assuming that user information is in the 'user' property
+    return userInfo.user;
   } catch (error) {
-      console.error('Error extracting user info from token:', error);
-      return null;
+    console.error('Error extracting user info from token:', error);
+    return null;
   }
 };
 
@@ -133,6 +137,10 @@ const insertObservationReport = async (event) => {
     if (data.status === false) {
       alert(data.message);
     } else {
+      // Update the input fields with user information
+      document.getElementById('namaPengawas').value = userFromToken.Nama;
+      document.getElementById('jabatanPengawas').value = userFromToken.Jabatan;
+
       alert("Employee data inserted successfully!");
     }
   } catch (error) {
