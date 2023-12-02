@@ -24,7 +24,7 @@ const getUserInfoFromToken = (token) => {
   }
 };
 
-const insertEmployee = async (event) => {
+const insertObservationReport = async (event) => {
   event.preventDefault();
 
   const token = getTokenFromCookies('Login');
