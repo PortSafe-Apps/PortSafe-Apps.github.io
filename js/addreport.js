@@ -22,39 +22,12 @@ const resetNomorPelaporan = () => {
 };
 document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
 
-
-const getUserInfoFromToken = (token) => {
-  try {
-      const userInfo = JSON.parse(atob(token.split('.')[1]));
-      return userInfo;
-  } catch (error) {
-      console.error('Error parsing user info from token:', error);
-      return null;
-  }
-};
-
-const fillSupervisorData = () => {
-  const token = getTokenFromCookies('Login');
-
-  if (!token) {
-      console.warn('Token not found');
-      return;
-  }
-
-  const userInfo = getUserInfoFromToken(token);
-
-  if (!userInfo) {
-      console.warn('Unable to get user info from token');
-      return;
-  }
-
-  document.getElementById('namaPengawas').value = userInfo.Nama || '';
-  document.getElementById('jabatanPengawas').value = userInfo.Jabatan || '';
-};
-
-// Panggil fungsi untuk mengisi data pengawas saat halaman dimuat
-document.addEventListener('DOMContentLoaded', fillSupervisorData);
-
+const token = getTokenFromCookies('Login'); 
+const userInfo = getUserInfoFromToken(token);
+if (userInfo) {
+    document.getElementById('namaPengawas').value = userInfo.Nama; 
+    document.getElementById('jabatanPengawas').value = userInfo.Jabatan; 
+}
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -74,13 +47,9 @@ const insertObservationReport = async (event) => {
 
   try {
     const selectedTypeDangerousActions = [];
-
-    // Mendapatkan elemen-elemen checkbox dari setiap kategori
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-
-    // Menambahkan pilihan yang dipilih dari setiap kategori
     reaksiOrangCheckboxes.forEach((checkbox) => {
-        const typeName = "REAKSI ORANG"; // Sesuaikan dengan kategori yang sesuai
+        const typeName = "REAKSI ORANG"; 
         const subTypeName = checkbox.value;
 
         selectedTypeDangerousActions.push({
@@ -89,12 +58,9 @@ const insertObservationReport = async (event) => {
         });
     });
 
-     // Mendapatkan elemen-elemen checkbox dari setiap kategori
      const alatPelindungDiriCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-
-     // Menambahkan pilihan yang dipilih dari setiap kategori
      alatPelindungDiriCheckboxes.forEach((checkbox) => {
-         const typeName = "ALAT PELINDUNG DIRI"; // Sesuaikan dengan kategori yang sesuai
+         const typeName = "ALAT PELINDUNG DIRI"; 
          const subTypeName = checkbox.value;
  
          selectedTypeDangerousActions.push({
@@ -103,13 +69,9 @@ const insertObservationReport = async (event) => {
          });
      });
    
-    
-    // Mendapatkan elemen-elemen checkbox dari setiap kategori
     const posisiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-
-    // Menambahkan pilihan yang dipilih dari setiap kategori
     posisiOrangCheckboxes.forEach((checkbox) => {
-        const typeName = "POSISI ORANG"; // Sesuaikan dengan kategori yang sesuai
+        const typeName = "POSISI ORANG"; 
         const subTypeName = checkbox.value;
 
         selectedTypeDangerousActions.push({
@@ -118,12 +80,9 @@ const insertObservationReport = async (event) => {
         });
     });
 
-    // Mendapatkan elemen-elemen checkbox dari setiap kategori
     const alatDanPerlengkapanCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-
-    // Menambahkan pilihan yang dipilih dari setiap kategori
     alatDanPerlengkapanCheckboxes.forEach((checkbox) => {
-        const typeName = "ALAT DAN PERLENGKAPAN"; // Sesuaikan dengan kategori yang sesuai
+        const typeName = "ALAT DAN PERLENGKAPAN"; 
         const subTypeName = checkbox.value;
 
         selectedTypeDangerousActions.push({
@@ -132,12 +91,9 @@ const insertObservationReport = async (event) => {
         });
     });
 
-    // Mendapatkan elemen-elemen checkbox dari setiap kategori
     const prosedurDanCaraKerjaCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-
-    // Menambahkan pilihan yang dipilih dari setiap kategori
     prosedurDanCaraKerjaCheckboxes.forEach((checkbox) => {
-        const typeName = "PROSEDUR DAN CARA KERJA"; // Sesuaikan dengan kategori yang sesuai
+        const typeName = "PROSEDUR DAN CARA KERJA"; 
         const subTypeName = checkbox.value;
 
         selectedTypeDangerousActions.push({
@@ -163,7 +119,7 @@ const insertObservationReport = async (event) => {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
           Description: document.getElementById('deskripsiPengamatan').value,
-          ObservationPhoto: fotoObservasiBase64, // Menggunakan data foto observasi yang sudah diambil
+          ObservationPhoto: fotoObservasiBase64, 
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
               AreaName: document.getElementById('newAreaName').value,
@@ -188,6 +144,6 @@ const insertObservationReport = async (event) => {
 }
 };
 
-document.getElementById('newObservationReportForm').addEventListener('submit', insertObservationReport);
+document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
 
   

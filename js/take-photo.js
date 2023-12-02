@@ -1,91 +1,53 @@
 const inputFotoObservasi = document.getElementById('fotoObservasi');
-    const videoObservasi = document.getElementById('videoObservasi');
-    const canvasObservasi = document.getElementById('canvasObservasi');
-    const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
-    let fotoObservasiBase64 = ''; // Variabel untuk menyimpan data foto dalam bentuk string base64
+const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
 
-    inputFotoObservasi.addEventListener('change', () => {
-        openCameraObservasi();
-    });
+function ambilFotoObservasi() {
+    const fileInput = inputFotoObservasi.files[0];
+    const reader = new FileReader();
 
-    function openCameraObservasi() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                videoObservasi.srcObject = stream;
-            })
-            .catch((error) => {
-                console.error('Error accessing camera:', error);
-            });
+    reader.onloadend = function () {
+        const fotoObservasiBase64 = reader.result;
+        imgHasilFotoObservasi.src = URL.createObjectURL(fileInput);
+        simpanFotoObservasi(fotoObservasiBase64);
+
+        document.getElementById('hasilFotoObservasi').src = fotoObservasiBase64;
+    };
+
+    if (fileInput) {
+        reader.readAsDataURL(fileInput);
     }
+}
 
-    videoObservasi.addEventListener('loadedmetadata', () => {
-        videoObservasi.play();
-    });
+document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
 
-    inputFotoObservasi.addEventListener('change', async () => {
-        const stream = videoObservasi.srcObject;
-        const track = stream.getTracks()[0];
+const inputFotoPerbaikan = document.getElementById('fotoPerbaikan');
+const imgHasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
 
-        const imageCapture = new ImageCapture(track);
+function ambilFotoPerbaikan() {
+    const fileInput = inputFotoPerbaikan.files[0];
+    const reader = new FileReader();
 
-        const photoBlob = await imageCapture.takePhoto();
-        const photoUrl = URL.createObjectURL(photoBlob);
+    reader.onloadend = function () {
+        const fotoPerbaikanBase64 = reader.result;
+        imgHasilFotoPerbaikan.src = URL.createObjectURL(fileInput);
+        // Menyimpan string base64 ke dalam variabel atau objek yang dapat diakses di fungsi insertObservationReport
+        simpanFotoPerbaikan(fotoPerbaikanBase64);
+    };
 
-        canvasObservasi.width = videoObservasi.videoWidth;
-        canvasObservasi.height = videoObservasi.videoHeight;
-        const context = canvasObservasi.getContext('2d');
-
-        context.drawImage(videoObservasi, 0, 0, canvasObservasi.width, canvasObservasi.height);
-
-        fotoObservasiBase64 = canvasObservasi.toDataURL('image/png').split(',')[1];
-        imgHasilFotoObservasi.src = `data:image/png;base64,${fotoObservasiBase64}`;
-
-        track.stop();
-    });
-
-
-
-const inputFoto = document.getElementById('fotoPerbaikan');
-    const video = document.getElementById('video');
-    const canvas = document.getElementById('canvas');
-    const imgHasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
-    let fotoPerbaikanBase64 = ''; // Variabel untuk menyimpan data foto dalam bentuk string base64
-
-    inputFoto.addEventListener('change', () => {
-        openCamera();
-    });
-
-    function openCamera() {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then((stream) => {
-                video.srcObject = stream;
-            })
-            .catch((error) => {
-                console.error('Error accessing camera:', error);
-            });
+    if (fileInput) {
+        reader.readAsDataURL(fileInput);
     }
+}
+document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
 
-    video.addEventListener('loadedmetadata', () => {
-        video.play();
-    });
+let fotoObservasiBase64 = '';
+let fotoPerbaikanBase64 = '';
 
-    inputFoto.addEventListener('change', async () => {
-        const stream = video.srcObject;
-        const track = stream.getTracks()[0];
+// Fungsi untuk menyimpan string base64
+function simpanFotoObservasi(base64) {
+    fotoObservasiBase64 = base64;
+}
 
-        const imageCapture = new ImageCapture(track);
-
-        const photoBlob = await imageCapture.takePhoto();
-        const photoUrl = URL.createObjectURL(photoBlob);
-
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
-        const context = canvas.getContext('2d');
-
-        context.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-        fotoPerbaikanBase64 = canvas.toDataURL('image/png').split(',')[1];
-        imgHasilFotoPerbaikan.src = `data:image/png;base64,${fotoPerbaikanBase64}`;
-
-        track.stop();
-    });
+function simpanFotoPerbaikan(base64) {
+    fotoPerbaikanBase64 = base64;
+}
