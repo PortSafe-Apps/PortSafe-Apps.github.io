@@ -9,17 +9,32 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
+const getUserInfoFromToken = (token) => {
+  try {
+      // Bagian ini bervariasi tergantung pada format token Anda
+      const tokenPayloadBase64 = token.split('.')[1];
+      const tokenPayload = atob(tokenPayloadBase64);
+      const userInfo = JSON.parse(tokenPayload);
 
-const insertObservationReport = async (event) => {
+      // Diperkirakan bahwa informasi pengguna ada dalam properti 'user'
+      return userInfo.user;
+  } catch (error) {
+      console.error('Error extracting user info from token:', error);
+      return null;
+  }
+};
+
+const insertEmployee = async (event) => {
   event.preventDefault();
 
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-      alert("Header Login Not Found");
-      return;
+    alert("Header Login Not Found");
+    return;
   }
 
+  const userFromToken = getUserInfoFromToken(token);
   const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
 
   const myHeaders = new Headers();
