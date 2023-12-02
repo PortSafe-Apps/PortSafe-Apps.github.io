@@ -10,7 +10,7 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 // Pastikan untuk menginstal paseto.js dengan npm install paseto
-const { verify } = require('paseto');
+import { verify } from 'paseto';
 
 // Definisikan kunci publik yang sesuai
 const publicKey = '75aa9f476d8e4491fac241b64cbdc95c84edb80f66f2e509c81675161a9fb9aa'; // Gantilah dengan kunci publik yang benar
@@ -29,6 +29,14 @@ async function decodeToken(token, publicKey) {
 
 // Panggil fungsi untuk mendekripsi token
 const decodedPayload = await decodeToken(token, publicKey);
+
+if (decodedPayload) {
+  // Proses payload sesuai kebutuhan
+  console.log('Token Payload:', decodedPayload);
+} else {
+  // Token tidak valid, tanggapi sesuai kebutuhan
+  console.log('Invalid token');
+}
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
