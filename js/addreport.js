@@ -17,8 +17,13 @@ const getUserInfoFromToken = (token) => {
     }
 
     const tokenPayloadBase64 = tokenParts[1];
+    console.log('Token Payload Base64:', tokenPayloadBase64);
+
     const tokenPayload = atob(tokenPayloadBase64);
+    console.log('Decoded Token Payload:', tokenPayload);
+
     const userInfo = JSON.parse(tokenPayload);
+    console.log('User Info:', userInfo);
 
     // Assuming that user information is in the 'user' property
     return userInfo.user;
@@ -27,6 +32,7 @@ const getUserInfoFromToken = (token) => {
     return null;
   }
 };
+
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
