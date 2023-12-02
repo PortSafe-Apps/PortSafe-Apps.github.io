@@ -13,7 +13,7 @@ const token = getTokenFromCookies('Login');
 console.log('Received Token:', token);
 const tokenParts = token.split('.');
 const encodedPayload = tokenParts[1];
-const decodedPayload = atob(encodedPayload);
+const decodedPayload = paseto.decode(publicKey, encodedPayload);
 console.log('Decoded Payload:', decodedPayload);
 const payload = JSON.parse(decodedPayload);
 console.log('Token Payload:', payload);
