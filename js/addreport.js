@@ -141,7 +141,7 @@ const insertObservationReport = async (event) => {
       document.getElementById('namaPengawas').value = userFromToken.Nama;
       document.getElementById('jabatanPengawas').value = userFromToken.Jabatan;
 
-      alert("Employee data inserted successfully!");
+      alert("Reporting data inserted successfully!");
     }
   } catch (error) {
     console.error('Error:', error);
