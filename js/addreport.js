@@ -9,30 +9,8 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const getUserInfoFromToken = (token) => {
-  try {
-    const tokenParts = token.split('.');
-    if (tokenParts.length !== 3) {
-      throw new Error('Invalid token format');
-    }
-
-    const tokenPayloadBase64 = tokenParts[1];
-    console.log('Token Payload Base64:', tokenPayloadBase64);
-
-    const tokenPayload = atob(tokenPayloadBase64);
-    console.log('Decoded Token Payload:', tokenPayload);
-
-    const userInfo = JSON.parse(tokenPayload);
-    console.log('User Info:', userInfo);
-
-    // Assuming that user information is in the 'user' property
-    return userInfo.user;
-  } catch (error) {
-    console.error('Error extracting user info from token:', error);
-    return null;
-  }
-};
-
+const token = getTokenFromCookies('Login');
+console.log('Received Token:', token);
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
