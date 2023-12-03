@@ -1,4 +1,5 @@
 import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
+import { simpanngenerate } from '../js/numreport.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -10,7 +11,7 @@ const getTokenFromCookies = (cookieName) => {
   }
   return null;
 };
-
+  
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -28,19 +29,6 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Content-Type', 'application/json');
 
   try {
-    const generateNomorPelaporan = () => {
-      const tahunSekarang = new Date().getFullYear();
-      const nomorUrut = 1;
-      const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
-      return nomorPelaporan;
-    };
-    document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
-    
-    const resetNomorPelaporan = () => {
-      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
-    };
-    document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
-    
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -101,7 +89,7 @@ const insertObservationReport = async (event) => {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
-          Reportid: generateNomorPelaporan(),
+          Reportid: simpanngenerate,
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
             Nipp: userData.Nipp,

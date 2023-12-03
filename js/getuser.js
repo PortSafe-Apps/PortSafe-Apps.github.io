@@ -53,8 +53,8 @@ function displayUserData(userData) {
   
     if (userData && userData.length > 0) {
       const user = userData[0]; // Assuming you only want to display the first user if there are multiple users
-      namaPengawasInput.value = user.username;
-      jabatanPengawasInput.value = user.password;
+      namaPengawasInput.value = user.nama;
+      jabatanPengawasInput.value = user.jabatan;
     } else {
       // Set default values or handle the case where no user data is found
       namaPengawasInput.value = 'No user data found';
