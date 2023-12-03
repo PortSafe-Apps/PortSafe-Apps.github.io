@@ -13,11 +13,18 @@ const resetNomorPelaporan = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Wrap your code inside this event listener to ensure it runs after the DOM has loaded
-    document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
+    // Check if the element exists before adding the event listener
+    const tombolBuatLaporanBaru = document.getElementById('tombolBuatLaporanBaru');
+    
+    if (tombolBuatLaporanBaru) {
+        tombolBuatLaporanBaru.addEventListener('click', resetNomorPelaporan);
+    } else {
+        console.error("Element with id 'tombolBuatLaporanBaru' not found.");
+    }
 });
 
 export function simpanngenerate() {
     console.log('Hasil Generate:', hasilgenerate);
     return hasilgenerate;
 }
+
