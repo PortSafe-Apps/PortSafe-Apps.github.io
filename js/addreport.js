@@ -29,60 +29,30 @@ const insertObservationReport = async (event) => {
 
   try {
     const selectedTypeDangerousActions = [];
-    const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-    reaksiOrangCheckboxes.forEach((checkbox) => {
-        const typeName = "REAKSI ORANG"; 
-        const subTypeName = checkbox.value;
-  
-        selectedTypeDangerousActions.push({
-            TypeName: typeName,
-            SubTypes: [{ SubTypeName: subTypeName }],
+
+    const processCheckboxGroup = (groupName) => {
+        const checkboxes = document.querySelectorAll(`.${groupName} input:checked`);
+        checkboxes.forEach((checkbox) => {
+            const typeName = groupName;
+            const subTypeName = checkbox.value;
+    
+            selectedTypeDangerousActions.push({
+                TypeName: typeName,
+                SubTypes: [subTypeName],
+            });
         });
-    });
-  
-     const alatPelindungDiriCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-     alatPelindungDiriCheckboxes.forEach((checkbox) => {
-         const typeName = "ALAT PELINDUNG DIRI"; 
-         const subTypeName = checkbox.value;
-  
-         selectedTypeDangerousActions.push({
-             TypeName: typeName,
-             SubTypes: [{ SubTypeName: subTypeName }],
-         });
-     });
-   
-    const posisiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-    posisiOrangCheckboxes.forEach((checkbox) => {
-        const typeName = "POSISI ORANG"; 
-        const subTypeName = checkbox.value;
-  
-        selectedTypeDangerousActions.push({
-            TypeName: typeName,
-            SubTypes: [{ SubTypeName: subTypeName }],
-        });
-    });
-  
-    const alatDanPerlengkapanCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-    alatDanPerlengkapanCheckboxes.forEach((checkbox) => {
-        const typeName = "ALAT DAN PERLENGKAPAN"; 
-        const subTypeName = checkbox.value;
-  
-        selectedTypeDangerousActions.push({
-            TypeName: typeName,
-            SubTypes: [{ SubTypeName: subTypeName }],
-        });
-    });
-  
-    const prosedurDanCaraKerjaCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
-    prosedurDanCaraKerjaCheckboxes.forEach((checkbox) => {
-        const typeName = "PROSEDUR DAN CARA KERJA"; 
-        const subTypeName = checkbox.value;
-  
-        selectedTypeDangerousActions.push({
-            TypeName: typeName,
-            SubTypes: [{ SubTypeName: subTypeName }],
-        });
-    });
+    };
+    
+    // Proses setiap grup checkbox
+    const checkboxGroups = ['reaksiOrang', 'alatPelindungDiri', 'posisiOrang', 'alatDanPerlengkapan', 'prosedurDanCaraKerja'];
+    checkboxGroups.forEach((groupName) => processCheckboxGroup(groupName));
+    
+    console.log(selectedTypeDangerousActions);
+    
+    
+    // Menentukan jenis dan pemrosesan checkbox
+    const typesToProcess = ["REAKSI ORANG", "ALAT PELINDUNG DIRI", "POSISI ORANG", "ALAT DAN PERLENGKAPAN", "PROSEDUR DAN CARA KERJA"];
+    typesToProcess.forEach((type) => processCheckboxes(type));    
 
     const requestOptions = {
       method: 'POST',
