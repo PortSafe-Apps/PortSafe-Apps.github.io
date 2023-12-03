@@ -32,7 +32,9 @@ const insertObservationReport = async (event) => {
 
    
   try {
-    
+
+   
+
      const userData = await getUserInfoFromApi();
 
      // Dapatkan informasi pengguna dari respons API
@@ -99,7 +101,24 @@ const insertObservationReport = async (event) => {
             SubTypes: [{ SubTypeName: subTypeName }],
         });
     });
-  
+
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+    });
+
+    // Function to generate the report number
+    const generateNomorPelaporan = () => {
+      const tahunSekarang = new Date().getFullYear();
+      const nomorUrut = 1;
+      const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
+      return nomorPelaporan;
+    };
+
+    // Event listener to set the report number when the DOM is fully loaded
+    document.addEventListener('DOMContentLoaded', function () {
+      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+    });
+
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
