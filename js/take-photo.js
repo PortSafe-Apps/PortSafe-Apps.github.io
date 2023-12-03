@@ -43,11 +43,10 @@ document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPer
 let fotoObservasiBase64 = '';
 let fotoPerbaikanBase64 = '';
 
-// Fungsi untuk menyimpan string base64
-function simpanFotoObservasi(base64) {
+export function simpanFotoObservasi(base64) {
     fotoObservasiBase64 = base64;
 }
 
-function simpanFotoPerbaikan(base64) {
+export function simpanFotoPerbaikan(base64) {
     fotoPerbaikanBase64 = base64;
 }

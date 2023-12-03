@@ -1,4 +1,5 @@
 import { getUserInfoFromApi } from '../js/getUserInfoFromApi.js';
+import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js'
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -116,13 +117,13 @@ const insertObservationReport = async (event) => {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
           Description: document.getElementById('deskripsiPengamatan').value,
-          ObservationPhoto: fotoObservasiBase64, 
+          ObservationPhoto: simpanFotoObservasi, 
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
               AreaName: document.getElementById('newAreaName').value,
           },
           ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-          ImprovementPhoto: fotoPerbaikanBase64,
+          ImprovementPhoto: simpanFotoPerbaikan,
           CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
@@ -135,8 +136,8 @@ const insertObservationReport = async (event) => {
       alert(data.message);
     } else {
       // Update the input fields with user information
-      document.getElementById('namaPengawas').value = userData.Nama;
-      document.getElementById('jabatanPengawas').value = userData.Jabatan;
+      document.getElementById('namaPengawas').value = userFromApi.Nama;
+      document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
   
       alert("Reporting data inserted successfully!");
     }
