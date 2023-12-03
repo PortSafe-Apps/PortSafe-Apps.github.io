@@ -1,6 +1,6 @@
 import { getUserInfoFromApi } from '../js/getUserInfoFromApi.js';
 import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
-import { generateNomorPelaporan } from '../js/num-report.js';
+import { resetNomorPelaporan  } from '../js/num-report.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -13,6 +13,18 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
+   // Panggil fungsi untuk mengambil data pengguna
+  try {
+    const userFromApi = await getUserInfoFromApi();
+
+    // Perbarui bidang masukan dengan informasi pengguna
+    document.getElementById('namaPengawas').value = userFromApi.Nama;
+    document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
+  } catch (error) {
+    // Tangani kesalahan dengan menampilkan pesan kesalahan yang lebih informatif
+    console.error('Gagal mengambil data pengguna:', error.message);
+    // Mungkin tambahkan logika lain sesuai kebutuhan, seperti menampilkan pesan kesalahan kepada pengguna.
+  }
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -24,22 +36,13 @@ const insertObservationReport = async (event) => {
     return;
   }
 
-
   const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
 
   const myHeaders = new Headers();
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
-   
   try {
-     // Panggil fungsi untuk mengambil data pengguna
-    const userFromApi = await getUserInfoFromApi();
-
-     // Perbarui bidang masukan dengan informasi pengguna
-    document.getElementById('namaPengawas').value = userFromApi.Nama;
-    document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
-    
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -97,13 +100,7 @@ const insertObservationReport = async (event) => {
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-      const nomorPelaporanElement = document.getElementById('nomorPelaporan');
-     
-      if (nomorPelaporanElement) {
-          nomorPelaporanElement.value = generateNomorPelaporan();
-      } else {
-          console.error("Elemen dengan ID 'nomorPelaporan' tidak ditemukan");
-      }
+      resetNomorPelaporan(); // Pastikan nilai nomorPelaporan sudah ada di elemen dengan ID 'nomorPelaporan'
     });
 
     const requestOptions = {
@@ -145,8 +142,7 @@ const insertObservationReport = async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
-    console.error('Gagal mengambil data pengguna:', error.message);
-  // Mungkin tambahkan logika lain sesuai kebutuhan, seperti menampilkan pesan kesalahan kepada pengguna.
+  
 }
   };
   

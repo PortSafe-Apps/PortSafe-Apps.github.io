@@ -1,3 +1,5 @@
+// num-report.js
+
 export const generateNomorPelaporan = () => {
   const tahunSekarang = new Date().getFullYear();
   const nomorUrut = 1;
@@ -6,10 +8,6 @@ export const generateNomorPelaporan = () => {
 };
 
 export const resetNomorPelaporan = () => {
-  document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
-};
-
-document.addEventListener('DOMContentLoaded', function () {
   const nomorPelaporanElement = document.getElementById('nomorPelaporan');
 
   if (nomorPelaporanElement) {
@@ -17,6 +15,10 @@ document.addEventListener('DOMContentLoaded', function () {
   } else {
       console.error("Elemen dengan ID 'nomorPelaporan' tidak ditemukan");
   }
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  resetNomorPelaporan(); // Panggil fungsi resetNomorPelaporan saat DOM selesai dimuat
 });
 
 document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
