@@ -12,7 +12,7 @@ const resetNomorPelaporan = () => {
     document.getElementById('nomorPelaporan').value = hasilgenerate;
 };
 
-document.addEventListener('DOMContentLoaded', () => {
+window.onload = () => {
     const tombolBuatLaporanBaru = document.getElementById('tombolBuatLaporanBaru');
     
     if (tombolBuatLaporanBaru) {
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error("Element with id 'tombolBuatLaporanBaru' not found.");
     }
-});
+};
 
 export function simpanngenerate() {
     console.log('Hasil Generate:', hasilgenerate);
