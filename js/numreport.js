@@ -12,8 +12,10 @@ const resetNomorPelaporan = () => {
     document.getElementById('nomorPelaporan').value = hasilgenerate;
 };
 
-document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
-
+document.addEventListener('DOMContentLoaded', () => {
+    // Wrap your code inside this event listener to ensure it runs after the DOM has loaded
+    document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
+});
 
 export function simpanngenerate() {
     console.log('Hasil Generate:', hasilgenerate);
