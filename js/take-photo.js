@@ -30,7 +30,6 @@ function ambilFotoPerbaikan() {
     reader.onloadend = function () {
         const fotoPerbaikanBase64 = reader.result;
         imgHasilFotoPerbaikan.src = URL.createObjectURL(fileInput);
-        // Menyimpan string base64 ke dalam variabel atau objek yang dapat diakses di fungsi insertObservationReport
         simpanFotoPerbaikan(fotoPerbaikanBase64);
     };
 
@@ -39,14 +38,3 @@ function ambilFotoPerbaikan() {
     }
 }
 document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
-
-let fotoObservasiBase64 = '';
-let fotoPerbaikanBase64 = '';
-
-export function simpanFotoObservasi(base64) {
-    fotoObservasiBase64 = base64;
-}
-
-export function simpanFotoPerbaikan(base64) {
-    fotoPerbaikanBase64 = base64;
-}

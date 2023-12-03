@@ -1,5 +1,3 @@
-import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
-
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
@@ -11,38 +9,30 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-// Fungsi untuk mendapatkan data yang dipilih dari checkbox
-function getSelectedTypeDangerousActions() {
-  const categories = [
-      "REAKSI ORANG",
-      "ALAT PELINDUNG DIRI",
-      "POSISI ORANG",
-      "ALAT DAN PERLENGKAPAN",
-      "PROSEDUR DAN CARA KERJA"
-  ];
+const getSelectedTypeDangerousActions = () => {
+  try {
+    const typeDangerousActions = [];
 
-  const selectedTypeDangerousActions = [];
+    const typeCheckboxes = document.querySelectorAll('.checkbox-group');
+    typeCheckboxes.forEach((typeCheckbox) => {
+      const typeName = typeCheckbox.querySelector('.element-heading h6').innerText;
+      const subTypeCheckboxes = typeCheckbox.querySelectorAll('.form-check-input:checked');
+      const subTypes = Array.from(subTypeCheckboxes).map((checkbox) => checkbox.value);
 
-  // Loop melalui setiap kategori
-  categories.forEach(category => {
-      const checkboxes = document.querySelectorAll(`#${category.toLowerCase().replace(/\s/g, "")}CheckboxGroup input[type="checkbox"]:checked`);
-      
-      // Loop melalui setiap checkbox yang terpilih
-      checkboxes.forEach(checkbox => {
-          const value = checkbox.value;
-          const typeName = category;
+      if (subTypes.length > 0) {
+        typeDangerousActions.push({
+          TypeName: typeName,
+          SubTypes: subTypes,
+        });
+      }
+    });
 
-          // Tambahkan data ke dalam array
-          selectedTypeDangerousActions.push({
-              TypeName: typeName,
-              SubTypes: [value]
-          });
-      });
-  });
-
-  return selectedTypeDangerousActions;
-}
-
+    return typeDangerousActions;
+  } catch (error) {
+    console.error('Error in getSelectedTypeDangerousActions:', error);
+    return null;
+  }
+};
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -61,15 +51,7 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Content-Type', 'application/json');
 
   try {
-    
-     // Get the photo data using the respective functions
-    const observationPhoto = await simpanFotoObservasi();
-    const improvementPhoto = await simpanFotoPerbaikan();
- 
-     // Get the selectedTypeDangerousActions variable
     const selectedTypeDangerousActions = getSelectedTypeDangerousActions();
-
-
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -81,13 +63,13 @@ const insertObservationReport = async (event) => {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
           Description: document.getElementById('deskripsiPengamatan').value,
-          ObservationPhoto: observationPhoto, 
+          ObservationPhoto: fotoObservasiBase64, 
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
               AreaName: document.getElementById('newAreaName').value,
           },
           ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-          ImprovementPhoto: improvementPhoto,
+          ImprovementPhoto: fotoPerbaikanBase64, 
           CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
