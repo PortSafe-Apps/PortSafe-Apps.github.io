@@ -1,5 +1,4 @@
 import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
-import { resetNomorPelaporan  } from '../js/num-report.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -12,51 +11,9 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const getUserInfoFromApi = async () => {
-  const apiUrl = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
-
-  try {
-    // Get the token from cookies
-    const token = getTokenFromCookies('Login');
-    console.log('Token:', token);
-
-    if (!token) {
-      throw new Error('Token not found in cookies');
-    }
-
-    const response = await fetch(apiUrl, {
-      headers: {
-        'Login': token,
-      },
-    });
-    console.log('Response:', response);
-
-    const data = await response.json();
-
-    if (response.ok) {
-      console.log('Data:', data);
-      return data;
-    } else {
-      console.error('Error:', data.message);
-      throw new Error(`Error: ${data.message}`);
-    }
-  } catch (error) {
-    console.error('Error:', error);
-    throw error;
-  }
-};
-
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
-  
-  try {
-    // Panggil fungsi untuk mengambil data pengguna
-    const userData = await getUserInfoFromApi();
 
-    // Perbarui bidang masukan dengan informasi pengguna
-    document.getElementById('namaPengawas').value = userData.Nama;
-    document.getElementById('jabatanPengawas').value = userData.Jabatan;
   const token = getTokenFromCookies('Login');
 
   if (!token) {
@@ -70,7 +27,20 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
-  
+  try {
+    const generateNomorPelaporan = () => {
+      const tahunSekarang = new Date().getFullYear();
+      const nomorUrut = 1;
+      const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
+      return nomorPelaporan;
+    };
+    document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+    
+    const resetNomorPelaporan = () => {
+      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+    };
+    document.getElementById('tombolBuatLaporanBaru').addEventListener('click', resetNomorPelaporan);
+    
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -127,15 +97,11 @@ const insertObservationReport = async (event) => {
         });
     });
 
-    document.addEventListener('DOMContentLoaded', function () {
-      resetNomorPelaporan(); // Pastikan nilai nomorPelaporan sudah ada di elemen dengan ID 'nomorPelaporan'
-    });
-
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
-          Reportid: document.getElementById('nomorPelaporan').value,
+          Reportid: generateNomorPelaporan(),
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
             Nipp: userData.Nipp,
