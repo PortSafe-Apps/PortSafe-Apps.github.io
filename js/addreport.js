@@ -11,32 +11,6 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const generateNomorPelaporan = () => {
-  const tahunSekarang = new Date().getFullYear();
-  const nomorUrut = 1; // Gantilah dengan logika mendapatkan nomor urut yang sesuai
-  const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
-  return nomorPelaporan;
-};
-
-document.addEventListener('DOMContentLoaded', function () {
-  // Setel event listener untuk tombol "Tambah" berdasarkan ID
-  const tambahButton = document.getElementById('tombolTambah');
-  if (tambahButton) {
-    tambahButton.addEventListener('click', function (event) {
-      event.preventDefault();
-
-      // Panggil fungsi generateNomorPelaporan dan setel nilai di elemen nomorPelaporan
-      const nomorPelaporanElement = document.getElementById('nomorPelaporan');
-      if (nomorPelaporanElement) {
-        nomorPelaporanElement.value = generateNomorPelaporan();
-      }
-
-      // Redirect ke halaman addreport.html
-      window.location.href = this.getAttribute('href');
-    });
-  }
-});
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -114,7 +88,7 @@ const insertObservationReport = async (event) => {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
-          Reportid: generateNomorPelaporan(),
+          Reportid: document.getElementById('nomorPelaporan').value,
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
             Nipp: userData.Nipp,
