@@ -1,3 +1,5 @@
+import { getUserInfoFromToken } from '/js/getUserInfoFromToken.js';
+
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
