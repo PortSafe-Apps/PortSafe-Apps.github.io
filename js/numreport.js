@@ -2,7 +2,7 @@ let hasilgenerate = '';
 
 const generateNomorPelaporan = () => {
     const tahunSekarang = new Date().getFullYear();
-    const nomorUrut = 1; // You may want to dynamically generate this value
+    const nomorUrut = 1;
     const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
     return nomorPelaporan;
 };
@@ -13,7 +13,6 @@ const resetNomorPelaporan = () => {
 };
 
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if the element exists before adding the event listener
     const tombolBuatLaporanBaru = document.getElementById('tombolBuatLaporanBaru');
     
     if (tombolBuatLaporanBaru) {
@@ -27,4 +26,3 @@ export function simpanngenerate() {
     console.log('Hasil Generate:', hasilgenerate);
     return hasilgenerate;
 }
-
