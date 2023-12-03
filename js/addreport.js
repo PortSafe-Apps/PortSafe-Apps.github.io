@@ -31,16 +31,17 @@ const insertObservationReport = async (event) => {
 
    
   try {
-    const userData = await getUserInfoFromApi(token);
+    
+     const userData = await getUserInfoFromApi();
 
-    // Dapatkan informasi pengguna dari respons API
-    const userFromApi = {
-      Nipp: userData.nipp,
-      Nama: userData.nama,
-      Jabatan: userData.jabatan,
-      Divisi: userData.divisi,
-      Bidang: userData.bidang,
-    };
+     // Dapatkan informasi pengguna dari respons API
+     const userFromApi = {
+       Nipp: userData.nipp,
+       Nama: userData.nama,
+       Jabatan: userData.jabatan,
+       Divisi: userData.divisi,
+       Bidang: userData.bidang,
+     };
 
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
@@ -105,11 +106,11 @@ const insertObservationReport = async (event) => {
           Reportid: document.getElementById('nomorPelaporan').value,
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
-            Nipp: userFromApi.Nipp,
-            Nama: userFromApi.Nama,
-            Jabatan: userFromApi.Jabatan,
-            Divisi: userFromApi.Divisi,
-            Bidang: userFromApi.Bidang,
+            Nipp: userData.Nipp,
+            Nama: userData.Nama,
+            Jabatan: userData.Jabatan,
+            Divisi: userData.Divisi,
+            Bidang: userData.Bidang,
         },
           Location: {
               LocationName: document.getElementById('autoCompleteLocation').value,
@@ -134,8 +135,8 @@ const insertObservationReport = async (event) => {
       alert(data.message);
     } else {
       // Update the input fields with user information
-      document.getElementById('namaPengawas').value = userFromApi.Nama;
-      document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
+      document.getElementById('namaPengawas').value = userData.Nama;
+      document.getElementById('jabatanPengawas').value = userData.Jabatan;
   
       alert("Reporting data inserted successfully!");
     }
