@@ -9,18 +9,24 @@ const generateNomorPelaporan = () => {
 
 const resetNomorPelaporan = () => {
     hasilgenerate = generateNomorPelaporan();
-    document.getElementById('nomorPelaporan').value = hasilgenerate;
+    const nomorPelaporanElement = document.getElementById('nomorPelaporan');
+
+    if (nomorPelaporanElement) {
+        nomorPelaporanElement.value = hasilgenerate;
+    } else {
+        console.error("Element with id 'nomorPelaporan' not found.");
+    }
 };
 
-window.onload = () => {
+document.addEventListener('DOMContentLoaded', () => {
     const tombolBuatLaporanBaru = document.getElementById('tombolBuatLaporanBaru');
-    
+
     if (tombolBuatLaporanBaru) {
         tombolBuatLaporanBaru.addEventListener('click', resetNomorPelaporan);
     } else {
         console.error("Element with id 'tombolBuatLaporanBaru' not found.");
     }
-};
+});
 
 export function simpanngenerate() {
     console.log('Hasil Generate:', hasilgenerate);
