@@ -9,35 +9,6 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-// Pastikan untuk menginstal paseto.js dengan npm install paseto
-import { verify } from 'paseto';
-
-// Definisikan kunci publik yang sesuai
-const publicKey = '75aa9f476d8e4491fac241b64cbdc95c84edb80f66f2e509c81675161a9fb9aa'; // Gantilah dengan kunci publik yang benar
-
-// Fungsi untuk mendekripsi token
-async function decodeToken(token, publicKey) {
-  try {
-    const decodedPayload = await verify(token, publicKey);
-    console.log('Decoded Payload:', decodedPayload);
-    return decodedPayload;
-  } catch (error) {
-    console.error('Error decoding token:', error);
-    return null;
-  }
-}
-
-// Panggil fungsi untuk mendekripsi token
-const decodedPayload = await decodeToken(token, publicKey);
-
-if (decodedPayload) {
-  // Proses payload sesuai kebutuhan
-  console.log('Token Payload:', decodedPayload);
-} else {
-  // Token tidak valid, tanggapi sesuai kebutuhan
-  console.log('Invalid token');
-}
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -55,6 +26,26 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
+  const getUserInfoFromToken = (token) => {
+    // Dekode token untuk mendapatkan informasi pengguna
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace('-', '+').replace('_', '/');
+    const decodedData = JSON.parse(atob(base64));
+  
+    // Ambil informasi pengguna dari data yang didekode
+    const userInfo = {
+      Nipp: decodedData.nipp,
+      Nama: decodedData.nama,
+      Jabatan: decodedData.jabatan,
+      Divisi: decodedData.divisi,
+      Bidang: decodedData.bidang,
+      Password: decodedData.password,
+      // Sesuaikan dengan struktur data yang sesuai dengan token Anda
+    };
+  
+    return userInfo;
+  };
+  
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
