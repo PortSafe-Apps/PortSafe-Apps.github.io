@@ -1,4 +1,4 @@
-import { getUserInfoFromApi } from '/js/getUserInfoFromApi.js';
+import { getUserInfoFromApi } from '../js/getUserInfoFromApi.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
