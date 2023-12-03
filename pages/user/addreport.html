@@ -144,19 +144,19 @@
                 <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
                 <div class="form-group">
                     <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
-                    <input class="form-control" id="nomorPelaporan" type="text" value="">
+                    <input class="form-control" id="nomorPelaporan" type="text" value="" readonly>
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="tanggalPelaporan">Tanggal Laporan</label>
-                    <input class="form-control" id="tanggalPelaporan" type="date">
+                    <input class="form-control" id="tanggalPelaporan" type="date" value="tanggalPelaporan">
                 </div>
                 <div class="form-group">
                     <label class="form-label" for="namaPengawas">Nama Pengawas</label>
-                    <input class="form-control" id="namaPengawas" type="text" readonly>
-                </div>
+                    <input class="form-control" id="namaPengawas" type="text" value="" readonly>
+                </div>readonly
                 <div class="form-group">
                     <label class="form-label" for="jabatanPengawas">Jabatan Pengawas</label>
-                    <input class="form-control" id="jabatanPengawas" type="text" readonly>
+                    <input class="form-control" id="jabatanPengawas" value="" type="text" >
                 </div>
                 <h5>Langkah 2: Berhenti dan Melihat Dengan Jelas</h5>
                 <div class="form-group">
@@ -316,12 +316,12 @@
                     <label class="form-label" for="newAreaName">Area</label>
                     <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example">
                       <option value="" disabled selected>Pilih Area Observasi</option>
-                      <option value="1">Kantor</option>
-                      <option value="2">Workshop</option>
-                      <option value="3">Gudang</option>
-                      <option value="4">Dermaga</option>
-                      <option value="5">Lapangan Penumpukan </option>
-                      <option value="6">Area kerja lainnya</option>
+                      <option value="Kantor">Kantor</option>
+                      <option value="Workshop">Workshop</option>
+                      <option value="Gudang">Gudang</option>
+                      <option value="Dermaga">Dermaga</option>
+                      <option value="Lapangan Penumpukan">Lapangan Penumpukan</option>
+                      <option value="Area kerja lainnya">Area kerja lainnya</option>
                     </select>
                 </div>
                 <h5>Langkah 4: Bertindak Untuk Memperbaiki</h5>
@@ -364,6 +364,7 @@
     </div>  
     <script src="/js/addreport.js" type="module"></script>
     <script src="/js/getUserInfoFromApi.js" type="module"></script>
+    <script src="/js/num-report.js" type="module"></script>
     <script src="/js/take-photo.js" type="module"></script>
     <!-- All JavaScript Files -->
     <script src="/js/form-autocomplete.js"></script>

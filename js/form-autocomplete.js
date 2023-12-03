@@ -22,3 +22,5 @@ var locations = [
     "Branch Gresik"];
 
 autocomplete(document.getElementById("autoCompleteLocation"), locations);
+
+

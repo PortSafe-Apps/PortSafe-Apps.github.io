@@ -1,5 +1,6 @@
 import { getUserInfoFromApi } from '../js/getUserInfoFromApi.js';
-import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js'
+import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
+import { generateNomorPelaporan } from '../js/num-report.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -32,20 +33,13 @@ const insertObservationReport = async (event) => {
 
    
   try {
+     // Panggil fungsi untuk mengambil data pengguna
+    const userFromApi = await getUserInfoFromApi();
 
-   
-
-     const userData = await getUserInfoFromApi();
-
-     // Dapatkan informasi pengguna dari respons API
-     const userFromApi = {
-       Nipp: userData.nipp,
-       Nama: userData.nama,
-       Jabatan: userData.jabatan,
-       Divisi: userData.divisi,
-       Bidang: userData.bidang,
-     };
-
+     // Perbarui bidang masukan dengan informasi pengguna
+    document.getElementById('namaPengawas').value = userFromApi.Nama;
+    document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
+    
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -103,22 +97,15 @@ const insertObservationReport = async (event) => {
     });
 
     document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+      const nomorPelaporanElement = document.getElementById('nomorPelaporan');
+     
+      if (nomorPelaporanElement) {
+          nomorPelaporanElement.value = generateNomorPelaporan();
+      } else {
+          console.error("Elemen dengan ID 'nomorPelaporan' tidak ditemukan");
+      }
     });
-
-    // Function to generate the report number
-    const generateNomorPelaporan = () => {
-      const tahunSekarang = new Date().getFullYear();
-      const nomorUrut = 1;
-      const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
-      return nomorPelaporan;
-    };
-
-    // Event listener to set the report number when the DOM is fully loaded
-    document.addEventListener('DOMContentLoaded', function () {
-      document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
-    });
-
+    
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -154,10 +141,6 @@ const insertObservationReport = async (event) => {
     if (data.status === false) {
       alert(data.message);
     } else {
-      // Update the input fields with user information
-      document.getElementById('namaPengawas').value = userFromApi.Nama;
-      document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
-  
       alert("Reporting data inserted successfully!");
     }
   } catch (error) {
