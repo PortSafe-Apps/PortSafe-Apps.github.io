@@ -29,30 +29,25 @@ const insertObservationReport = async (event) => {
 
   try {
     const selectedTypeDangerousActions = [];
-
     const processCheckboxGroup = (groupName) => {
         const checkboxes = document.querySelectorAll(`.${groupName} input:checked`);
         checkboxes.forEach((checkbox) => {
             const typeName = groupName;
             const subTypeName = checkbox.value;
-    
+
             selectedTypeDangerousActions.push({
                 TypeName: typeName,
                 SubTypes: [subTypeName],
             });
         });
     };
-    
+
     // Proses setiap grup checkbox
     const checkboxGroups = ['reaksiOrang', 'alatPelindungDiri', 'posisiOrang', 'alatDanPerlengkapan', 'prosedurDanCaraKerja'];
     checkboxGroups.forEach((groupName) => processCheckboxGroup(groupName));
-    
+
     console.log(selectedTypeDangerousActions);
-    
-    
-    // Menentukan jenis dan pemrosesan checkbox
-    const typesToProcess = ["REAKSI ORANG", "ALAT PELINDUNG DIRI", "POSISI ORANG", "ALAT DAN PERLENGKAPAN", "PROSEDUR DAN CARA KERJA"];
-    typesToProcess.forEach((type) => processCheckboxes(type));    
+
 
     const requestOptions = {
       method: 'POST',
