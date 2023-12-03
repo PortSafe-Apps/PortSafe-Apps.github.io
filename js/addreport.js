@@ -9,29 +9,6 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const token = getTokenFromCookies('Login');
-
-if (!token) {
-  alert("Header Login Not Found");
-  return;
-}
-
-const getUserInfoFromToken = (token) => {
-  const base64Url = token.split('.')[1];
-  const base64 = base64Url.replace('-', '+').replace('_', '/');
-  const decodedData = JSON.parse(atob(base64));
-
-  const userInfo = {
-    Nipp: decodedData.nipp,
-    Nama: decodedData.nama,
-    Jabatan: decodedData.jabatan,
-    Divisi: decodedData.divisi,
-    Bidang: decodedData.bidang,
-    // Adjust the property names based on your token structure
-  };
-
-  return userInfo;
-};
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -43,30 +20,34 @@ const insertObservationReport = async (event) => {
     return;
   }
 
-  const userFromToken = getUserInfoFromToken(token);
+
   const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
 
   const myHeaders = new Headers();
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
+   
+  try {
+    const userFromToken = getUserInfoFromToken(token);
+  
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
         const typeName = "REAKSI ORANG"; 
         const subTypeName = checkbox.value;
-
+  
         selectedTypeDangerousActions.push({
             TypeName: typeName,
             SubTypes: [{ SubTypeName: subTypeName }],
         });
     });
-
+  
      const alatPelindungDiriCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
      alatPelindungDiriCheckboxes.forEach((checkbox) => {
          const typeName = "ALAT PELINDUNG DIRI"; 
          const subTypeName = checkbox.value;
- 
+  
          selectedTypeDangerousActions.push({
              TypeName: typeName,
              SubTypes: [{ SubTypeName: subTypeName }],
@@ -77,36 +58,36 @@ const insertObservationReport = async (event) => {
     posisiOrangCheckboxes.forEach((checkbox) => {
         const typeName = "POSISI ORANG"; 
         const subTypeName = checkbox.value;
-
+  
         selectedTypeDangerousActions.push({
             TypeName: typeName,
             SubTypes: [{ SubTypeName: subTypeName }],
         });
     });
-
+  
     const alatDanPerlengkapanCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     alatDanPerlengkapanCheckboxes.forEach((checkbox) => {
         const typeName = "ALAT DAN PERLENGKAPAN"; 
         const subTypeName = checkbox.value;
-
+  
         selectedTypeDangerousActions.push({
             TypeName: typeName,
             SubTypes: [{ SubTypeName: subTypeName }],
         });
     });
-
+  
     const prosedurDanCaraKerjaCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     prosedurDanCaraKerjaCheckboxes.forEach((checkbox) => {
         const typeName = "PROSEDUR DAN CARA KERJA"; 
         const subTypeName = checkbox.value;
-
+  
         selectedTypeDangerousActions.push({
             TypeName: typeName,
             SubTypes: [{ SubTypeName: subTypeName }],
         });
     });
-    
-  const requestOptions = {
+  
+    const requestOptions = {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
@@ -134,23 +115,24 @@ const insertObservationReport = async (event) => {
       }),
       redirect: 'follow',
   };
-
-  try {
+  
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
-
+  
     if (data.status === false) {
       alert(data.message);
     } else {
       // Update the input fields with user information
       document.getElementById('namaPengawas').value = userFromToken.Nama;
       document.getElementById('jabatanPengawas').value = userFromToken.Jabatan;
-
+  
       alert("Reporting data inserted successfully!");
     }
   } catch (error) {
     console.error('Error:', error);
   }
-};
+  };
+  
+  document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
 
-document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
+
