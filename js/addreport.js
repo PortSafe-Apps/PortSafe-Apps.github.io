@@ -11,6 +11,39 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
+// Fungsi untuk mendapatkan data yang dipilih dari checkbox
+function getSelectedTypeDangerousActions() {
+  const categories = [
+      "REAKSI ORANG",
+      "ALAT PELINDUNG DIRI",
+      "POSISI ORANG",
+      "ALAT DAN PERLENGKAPAN",
+      "PROSEDUR DAN CARA KERJA"
+  ];
+
+  const selectedTypeDangerousActions = [];
+
+  // Loop melalui setiap kategori
+  categories.forEach(category => {
+      const checkboxes = document.querySelectorAll(`#${category.toLowerCase().replace(/\s/g, "")}CheckboxGroup input[type="checkbox"]:checked`);
+      
+      // Loop melalui setiap checkbox yang terpilih
+      checkboxes.forEach(checkbox => {
+          const value = checkbox.value;
+          const typeName = category;
+
+          // Tambahkan data ke dalam array
+          selectedTypeDangerousActions.push({
+              TypeName: typeName,
+              SubTypes: [value]
+          });
+      });
+  });
+
+  return selectedTypeDangerousActions;
+}
+
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -28,25 +61,13 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Content-Type', 'application/json');
 
   try {
-    const selectedTypeDangerousActions = [];
-    const processCheckboxGroup = (groupName) => {
-        const checkboxes = document.querySelectorAll(`.${groupName} input:checked`);
-        checkboxes.forEach((checkbox) => {
-            const typeName = groupName;
-            const subTypeName = checkbox.value;
-
-            selectedTypeDangerousActions.push({
-                TypeName: typeName,
-                SubTypes: [subTypeName],
-            });
-        });
-    };
-
-    // Proses setiap grup checkbox
-    const checkboxGroups = ['reaksiOrang', 'alatPelindungDiri', 'posisiOrang', 'alatDanPerlengkapan', 'prosedurDanCaraKerja'];
-    checkboxGroups.forEach((groupName) => processCheckboxGroup(groupName));
-
-    console.log(selectedTypeDangerousActions);
+    
+     // Get the photo data using the respective functions
+    const observationPhoto = await simpanFotoObservasi();
+    const improvementPhoto = await simpanFotoPerbaikan();
+ 
+     // Get the selectedTypeDangerousActions variable
+    const selectedTypeDangerousActions = getSelectedTypeDangerousActions();
 
 
     const requestOptions = {
@@ -60,13 +81,13 @@ const insertObservationReport = async (event) => {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
           Description: document.getElementById('deskripsiPengamatan').value,
-          ObservationPhoto: simpanFotoObservasi, 
+          ObservationPhoto: observationPhoto, 
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
               AreaName: document.getElementById('newAreaName').value,
           },
           ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-          ImprovementPhoto: simpanFotoPerbaikan,
+          ImprovementPhoto: improvementPhoto,
           CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
