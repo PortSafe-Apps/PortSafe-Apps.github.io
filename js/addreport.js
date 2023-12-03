@@ -1,4 +1,3 @@
-import { getUserInfoFromApi } from '../js/getUserInfoFromApi.js';
 import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
 import { resetNomorPelaporan  } from '../js/num-report.js';
 
@@ -13,22 +12,51 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-   // Panggil fungsi untuk mengambil data pengguna
-  try {
-    const userFromApi = await getUserInfoFromApi();
+const getUserInfoFromApi = async () => {
+  const apiUrl = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
 
-    // Perbarui bidang masukan dengan informasi pengguna
-    document.getElementById('namaPengawas').value = userFromApi.Nama;
-    document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
+  try {
+    // Get the token from cookies
+    const token = getTokenFromCookies('Login');
+    console.log('Token:', token);
+
+    if (!token) {
+      throw new Error('Token not found in cookies');
+    }
+
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Login': token,
+      },
+    });
+    console.log('Response:', response);
+
+    const data = await response.json();
+
+    if (response.ok) {
+      console.log('Data:', data);
+      return data;
+    } else {
+      console.error('Error:', data.message);
+      throw new Error(`Error: ${data.message}`);
+    }
   } catch (error) {
-    // Tangani kesalahan dengan menampilkan pesan kesalahan yang lebih informatif
-    console.error('Gagal mengambil data pengguna:', error.message);
-    // Mungkin tambahkan logika lain sesuai kebutuhan, seperti menampilkan pesan kesalahan kepada pengguna.
+    console.error('Error:', error);
+    throw error;
   }
+};
+
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
+  
+  try {
+    // Panggil fungsi untuk mengambil data pengguna
+    const userData = await getUserInfoFromApi();
 
+    // Perbarui bidang masukan dengan informasi pengguna
+    document.getElementById('namaPengawas').value = userData.Nama;
+    document.getElementById('jabatanPengawas').value = userData.Jabatan;
   const token = getTokenFromCookies('Login');
 
   if (!token) {
@@ -42,7 +70,7 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
-  try {
+  
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {

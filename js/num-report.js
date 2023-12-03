@@ -12,6 +12,16 @@ export const resetNomorPelaporan = () => {
 
   if (nomorPelaporanElement) {
       nomorPelaporanElement.value = generateNomorPelaporan();
+      // Periksa apakah ada event listener sebelum menambahkannya
+      if (!nomorPelaporanElement.hasAttribute('data-event-listener-added')) {
+          // Tambahkan event listener hanya jika belum ditambahkan sebelumnya
+          nomorPelaporanElement.addEventListener('change', function () {
+              // Callback ketika nilai berubah
+              console.log('Nilai nomor pelaporan berubah menjadi: ', nomorPelaporanElement.value);
+          });
+          // Tandai bahwa event listener sudah ditambahkan
+          nomorPelaporanElement.setAttribute('data-event-listener-added', 'true');
+      }
   } else {
       console.error("Elemen dengan ID 'nomorPelaporan' tidak ditemukan");
   }
