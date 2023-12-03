@@ -1,5 +1,4 @@
 import { simpanFotoObservasi, simpanFotoPerbaikan } from '../js/take-photo.js';
-import { simpanngenerate } from '../js/numreport.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -29,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function () {
       if (nomorPelaporanElement) {
         nomorPelaporanElement.value = generateNomorPelaporan();
       }
-      
+
       window.location.href = this.getAttribute('href');
     });
   }
