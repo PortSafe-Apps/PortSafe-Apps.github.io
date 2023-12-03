@@ -90,13 +90,7 @@ const insertObservationReport = async (event) => {
       body: JSON.stringify({
           Reportid: document.getElementById('nomorPelaporan').value,
           Date: document.getElementById('tanggalPelaporan').value,
-          User: {
-            Nipp: userData.Nipp,
-            Nama: userData.Nama,
-            Jabatan: userData.Jabatan,
-            Divisi: userData.Divisi,
-            Bidang: userData.Bidang,
-        },
+          User: {},
           Location: {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
