@@ -9,6 +9,30 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
+const token = getTokenFromCookies('Login');
+
+if (!token) {
+  alert("Header Login Not Found");
+  return;
+}
+
+const getUserInfoFromToken = (token) => {
+  const base64Url = token.split('.')[1];
+  const base64 = base64Url.replace('-', '+').replace('_', '/');
+  const decodedData = JSON.parse(atob(base64));
+
+  const userInfo = {
+    Nipp: decodedData.nipp,
+    Nama: decodedData.nama,
+    Jabatan: decodedData.jabatan,
+    Divisi: decodedData.divisi,
+    Bidang: decodedData.bidang,
+    // Adjust the property names based on your token structure
+  };
+
+  return userInfo;
+};
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -26,26 +50,6 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Login', token);
   myHeaders.append('Content-Type', 'application/json');
 
-  const getUserInfoFromToken = (token) => {
-    // Dekode token untuk mendapatkan informasi pengguna
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace('-', '+').replace('_', '/');
-    const decodedData = JSON.parse(atob(base64));
-  
-    // Ambil informasi pengguna dari data yang didekode
-    const userInfo = {
-      Nipp: decodedData.nipp,
-      Nama: decodedData.nama,
-      Jabatan: decodedData.jabatan,
-      Divisi: decodedData.divisi,
-      Bidang: decodedData.bidang,
-      Password: decodedData.password,
-      // Sesuaikan dengan struktur data yang sesuai dengan token Anda
-    };
-  
-    return userInfo;
-  };
-  
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
