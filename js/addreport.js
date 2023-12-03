@@ -13,22 +13,25 @@ const getTokenFromCookies = (cookieName) => {
 
 const generateNomorPelaporan = () => {
   const tahunSekarang = new Date().getFullYear();
-  const nomorUrut = 1;
+  const nomorUrut = 1; // Gantilah dengan logika mendapatkan nomor urut yang sesuai
   const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
   return nomorPelaporan;
 };
 
 document.addEventListener('DOMContentLoaded', function () {
-  const tambahButton = document.querySelector('a[href="/pages/user/addreport.html"]');
+  // Setel event listener untuk tombol "Tambah" berdasarkan ID
+  const tambahButton = document.getElementById('tombolTambah');
   if (tambahButton) {
     tambahButton.addEventListener('click', function (event) {
       event.preventDefault();
 
+      // Panggil fungsi generateNomorPelaporan dan setel nilai di elemen nomorPelaporan
       const nomorPelaporanElement = document.getElementById('nomorPelaporan');
       if (nomorPelaporanElement) {
         nomorPelaporanElement.value = generateNomorPelaporan();
       }
 
+      // Redirect ke halaman addreport.html
       window.location.href = this.getAttribute('href');
     });
   }
