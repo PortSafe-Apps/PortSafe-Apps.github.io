@@ -11,7 +11,30 @@ const getTokenFromCookies = (cookieName) => {
   }
   return null;
 };
-  
+
+const generateNomorPelaporan = () => {
+  const tahunSekarang = new Date().getFullYear();
+  const nomorUrut = 1;
+  const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut.toString().padStart(3, '0')}`;
+  return nomorPelaporan;
+};
+
+document.addEventListener('DOMContentLoaded', function () {
+  const tambahButton = document.querySelector('a[href="/pages/user/addreport.html"]');
+  if (tambahButton) {
+    tambahButton.addEventListener('click', function (event) {
+      event.preventDefault();
+
+      const nomorPelaporanElement = document.getElementById('nomorPelaporan');
+      if (nomorPelaporanElement) {
+        nomorPelaporanElement.value = generateNomorPelaporan();
+      }
+      
+      window.location.href = this.getAttribute('href');
+    });
+  }
+});
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -89,7 +112,7 @@ const insertObservationReport = async (event) => {
       method: 'POST',
       headers: myHeaders,
       body: JSON.stringify({
-          Reportid: simpanngenerate,
+          Reportid: generateNomorPelaporan(),
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
             Nipp: userData.Nipp,
