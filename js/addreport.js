@@ -1,4 +1,4 @@
-import { getUserInfoFromToken } from '/js/getUserInfoFromToken.js';
+import { getUserInfoFromApi } from '/js/getUserInfoFromApi.js';
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
@@ -31,8 +31,17 @@ const insertObservationReport = async (event) => {
 
    
   try {
-    const userFromToken = getUserInfoFromToken(token);
-  
+    const userData = await getUserInfoFromApi(token);
+
+    // Dapatkan informasi pengguna dari respons API
+    const userFromApi = {
+      Nipp: userData.nipp,
+      Nama: userData.nama,
+      Jabatan: userData.jabatan,
+      Divisi: userData.divisi,
+      Bidang: userData.bidang,
+    };
+
     const selectedTypeDangerousActions = [];
     const reaksiOrangCheckboxes = document.querySelectorAll('.checkbox-group input:checked');
     reaksiOrangCheckboxes.forEach((checkbox) => {
@@ -96,11 +105,11 @@ const insertObservationReport = async (event) => {
           Reportid: document.getElementById('nomorPelaporan').value,
           Date: document.getElementById('tanggalPelaporan').value,
           User: {
-            Nipp: userFromToken.Nipp,
-            Nama: userFromToken.Nama,
-            Jabatan: userFromToken.Jabatan,
-            Divisi: userFromToken.Divisi,
-            Bidang: userFromToken.Bidang,
+            Nipp: userFromApi.Nipp,
+            Nama: userFromApi.Nama,
+            Jabatan: userFromApi.Jabatan,
+            Divisi: userFromApi.Divisi,
+            Bidang: userFromApi.Bidang,
         },
           Location: {
               LocationName: document.getElementById('autoCompleteLocation').value,
@@ -125,8 +134,8 @@ const insertObservationReport = async (event) => {
       alert(data.message);
     } else {
       // Update the input fields with user information
-      document.getElementById('namaPengawas').value = userFromToken.Nama;
-      document.getElementById('jabatanPengawas').value = userFromToken.Jabatan;
+      document.getElementById('namaPengawas').value = userFromApi.Nama;
+      document.getElementById('jabatanPengawas').value = userFromApi.Jabatan;
   
       alert("Reporting data inserted successfully!");
     }

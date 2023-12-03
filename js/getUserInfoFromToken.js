@@ -1,16 +1,22 @@
-export const getUserInfoFromToken = (token) => {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace('-', '+').replace('_', '/');
-    const decodedData = JSON.parse(atob(base64));
-  
-    const userInfo = {
-      Nipp: decodedData.nipp,
-      Nama: decodedData.nama,
-      Jabatan: decodedData.jabatan,
-      Divisi: decodedData.divisi,
-      Bidang: decodedData.bidang,
-    };
-  
-    return userInfo;
-  };
-  
+export const getUserInfoFromApi = async (token) => {
+  const apiUrl = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
+
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        'Login': token, 
+      },
+    });
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    } else {
+      throw new Error(`Error: ${data.message}`);
+    }
+  } catch (error) {
+    console.error('Error:', error);
+    throw error;
+  }
+};
