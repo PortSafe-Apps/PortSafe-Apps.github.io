@@ -105,7 +105,7 @@ const insertObservationReport = async (event) => {
           console.error("Elemen dengan ID 'nomorPelaporan' tidak ditemukan");
       }
     });
-    
+
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -145,7 +145,9 @@ const insertObservationReport = async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
-  }
+    console.error('Gagal mengambil data pengguna:', error.message);
+  // Mungkin tambahkan logika lain sesuai kebutuhan, seperti menampilkan pesan kesalahan kepada pengguna.
+}
   };
   
   document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
