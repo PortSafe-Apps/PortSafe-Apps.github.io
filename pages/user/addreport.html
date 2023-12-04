@@ -138,11 +138,24 @@
                         <img id="hasilFotoObservasi" class="w-75 mb-4" src="" alt="">
                     </div>
                 </div>
+                
                 <h5>Langkah 3: Pengamatan Perilaku Tidak Standar</h5>
                 <div class="element-heading">
                     <h6>Jenis Tindakan Berbahaya</h6>
                 </div>
-                <div id="checkboxContainer"></div>
+                <div class="form-group" id="checkboxContainer"></div>
+                <div class="form-group">
+                    <label class="form-label" for="newAreaName">Area</label>
+                    <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example">
+                      <option value="" disabled selected>Pilih Area Observasi</option>
+                      <option value="Kantor">Kantor</option>
+                      <option value="Workshop">Workshop</option>
+                      <option value="Gudang">Gudang</option>
+                      <option value="Dermaga">Dermaga</option>
+                      <option value="Lapangan Penumpukan">Lapangan Penumpukan</option>
+                      <option value="Area kerja lainnya">Area kerja lainnya</option>
+                    </select>
+                </div>
                 <h5>Langkah 4: Bertindak Untuk Memperbaiki</h5>
                 <div class="form-group">
                       <label class="form-label" for="deskripsiPerbaikanSegera">Tindakan Segera / Immidiate Action </label>
@@ -180,12 +193,12 @@
             </div>
           </div>
         </div>
-    </div>  
-     <!-- All JavaScript Files -->
+    </div> 
+    <!-- All JavaScript Files --> 
     <script src="/js/addreport.js" type="module"></script>
     <script src="/js/getuser.js" type="module"></script>
     <script src="/js/take-photo.js" type="module"></script>
-    <script src="/js/checkbox.js"></script>
+    <script src="/js/checkbox.js" type="module"></script>
     <script src="/js/form-autocomplete.js"></script>
     <script src="/js/bootstrap.bundle.min.js"></script>
     <script src="/js/slideToggle.min.js"></script>

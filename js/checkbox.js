@@ -63,12 +63,12 @@ var data = {
   
     data.TypeDangerousActions.forEach(function (action) {
       var actionDiv = document.createElement("div");
-      actionDiv.className = "element-heading";  // Updated class name
+      actionDiv.className = "element-heading form-label";  // Updated class name
       actionDiv.innerHTML = "<h6>" + action.TypeName + "</h6>";
   
       action.SubTypes.forEach(function (subType) {
         var checkboxContainer = document.createElement("div");  // Container for checkbox and label
-        checkboxContainer.className = "form group form-check";  // Updated class name
+        checkboxContainer.className = "form-check";  // Updated class name
   
         var checkbox = document.createElement("input");
         checkbox.className = "form-check-input";
