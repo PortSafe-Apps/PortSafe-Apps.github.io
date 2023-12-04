@@ -26,7 +26,14 @@ const insertObservationReport = async (event) => {
   myHeaders.append('Content-Type', 'application/json');
 
   try {
-    const selectedTypeDangerousActions = getSelectedTypeDangerousActions();
+    function getCheckedCheckboxes() {
+      var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
+      var checkedValues = Array.from(checkboxes).map(function (checkbox) {
+        return checkbox.value;
+      });
+      return checkedValues;
+    }
+
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
@@ -39,7 +46,7 @@ const insertObservationReport = async (event) => {
           },
           Description: document.getElementById('deskripsiPengamatan').value,
           ObservationPhoto: document.getElementById('fotoObservasi').value, 
-          TypeDangerousActions: selectedTypeDangerousActions,
+          TypeDangerousActions: getCheckedCheckboxes(),
           Area: {
               AreaName: document.getElementById('newAreaName').value,
           },
