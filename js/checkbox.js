@@ -71,34 +71,42 @@ function createCheckboxes(data) {
         actionDiv.className = "element-heading form-label";  // Updated class name
         actionDiv.innerHTML = "<h6>" + action.TypeName + "</h6>";
 
+        var subTypesArray = [];  // Array untuk menyimpan subTypes
+
         action.SubTypes.forEach(function (subType) {
-            console.log("SubType:", subType);  // Tambahkan baris ini untuk melacak nilai SubTypes
-        
             var checkboxContainer = document.createElement("div");  // Container for checkbox and label
             checkboxContainer.className = "form-check";  // Updated class name
-        
+
             var checkbox = document.createElement("input");
             checkbox.className = "form-check-input";
             checkbox.type = "checkbox";
-            checkbox.name = action.TypeName;
+            checkbox.name = action.TypeId;
             checkbox.value = subType;
-            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_");
-        
+            checkbox.id = action.TypeId 
+
             var label = document.createElement("label");
             label.className = "form-check-label";
             label.htmlFor = checkbox.id;
             label.appendChild(document.createTextNode(subType));
-        
+
             checkboxContainer.appendChild(checkbox);
             checkboxContainer.appendChild(label);
-        
+
             actionDiv.appendChild(checkboxContainer);
+
+            // Menambahkan subType ke dalam array
+            subTypesArray.push(subType);
         });
-        
+
+        // Menampilkan typeId, typeName, dan subTypes
+        console.log("typeId:", action.TypeId);
+        console.log("typeName:", action.TypeName);
+        console.log("subTypes:", subTypesArray);
 
         container.appendChild(actionDiv);
     });
 }
+
 
 // Call the function with your data
 createCheckboxes(data);
