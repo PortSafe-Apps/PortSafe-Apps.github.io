@@ -72,26 +72,29 @@ function createCheckboxes(data) {
         actionDiv.innerHTML = "<h6>" + action.TypeName + "</h6>";
 
         action.SubTypes.forEach(function (subType) {
+            console.log("SubType:", subType);  // Tambahkan baris ini untuk melacak nilai SubTypes
+        
             var checkboxContainer = document.createElement("div");  // Container for checkbox and label
             checkboxContainer.className = "form-check";  // Updated class name
         
             var checkbox = document.createElement("input");
             checkbox.className = "form-check-input";
             checkbox.type = "checkbox";
-            checkbox.name = action.TypeName; // Remove this line
+            checkbox.name = action.TypeName;
             checkbox.value = subType;
-            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_"); // Updated this line
+            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_");
         
             var label = document.createElement("label");
-            label.className = "form-check-label"; // Optional: Bootstrap class for form-check label
+            label.className = "form-check-label";
             label.htmlFor = checkbox.id;
-            label.appendChild(document.createTextNode(subType));  // Added space before SubTypeName
+            label.appendChild(document.createTextNode(subType));
         
             checkboxContainer.appendChild(checkbox);
             checkboxContainer.appendChild(label);
         
             actionDiv.appendChild(checkboxContainer);
         });
+        
 
         container.appendChild(actionDiv);
     });
