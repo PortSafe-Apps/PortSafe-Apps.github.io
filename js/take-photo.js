@@ -8,7 +8,9 @@ function ambilFotoObservasi() {
     reader.onloadend = function () {
         const fotoObservasiBase64 = reader.result;
         imgHasilFotoObservasi.src = URL.createObjectURL(fileInput);
-        simpanFotoObservasi(fotoObservasiBase64);
+
+        // Set the input value with the base64-encoded string
+        inputFotoObservasi.value = fotoObservasiBase64;
 
         document.getElementById('hasilFotoObservasi').src = fotoObservasiBase64;
     };
@@ -20,6 +22,9 @@ function ambilFotoObservasi() {
 
 document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
 
+
+
+
 const inputFotoPerbaikan = document.getElementById('fotoPerbaikan');
 const imgHasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
 
@@ -30,11 +35,17 @@ function ambilFotoPerbaikan() {
     reader.onloadend = function () {
         const fotoPerbaikanBase64 = reader.result;
         imgHasilFotoPerbaikan.src = URL.createObjectURL(fileInput);
-        simpanFotoPerbaikan(fotoPerbaikanBase64);
+
+        // Set the input value with the base64-encoded string
+        inputFotoPerbaikan.value = fotoPerbaikanBase64;
+
+        document.getElementById('hasilFotoPerbaikan').src = fotoPerbaikanBase64;
     };
 
     if (fileInput) {
         reader.readAsDataURL(fileInput);
     }
 }
+
 document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
+

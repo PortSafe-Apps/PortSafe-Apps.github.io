@@ -9,31 +9,6 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const getSelectedTypeDangerousActions = () => {
-  try {
-    const typeDangerousActions = [];
-
-    const typeCheckboxes = document.querySelectorAll('.checkbox-group');
-    typeCheckboxes.forEach((typeCheckbox) => {
-      const typeName = typeCheckbox.querySelector('.element-heading h6').innerText;
-      const subTypeCheckboxes = typeCheckbox.querySelectorAll('.form-check-input:checked');
-      const subTypes = Array.from(subTypeCheckboxes).map((checkbox) => checkbox.value);
-
-      if (subTypes.length > 0) {
-        typeDangerousActions.push({
-          TypeName: typeName,
-          SubTypes: subTypes,
-        });
-      }
-    });
-
-    return typeDangerousActions;
-  } catch (error) {
-    console.error('Error in getSelectedTypeDangerousActions:', error);
-    return null;
-  }
-};
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -63,13 +38,13 @@ const insertObservationReport = async (event) => {
               LocationName: document.getElementById('autoCompleteLocation').value,
           },
           Description: document.getElementById('deskripsiPengamatan').value,
-          ObservationPhoto: fotoObservasiBase64, 
+          ObservationPhoto: document.getElementById('fotoObservasi').value, 
           TypeDangerousActions: selectedTypeDangerousActions,
           Area: {
               AreaName: document.getElementById('newAreaName').value,
           },
           ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-          ImprovementPhoto: fotoPerbaikanBase64, 
+          ImprovementPhoto: document.getElementById('fotoPerbaikan').value,  
           CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
