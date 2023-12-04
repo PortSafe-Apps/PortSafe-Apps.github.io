@@ -34,12 +34,12 @@ function ambilFotoPerbaikan() {
 
     reader.onloadend = function () {
         const fotoPerbaikanBase64 = reader.result;
-        imgHasilFotoPerbaikan.src = URL.createObjectURL(fileInput);
 
-        // Set the input value with the base64-encoded string
-        inputFotoPerbaikan.value = fotoPerbaikanBase64;
+        // Set the source of the image directly
+        imgHasilFotoPerbaikan.src = fotoPerbaikanBase64;
 
-        document.getElementById('hasilFotoPerbaikan').src = fotoPerbaikanBase64;
+        // You can use fotoPerbaikanBase64 in other ways (e.g., send to the server)
+        console.log(fotoPerbaikanBase64);
     };
 
     if (fileInput) {

@@ -29,11 +29,15 @@ const insertObservationReport = async (event) => {
     function getCheckedCheckboxes() {
       var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
       var checkedValues = Array.from(checkboxes).map(function (checkbox) {
-        return checkbox.value;
+          return {
+              TypeId: checkbox.id,  // You might need to adjust this based on your server's expectations
+              TypeName: checkbox.name,
+              SubTypeName: checkbox.value
+          };
       });
       return checkedValues;
-    }
-
+  }
+  
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
