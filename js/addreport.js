@@ -28,15 +28,22 @@ const insertObservationReport = async (event) => {
   try {
     function getCheckedCheckboxes() {
       var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
-      var checkedValues = Array.from(checkboxes).map(function (checkbox) {
-          return {
-              TypeId: checkbox.id,  
-              TypeName: checkbox.name,
-              SubTypes: checkbox.value
-          };
+      var checkedValues = [];
+  
+      checkboxes.forEach(function (checkbox) {
+          var typeId = checkbox.name;
+          var typeName = document.querySelector('label[for="' + checkbox.id + '"]').textContent;
+  
+          checkedValues.push({
+              TypeId: typeId,
+              TypeName: typeName,
+              SubTypes: [checkbox.value]
+          });
       });
+  
       return checkedValues;
   }
+  
   
     const requestOptions = {
       method: 'POST',
