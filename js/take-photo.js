@@ -7,12 +7,12 @@ function ambilFotoObservasi() {
 
     reader.onloadend = function () {
         const fotoObservasiBase64 = reader.result;
-        imgHasilFotoObservasi.src = URL.createObjectURL(fileInput);
 
-        // Set the input value with the base64-encoded string
-        inputFotoObservasi.value = fotoObservasiBase64;
+        // Set the source of the image directly
+        imgHasilFotoObservasi.src = fotoObservasiBase64;
 
-        document.getElementById('hasilFotoObservasi').src = fotoObservasiBase64;
+        // You can use fotoObservasiBase64 in other ways (e.g., send to the server)
+        console.log(fotoObservasiBase64);
     };
 
     if (fileInput) {
