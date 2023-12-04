@@ -32,7 +32,7 @@ const insertObservationReport = async (event) => {
   
       checkboxes.forEach(function (checkbox) {
           var typeId = checkbox.name;
-          var typeName = document.querySelector('label[for="' + checkbox.id + '"]').textContent;
+          var typeName = checkbox.dataset.typeName; // Mengambil Type Name dari dataset
   
           checkedValues.push({
               TypeId: typeId,
@@ -42,8 +42,7 @@ const insertObservationReport = async (event) => {
       });
   
       return checkedValues;
-  }
-  
+  }  
   
     const requestOptions = {
       method: 'POST',

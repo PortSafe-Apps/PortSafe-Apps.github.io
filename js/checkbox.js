@@ -68,21 +68,21 @@ function createCheckboxes(data) {
 
     data.TypeDangerousActions.forEach(function (action) {
         var actionDiv = document.createElement("div");
-        actionDiv.className = "element-heading form-label";  // Updated class name
+        actionDiv.className = "element-heading form-label";  
         actionDiv.innerHTML = "<h6>" + action.TypeName + "</h6>";
 
-        var subTypesArray = [];  // Array untuk menyimpan subTypes
+        var subTypesArray = [];  
 
         action.SubTypes.forEach(function (subType) {
-            var checkboxContainer = document.createElement("div");  // Container for checkbox and label
-            checkboxContainer.className = "form-check";  // Updated class name
+            var checkboxContainer = document.createElement("div");  
+            checkboxContainer.className = "form-check";  
 
             var checkbox = document.createElement("input");
             checkbox.className = "form-check-input";
             checkbox.type = "checkbox";
             checkbox.name = action.TypeId;
             checkbox.value = subType;
-            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_"); // Menambahkan subType ke ID
+            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_"); 
 
             var label = document.createElement("label");
             label.className = "form-check-label";
@@ -96,13 +96,6 @@ function createCheckboxes(data) {
 
             // Menambahkan subType ke dalam array
             subTypesArray.push(subType);
-        });
-
-        // Menampilkan typeId, typeName, dan subTypes sebagai array
-        console.log({
-            typeId: action.TypeId,
-            typeName: action.TypeName,
-            subTypes: subTypesArray
         });
 
         container.appendChild(actionDiv);
