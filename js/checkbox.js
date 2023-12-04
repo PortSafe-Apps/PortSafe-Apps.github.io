@@ -80,7 +80,7 @@ function createCheckboxes(data) {
             var checkbox = document.createElement("input");
             checkbox.className = "form-check-input";
             checkbox.type = "checkbox";
-            checkbox.name = action.TypeId;
+            checkbox.name = action.TypeName;
             checkbox.value = subType;
             checkbox.id = action.TypeId 
 
