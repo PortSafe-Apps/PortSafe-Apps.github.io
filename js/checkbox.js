@@ -74,22 +74,22 @@ function createCheckboxes(data) {
         action.SubTypes.forEach(function (subType) {
             var checkboxContainer = document.createElement("div");  // Container for checkbox and label
             checkboxContainer.className = "form-check";  // Updated class name
-
+        
             var checkbox = document.createElement("input");
             checkbox.className = "form-check-input";
             checkbox.type = "checkbox";
-            checkbox.name = action.TypeName;
+            checkbox.name = action.TypeName; // Remove this line
             checkbox.value = subType;
-            checkbox.id = action.TypeName + "_" + subType.replace(/\s+/g, "_");
-
+            checkbox.id = action.TypeId + "_" + subType.replace(/\s+/g, "_"); // Updated this line
+        
             var label = document.createElement("label");
             label.className = "form-check-label"; // Optional: Bootstrap class for form-check label
             label.htmlFor = checkbox.id;
             label.appendChild(document.createTextNode(subType));  // Added space before SubTypeName
-
+        
             checkboxContainer.appendChild(checkbox);
             checkboxContainer.appendChild(label);
-
+        
             actionDiv.appendChild(checkboxContainer);
         });
 
