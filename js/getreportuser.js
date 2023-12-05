@@ -12,6 +12,7 @@ function getTokenFromCookies(cookieName) {
 function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
     reportContainer.innerHTML = '';
+    console.log('Displaying data:', reportData);
     if (reportData && reportData.length > 0) {
         reportData.forEach((report) => {
             const newCard = document.createElement('div');
