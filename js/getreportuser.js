@@ -1,12 +1,12 @@
+// script.js
+
 async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
   
     if (!token) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Error',
-        text: 'Kamu belum login.',
-      });
+      // Menampilkan pesan langsung di dalam elemen dengan ID tertentu
+      const errorMessageContainer = document.getElementById('errorMessageContainer');
+      errorMessageContainer.innerHTML = '<p class="error-message">Authentication Error: Kamu belum login.</p>';
       return;
     }
   
@@ -28,11 +28,9 @@ async function getUserReportWithToken() {
       if (data.status === true) {
         displayReportData(data.data);
       } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Error',
-          text: data.message,
-        });
+        // Menampilkan pesan langsung di dalam elemen dengan ID tertentu
+        const errorMessageContainer = document.getElementById('errorMessageContainer');
+        errorMessageContainer.innerHTML = `<p class="error-message">Error: ${data.message}</p>`;
       }
     } catch (error) {
       console.error('Error:', error);
