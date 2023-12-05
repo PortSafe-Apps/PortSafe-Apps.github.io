@@ -47,47 +47,46 @@ async function getUserReportWithToken() {
   
   function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
-
-    console.log("Report Data:", reportData);
-  
     // Menghapus semua elemen anak di dalam reportContainer
     reportContainer.innerHTML = '';
   
+    // Menghapus semua elemen anak di dalam reportContainer
+    reportContainer.innerHTML = '';
+
     if (reportData && reportData.length > 0) {
-      reportData.forEach((report) => {
-        const newCard = document.createElement('div');
-        newCard.className = 'card timeline-card bg-dark';
-        newCard.innerHTML = `
-          <div class="card-body">
-            <div class="d-flex justify-content-between">
-              <div class="timeline-text mb-2">
-                <h6 class="element-heading fw-bolder">${report.reportid}</h6>
-                <span>${report.location.locationName}</span>
-              </div>
-              <div class="timeline-text mb-2">
-                <span class="badge mb-2 rounded-pill bg-dark">${report.date}</span>
-              </div>
-            </div>
-            <div class="divider mt-0"></div>
-            <div class="text-content mb-2">
-              <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
-              <div class="timeline-tags">
-                ${report.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">#${action.typeName}</span>`).join('')}
-              </div>
-            </div>
-            <div class="text-content mb-2">
-              <h6 class="mb-0">Identitas Pengawas</h6>
-              <p><span>${report.user.nama}</span> <br> <span>${report.user.jabatan}</span></p>
-            </div>
-            <!-- Tambahan informasi lainnya sesuai kebutuhan -->
-          </div>
-        `;
-  
-        // Menambahkan card ke dalam reportContainer
-        reportContainer.appendChild(newCard);
-      });
+        reportData.forEach((report) => {
+            const newCard = document.createElement('div');
+            newCard.className = 'card timeline-card bg-dark';
+            newCard.innerHTML = `
+                <div class="card-body">
+                    <div class="d-flex justify-content-between">
+                        <div class="timeline-text mb-2">
+                            <h6 class="element-heading fw-bolder">${report.reportid}</h6>
+                            <span>${report.location.locationName}</span>
+                        </div>
+                        <div class="timeline-text mb-2">
+                            <span class="badge mb-2 rounded-pill bg-dark">${report.date}</span>
+                        </div>
+                    </div>
+                    <div class="divider mt-0"></div>
+                    <div class="text-content mb-2">
+                        <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
+                        <div class="timeline-tags">
+                            ${report.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">#${action.typeName}</span>`).join('')}
+                        </div>
+                    </div>
+                    <div class="text-content mb-2">
+                        <h6 class="mb-0">Pengawas</h6>
+                        <p><span>${report.user.nama}</span> <br> <span>${report.user.jabatan}</span></p>
+                    </div>
+                    <!-- Tambahan informasi lainnya sesuai kebutuhan -->
+                </div>
+            `;
+
+            // Menambahkan card ke dalam reportContainer
+            reportContainer.appendChild(newCard);
+        });
     } else {
-        console.warn("Data report kosong atau tidak ditemukan");
         reportContainer.innerHTML = '<p>No report data found.</p>';
     }
   }

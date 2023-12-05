@@ -1,225 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="description" content="PortSafe+ - PWA Mobile K3 observation reporting application">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="theme-color" content="#4948AC">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black">
-    <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <!-- Title -->
-    <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap" rel="stylesheet">
-    <!-- Favicon -->
-    <link rel="icon" href="/img/core-img/favicon.ico">
-    <link rel="apple-touch-icon" href="/img/icons/icon-96x96.png">
-    <link rel="apple-touch-icon" sizes="152x152" href="/img/icons/icon-152x152.png">
-    <link rel="apple-touch-icon" sizes="167x167" href="/img/icons/icon-167x167.png">
-    <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/icon-180x180.png">
-    <!-- CSS Libraries -->
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/bootstrap-icons.css">
-    <link rel="stylesheet" href="/css/tiny-slider.css">
-    <link rel="stylesheet" href="/css/baguetteBox.min.css">
-    <link rel="stylesheet" href="/css/rangeslider.css">
-    <link rel="stylesheet" href="/css/vanilla-dataTables.min.css">
-    <link rel="stylesheet" href="/css/apexcharts.css">
-    <!-- Core Stylesheet -->
-    <link rel="stylesheet" href="/style.css">
-    <!-- Web App Manifest -->
-    <link rel="manifest" href="/manifest.json">
-  </head>
-  <body>
-    <!-- Preloader -->
-    <div id="preloader">
-      <div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
-    </div>
-    <div class="internet-connection-status" id="internetStatus"></div>
-    <!-- Header Area -->
-    <div class="header-area" id="headerArea">
-      <div class="container">
-        <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
-          <!-- Logo Wrapper -->
-          <div class="logo-wrapper"><a href="./beranda.html"><img src="/img/core-img/logo.png" alt=""></a></div>
-          <!-- Navbar Toggler -->
-          <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#affanOffcanvas" aria-controls="affanOffcanvas"><span class="d-block"></span><span class="d-block"></span><span class="d-block"></span></div>
-        </div>
-        <!-- # Header Five Layout End -->
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="PortSafe+ - PWA Mobile K3 observation reporting application">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="theme-color" content="#4948AC">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+  <!-- Title -->
+  <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
+    rel="stylesheet">
+  <!-- Favicon -->
+  <link rel="icon" href="/img/core-img/favicon.ico">
+  <link rel="apple-touch-icon" href="/img/icons/icon-96x96.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/img/icons/icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/img/icons/icon-167x167.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/img/icons/icon-180x180.png">
+  <!-- CSS Libraries -->
+  <link rel="stylesheet" href="/css/bootstrap.min.css">
+  <link rel="stylesheet" href="/css/bootstrap-icons.css">
+  <link rel="stylesheet" href="/css/tiny-slider.css">
+  <link rel="stylesheet" href="/css/baguetteBox.min.css">
+  <link rel="stylesheet" href="/css/rangeslider.css">
+  <link rel="stylesheet" href="/css/vanilla-dataTables.min.css">
+  <link rel="stylesheet" href="/css/apexcharts.css">
+  <!-- Core Stylesheet -->
+  <link rel="stylesheet" href="/style.css">
+  <!-- Web App Manifest -->
+  <link rel="manifest" href="/manifest.json">
+</head>
+
+<body>
+  <!-- Preloader -->
+  <div id="preloader">
+    <div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
+  </div>
+  <div class="internet-connection-status" id="internetStatus"></div>
+  <!-- Header Area -->
+  <div class="header-area" id="headerArea">
+    <div class="container">
+      <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
+        <!-- Logo Wrapper -->
+        <div class="logo-wrapper"><a href="./beranda.html"><img src="/img/core-img/logo.png" alt=""></a></div>
+        <!-- Navbar Toggler -->
+        <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#affanOffcanvas"
+          aria-controls="affanOffcanvas"><span class="d-block"></span><span class="d-block"></span><span
+            class="d-block"></span></div>
       </div>
+      <!-- # Header Five Layout End -->
     </div>
-    <!-- # Sidenav Left -->
-    <!-- Offcanvas -->
-    <div class="offcanvas offcanvas-start" id="affanOffcanvas" data-bs-scroll="true" tabindex="-1" aria-labelledby="affanOffcanvsLabel">
-      <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-      <div class="offcanvas-body p-0">
-        <!-- Side Nav Wrapper -->
-        <div class="sidenav-wrapper">
-          <!-- Sidenav Profile -->
-          <div class="sidenav-profile bg-gradient">
-            <div class="sidenav-style1"></div>
-            <!-- User Thumbnail -->
-            <div class="user-profile"><img src="/img/bg-img/2.jpg" alt=""></div>
-            <!-- User Info -->
-            <div class="user-info">
-              <h6 class="user-name mb-0">Fahira</h6><span>Student, University of Logistics & International Business</span>
-            </div>
-          </div>
-          <!-- Sidenav Nav -->
-          <ul class="sidenav-nav ps-0">
-            <li><a href="/pages/user/beranda.html"><i class="bi bi-house-door"></i>Home</a></li>
-            <li><a href="elements.html"><i class="bi bi-folder2-open"></i>Elements<span class="badge bg-danger rounded-pill ms-2">220+</span></a></li>
-            <li><a href="pages.html"><i class="bi bi-collection"></i>Pages<span class="badge bg-success rounded-pill ms-2">100+</span></a></li>
-            <li><a href="settings.html"><i class="bi bi-gear"></i>Settings</a></li>
-            <li><a href="#" id="logoutButton" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
-          </ul>
-          <!-- Social Info -->
-          <div class="social-info-wrap"><a href="#"><i class="bi bi-facebook"></i></a><a href="#"><i class="bi bi-twitter"></i></a><a href="#"><i class="bi bi-linkedin"></i></a></div>
-          <!-- Copyright Info -->
-          <div class="copyright-info">
-            <p>2023 &copy; Made by<a href="#">Fahira</a></p>
+  </div>
+  <!-- # Sidenav Left -->
+  <!-- Offcanvas -->
+  <div class="offcanvas offcanvas-start" id="affanOffcanvas" data-bs-scroll="true" tabindex="-1"
+    aria-labelledby="affanOffcanvsLabel">
+    <button class="btn-close btn-close-white text-reset" type="button" data-bs-dismiss="offcanvas"
+      aria-label="Close"></button>
+    <div class="offcanvas-body p-0">
+      <!-- Side Nav Wrapper -->
+      <div class="sidenav-wrapper">
+        <!-- Sidenav Profile -->
+        <div class="sidenav-profile bg-gradient">
+          <div class="sidenav-style1"></div>
+          <!-- User Thumbnail -->
+          <div class="user-profile"><img src="/img/bg-img/2.jpg" alt=""></div>
+          <!-- User Info -->
+          <div class="user-info">
+            <h6 class="user-name mb-0">Fahira</h6><span>Student, University of Logistics & International Business</span>
           </div>
         </div>
+        <!-- Sidenav Nav -->
+        <ul class="sidenav-nav ps-0">
+          <li><a href="/pages/user/beranda.html"><i class="bi bi-house-door"></i>Home</a></li>
+          <li><a href="elements.html"><i class="bi bi-folder2-open"></i>Elements<span
+                class="badge bg-danger rounded-pill ms-2">220+</span></a></li>
+          <li><a href="pages.html"><i class="bi bi-collection"></i>Pages<span
+                class="badge bg-success rounded-pill ms-2">100+</span></a></li>
+          <li><a href="settings.html"><i class="bi bi-gear"></i>Settings</a></li>
+          <li><a href="#" id="logoutButton" onclick="logout()"><i class="bi bi-box-arrow-right"></i>Logout</a></li>
+        </ul>
+        <!-- Social Info -->
+        <div class="social-info-wrap"><a href="#"><i class="bi bi-facebook"></i></a><a href="#"><i
+              class="bi bi-twitter"></i></a><a href="#"><i class="bi bi-linkedin"></i></a></div>
+        <!-- Copyright Info -->
+        <div class="copyright-info">
+          <p>2023 &copy; Made by<a href="#">Fahira</a></p>
+        </div>
       </div>
     </div>
-    <div class="page-content-wrapper">
-      <!-- Welcome Toast -->
-      <div class="toast toast-autohide custom-toast-1 toast-success home-page-toast" role="alert" aria-live="assertive" aria-atomic="true" data-bs-delay="7000" data-bs-autohide="true">
-        <div class="toast-body">
-          <svg class="bi bi-bookmark-check text-white" width="30" height="30" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z"></path>
-            <path fill-rule="evenodd" d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z"></path>
-          </svg>
-          <div class="toast-text ms-3 me-2">
-            <p class="mb-1 text-white">Welcome to PortSafe+!</p><small class="d-block">Click the "Add to Home Screen" button &amp; enjoy it like an app.</small>
-          </div>
+  </div>
+  <div class="page-content-wrapper">
+    <!-- Welcome Toast -->
+    <div class="toast toast-autohide custom-toast-1 toast-success home-page-toast" role="alert" aria-live="assertive"
+      aria-atomic="true" data-bs-delay="7000" data-bs-autohide="true">
+      <div class="toast-body">
+        <svg class="bi bi-bookmark-check text-white" width="30" height="30" viewBox="0 0 16 16" fill="currentColor"
+          xmlns="http://www.w3.org/2000/svg">
+          <path fill-rule="evenodd"
+            d="M2 2a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v13.5a.5.5 0 0 1-.777.416L8 13.101l-5.223 2.815A.5.5 0 0 1 2 15.5V2zm2-1a1 1 0 0 0-1 1v12.566l4.723-2.482a.5.5 0 0 1 .554 0L13 14.566V2a1 1 0 0 0-1-1H4z">
+          </path>
+          <path fill-rule="evenodd"
+            d="M10.854 5.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 1 1 .708-.708L7.5 7.793l2.646-2.647a.5.5 0 0 1 .708 0z">
+          </path>
+        </svg>
+        <div class="toast-text ms-3 me-2">
+          <p class="mb-1 text-white">Welcome to PortSafe+!</p><small class="d-block">Click the "Add to Home Screen"
+            button &amp; enjoy it like an app.</small>
         </div>
-        <button class="btn btn-close btn-close-white position-absolute p-1" type="button" data-bs-dismiss="toast" aria-label="Close"></button>
       </div>
-      <div class="tiny-slider-one-wrapper">
-        <div class="tiny-slider-one">
-          <!-- Single Hero Slide -->
-          <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/31.jpg')">
-              <div class="h-100 d-flex align-items-center text-center">
-                <div class="container">
-                  <h3 class="text-white mb-1">Build with Bootstrap 5</h3>
-                  <p class="text-white mb-4">Build fast, responsive sites with Bootstrap.</p><a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Single Hero Slide -->
-          <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
-              <div class="h-100 d-flex align-items-center text-center">
-                <div class="container">
-                  <h3 class="text-white mb-1">Vanilla JavaScript</h3>
-                  <p class="text-white mb-4">The whole code is written with vanilla JS.</p><a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Single Hero Slide -->
-          <div> 
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/32.jpg')">
-              <div class="h-100 d-flex align-items-center text-center">
-                <div class="container">
-                  <h3 class="text-white mb-1">PWA Ready</h3>
-                  <p class="text-white mb-4">Click the "Add to Home Screen" button &amp; <br> enjoy it like an app.</p><a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Single Hero Slide -->
-          <div> 
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
-              <div class="h-100 d-flex align-items-center text-center">
-                <div class="container">
-                  <h3 class="text-white mb-1">Lots of Elements &amp; Pages</h3>
-                  <p class="text-white mb-4">Create your website in days, not months.</p><a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                </div>
-              </div>
-            </div>
-          </div>
-          <!-- Single Hero Slide -->
-          <div>
-            <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/1.jpg')">
-              <div class="h-100 d-flex align-items-center text-center">
-                <div class="container">
-                  <h3 class="text-white mb-1">Dark &amp; RTL Ready</h3>
-                  <p class="text-white mb-4">You can use the Dark or <br> RTL mode of your choice.</p><a class="btn btn-creative btn-warning" href="#">Buy Now</a>
-                </div>
+      <button class="btn btn-close btn-close-white position-absolute p-1" type="button" data-bs-dismiss="toast"
+        aria-label="Close"></button>
+    </div>
+    <div class="tiny-slider-one-wrapper">
+      <div class="tiny-slider-one">
+        <!-- Single Hero Slide -->
+        <div>
+          <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/31.jpg')">
+            <div class="h-100 d-flex align-items-center text-center">
+              <div class="container">
+                <h3 class="text-white mb-1">Build with Bootstrap 5</h3>
+                <p class="text-white mb-4">Build fast, responsive sites with Bootstrap.</p><a
+                  class="btn btn-creative btn-warning" href="#">Buy Now</a>
               </div>
             </div>
           </div>
         </div>
-      </div>
-        
-      <div class="pt-3"></div>
-      <div class="container">
-        <h1 class="element-heading fw-bold">Statistik K3</h1>
-      </div>
-      <div class="pt-3"></div>
-      <div class="container">
-        <h1 class="element-heading fw-bold">Laporan Terbaru</h1>
-        <div class="container" id="reportContainer">
-      </div>
-    </div>
-      </div>
-    </div>
-    <!-- Footer Nav -->
-    <div class="footer-nav-area" id="footerNav">
-      <div class="container px-0">
-        <div class="footer-nav position-relative">
-          <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
-            <li>
-              <a href="/pages/user/beranda.html">
-                <svg class="bi bi-house" width="20" height="20" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd" d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z"></path>
-                  <path fill-rule="evenodd" d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z"></path>
-                </svg><span>Home</span></a></li>
-                <li>
-                  <a href="/pages/user/addreport.html"  id="tombolBuatLaporanBaru">
-                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg" viewBox="0 0 16 16">
-                          <path fill-rule="evenodd" d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2"/>
-                      </svg>
-                      <span>Tambah</span>
-                  </a>
-              </li>
-              <li>
-                <a href="settings.html">
-                  <svg class="bi bi-graph-up" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"  xmlns="http://www.w3.org/2000/svg" >
-                    <path fill-rule="evenodd" d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z"/>
-                  </svg>
-                  <span>Laporan</span>
-                </a>
-              </li>
-          </ul>
+        <!-- Single Hero Slide -->
+        <div>
+          <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
+            <div class="h-100 d-flex align-items-center text-center">
+              <div class="container">
+                <h3 class="text-white mb-1">Vanilla JavaScript</h3>
+                <p class="text-white mb-4">The whole code is written with vanilla JS.</p><a
+                  class="btn btn-creative btn-warning" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Single Hero Slide -->
+        <div>
+          <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/32.jpg')">
+            <div class="h-100 d-flex align-items-center text-center">
+              <div class="container">
+                <h3 class="text-white mb-1">PWA Ready</h3>
+                <p class="text-white mb-4">Click the "Add to Home Screen" button &amp; <br> enjoy it like an app.</p><a
+                  class="btn btn-creative btn-warning" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Single Hero Slide -->
+        <div>
+          <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/33.jpg')">
+            <div class="h-100 d-flex align-items-center text-center">
+              <div class="container">
+                <h3 class="text-white mb-1">Lots of Elements &amp; Pages</h3>
+                <p class="text-white mb-4">Create your website in days, not months.</p><a
+                  class="btn btn-creative btn-warning" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- Single Hero Slide -->
+        <div>
+          <div class="single-hero-slide bg-overlay" style="background-image: url('img/bg-img/1.jpg')">
+            <div class="h-100 d-flex align-items-center text-center">
+              <div class="container">
+                <h3 class="text-white mb-1">Dark &amp; RTL Ready</h3>
+                <p class="text-white mb-4">You can use the Dark or <br> RTL mode of your choice.</p><a
+                  class="btn btn-creative btn-warning" href="#">Buy Now</a>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
-    <!-- All JavaScript Files -->
-    <script src="/js/logout.js" type="module"></script>
-    <script src="/js/numreport.js" type="module"></script>
-    <script src="/js/getreportuser.js" type="module"></script>
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/slideToggle.min.js"></script>
-    <script src="/js/internet-status.js"></script>
-    <script src="/js/tiny-slider.js"></script>
-    <script src="/js/baguetteBox.min.js"></script>
-    <script src="/js/countdown.js"></script>
-    <script src="/js/rangeslider.min.js"></script>
-    <script src="/js/vanilla-dataTables.min.js"></script>
-    <script src="/js/index.js"></script>
-    <script src="/js/imagesloaded.pkgd.min.js"></script>
-    <script src="/js/isotope.pkgd.min.js"></script>
-    <script src="/js/dark-rtl.js"></script>
-    <script src="/js/active.js"></script>
-    <!-- PWA -->
-    <script src="/js/pwa.js"></script>
-  </body>
+
+    <div class="pt-3"></div>
+    <div class="container">
+      <h1 class="element-heading fw-bold">Statistik K3</h1>
+    </div>
+    <div class="pt-3"></div>
+    <div class="container">
+      <h1 class="element-heading fw-bold">Laporan Terbaru</h1>
+    </div>
+    <div class="container" id="reportContainer"></div>
+  </div>
+  </div>
+  <!-- Footer Nav -->
+  <div class="footer-nav-area" id="footerNav">
+    <div class="container px-0">
+      <div class="footer-nav position-relative">
+        <ul class="h-100 d-flex align-items-center justify-content-between ps-0">
+          <li>
+            <a href="/pages/user/beranda.html">
+              <svg class="bi bi-house" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                  d="M2 13.5V7h1v6.5a.5.5 0 0 0 .5.5h9a.5.5 0 0 0 .5-.5V7h1v6.5a1.5 1.5 0 0 1-1.5 1.5h-9A1.5 1.5 0 0 1 2 13.5zm11-11V6l-2-2V2.5a.5.5 0 0 1 .5-.5h1a.5.5 0 0 1 .5.5z">
+                </path>
+                <path fill-rule="evenodd"
+                  d="M7.293 1.5a1 1 0 0 1 1.414 0l6.647 6.646a.5.5 0 0 1-.708.708L8 2.207 1.354 8.854a.5.5 0 1 1-.708-.708L7.293 1.5z">
+                </path>
+              </svg><span>Home</span></a>
+          </li>
+          <li>
+            <a href="/pages/user/addreport.html" id="tombolBuatLaporanBaru">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus-lg"
+                viewBox="0 0 16 16">
+                <path fill-rule="evenodd"
+                  d="M8 2a.5.5 0 0 1 .5.5v5h5a.5.5 0 0 1 0 1h-5v5a.5.5 0 0 1-1 0v-5h-5a.5.5 0 0 1 0-1h5v-5A.5.5 0 0 1 8 2" />
+              </svg>
+              <span>Tambah</span>
+            </a>
+          </li>
+          <li>
+            <a href="settings.html">
+              <svg class="bi bi-graph-up" width="20" height="20" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                  d="M0 0h1v15h15v1H0zm14.817 3.113a.5.5 0 0 1 .07.704l-4.5 5.5a.5.5 0 0 1-.74.037L7.06 6.767l-3.656 5.027a.5.5 0 0 1-.808-.588l4-5.5a.5.5 0 0 1 .758-.06l2.609 2.61 4.15-5.073a.5.5 0 0 1 .704-.07Z" />
+              </svg>
+              <span>Laporan</span>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <!-- All JavaScript Files -->
+  <script src="/js/logout.js" type="module"></script>
+  <script src="/js/numreport.js" type="module"></script>
+  <script src="/js/getreportuser.js" type="module"></script>
+  <script src="/js/bootstrap.bundle.min.js"></script>
+  <script src="/js/slideToggle.min.js"></script>
+  <script src="/js/internet-status.js"></script>
+  <script src="/js/tiny-slider.js"></script>
+  <script src="/js/baguetteBox.min.js"></script>
+  <script src="/js/countdown.js"></script>
+  <script src="/js/rangeslider.min.js"></script>
+  <script src="/js/vanilla-dataTables.min.js"></script>
+  <script src="/js/index.js"></script>
+  <script src="/js/imagesloaded.pkgd.min.js"></script>
+  <script src="/js/isotope.pkgd.min.js"></script>
+  <script src="/js/dark-rtl.js"></script>
+  <script src="/js/active.js"></script>
+  <!-- PWA -->
+  <script src="/js/pwa.js"></script>
+</body>
+
 </html>
