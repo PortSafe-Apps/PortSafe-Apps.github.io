@@ -1,4 +1,5 @@
-function getTokenFromCookies(cookieName) {
+ // Fungsi untuk mendapatkan token dari cookie
+ function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
@@ -9,6 +10,48 @@ function getTokenFromCookies(cookieName) {
     return null;
 }
 
+// Fungsi untuk mendapatkan laporan pengguna dengan token
+async function getUserReportWithToken() {
+    const token = getTokenFromCookies('Login');
+
+    if (!token) {
+        alert("Token tidak ditemukan");
+        return;
+    }
+
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
+
+    const myHeaders = new Headers();
+    myHeaders.append('Login', token);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+    };
+
+    try {
+        const response = await fetch(targetURL, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`Server response not ok: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        console.log('Server response:', data);
+
+        if (data.status === true) {
+            displayReportData(data.data);
+        } else {
+            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+        }
+    } catch (error) {
+        console.error('Error in getUserReportWithToken:', error);
+    }
+}
+
+// Fungsi untuk menampilkan data laporan ke dalam elemen HTML
 function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
     reportContainer.innerHTML = '';
@@ -47,6 +90,7 @@ function displayReportData(reportData) {
                 reportContainer.appendChild(newCard);
             });
         } else {
+            console.error('Data tidak dapat ditemukan atau tidak sesuai dengan format yang diharapkan');
             reportContainer.innerHTML = '<p>No report data found.</p>';
         }
     } catch (error) {
@@ -54,48 +98,11 @@ function displayReportData(reportData) {
     }
 }
 
-// Fungsi untuk mendapatkan laporan pengguna dengan token
-async function getUserReportWithToken() {
-    const token = getTokenFromCookies('Login');
-
-    if (!token) {
-        alert("Token tidak ditemukan");
-        return;
-    }
-
-    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
-
-    const myHeaders = new Headers();
-    myHeaders.append('Login', token);
-
-    const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        redirect: 'follow',
-    };
-
-    try {
-        const response = await fetch(targetURL, requestOptions);
-
-        if (!response.ok) {
-            throw new Error(`Server response not ok: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-
-        console.log('Response:', data);
-        if (data.status === true) {
-            console.log('Data ditemukan, akan ditampilkan.');
-            displayReportData(data.data);
-        } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-        }
-    } catch (error) {
-        console.error('Error in getUserReportWithToken:', error);
-    }
-}
-
 // Panggil fungsi setelah DOM telah sepenuhnya dimuat
 document.addEventListener('DOMContentLoaded', async function () {
-    await getUserReportWithToken();
+    try {
+        await getUserReportWithToken();
+    } catch (error) {
+        console.error('Error during document load:', error);
+    }
 });
