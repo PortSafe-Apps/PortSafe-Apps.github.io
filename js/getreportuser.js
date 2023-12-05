@@ -1,16 +1,4 @@
- // Fungsi untuk mendapatkan token dari cookie
- function getTokenFromCookies(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === cookieName) {
-            return value;
-        }
-    }
-    return null;
-}
-
-// Fungsi untuk mendapatkan laporan pengguna dengan token
+ // Fungsi untuk mendapatkan laporan pengguna dengan token
 async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
 
@@ -32,11 +20,6 @@ async function getUserReportWithToken() {
 
     try {
         const response = await fetch(targetURL, requestOptions);
-
-        if (!response.ok) {
-            throw new Error(`Server response not ok: ${response.statusText}`);
-        }
-
         const data = await response.json();
 
         console.log('Server response:', data);
@@ -50,6 +33,20 @@ async function getUserReportWithToken() {
         console.error('Error in getUserReportWithToken:', error);
     }
 }
+
+ 
+ // Fungsi untuk mendapatkan token dari cookie
+ function getTokenFromCookies(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            return value;
+        }
+    }
+    return null;
+}
+
 
 // Fungsi untuk menampilkan data laporan ke dalam elemen HTML
 function displayReportData(reportData) {
@@ -98,12 +95,4 @@ function displayReportData(reportData) {
     }
 }
 
-//bismillah
-// Panggil fungsi setelah DOM telah sepenuhnya dimuat
-document.addEventListener('DOMContentLoaded', async function () {
-    try {
-        await getUserReportWithToken();
-    } catch (error) {
-        console.error('Error during document load:', error);
-    }
-});
+getUserReportWithToken();
