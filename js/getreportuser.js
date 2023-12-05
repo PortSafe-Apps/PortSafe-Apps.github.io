@@ -1,5 +1,3 @@
-// script.js
-
 async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
   
@@ -15,7 +13,7 @@ async function getUserReportWithToken() {
     myHeaders.append('Login', token);
   
     const requestOptions = {
-      method: 'GET',
+      method: 'POST',
       headers: myHeaders,
       redirect: 'follow',
     };
@@ -27,7 +25,7 @@ async function getUserReportWithToken() {
       if (data.status === true) {
         displayReportData(data.data);
       } else {
-        alert(data.message);
+
       }
     } catch (error) {
       console.error('Error:', error);
