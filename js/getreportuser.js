@@ -91,16 +91,10 @@ function createReportCard(report) {
     userDiv.className = 'text-content mb-2';
     const userHeading = document.createElement('h6');
     userHeading.className = 'mb-0';
-    userHeading.textContent = 'User Information';
+    userHeading.textContent = 'Pengawas';
 
     const userData = document.createElement('p');
-    const userName = document.createElement('span');
-    userName.textContent = report.User.nama;
-    const userRole = document.createElement('span');
-    userRole.textContent = report.User.jabatan;
-    userData.appendChild(userName);
-    userData.appendChild(document.createElement('br'));
-    userData.appendChild(userRole);
+    userData.textContent = `${report.User.nama}, ${report.User.jabatan}`;
 
     userDiv.appendChild(userHeading);
     userDiv.appendChild(userData);
