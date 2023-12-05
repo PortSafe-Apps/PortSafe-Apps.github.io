@@ -111,8 +111,6 @@ function createReportCard(report) {
     userDiv.appendChild(userHeading);
     userDiv.appendChild(userData);
 
-    // Continue creating the rest of the HTML structure...
-
     cardBody.appendChild(headingDiv);
     cardBody.appendChild(userDiv);
 
