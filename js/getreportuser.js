@@ -1,23 +1,23 @@
 async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
-  
+
     if (!token) {
         alert("token tidak ditemukan");
         return;
-      }
-    
-  
+    }
+
+
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
-  
+
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
-  
+
     const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      redirect: 'follow',
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
     };
-  
+
     try {
         const response = await fetch(targetURL, requestOptions);
         const data = await response.json();
@@ -25,25 +25,25 @@ async function getUserReportWithToken() {
         if (data.status === true) {
             displayReportData(data.data);
         } else {
-            console.error("Status bukan true:", data.status);
+            alert(data.message);
         }
     } catch (error) {
         console.error('Error:', error);
     }
 }
-  
-  function getTokenFromCookies(cookieName) {
+
+function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=');
-      if (name === cookieName) {
-        return value;
-      }
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            return value;
+        }
     }
     return null;
-  }
-  
-  function displayReportData(reportData) {
+}
+
+function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
     reportContainer.innerHTML = '';
     if (reportData && reportData.length > 0) {
@@ -80,7 +80,6 @@ async function getUserReportWithToken() {
     } else {
         reportContainer.innerHTML = '<p>No report data found.</p>';
     }
-  }
-  
-  getUserReportWithToken();
-  
+}
+
+getUserReportWithToken();
