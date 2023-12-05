@@ -1,37 +1,3 @@
-async function getUserReportWithToken() {
-    const token = getTokenFromCookies('Login');
-
-    if (!token) {
-        alert("token tidak ditemukan");
-        return;
-    }
-
-
-    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
-
-    const myHeaders = new Headers();
-    myHeaders.append('Login', token);
-
-    const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        redirect: 'follow',
-    };
-
-    try {
-        const response = await fetch(targetURL, requestOptions);
-        const data = await response.json();
-
-        if (data.status === true) {
-            displayReportData(data.data);
-        } else {
-            console.error('data tidak dapat ditemukan');  
-        }
-    } catch (error) {
-        console.error('Error:', error);
-    }
-}
-
 function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
@@ -82,7 +48,40 @@ function displayReportData(reportData) {
     }
 }
 
+async function getUserReportWithToken() {
+    const token = getTokenFromCookies('Login');
+
+    if (!token) {
+        alert("Token tidak ditemukan");
+        return;
+    }
+
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
+
+    const myHeaders = new Headers();
+    myHeaders.append('Login', token);
+
+    const requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        redirect: 'follow',
+    };
+
+    try {
+        const response = await fetch(targetURL, requestOptions);
+        const data = await response.json();
+
+        if (data.status === true) {
+            displayReportData(data.data);
+        } else {
+            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+        }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+}
+
+// Panggil fungsi setelah DOM telah sepenuhnya dimuat
 document.addEventListener('DOMContentLoaded', function () {
     getUserReportWithToken();
 });
-
