@@ -19,18 +19,20 @@ async function getUserReportWithToken() {
     };
   
     try {
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
-  
-      if (data.status === true) {
-        displayReportData(data.data);
-      } else {
+        const response = await fetch(targetURL, requestOptions);
+        const data = await response.json();
 
-      }
+        console.log("Response Data:", data);
+
+        if (data.status === true) {
+            displayReportData(data.data);
+        } else {
+            console.error("Status bukan true:", data.status);
+        }
     } catch (error) {
-      console.error('Error:', error);
+        console.error('Error:', error);
     }
-  }
+}
   
   function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
@@ -45,6 +47,8 @@ async function getUserReportWithToken() {
   
   function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
+
+    console.log("Report Data:", reportData);
   
     // Menghapus semua elemen anak di dalam reportContainer
     reportContainer.innerHTML = '';
@@ -83,7 +87,8 @@ async function getUserReportWithToken() {
         reportContainer.appendChild(newCard);
       });
     } else {
-      reportContainer.innerHTML = '<p>No report data found.</p>';
+        console.warn("Data report kosong atau tidak ditemukan");
+        reportContainer.innerHTML = '<p>No report data found.</p>';
     }
   }
   
