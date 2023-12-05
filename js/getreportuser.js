@@ -25,7 +25,7 @@ async function getUserReportWithToken() {
         if (data.status === true) {
             displayReportData(data.data);
         } else {
-            alert(data.message);
+            console.error('data tidak dapat ditemukan');  
         }
     } catch (error) {
         console.error('Error:', error);
@@ -82,4 +82,7 @@ function displayReportData(reportData) {
     }
 }
 
-getUserReportWithToken();
+document.addEventListener('DOMContentLoaded', function () {
+    getUserReportWithToken();
+});
+

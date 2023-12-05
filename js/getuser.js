@@ -1,6 +1,5 @@
-// Function to make the API request with the token
 async function getUserWithToken() {
-    const token = getTokenFromCookies('Login'); // Get the token dari cookies via parameter
+    const token = getTokenFromCookies('Login'); 
   
     if (!token) {
       alert("token tidak ditemukan");
@@ -9,7 +8,7 @@ async function getUserWithToken() {
   
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
   
-    // Set up headers with the token
+   
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
   
