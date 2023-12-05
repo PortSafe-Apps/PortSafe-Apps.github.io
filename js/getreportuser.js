@@ -4,11 +4,10 @@ async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
   
     if (!token) {
-      // Menampilkan pesan langsung di dalam elemen dengan ID tertentu
-      const errorMessageContainer = document.getElementById('errorMessageContainer');
-      errorMessageContainer.innerHTML = '<p class="error-message">Authentication Error: Kamu belum login.</p>';
-      return;
-    }
+        alert("token tidak ditemukan");
+        return;
+      }
+    
   
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
   
@@ -28,9 +27,7 @@ async function getUserReportWithToken() {
       if (data.status === true) {
         displayReportData(data.data);
       } else {
-        // Menampilkan pesan langsung di dalam elemen dengan ID tertentu
-        const errorMessageContainer = document.getElementById('errorMessageContainer');
-        errorMessageContainer.innerHTML = `<p class="error-message">Error: ${data.message}</p>`;
+        alert(data.message);
       }
     } catch (error) {
       console.error('Error:', error);
