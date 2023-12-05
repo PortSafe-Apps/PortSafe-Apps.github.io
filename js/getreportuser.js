@@ -117,6 +117,7 @@ function displayReports(reportsData, containerId) {
     const reportsContainer = document.getElementById(containerId);
 
     if (reportsData && reportsData.length > 0) {
+        reportsContainer.innerHTML = ''; // Clear existing content
         reportsData.forEach(report => {
             const reportCard = createReportCard(report);
             reportsContainer.appendChild(reportCard);
