@@ -23,7 +23,7 @@ async function getUserWithTokenAndDisplay() {
         const data = await response.json();
 
         if (data.status === true) {
-            displayReports(data.data, 'reportsContainer');
+            displayReports(data.data);
         } else {
             alert(data.message);
         }
@@ -44,6 +44,7 @@ function getTokenFromCookies(cookieName) {
     return null;
 }
 
+// Function to create a report card
 function createReportCard(report) {
     const card = document.createElement('div');
     card.className = 'card timeline-card bg-dark';
@@ -57,6 +58,7 @@ function createReportCard(report) {
     const timelineTextDiv = document.createElement('div');
     timelineTextDiv.className = 'timeline-text mb-2';
 
+    // Report ID and Location
     const reportIdHeading = document.createElement('h6');
     reportIdHeading.className = 'element-heading fw-bolder';
     reportIdHeading.textContent = report.Reportid;
@@ -64,10 +66,12 @@ function createReportCard(report) {
     const locationSpan = document.createElement('span');
     locationSpan.textContent = report.Location.LocationName;
 
+    // Date badge
     const dateBadge = document.createElement('span');
     dateBadge.className = 'badge mb-2 rounded-pill bg-dark';
     dateBadge.textContent = report.Date;
 
+    // TypeDangerousActions badges
     const typeDangerousActionsDiv = document.createElement('div');
     typeDangerousActionsDiv.className = 'timeline-tags';
 
@@ -80,6 +84,7 @@ function createReportCard(report) {
         });
     });
 
+    // Append elements to their respective parent elements
     timelineTextDiv.appendChild(reportIdHeading);
     timelineTextDiv.appendChild(locationSpan);
     timelineTextDiv.appendChild(dateBadge);
@@ -87,6 +92,7 @@ function createReportCard(report) {
 
     headingDiv.appendChild(timelineTextDiv);
 
+    // User information
     const userDiv = document.createElement('div');
     userDiv.className = 'text-content mb-2';
     const userHeading = document.createElement('h6');
@@ -107,8 +113,9 @@ function createReportCard(report) {
     return card;
 }
 
-function displayReports(reportsData, containerId) {
-    const reportsContainer = document.getElementById(containerId);
+// Function to display report data in the specified container
+function displayReports(reportsData) {
+    const reportsContainer = document.getElementById('reportsContainer');
 
     if (reportsData && reportsData.length > 0) {
         reportsContainer.innerHTML = ''; // Clear existing content
@@ -117,6 +124,7 @@ function displayReports(reportsData, containerId) {
             reportsContainer.appendChild(reportCard);
         });
     } else {
+        // Handle the case where no report data is found
         reportsContainer.innerHTML = '<p>No report data found</p>';
     }
 }
