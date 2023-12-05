@@ -47,12 +47,7 @@ async function getUserReportWithToken() {
   
   function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
-    // Menghapus semua elemen anak di dalam reportContainer
     reportContainer.innerHTML = '';
-  
-    // Menghapus semua elemen anak di dalam reportContainer
-    reportContainer.innerHTML = '';
-
     if (reportData && reportData.length > 0) {
         reportData.forEach((report) => {
             const newCard = document.createElement('div');
