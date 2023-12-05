@@ -22,12 +22,10 @@ async function getUserReportWithToken() {
         const response = await fetch(targetURL, requestOptions);
         const data = await response.json();
 
-        console.log("Response Data:", data);
-
         if (data.status === true) {
             displayReportData(data.data);
         } else {
-            console.error("Status bukan true:", data.status);
+            console.error("Status bukan true");
         }
     } catch (error) {
         console.error('Error:', error);
@@ -47,38 +45,25 @@ async function getUserReportWithToken() {
   
   function displayReportData(reportData) {
     const reportContainer = document.getElementById('reportContainer');
+
+    // Menghapus semua elemen anak di dalam reportContainer
     reportContainer.innerHTML = '';
+
     if (reportData && reportData.length > 0) {
         reportData.forEach((report) => {
             const newCard = document.createElement('div');
             newCard.className = 'card timeline-card bg-dark';
             newCard.innerHTML = `
                 <div class="card-body">
-                    <div class="d-flex justify-content-between">
-                        <div class="timeline-text mb-2">
-                            <h6 class="element-heading fw-bolder">${report.reportid}</h6>
-                            <span>${report.location.locationName}</span>
-                        </div>
-                        <div class="timeline-text mb-2">
-                            <span class="badge mb-2 rounded-pill bg-dark">${report.date}</span>
-                        </div>
-                    </div>
-                    <div class="divider mt-0"></div>
-                    <div class="text-content mb-2">
-                        <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
-                        <div class="timeline-tags">
-                            ${report.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">#${action.typeName}</span>`).join('')}
-                        </div>
-                    </div>
-                    <div class="text-content mb-2">
-                        <h6 class="mb-0">Pengawas</h6>
-                        <p><span>${report.user.nama}</span> <br> <span>${report.user.jabatan}</span></p>
-                    </div>
-                    <!-- Tambahan informasi lainnya sesuai kebutuhan -->
+                    <h6 class="element-heading fw-bolder">${report.reportid}</h6>
+                    <p>Lokasi: ${report.location.locationName}</p>
+                    <p>Tanggal: ${report.date}</p>
+                    <p>Jenis Ketidaksesuaian: ${report.typeDangerousActions.map(action => `#${action.typeName}`).join(', ')}</p>
+                    <p>Identitas Pengawas: ${report.user.nama} - ${report.user.jabatan}</p>
                 </div>
             `;
 
-            // Menambahkan card ke dalam reportContainer
+           
             reportContainer.appendChild(newCard);
         });
     } else {
@@ -86,6 +71,5 @@ async function getUserReportWithToken() {
     }
   }
   
-  // Panggil fungsi untuk mendapatkan dan menampilkan data report
   getUserReportWithToken();
   
