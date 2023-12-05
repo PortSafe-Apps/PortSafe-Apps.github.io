@@ -50,7 +50,8 @@ function displayReportData(reportData) {
 }
 
 // Fungsi untuk mendapatkan laporan pengguna dengan token
-function getUserReportWithToken() {
+// Fungsi untuk mendapatkan laporan pengguna dengan token
+async function getUserReportWithToken() {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
@@ -69,28 +70,28 @@ function getUserReportWithToken() {
         redirect: 'follow',
     };
 
-    fetch(targetURL, requestOptions)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Server response not ok: ${response.statusText}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Response:', data);
-            if (data.status === true) {
-                console.log('Data ditemukan, akan ditampilkan.');
-                displayReportData(data.data);
-            } else {
-                console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-            }
-        })
-        .catch(error => {
-            console.error('Error in getUserReportWithToken:', error);
-        });
+    try {
+        const response = await fetch(targetURL, requestOptions);
+
+        if (!response.ok) {
+            throw new Error(`Server response not ok: ${response.statusText}`);
+        }
+
+        const data = await response.json();
+
+        console.log('Response:', data);
+        if (data.status === true) {
+            console.log('Data ditemukan, akan ditampilkan.');
+            displayReportData(data.data);
+        } else {
+            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+        }
+    } catch (error) {
+        console.error('Error in getUserReportWithToken:', error);
+    }
 }
 
 // Panggil fungsi setelah DOM telah sepenuhnya dimuat
-document.addEventListener('DOMContentLoaded', function () {
-    getUserReportWithToken();
+document.addEventListener('DOMContentLoaded', async function () {
+    await getUserReportWithToken();
 });
