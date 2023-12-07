@@ -1,59 +1,60 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === cookieName) {
-      return value;
+  // Fungsi untuk mendapatkan token dari cookie
+  function getTokenFromCookies(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            return value;
+        }
     }
-  }
-  return null;
+    return null;
 }
 
 const getUserReportWithToken = async () => {
-  const token = getTokenFromCookies('Login');
-
-  if (!token) {
-    alert("Token tidak ditemukan");
-    return;
-  }
-
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
-
-  const myHeaders = new Headers();
-  myHeaders.append('Login', token);
-
-  const requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    redirect: 'follow',
+    const token = getTokenFromCookies('Login');
+  
+    if (!token) {
+      alert("Token tidak ditemukan");
+      return;
+    }
+  
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
+  
+    const myHeaders = new Headers();
+    myHeaders.append('Login', token);
+  
+    const requestOptions = {
+      method: 'POST',
+      headers: myHeaders,
+      redirect: 'follow',
+    };
+  
+    try {
+      const response = await fetch(targetURL, requestOptions);
+      const data = await response.json();
+  
+      if (data.status === 200) {
+        displayReportData(data.data, 'reportContainer');
+        displayLatestReport(data.data, 'latestCardContainer');
+      } else {
+        console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+    }
   };
 
-  try {
-    const response = await fetch(targetURL, requestOptions);
-    const data = await response.json();
 
-    if (data.status === 200) {
-      displayReportData(data.data, 'reportContainer');
-      displayLatestReport(data.data, 'latestCardContainer');
-    } else {
-      console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-
-const displayReportData = (reportData, cardContainerId) => {
-  const reportContainer = document.getElementById(cardContainerId);
-
-  reportContainer.innerHTML = '';
-
-  if (reportData && reportData.length > 0) {
-    reportData.forEach((report) => {
-      const newCard = document.createElement('div');
-      newCard.className = 'card timeline-card bg-dark';
-      newCard.innerHTML = `
+  const displayReportData = (reportData, cardContainerId) => {
+    const reportContainer = document.getElementById(cardContainerId);
+  
+    reportContainer.innerHTML = '';
+  
+    if (reportData && reportData.length > 0) {
+      reportData.forEach((report) => {
+        const newCard = document.createElement('div');
+        newCard.className = 'card timeline-card bg-dark';
+        newCard.innerHTML = `
           <div class="card-body">
             <div class="d-flex justify-content-between">
               <div class="timeline-text mb-2">
@@ -77,27 +78,27 @@ const displayReportData = (reportData, cardContainerId) => {
             </div>
           </div>
         `;
+  
+        reportContainer.appendChild(newCard);
+      });
+    } else {
+      reportContainer.innerHTML = '<p>No report data found.</p>';
+    }
+  };
 
-      reportContainer.appendChild(newCard);
-    });
-  } else {
-    reportContainer.innerHTML = '<p>No report data found.</p>';
-  }
-};
+  const displayLatestReport = (reportData, latestCardContainerId) => {
+    const latestCardContainer = document.getElementById(latestCardContainerId);
 
-const displayLatestReport = (reportData, latestCardContainerId) => {
-  const latestCardContainer = document.getElementById(latestCardContainerId);
+    latestCardContainer.innerHTML = '';
 
-  latestCardContainer.innerHTML = '';
+    if (reportData && reportData.length > 0) {
+        reportData.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-  if (reportData && reportData.length > 0) {
-    reportData.sort((a, b) => new Date(b.date) - new Date(a.date));
+        const latestReport = reportData[0];
 
-    const latestReport = reportData[0];
-
-    const newCard = document.createElement('div');
-    newCard.className = 'card timeline-card bg-dark';
-    newCard.innerHTML = `
+        const newCard = document.createElement('div');
+        newCard.className = 'card timeline-card bg-dark';
+        newCard.innerHTML = `
             <div class="card-body">
                 <div class="d-flex justify-content-between">
                     <div class="timeline-text mb-2">
@@ -121,10 +122,12 @@ const displayLatestReport = (reportData, latestCardContainerId) => {
                 </div>
             </div>
         `;
-    latestCardContainer.appendChild(newCard);
-  } else {
-    latestCardContainer.innerHTML = '<p>No report data found.</p>';
-  }
+
+        latestCardContainer.appendChild(newCard);
+    } else {
+        latestCardContainer.innerHTML = '<p>No report data found.</p>';
+    }
 };
+
 
 getUserReportWithToken();

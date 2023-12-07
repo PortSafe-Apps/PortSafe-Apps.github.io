@@ -4067,7 +4067,6 @@ form .btn.btn-sm {
 
 .card-body {
   padding: 1.5rem;
-  
 }
 
 .cta-card {
@@ -7242,7 +7241,7 @@ input[type=color].form-control:valid {
 .timeline-card {
   position: relative;
   z-index: 1;
-  margin-bottom: 0.1rem;
+  margin-bottom: 1rem;
   border-left: 0.5rem solid #0d5afd !important;
 }
 
