@@ -91,8 +91,8 @@ const getUserReportWithTokenAndDisplayNew = async () => {
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-      alert("Token tidak ditemukan");
-      return;
+    alert("Token tidak ditemukan");
+    return;
   }
 
   const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
@@ -101,32 +101,30 @@ const getUserReportWithTokenAndDisplayNew = async () => {
   myHeaders.append('Login', token);
 
   const requestOptions = {
-      method: 'POST',
-      headers: myHeaders,
-      redirect: 'follow',
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow',
   };
 
   try {
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
 
-      if (data.status === 200) {
-          // Menampilkan semua data seperti sebelumnya
-          displayReportData(data.data, 'reportContainer');
-          
-          // Menampilkan satu card baru jika ada data baru
-          if (data.data.length > 0) {
-              const newReport = data.data[0]; // Misalnya, mengambil data report pertama sebagai contoh
-              displayNewReport(newReport, 'newreportContainer');
-          }
-      } else {
-          console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+    if (data.status === 200) {
+      // Menampilkan semua data seperti sebelumnya
+      displayReportData(data.data, 'reportContainer');
+
+      // Menampilkan satu card baru jika ada data baru
+      if (data.data.length > 0) {
+        const newReport = data.data[data.data.length - 1]; // Mengambil data report terbaru
+        displayNewReport(newReport, 'newreportContainer');
       }
+    } else {
+      console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+    }
   } catch (error) {
-      console.error('Error:', error);
+    console.error('Error:', error);
   }
 };
-
-
 
 getUserReportWithTokenAndDisplayNew();
