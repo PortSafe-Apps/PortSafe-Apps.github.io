@@ -96,6 +96,8 @@ const getUserReportWithToken = async () => {
 
         const latestReport = reportData[0];
 
+        console.log('Latest Report:', latestReport); // Log the latestReport object to the console
+
         const newCard = document.createElement('div');
         newCard.className = 'card timeline-card bg-dark';
         newCard.innerHTML = `
@@ -128,6 +130,5 @@ const getUserReportWithToken = async () => {
         latestCardContainer.innerHTML = '<p>No report data found.</p>';
     }
 };
-
 
 getUserReportWithToken();
