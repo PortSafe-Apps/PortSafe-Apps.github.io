@@ -1,4 +1,3 @@
-// Fungsi untuk menampilkan top 5 jenis tindakan berbahaya
 const displayTopDangerousActions = (data, containerId) => {
     const dangerousActionList = document.getElementById(containerId);
 
@@ -7,7 +6,8 @@ const displayTopDangerousActions = (data, containerId) => {
     data.forEach(report => {
         if (report.typeDangerousActions && report.typeDangerousActions.length > 0) {
             report.typeDangerousActions.forEach(type => {
-                countByType[type.typeName] = (countByType[type.typeName] || 0) + 1;
+                const typeName = type.typeName; // Sesuaikan dengan struktur data yang sesuai
+                countByType[typeName] = (countByType[typeName] || 0) + 1;
             });
         }
     });
