@@ -3945,10 +3945,22 @@ form .btn.btn-sm {
 
 .recorded-badge {
   font-size: 14px;
-  color: #1da1f2;
+  color: #02172C;
   margin-left: 5px;
 }
 
+.subtypes-list {
+  list-style-type: none;
+  margin-top: 5px;
+  padding-left: 20px;
+}
+
+.top-number {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #02172C;
+}
 
 /* Dividers CSS */
 .divider {
@@ -7272,13 +7284,6 @@ input[type=color].form-control:valid {
 
 .testimonial-style3 .single-testimonial-slide .text-content p {
   font-weight: 500;
-}
-
-.top-number {
-  font-size: 18px;
-  font-weight: bold;
-  margin-right: 10px;
-  color: #1da1f2;
 }
 
 /* :: Timeline CSS */

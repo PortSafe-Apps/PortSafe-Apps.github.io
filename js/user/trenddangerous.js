@@ -28,23 +28,9 @@ const displayTopDangerousActions = (data, containerId) => {
             <span class="top-number">${index + 1}.</span>
             <span class="dangerous-action-name">${item.typeName}</span>
             <span class="recorded-label">Yang Tercatat</span>
-            <span class="recorded-badge">&#x2713; Laporan</span>
+            <span class="recorded-badge">${item.recorded}</span>
         `;
-
-        // Tambahkan subtypes jika ada
-        if (item.subTypes && item.subTypes.length > 0) {
-            const subtypesList = document.createElement('ul');
-            subtypesList.className = 'subtypes-list';
-
-            item.subTypes.forEach(subtype => {
-                const subtypeItem = document.createElement('li');
-                subtypeItem.textContent = subtype;
-                subtypesList.appendChild(subtypeItem);
-            });
-
-            dangerousActionItem.appendChild(subtypesList);
-        }
-
+    
         dangerousActionList.appendChild(dangerousActionItem);
     });
 };
