@@ -33,6 +33,18 @@ const displayNewReport = (newReport, cardContainerId) => {
   reportContainer.prepend(newCard);
 };
 
+// Function to extract the token from cookies
+function getTokenFromCookies(cookieName) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === cookieName) {
+      return value;
+    }
+  }
+  return null;
+}
+
 // Modifikasi getUserReportWithToken untuk menampilkan satu card baru
 const getUserReportWithTokenAndDisplayNew = async () => {
   const token = getTokenFromCookies('Login');
@@ -73,5 +85,7 @@ const getUserReportWithTokenAndDisplayNew = async () => {
       console.error('Error:', error);
   }
 };
+
+
 
 getUserReportWithTokenAndDisplayNew();
