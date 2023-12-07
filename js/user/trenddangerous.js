@@ -1,21 +1,25 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if (name === cookieName) {
-            return value;
-        }
-    }
-    return null;
-}
-
 // Fungsi untuk menampilkan top 5 jenis tindakan berbahaya
 const displayTopDangerousActions = (data, containerId) => {
     const dangerousActionList = document.getElementById(containerId);
 
+    // Hitung jumlah tindakan berbahaya untuk setiap jenis
+    const countByType = {};
+    data.forEach(report => {
+        if (report.typeDangerousActions && report.typeDangerousActions.length > 0) {
+            report.typeDangerousActions.forEach(type => {
+                countByType[type.typeName] = (countByType[type.typeName] || 0) + 1;
+            });
+        }
+    });
+
+    // Ubah data menjadi bentuk yang dapat diurutkan
+    const sortableData = [];
+    for (const typeName in countByType) {
+        sortableData.push({ typeName, recorded: countByType[typeName] });
+    }
+
     // Urutkan data berdasarkan jumlah yang tercatat
-    const sortedData = data.sort((a, b) => b.recorded - a.recorded);
+    const sortedData = sortableData.sort((a, b) => b.recorded - a.recorded);
 
     // Hanya ambil lima data teratas
     const topData = sortedData.slice(0, 5);
@@ -30,7 +34,7 @@ const displayTopDangerousActions = (data, containerId) => {
             <span class="recorded-label">Yang Tercatat</span>
             <span class="recorded-badge">${item.recorded}</span>
         `;
-    
+
         dangerousActionList.appendChild(dangerousActionItem);
     });
 };
