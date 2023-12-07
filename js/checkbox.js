@@ -27,7 +27,7 @@ var data = {
       },
       {
         "TypeId": "3",
-        "TypeName": "Posisi Orang",
+        "TypeName": "POSISI ORANG",
         "SubTypes": [
           "Terbentur Pada",
           "Tertabrak oleh",
