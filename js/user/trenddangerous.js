@@ -1,3 +1,16 @@
+ // Function to extract the token from cookies
+ function getTokenFromCookies(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split('=');
+      if (name === cookieName) {
+        return value;
+      }
+    }
+    return null;
+  }
+  
+
 const displayTopDangerousActions = (data, containerId) => {
     const dangerousActionList = document.getElementById(containerId);
 
