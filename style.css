@@ -3913,6 +3913,43 @@ form .btn.btn-sm {
   font-weight: 400;
 }
 
+/* :: Dangerous CSS */
+#dangerous-actions-section {
+  background-color: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+}
+
+.dangerous-action-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.dangerous-action-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.dangerous-action-name {
+  font-size: 16px;
+  color: #1c1e21;
+}
+
+.recorded-label {
+  font-size: 14px;
+  color: #657786;
+  margin-left: auto;
+}
+
+.recorded-badge {
+  font-size: 14px;
+  color: #1da1f2;
+  margin-left: 5px;
+}
+
+
 /* Dividers CSS */
 .divider {
   width: 100%;
@@ -7235,6 +7272,13 @@ input[type=color].form-control:valid {
 
 .testimonial-style3 .single-testimonial-slide .text-content p {
   font-weight: 500;
+}
+
+.top-number {
+  font-size: 18px;
+  font-weight: bold;
+  margin-right: 10px;
+  color: #1da1f2;
 }
 
 /* :: Timeline CSS */
