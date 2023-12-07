@@ -73,7 +73,7 @@ const getUserReportWithToken = async () => {
                 ${report.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">#${action.typeName}</span>`).join('')}
               </div>
             </div>
-            <div class="text-content mb-2">
+            <div class="text-content mb-0">
               <h6 class="mb-0">Pengawas</h6>
               <p><span>${report.user.nama}</span> <br> <span>${report.user.jabatan}</span></p>
             </div>
