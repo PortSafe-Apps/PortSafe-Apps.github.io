@@ -93,7 +93,7 @@ Created: December 10, 2020
 
 /* :: Bootstrap Color Reset CSS */
 a {
-  color: #0d5afd;
+  color: #061238;
 }
 
 kbd {
@@ -1824,7 +1824,7 @@ a.affan-element-item i {
 .element-heading-wrapper i {
   width: 2.5rem;
   height: 2.5rem;
-  background-color: #0d5afd;
+  background-color: #02172C;
   border-radius: 50%;
   text-align: center;
   color: #ffffff;
@@ -3911,6 +3911,53 @@ form .btn.btn-sm {
   font-size: 12px;
   color: #8480ae;
   font-weight: 400;
+}
+
+.cards-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.cards {
+  width: 175px;
+  height: 65px;
+  position: relative;
+}
+
+.background-shape {
+  width: 230px;
+  height: 80px;
+  position: absolute;
+  background: #ffffff;
+  border-radius: 15px;
+}
+
+.text-container {
+  width: 60px;
+  height: 37px;
+  position: absolute;
+  line-height: 19px;
+  left: 110px;
+  top: 20px;
+}
+
+.foreground-shape {
+  width: 90px;
+  height: 80px;
+  position: absolute;
+  background: #061238;
+  border-radius: 15px;
+  left: 1px;
+  top: 0px;
+}
+
+.count-text {
+  width: 54px;
+  height: 31px;
+  position: absolute;
+  color: #ffffff;
+  left: 25px;
+  top: 25px;
 }
 
 /* :: Dangerous CSS */

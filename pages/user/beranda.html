@@ -227,12 +227,26 @@
     </div>
     <div class="container">
       <h1 class="element-heading fw-bold mb-2">Statistik K3</h1>
-      <section id="dangerous-actions-section">
-        <h2 class="element-heading fw-normal" >Top 5 Jenis Tindakan Berbahaya</h2>
-        <div class="dangerous-action-list" id="dangerous-action-list">
-            <!-- Konten akan ditambahkan oleh JavaScript -->
+      <div class="cards-container">
+        <!-- Card "Jumlah Laporan" -->
+        <div class="cards">
+          <div class="background-shape"></div>
+          <h4 class="element-heading fw-bolder text-container">Jumlah Laporan</h4>
+          <div class="foreground-shape"></div>
+          <h3 class="element-heading fw-bold count-text"><span class="counter" id="total-reports"></span></h3>
         </div>
-    </section>
+
+        <!-- Card "Trend Dangerous" -->
+        <div class="card">
+          <section id="dangerous-actions-section">
+            <h6 class="element-heading fw-bolder">Top 3 Jenis Tindakan Berbahaya yang Sering Terjadi</h6>
+            <div class="dangerous-action-list" id="dangerous-action-list">
+              <!-- Konten akan ditambahkan oleh JavaScript -->
+            </div>
+        </div>
+      </div>
+
+      </section>
     </div>
 
     <div class="pt-3"></div>

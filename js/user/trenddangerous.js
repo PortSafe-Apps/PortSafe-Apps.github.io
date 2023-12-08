@@ -35,7 +35,7 @@ const displayTopDangerousActions = (data, containerId) => {
     const sortedData = sortableData.sort((a, b) => b.recorded - a.recorded);
 
     // Hanya ambil lima data teratas
-    const topData = sortedData.slice(0, 5);
+    const topData = sortedData.slice(0, 3);
 
     // Tampilkan data dalam elemen HTML
     topData.forEach((item, index) => {
