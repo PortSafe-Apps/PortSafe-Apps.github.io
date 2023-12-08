@@ -2,7 +2,13 @@ async function getUserWithToken() {
     const token = getTokenFromCookies('Login'); 
   
     if (!token) {
-      alert("token tidak ditemukan");
+      Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Error',
+        text: 'Kamu Belum Login!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/'; 
+      });
       return;
     }
   

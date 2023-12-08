@@ -9,13 +9,22 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
+const showAlert = (message, type = 'success') => {
+  Swal.fire({
+    icon: type,
+    text: message,
+    showConfirmButton: false,
+    timer: 1500
+  });
+};
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-    alert("Header Login Not Found");
+    showAlert("Header Login Not Found", 'error');
     return;
   }
 
@@ -71,9 +80,10 @@ const insertObservationReport = async (event) => {
     const data = await response.json();
   
     if (data.status === false) {
-      alert(data.message);
+      showAlert(data.message, 'error');
     } else {
-      alert("Reporting data inserted successfully!");
+      showAlert("Data Pelaporan Berhasil di Input!", 'success');
+      window.location.href = 'https://portsafe-apps.github.io/pages/user/listreport.html';
     }
   } catch (error) {
     console.error('Error:', error);

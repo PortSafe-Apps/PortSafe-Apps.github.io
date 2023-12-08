@@ -14,7 +14,13 @@ const getUserReportWithToken = async () => {
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-    alert("Token tidak ditemukan");
+    Swal.fire({
+      icon: 'warning',
+      title: 'Authentication Error',
+      text: 'Kamu Belum Login!',
+    }).then(() => {
+      window.location.href = 'https://portsafe-apps.github.io/'; 
+    });
     return;
   }
 
@@ -71,7 +77,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
             <div class="text-content mb-2">
               <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
               <div class="timeline-tags">
-                ${latestReport.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">#${action.typeName}</span>`).join('')}
+                ${latestReport.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">${action.typeName}</span>`).join('')}
               </div>
             </div>
             <div class="text-content mb-0">
