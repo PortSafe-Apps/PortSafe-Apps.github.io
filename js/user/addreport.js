@@ -13,7 +13,7 @@ const showAlert = (message, type = 'success') => {
   Swal.fire({
     icon: type,
     text: message,
-    showConfirmButton: false,
+    showConfirmButton: true,
     timer: 1500
   });
 };
