@@ -18,6 +18,33 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
+// Fungsi untuk mendapatkan URL data gambar dari elemen gambar
+async function getDataURLFromImage(elementId) {
+  const imageElement = document.getElementById(elementId);
+
+  return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    const image = new Image();
+
+    image.onload = function () {
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+
+      // Dapatkan URL data gambar
+      const dataURL = canvas.toDataURL(); // Default format adalah PNG, tetapi dapat diganti jika diperlukan
+      resolve(dataURL);
+    };
+
+    image.onerror = function (error) {
+      reject(error);
+    };
+
+    image.src = imageElement.src;
+  });
+}
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -53,8 +80,8 @@ const insertObservationReport = async (event) => {
       return checkedValues;
     }
 
-    const fotoObservasiBase64 = await getBase64FromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getBase64FromImage('hasilFotoPerbaikan');
+    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
+    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',
@@ -73,7 +100,7 @@ const insertObservationReport = async (event) => {
           AreaName: document.getElementById('newAreaName').value,
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-        ObservationPhoto: fotoPerbaikanBase64,
+        ImprovementPhoto: fotoPerbaikanBase64,
         CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
@@ -90,37 +117,7 @@ const insertObservationReport = async (event) => {
     }
   } catch (error) {
     console.error('Error:', error);
-
   }
 };
 
-// Fungsi untuk mendapatkan URL data gambar dari elemen gambar
-async function getDataURLFromImage(elementId) {
-  const imageElement = document.getElementById(elementId);
-
-  return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const image = new Image();
-
-    image.onload = function () {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0, image.width, image.height);
-
-      // Dapatkan URL data gambar
-      const dataURL = canvas.toDataURL(); // Default format adalah PNG, tetapi dapat diganti jika diperlukan
-      resolve(dataURL);
-    };
-
-    image.onerror = function (error) {
-      reject(error);
-    };
-
-    image.src = imageElement.src;
-  });
-}
-
 document.getElementById('newReportForm').addEventListener('submit', insertObservationReport);
-
-
