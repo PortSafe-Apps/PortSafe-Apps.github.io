@@ -119,7 +119,7 @@ const getDetailedReport = async (reportid) => {
     return;
   }
 
-  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-${reportid}`;
+  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1`;
 
   const myHeaders = new Headers();
   myHeaders.append('Login', token);
