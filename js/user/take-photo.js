@@ -11,6 +11,9 @@ function ambilFotoObservasi() {
         // Set the source of the image directly
         imgHasilFotoObservasi.src = fotoObservasiBase64;
 
+         // Set the value of the input element to the data URL
+         inputFotoObservasi.value = fotoPerbaikanBase64;
+
         // You can use fotoObservasiBase64 in other ways (e.g., send to the server)
         console.log(fotoObservasiBase64);
     };
@@ -38,6 +41,9 @@ function ambilFotoPerbaikan() {
         // Set the source of the image directly
         imgHasilFotoPerbaikan.src = fotoPerbaikanBase64;
 
+        // Set the value of the input element to the data URL
+        inputFotoPerbaikan.value = fotoPerbaikanBase64;
+
         // You can use fotoPerbaikanBase64 in other ways (e.g., send to the server)
         console.log(fotoPerbaikanBase64);
     };
@@ -48,4 +54,3 @@ function ambilFotoPerbaikan() {
 }
 
 document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
-
