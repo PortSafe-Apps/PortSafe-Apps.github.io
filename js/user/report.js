@@ -132,7 +132,7 @@ const getDetailedReport = async (reportid) => {
 
     if (data.status === 200) {
       // Tampilkan informasi detail laporan
-      displayDetailedReport(data.data);
+      displayDetailedReport(data.data, 'detailContainer');
     } else {
       console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
     }
