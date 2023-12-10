@@ -94,8 +94,8 @@ const insertObservationReport = async (event) => {
   }
 };
 
-// Fungsi untuk mengambil base64 dari elemen gambar
-async function getBase64FromImage(elementId) {
+// Fungsi untuk mendapatkan URL data gambar dari elemen gambar
+async function getDataURLFromImage(elementId) {
   const imageElement = document.getElementById(elementId);
 
   return new Promise((resolve, reject) => {
@@ -108,8 +108,9 @@ async function getBase64FromImage(elementId) {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, image.width, image.height);
 
-      const dataURL = canvas.toDataURL('image/png'); // Ganti format jika diperlukan
-      resolve(dataURL.replace(/^data:image\/(png|jpg);base64,/, ''));
+      // Dapatkan URL data gambar
+      const dataURL = canvas.toDataURL(); // Default format adalah PNG, tetapi dapat diganti jika diperlukan
+      resolve(dataURL);
     };
 
     image.onerror = function (error) {

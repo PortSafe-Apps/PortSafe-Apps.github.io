@@ -113,7 +113,7 @@ const displayDetailedReport = (detailedReport) => {
 
   if (detailedReport) {
     const detailCard = document.createElement('div');
-    detailCard.className = 'card bg-light';
+    detailCard.className = 'card';
     detailCard.innerHTML = `
       <div class="card-body">
         <h6 class="mb-0">Nomor Pelaporan</h6>
