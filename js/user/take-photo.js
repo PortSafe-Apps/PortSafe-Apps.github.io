@@ -15,12 +15,16 @@ function ambilFotoObservasi() {
     }
 }
 
-function compressToURL(data) {
-    // Menggunakan Base64URL (mengganti karakter '+' dan '/' dengan '-' dan '_')
-    return `data:image/png;base64,${data.replace(/\+/g, '-').replace(/\//g, '_')}`;
+// Declare compressToURL only if it doesn't exist yet
+if (typeof compressToURL !== 'function') {
+    function compressToURL(data) {
+        // Menggunakan Base64URL (mengganti karakter '+' dan '/' dengan '-' dan '_')
+        return `data:image/png;base64,${data.replace(/\+/g, '-').replace(/\//g, '_')}`;
+    }
 }
 
 i.addEventListener('change', ambilFotoObservasi);
+
 
 
 
