@@ -99,7 +99,6 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
-// Fungsi untuk menampilkan detail pelaporan
 const getDetailedReport = async (reportid) => {
   const token = getTokenFromCookies('Login');
 
@@ -213,6 +212,7 @@ const displayDetailedReport = (detailedReport) => {
     detailContainer.innerHTML = '<p>Informasi detail tidak ditemukan.</p>';
   }
 };
+
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
 getAllUserReport();
