@@ -99,57 +99,15 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
-const getDetailedReport = async (reportid) => {
-  const token = getTokenFromCookies('Login');
-
-  if (!token) {
-    // Tangani kesalahan autentikasi jika tidak ada token
-    Swal.fire({
-      icon: 'warning',
-      title: 'Authentication Error',
-      text: 'Kamu Belum Login!',
-    }).then(() => {
-      window.location.href = 'https://portsafe-apps.github.io/';
-    });
-    return;
-  }
-
-  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1`;
-
-  const myHeaders = new Headers();
-  myHeaders.append('Login', token);
-
-  const requestOptions = {
-    method: 'POST',
-    headers: myHeaders,
-    body: JSON.stringify({ reportid }), // Pass reportid in the request body
-    redirect: 'follow',
-  };
-
-  try {
-    const response = await fetch(targetURL, requestOptions);
-    const data = await response.json();
-
-    if (data.status === 200) {
-      // Tampilkan informasi detail laporan
-      displayDetailedReport(data.data, 'detailContainer');
-    } else {
-      console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-    }
-  } catch (error) {
-    console.error('Error:', error);
-  }
-};
-
 // Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
 const displayDetailedReport = (detailedReport) => {
   const detailContainer = document.getElementById('detailContainer');
 
-    // Tambahkan pengecekan apakah detailContainer ditemukan
-    if (!detailContainer) {
-      console.error('Error: Element with ID "detailContainer" not found.');
-      return;
-    }
+  // Tambahkan pengecekan apakah detailContainer ditemukan
+  if (!detailContainer) {
+    console.error('Error: Element with ID "detailContainer" not found.');
+    return;
+  }
 
   detailContainer.innerHTML = '';
 
@@ -213,9 +171,61 @@ const displayDetailedReport = (detailedReport) => {
   }
 };
 
-
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
 getAllUserReport();
 
+// Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
+const getDetailedReport = async (reportid) => {
+  const token = getTokenFromCookies('Login');
 
+  if (!token) {
+    // Tangani kesalahan autentikasi jika tidak ada token
+    Swal.fire({
+      icon: 'warning',
+      title: 'Authentication Error',
+      text: 'Kamu Belum Login!',
+    }).then(() => {
+      window.location.href = 'https://portsafe-apps.github.io/';
+    });
+    return;
+  }
 
+  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1`;
+
+  const myHeaders = new Headers();
+  myHeaders.append('Login', token);
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    body: JSON.stringify({ reportid }), // Pass reportid in the request body
+    redirect: 'follow',
+  };
+
+  try {
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+
+    if (data.status === 200) {
+      // Tampilkan informasi detail laporan
+      displayDetailedReport(data.data, 'detailContainer');
+    } else {
+      console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+
+  // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
+  window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
+};
+
+// Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
+const urlParams = new URLSearchParams(window.location.search);
+const reportid = urlParams.get('reportid');
+
+if (reportid) {
+  getDetailedReport(reportid);
+} else {
+  console.error('Error: Reportid tidak ditemukan.');
+}
