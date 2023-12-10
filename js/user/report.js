@@ -165,11 +165,11 @@ const displayDetailedReport = (detailedReport) => {
         <p>${detailedReport.date}</p>
         
         <h6 class="mb-0">Informasi Pengawas</h6>
-        <p class="mb-0">${detailedReport.user ? detailedReport.user.nama : ''}</p>
-        <p>${detailedReport.user ? detailedReport.user.jabatan : ''}</p>
+        <p class="mb-0">${detailedReport.user.nama}</p>
+        <p>${detailedReport.user.jabatan}</p>
         
         <h6 class="mb-0">Lokasi Kejadian</h6>
-        <p>${detailedReport.location ? detailedReport.location.locationName : ''}</p>
+        <p>${detailedReport.location.locationName}</p>
         
         <h6 class="mb-0">Deskripsi Pengamatan</h6>
         <p>${detailedReport.description}</p>
@@ -181,18 +181,18 @@ const displayDetailedReport = (detailedReport) => {
         
         <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
         <ul class="ps-0 fs-6">
-          ${detailedReport.typeDangerousActions ? detailedReport.typeDangerousActions.map((action, index) => `
+          ${detailedReport.typeDangerousActions.map((action, index) => `
             <li><span>${index + 1}.</span> ${action.typeName}</li>
             <ul class="ps-3">
               ${action.subTypes.map(subType => `
                 <li><i class="bi bi-dash me-2"></i>${subType}</li>
               `).join('')}
             </ul>
-          `).join('') : ''}
+          `).join('')}
         </ul>
 
         <h6 class="mb-0">Area</h6>
-        <p>${detailedReport.area ? detailedReport.area.areaName : ''}</p>
+        <p>${detailedReport.area.areaName}</p>
 
         <h6 class="mb-0">Tindakan Perbaikan Segera</h6>
         <p>${detailedReport.immediateAction}</p>
@@ -212,6 +212,7 @@ const displayDetailedReport = (detailedReport) => {
     detailContainer.innerHTML = '<p>Informasi detail tidak ditemukan.</p>';
   }
 };
+
 
 
 const getLatestReport = async () => {
