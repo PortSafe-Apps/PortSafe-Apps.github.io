@@ -3913,10 +3913,6 @@ form .btn.btn-sm {
   font-weight: 400;
 }
 
-.cards-container {
-  display: flex;
-  justify-content: space-between;
-}
 
 .cards {
   width: 175px;
@@ -3927,7 +3923,7 @@ form .btn.btn-sm {
 .background-shape {
   width: 230px;
   height: 80px;
-  position: absolute;
+  position: relative;
   background: #ffffff;
   border-radius: 12px;
 }
@@ -3935,8 +3931,8 @@ form .btn.btn-sm {
 .text-container {
   width: 60px;
   height: 37px;
-  position: absolute;
-  line-height: 17px;
+  position: relative;
+  line-height: 20px;
   left: 110px;
   top: 20px;
 }
@@ -3959,35 +3955,6 @@ form .btn.btn-sm {
   left: 25px;
   top: 25px;
 }
-
-/* CSS untuk elemen latar belakang blur */
-.blur-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: #D9D9D9 center center; /* Ganti dengan gambar latar belakang atau warna yang diinginkan */
-  filter: blur(5px); /* Menentukan tingkat blur */
-  z-index: 999; /* Menempatkan di atas elemen lain */
-}
-
-/* CSS untuk modal */
-.modal {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background-color: white;
-  padding: 20px;
-  z-index: 1000;
-}
-
-/* CSS untuk menyembunyikan modal */
-.hidden {
-  display: none;
-}
-
 
 /* :: Dangerous CSS */
 #dangerous-actions-section {
