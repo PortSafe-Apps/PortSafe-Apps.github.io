@@ -100,8 +100,7 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
-getAllUserReport();
+
 
 // Fungsi untuk menampilkan detail pelaporan
 const getDetailedReport = async (reportid) => {
@@ -145,6 +144,7 @@ const getDetailedReport = async (reportid) => {
     console.error('Error:', error);
   }
 };
+
 
 
 // Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
@@ -213,7 +213,8 @@ const displayDetailedReport = (detailedReport) => {
   }
 };
 
-
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
 
 const getLatestReport = async () => {
   const token = getTokenFromCookies('Login');
