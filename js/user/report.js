@@ -215,9 +215,6 @@ const getDetailedReport = async (reportid) => {
   } catch (error) {
     console.error('Error:', error);
   }
-
-  // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
-  window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
 };
 
 // Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail

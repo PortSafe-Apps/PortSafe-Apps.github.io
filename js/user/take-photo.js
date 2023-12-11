@@ -18,7 +18,7 @@ function ambilFotoObservasi() {
     }
 }
 
-function convertToUrl() {
+function convertToUrlObservasi() {
     // Mendapatkan elemen input file
     var input = document.getElementById('fotoObservasi');
 
@@ -62,8 +62,8 @@ function ambilFotoPerbaikan() {
         // You can use reader.result in other ways (e.g., send to the server)
         console.log(reader.result);
 
-        // Call the convertToUrl function to perform additional actions
-        convertToUrl();
+        // Call the convertToUrlPerbaikan function to perform additional actions
+        convertToUrlPerbaikan();
     };
 
     if (fileInput) {
@@ -75,7 +75,7 @@ function ambilFotoPerbaikan() {
 document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
 
 // Fungsi untuk mengonversi gambar menjadi URL
-function convertToUrl() {
+function convertToUrlPerbaikan() {
     // Mendapatkan elemen input file
     const input = document.getElementById('fotoPerbaikan');
 
@@ -101,5 +101,3 @@ function convertToUrl() {
         reader.readAsDataURL(input.files[0]);
     }
 }
-
-
