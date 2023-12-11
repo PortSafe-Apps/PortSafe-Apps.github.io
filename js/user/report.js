@@ -107,6 +107,9 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
+
 // Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
 const displayDetailedReport = (detailedReport) => {
   const detailContainer = document.getElementById('detailContainer');
@@ -179,8 +182,6 @@ const displayDetailedReport = (detailedReport) => {
   }
 };
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
-getAllUserReport();
 
 
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
