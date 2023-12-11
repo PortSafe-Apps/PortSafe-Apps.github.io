@@ -171,6 +171,9 @@ const displayDetailedReport = (detailedReport) => {
   }
 };
 
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
+
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
 const getDetailedReport = async (reportid) => {
   const token = getTokenFromCookies('Login');
@@ -205,26 +208,24 @@ const getDetailedReport = async (reportid) => {
 
     if (data.status === 200) {
       // Tampilkan informasi detail laporan
-      displayDetailedReport(data.data);
-
-      // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
-      window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
+      displayDetailedReport(data.data, 'detailContainer');
     } else {
       console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
     }
   } catch (error) {
     console.error('Error:', error);
   }
+
+  // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
+  window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
 };
 
-// Pindahkan blok kode terakhir ke dalam sebuah fungsi
-function handleDetailPage() {
-  const urlParams = new URLSearchParams(window.location.search);
-  const reportid = urlParams.get('reportid');
+// Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
+const urlParams = new URLSearchParams(window.location.search);
+const reportid = urlParams.get('reportid');
 
-  // Panggil fungsi untuk mendapatkan laporan detail
+if (reportid) {
   getDetailedReport(reportid);
+} else {
+  console.error('Error: Reportid tidak ditemukan.');
 }
-
-// Panggil fungsi tersebut
-handleDetailPage();

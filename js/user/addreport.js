@@ -18,32 +18,6 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-async function getDataURLFromImage(elementId) {
-  const imageElement = document.getElementById(elementId);
-
-  return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const image = new Image();
-
-    image.onload = function () {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0, image.width, image.height);
-
-      // Dapatkan URL data dari elemen canvas
-      const dataURL = canvas.toDataURL(image.type || 'image/png'); // Tentukan tipe MIME, default ke PNG jika tidak ada
-      resolve(dataURL);
-    };
-
-    image.onerror = function (error) {
-      reject(error);
-    };
-
-    image.src = imageElement.src;
-  });
-}
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -78,9 +52,6 @@ const insertObservationReport = async (event) => {
 
       return checkedValues;
     }
-
-    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',
@@ -93,13 +64,13 @@ const insertObservationReport = async (event) => {
           LocationName: document.getElementById('autoCompleteLocation').value,
         },
         Description: document.getElementById('deskripsiPengamatan').value,
-        ObservationPhoto: fotoObservasiBase64,
+        ObservationPhoto: document.getElementById('fotoObservasi').value,
         TypeDangerousActions: getCheckedCheckboxes(),
         Area: {
           AreaName: document.getElementById('newAreaName').value,
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-        ImprovementPhoto: fotoPerbaikanBase64,
+        ImprovementPhoto: document.getElementById('fotoPerbaikan').value,
         CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
