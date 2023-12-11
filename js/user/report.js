@@ -214,11 +214,11 @@ const displayReportData = (reportData, cardContainerId, detailPageURL) => {
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
 getAllUserReport();
 
-// ID elemen target di halaman detail report
-const detailContainerId = 'detailContainer';
-
 // ID elemen target di halaman list report
 const cardContainerId = 'reportContainer';
+
+// ID elemen target di halaman detail report
+const detailContainerId = 'detailContainer';
 
 // Fungsi untuk menampilkan laporan pengguna dalam bentuk kartu
 displayReportData(data, cardContainerId, detailPageURL);
@@ -227,5 +227,6 @@ displayReportData(data, cardContainerId, detailPageURL);
 const reportid = new URLSearchParams(window.location.search).get('reportid');
 
 // Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
-displayDetailedReport(reportid, detailContainerId);
-
+if (reportid) {
+  displayDetailedReport(reportid, detailContainerId);
+}
