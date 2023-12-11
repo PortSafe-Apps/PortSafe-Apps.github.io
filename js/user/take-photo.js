@@ -1,57 +1,51 @@
-const i = document.getElementById('fotoObservasi');
-const m = document.getElementById('hasilFotoObservasi');
+const inputFotoObservasi = document.getElementById('fotoObservasi');
+const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
 
 function ambilFotoObservasi() {
-    const e = i.files[0];
-    if (e) {
-        const t = new FileReader();
-        t.onloadend = function () {
-            const fotoObservasiBase64 = t.result.split(',')[1];
-            const compressedURL = compressToURL(fotoObservasiBase64);
-            m.src = compressedURL;
-            console.log(compressedURL);
-        };
-        t.readAsDataURL(e);
+    const fileInput = inputFotoObservasi.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+        const fotoObservasiBase64 = reader.result;
+
+        // Set the source of the image directly
+        imgHasilFotoObservasi.src = fotoObservasiBase64;
+
+        // You can use fotoObservasiBase64 in other ways (e.g., send to the server)
+        console.log(fotoObservasiBase64);
+    };
+
+    if (fileInput) {
+        reader.readAsDataURL(fileInput);
     }
 }
 
-// Declare compressToURL only if it doesn't exist yet
-if (typeof compressToURL !== 'function') {
-    function compressToURL(data) {
-        // Menggunakan Base64URL (mengganti karakter '+' dan '/' dengan '-' dan '_')
-        return `data:image/png;base64,${data.replace(/\+/g, '-').replace(/\//g, '_')}`;
-    }
-}
-
-i.addEventListener('change', ambilFotoObservasi);
+document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
 
 
 
 
-const o = document.getElementById('fotoPerbaikan');
-const n = document.getElementById('hasilFotoPerbaikan');
+const inputFotoPerbaikan = document.getElementById('fotoPerbaikan');
+const imgHasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
 
 function ambilFotoPerbaikan() {
-    const e = o.files[0];
-    if (e) {
-        const t = new FileReader();
-        t.onloadend = function () {
-            const fotoPerbaikanBase64 = t.result.split(',')[1];
-            const compressedURL = compressToURL(fotoPerbaikanBase64);
-            n.src = compressedURL;
-            console.log(compressedURL);
-        };
-        t.readAsDataURL(e);
+    const fileInput = inputFotoPerbaikan.files[0];
+    const reader = new FileReader();
+
+    reader.onloadend = function () {
+        const fotoPerbaikanBase64 = reader.result;
+
+        // Set the source of the image directly
+        imgHasilFotoPerbaikan.src = fotoPerbaikanBase64;
+
+        // You can use fotoPerbaikanBase64 in other ways (e.g., send to the server)
+        console.log(fotoPerbaikanBase64);
+    };
+
+    if (fileInput) {
+        reader.readAsDataURL(fileInput);
     }
 }
 
-function compressToURL(data) {
-    // Menggunakan Base64URL (mengganti karakter '+' dan '/' dengan '-' dan '_')
-    return `data:image/png;base64,${data.replace(/\+/g, '-').replace(/\//g, '_')}`;
-}
-
-o.addEventListener('change', ambilFotoPerbaikan);
-
-
-
+document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
 

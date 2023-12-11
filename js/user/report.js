@@ -190,6 +190,7 @@ const getDetailedReport = async (reportid) => {
     return;
   }
 
+ 
   const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1`;
 
   const myHeaders = new Headers();
@@ -198,7 +199,7 @@ const getDetailedReport = async (reportid) => {
   const requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: JSON.stringify({ reportid }), // Pass reportid in the request body
+    body: JSON.stringify({ reportid }),
     redirect: 'follow',
   };
 
@@ -207,25 +208,16 @@ const getDetailedReport = async (reportid) => {
     const data = await response.json();
 
     if (data.status === 200) {
-      // Tampilkan informasi detail laporan
+      // Display detailed report
       displayDetailedReport(data.data, 'detailContainer');
+
+      // Update the URL without triggering a page reload
+      const newURL = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
+      window.history.pushState({ path: newURL }, '', newURL);
     } else {
       console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
     }
   } catch (error) {
     console.error('Error:', error);
   }
-
-  // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
-  window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
 };
-
-// Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
-const urlParams = new URLSearchParams(window.location.search);
-const reportid = urlParams.get('reportid');
-
-if (reportid) {
-  getDetailedReport(reportid);
-} else {
-  console.error('Error: Reportid tidak ditemukan.');
-}
