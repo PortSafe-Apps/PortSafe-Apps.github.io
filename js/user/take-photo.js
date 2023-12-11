@@ -3,48 +3,48 @@ const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
 
 function ambilFotoObservasi() {
     const fileInput = inputFotoObservasi.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = function () {
-        // Set the source of the image directly
-        imgHasilFotoObservasi.src = reader.result;
-
-        // You can use reader.result in other ways (e.g., send to the server)
-        console.log(reader.result);
-    };
 
     if (fileInput) {
+        const reader = new FileReader();
+
+        reader.onloadend = function () {
+            const imageData = reader.result;
+            const blob = dataURLtoBlob(imageData);
+
+            // Menetapkan blob sebagai sumber gambar
+            tampilkanGambarDariBlob(blob);
+        };
+
         reader.readAsDataURL(fileInput);
     }
 }
 
-function convertToUrlObservasi() {
-    // Mendapatkan elemen input file
-    var input = document.getElementById('fotoObservasi');
+function dataURLtoBlob(dataURL) {
+    const arr = dataURL.split(',');
+    const mime = arr[0].match(/:(.*?);/)[1];
+    const bstr = atob(arr[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
 
-    // Mengecek apakah file telah dipilih
-    if (input.files && input.files[0]) {
-        var reader = new FileReader();
-
-        // Menggunakan FileReader untuk membaca konten file sebagai URL data
-        reader.onload = function (e) {
-            // Menetapkan URL data sebagai sumber gambar
-            document.getElementById('hasilFotoObservasi').src = e.target.result;
-
-            // Di sini, Anda dapat melakukan apa pun dengan URL gambar, misalnya mengirimkannya ke server
-            // atau menyimpannya di basis data.
-
-            // Contoh: Menampilkan URL di console
-            console.log("Image URL:", e.target.result);
-        };
-
-        // Membaca konten file sebagai URL data
-        reader.readAsDataURL(input.files[0]);
+    while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
     }
+
+    return new Blob([u8arr], { type: mime });
+}
+
+function tampilkanGambarDariBlob(blob) {
+    const blobUrl = URL.createObjectURL(blob);
+
+    // Menetapkan URL sebagai sumber gambar
+    imgHasilFotoObservasi.src = blobUrl;
+
+    // Pastikan untuk membebaskan sumber daya
+    URL.revokeObjectURL(blobUrl);
 }
 
 // Menambahkan event listener untuk memanggil fungsi ambilFotoObservasi saat ada perubahan pada input file
-document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
+inputFotoObservasi.addEventListener('change', ambilFotoObservasi);
 
 
 

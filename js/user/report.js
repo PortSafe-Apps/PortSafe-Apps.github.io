@@ -89,9 +89,17 @@ const displayReportData = (reportData, cardContainerId) => {
 
       // Tambahkan event listener klik pada kartu
       newCard.addEventListener('click', () => {
-        getDetailedReport(report.reportid);
+        // Ambil reportid dari objek report
+        const reportid = report.reportid;
+
+        // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
+        window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
+
+        // Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
+        getDetailedReport(reportid);
       });
 
+      // Tambahkan kartu ke kontainer laporan
       reportContainer.appendChild(newCard);
     });
   } else {
@@ -171,9 +179,6 @@ const displayDetailedReport = (detailedReport) => {
   }
 };
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
-getAllUserReport();
-
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
 const getDetailedReport = async (reportid) => {
   const token = getTokenFromCookies('Login');
@@ -208,7 +213,7 @@ const getDetailedReport = async (reportid) => {
 
     if (data.status === 200) {
       // Tampilkan informasi detail laporan
-      displayDetailedReport(data.data, 'detailContainer');
+      displayDetailedReport(data.data);
     } else {
       console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
     }
@@ -217,12 +222,5 @@ const getDetailedReport = async (reportid) => {
   }
 };
 
-// Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
-const urlParams = new URLSearchParams(window.location.search);
-const reportid = urlParams.get('reportid');
-
-if (reportid) {
-  getDetailedReport(reportid);
-} else {
-  console.error('Error: Reportid tidak ditemukan.');
-}
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
