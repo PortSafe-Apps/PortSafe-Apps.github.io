@@ -99,7 +99,8 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
-
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
 
 // Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
 const displayDetailedReport = (detailedReport) => {
@@ -172,9 +173,6 @@ const displayDetailedReport = (detailedReport) => {
     detailContainer.innerHTML = '<p>Informasi detail tidak ditemukan.</p>';
   }
 };
-
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
-getAllUserReport();
 
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
 const getDetailedReport = async (reportid) => {
