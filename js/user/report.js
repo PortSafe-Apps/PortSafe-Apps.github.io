@@ -89,40 +89,25 @@ const displayReportData = (reportData, cardContainerId) => {
 
       // Tambahkan event listener klik pada kartu
       newCard.addEventListener('click', () => {
-        console.log('Report card clicked:', report.reportid);
-
-        // Check if the navigation is about to happen
-        console.log('Navigating to detailed report page...');
-
-        // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
-        window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${report.reportid}`;
+        getDetailedReport(report.reportid);
       });
 
       reportContainer.appendChild(newCard);
-    });
-
-    // Tambahkan event listener untuk container kartu secara keseluruhan
-    reportContainer.addEventListener('click', (event) => {
-      console.log('Container clicked:', event.target);
-
-      // Pastikan yang diklik adalah bagian dari kartu
-      const reportCard = event.target.closest('.timeline-card');
-      if (reportCard) {
-        const reportid = reportCard.querySelector('.element-heading').textContent;
-        console.log('Report card clicked within container. Report ID:', reportid);
-        getDetailedReport(reportid);
-      }
     });
   } else {
     reportContainer.innerHTML = '<p>No report data found.</p>';
   }
 };
 
-const displayDetailedReport = (detailedReport, detailContainerId) => {
-  const detailContainer = document.getElementById(detailContainerId);
 
+
+// Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
+const displayDetailedReport = (detailedReport) => {
+  const detailContainer = document.getElementById('detailContainer');
+
+  // Tambahkan pengecekan apakah detailContainer ditemukan
   if (!detailContainer) {
-    console.error(`Error: Element with ID "${detailContainerId}" not found.`);
+    console.error('Error: Element with ID "detailContainer" not found.');
     return;
   }
 
@@ -188,14 +173,14 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
   }
 };
 
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
+getAllUserReport();
+
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
 const getDetailedReport = async (reportid) => {
-  console.log('Getting detailed report for reportid:', reportid);
-
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-    console.log('Authentication error. Redirecting to login page...');
     // Tangani kesalahan autentikasi jika tidak ada token
     Swal.fire({
       icon: 'warning',
@@ -234,5 +219,8 @@ const getDetailedReport = async (reportid) => {
   }
 };
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
-getAllUserReport();
+ // Navigasi ke halaman baru dengan menyertakan reportid sebagai parameter query
+ window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
+ // Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
+const urlParams = new URLSearchParams(window.location.search);
+const reportid = urlParams.get('reportid');
