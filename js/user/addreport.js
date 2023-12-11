@@ -18,30 +18,24 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-async function getDataURLFromImage(elementId) {
-  const imageElement = document.getElementById(elementId);
-
+// Fungsi untuk mengonversi blob URL menjadi base64
+async function convertBlobUrlToBase64(blobUrl) {
+  const response = await fetch(blobUrl);
+  const blob = await response.blob();
   return new Promise((resolve, reject) => {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    const image = new Image();
-
-    image.onload = function () {
-      canvas.width = image.width;
-      canvas.height = image.height;
-      ctx.drawImage(image, 0, 0, image.width, image.height);
-
-      // Dapatkan URL data dari elemen canvas
-      const dataURL = canvas.toDataURL(image.type || 'image/png'); // Tentukan tipe MIME, default ke PNG jika tidak ada
-      resolve(dataURL);
-    };
-
-    image.onerror = function (error) {
-      reject(error);
-    };
-
-    image.src = imageElement.src;
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.onerror = reject;
+    reader.readAsDataURL(blob);
   });
+}
+
+// Fungsi untuk mendapatkan blob URL dari elemen gambar
+function getBlobUrlFromImageElement(elementId) {
+  const imgElement = document.getElementById(elementId);
+  if (imgElement.src.startsWith('blob:')) {
+    return imgElement.src;
+  }
 }
 
 const insertObservationReport = async (event) => {
@@ -78,10 +72,14 @@ const insertObservationReport = async (event) => {
 
       return checkedValues;
     }
+    // Mengonversi blob URL gambar observasi menjadi base64
+    const fotoObservasiBlobUrl = getBlobUrlFromImageElement('hasilFotoObservasi');
+    const fotoObservasiBase64 = await convertBlobUrlToBase64(fotoObservasiBlobUrl);
 
-    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
-    
+    // Mengonversi blob URL gambar perbaikan menjadi base64
+    const fotoPerbaikanBlobUrl = getBlobUrlFromImageElement('hasilFotoPerbaikan');
+    const fotoPerbaikanBase64 = await convertBlobUrlToBase64(fotoPerbaikanBlobUrl);
+
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
