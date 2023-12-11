@@ -18,7 +18,7 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-async function getDataURLBlobFromImage(elementId) {
+async function getDataURLFromImage(elementId) {
   const imageElement = document.getElementById(elementId);
 
   return new Promise((resolve, reject) => {
@@ -31,15 +31,9 @@ async function getDataURLBlobFromImage(elementId) {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, image.width, image.height);
 
-      // Dapatkan blob dari elemen canvas
-      canvas.toBlob(
-        function (blob) {
-          // Buat URL dari blob
-          const blobURL = URL.createObjectURL(blob);
-          resolve(blobURL);
-        },
-        image.type || 'image/png' // Tentukan tipe MIME, default ke PNG jika tidak ada
-      );
+      // Dapatkan URL data dari elemen canvas
+      const dataURL = canvas.toDataURL(image.type || 'image/png'); // Tentukan tipe MIME, default ke PNG jika tidak ada
+      resolve(dataURL);
     };
 
     image.onerror = function (error) {

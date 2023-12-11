@@ -118,13 +118,11 @@ const displayReportData = (reportData, cardContainerId) => {
   }
 };
 
-// Fungsi untuk menampilkan informasi detail laporan ke dalam HTML
-const displayDetailedReport = (detailedReport) => {
-  const detailContainer = document.getElementById('detailContainer');
+const displayDetailedReport = (detailedReport, detailContainerId) => {
+  const detailContainer = document.getElementById(detailContainerId);
 
-  // Tambahkan pengecekan apakah detailContainer ditemukan
   if (!detailContainer) {
-    console.error('Error: Element with ID "detailContainer" not found.');
+    console.error(`Error: Element with ID "${detailContainerId}" not found.`);
     return;
   }
 
