@@ -200,7 +200,7 @@ const displayReportData = (reportData, cardContainerId, detailPageURL) => {
         const reportid = report.reportid;
 
         // Navigasi ke halaman detail dengan menyertakan reportid sebagai parameter query
-        window.location.href = `${detailPageURL}?reportid=${reportid}`;
+        window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${reportid}`;
       });
 
       // Tambahkan kartu ke kontainer laporan
@@ -219,9 +219,6 @@ const detailContainerId = 'detailContainer';
 
 // ID elemen target di halaman list report
 const cardContainerId = 'reportContainer';
-
-// URL halaman detail report
-const detailPageURL = 'https://portsafe-apps.github.io/pages/user/detailreport.html';
 
 // Fungsi untuk menampilkan laporan pengguna dalam bentuk kartu
 displayReportData(data, cardContainerId, detailPageURL);
