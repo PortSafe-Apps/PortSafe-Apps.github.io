@@ -18,8 +18,7 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-// Fungsi untuk mendapatkan URL data gambar dari elemen gambar
-async function getDataURLFromImage(elementId) {
+async function getDataURLBlobFromImage(elementId) {
   const imageElement = document.getElementById(elementId);
 
   return new Promise((resolve, reject) => {
@@ -32,9 +31,15 @@ async function getDataURLFromImage(elementId) {
       canvas.height = image.height;
       ctx.drawImage(image, 0, 0, image.width, image.height);
 
-      // Dapatkan URL data gambar
-      const dataURL = canvas.toDataURL(); // Default format adalah PNG, tetapi dapat diganti jika diperlukan
-      resolve(dataURL);
+      // Dapatkan blob dari elemen canvas
+      canvas.toBlob(
+        function (blob) {
+          // Buat URL dari blob
+          const blobURL = URL.createObjectURL(blob);
+          resolve(blobURL);
+        },
+        image.type || 'image/png' // Tentukan tipe MIME, default ke PNG jika tidak ada
+      );
     };
 
     image.onerror = function (error) {
@@ -80,8 +85,8 @@ const insertObservationReport = async (event) => {
       return checkedValues;
     }
 
-    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
+    const fotoObservasiBase64 = await getDataURLBlobFromImage('hasilFotoObservasi');
+    const fotoPerbaikanBase64 = await getDataURLBlobFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',
