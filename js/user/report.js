@@ -190,7 +190,6 @@ const getDetailedReport = async (reportid) => {
     return;
   }
 
- 
   const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1`;
 
   const myHeaders = new Headers();
@@ -199,7 +198,7 @@ const getDetailedReport = async (reportid) => {
   const requestOptions = {
     method: 'POST',
     headers: myHeaders,
-    body: JSON.stringify({ reportid }),
+    body: JSON.stringify({ reportid }), // Pass reportid in the request body
     redirect: 'follow',
   };
 
@@ -221,3 +220,13 @@ const getDetailedReport = async (reportid) => {
     console.error('Error:', error);
   }
 };
+
+// Ambil reportid dari parameter query di halaman baru dan tampilkan informasi detail
+const urlParams = new URLSearchParams(window.location.search);
+const reportid = urlParams.get('reportid');
+
+if (reportid) {
+  getDetailedReport(reportid);
+} else {
+  console.error('Error: Reportid tidak ditemukan.');
+}
