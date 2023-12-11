@@ -79,8 +79,8 @@ const insertObservationReport = async (event) => {
       return checkedValues;
     }
 
-    const fotoObservasiBase64 = await getDataURLBlobFromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getDataURLBlobFromImage('hasilFotoPerbaikan');
+    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
+    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',
