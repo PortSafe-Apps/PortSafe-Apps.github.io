@@ -11,6 +11,14 @@ function ambilFotoObservasi() {
         // Set the source of the image directly
         imgHasilFotoObservasi.src = fotoObservasiBase64;
 
+        // Create a link from the base64-encoded image data
+        const linkElement = document.createElement('a');
+        linkElement.href = fotoObservasiBase64;
+        linkElement.download = 'image.png'; // You can set the download attribute if you want to make it downloadable
+        document.body.appendChild(linkElement);
+        linkElement.click();
+        document.body.removeChild(linkElement);
+
         // You can use fotoObservasiBase64 in other ways (e.g., send to the server)
         console.log(fotoObservasiBase64);
     };
@@ -21,6 +29,7 @@ function ambilFotoObservasi() {
 }
 
 document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
+
 
 
 
