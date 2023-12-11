@@ -18,16 +18,29 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-// Fungsi untuk mengonversi blob URL menjadi base64
-async function convertBlobUrlToBase64(blobUrl) {
+// Fungsi untuk mengonversi blob URL menjadi base64 dan kompres dengan Brotli
+async function convertBlobUrlToBase64AndCompress(blobUrl) {
   const response = await fetch(blobUrl);
   const blob = await response.blob();
+
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
-    reader.onloadend = () => resolve(reader.result);
+    reader.onloadend = () => {
+      const base64 = reader.result.split(',')[1]; // Ambil bagian base64 saja
+      const compressedBase64 = compressBase64WithBrotli(base64);
+      resolve(compressedBase64);
+    };
     reader.onerror = reject;
     reader.readAsDataURL(blob);
   });
+}
+
+// Fungsi untuk melakukan kompresi Brotli pada data base64
+function compressBase64WithBrotli(base64String) {
+  // Lakukan kompresi dengan Brotli
+  const compressedData = new TextEncoder().encode(base64String);
+  const compressedBase64 = String.fromCharCode.apply(null, Brotli.compress(compressedData));
+  return compressedBase64;
 }
 
 // Fungsi untuk mendapatkan blob URL dari elemen gambar
@@ -37,6 +50,7 @@ function getBlobUrlFromImageElement(elementId) {
     return imgElement.src;
   }
 }
+
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -72,13 +86,14 @@ const insertObservationReport = async (event) => {
 
       return checkedValues;
     }
-    // Mengonversi blob URL gambar observasi menjadi base64
-    const fotoObservasiBlobUrl = getBlobUrlFromImageElement('hasilFotoObservasi');
-    const fotoObservasiBase64 = await convertBlobUrlToBase64(fotoObservasiBlobUrl);
 
+    // Menggunakan fungsi untuk mendapatkan blob URL, mengonversinya ke base64, dan mengompresi dengan Brotli
+    const fotoObservasiBlobUrl = getBlobUrlFromImageElement('hasilFotoObservasi');
+    const compressedFotoObservasiBase64 = await convertBlobUrlToBase64AndCompress(fotoObservasiBlobUrl);
+ 
     // Mengonversi blob URL gambar perbaikan menjadi base64
     const fotoPerbaikanBlobUrl = getBlobUrlFromImageElement('hasilFotoPerbaikan');
-    const fotoPerbaikanBase64 = await convertBlobUrlToBase64(fotoPerbaikanBlobUrl);
+    const compressedFotoPerbaikanBase64 = await convertBlobUrlToBase64AndCompress(fotoPerbaikanBlobUrl);
 
     const requestOptions = {
       method: 'POST',
@@ -91,13 +106,13 @@ const insertObservationReport = async (event) => {
           LocationName: document.getElementById('autoCompleteLocation').value,
         },
         Description: document.getElementById('deskripsiPengamatan').value,
-        ObservationPhoto: fotoObservasiBase64,
+        ObservationPhoto: compressedFotoObservasiBase64,
         TypeDangerousActions: getCheckedCheckboxes(),
         Area: {
           AreaName: document.getElementById('newAreaName').value,
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-        ImprovementPhoto: fotoPerbaikanBase64,
+        ImprovementPhoto: compressedFotoPerbaikanBase64,
         CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
