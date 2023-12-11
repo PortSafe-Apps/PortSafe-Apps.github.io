@@ -1,26 +1,25 @@
 const inputFotoObservasi = document.getElementById('fotoObservasi');
 const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
+let fotoObservasiDataURL = null; // Variabel untuk menyimpan URL data gambar
 
 function ambilFotoObservasi() {
     const fileInput = inputFotoObservasi.files[0];
     const reader = new FileReader();
 
     reader.onloadend = function () {
-        const fotoObservasiBase64 = reader.result;
+        fotoObservasiDataURL = reader.result;
 
         // Set the source of the image directly
-        imgHasilFotoObservasi.src = fotoObservasiBase64;
+        imgHasilFotoObservasi.src = fotoObservasiDataURL;
 
-        // You can use fotoObservasiBase64 in other ways (e.g., send to the server)
-        console.log(fotoObservasiBase64);
+        // You can use fotoObservasiDataURL in other ways (e.g., send to the server)
+        console.log(fotoObservasiDataURL);
     };
 
     if (fileInput) {
         reader.readAsDataURL(fileInput);
     }
 }
-
-document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
 
 
 
