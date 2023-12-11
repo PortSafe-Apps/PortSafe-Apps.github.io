@@ -18,6 +18,26 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
+async function getObjectURLFromImage(elementId) {
+  const imageElement = document.getElementById(elementId);
+
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+
+    image.onload = function () {
+      // Dapatkan URL objek dari elemen gambar
+      const objectURL = URL.createObjectURL(imageElement.src);
+      resolve(objectURL);
+    };
+
+    image.onerror = function (error) {
+      reject(error);
+    };
+
+    image.src = imageElement.src;
+  });
+}
+
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -52,6 +72,9 @@ const insertObservationReport = async (event) => {
 
       return checkedValues;
     }
+
+    const fotoObservasiBase64 = await getObjectURLFromImage('hasilFotoObservasi');
+    const fotoPerbaikanBase64 = await getObjectURLFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',
@@ -64,13 +87,13 @@ const insertObservationReport = async (event) => {
           LocationName: document.getElementById('autoCompleteLocation').value,
         },
         Description: document.getElementById('deskripsiPengamatan').value,
-        ObservationPhoto: document.getElementById('fotoObservasi').value,
+        ObservationPhoto: fotoObservasiBase64,
         TypeDangerousActions: getCheckedCheckboxes(),
         Area: {
           AreaName: document.getElementById('newAreaName').value,
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-        ImprovementPhoto: document.getElementById('fotoPerbaikan').value,
+        ImprovementPhoto: fotoPerbaikanBase64,
         CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
