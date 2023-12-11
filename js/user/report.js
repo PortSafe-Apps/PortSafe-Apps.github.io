@@ -115,6 +115,49 @@ const displayDetailedReport = async (reportid, detailContainerId) => {
   }
 };
 
+
+// Fungsi untuk mendapatkan semua laporan pengguna dengan token
+const getAllUserReport = async () => {
+  const token = getTokenFromCookies('Login');
+
+  if (!token) {
+    // Tangani kesalahan autentikasi jika tidak ada token
+    Swal.fire({
+      icon: 'warning',
+      title: 'Authentication Error',
+      text: 'Kamu Belum Login!',
+    }).then(() => {
+      window.location.href = 'https://portsafe-apps.github.io/';
+    });
+    return;
+  }
+
+  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
+
+  const myHeaders = new Headers();
+  myHeaders.append('Login', token);
+
+  const requestOptions = {
+    method: 'POST',
+    headers: myHeaders,
+    redirect: 'follow',
+  };
+
+  try {
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+
+    if (data.status === 200) {
+      // Tampilkan laporan pengguna dalam bentuk kartu
+      displayReportData(data.data, 'reportContainer');
+    } else {
+      console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+    }
+  } catch (error) {
+    console.error('Error:', error);
+  }
+};
+
 // Fungsi untuk menampilkan laporan pengguna dalam bentuk kartu
 const displayReportData = (reportData, cardContainerId, detailPageURL) => {
   const reportContainer = document.getElementById(cardContainerId);
