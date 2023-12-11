@@ -18,16 +18,22 @@ const showAlert = (message, type = 'success') => {
   });
 };
 
-async function getObjectURLFromImage(elementId) {
+async function getDataURLFromImage(elementId) {
   const imageElement = document.getElementById(elementId);
 
   return new Promise((resolve, reject) => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
     const image = new Image();
 
     image.onload = function () {
-      // Dapatkan URL objek dari elemen gambar
-      const objectURL = URL.createObjectURL(imageElement.src);
-      resolve(objectURL);
+      canvas.width = image.width;
+      canvas.height = image.height;
+      ctx.drawImage(image, 0, 0, image.width, image.height);
+
+      // Dapatkan URL data dari elemen canvas
+      const dataURL = canvas.toDataURL(image.type || 'image/png'); // Tentukan tipe MIME, default ke PNG jika tidak ada
+      resolve(dataURL);
     };
 
     image.onerror = function (error) {
@@ -73,8 +79,8 @@ const insertObservationReport = async (event) => {
       return checkedValues;
     }
 
-    const fotoObservasiBase64 = await getObjectURLFromImage('hasilFotoObservasi');
-    const fotoPerbaikanBase64 = await getObjectURLFromImage('hasilFotoPerbaikan');
+    const fotoObservasiBase64 = await getDataURLFromImage('hasilFotoObservasi');
+    const fotoPerbaikanBase64 = await getDataURLFromImage('hasilFotoPerbaikan');
     
     const requestOptions = {
       method: 'POST',

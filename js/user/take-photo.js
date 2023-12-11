@@ -5,10 +5,11 @@ function ambilFotoObservasi() {
     const fileInput = inputFotoObservasi.files[0];
 
     // Set the source of the image using URL.createObjectURL
-    imgHasilFotoObservasi.src = URL.createObjectURL(fileInput);
+    const imageUrl = URL.createObjectURL(fileInput);
+    imgHasilFotoObservasi.src = imageUrl;
 
-    // You can use fileInput in other ways (e.g., send to the server)
-    console.log(fileInput);
+    // Cetak URL ke konsol
+    console.log(imageUrl);
 }
 
 document.getElementById('fotoObservasi').addEventListener('change', ambilFotoObservasi);
@@ -21,11 +22,11 @@ function ambilFotoPerbaikan() {
     const fileInput = inputFotoPerbaikan.files[0];
 
     // Set the source of the image using URL.createObjectURL
-    imgHasilFotoPerbaikan.src = URL.createObjectURL(fileInput);
+    const imageUrl = URL.createObjectURL(fileInput);
+    imgHasilFotoPerbaikan.src = imageUrl;
 
-    // You can use fileInput in other ways (e.g., send to the server)
-    console.log(fileInput);
+    // Cetak URL ke konsol
+    console.log(imageUrl);
 }
 
 document.getElementById('fotoPerbaikan').addEventListener('change', ambilFotoPerbaikan);
-
