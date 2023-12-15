@@ -31,15 +31,16 @@ function ambilFoto(inputElement, imgElement) {
 }
 
 function extractImageUrl(responseText) {
-    const urlPattern = /URL publik: (https:\/\/[^\s]+)\/([^\s]+\.[^\s]+)\b/;
+    const urlPattern = /URL publik: (\S+)/;
     const match = responseText.match(urlPattern);
 
-    if (match && match[1] && match[2]) {
-        return match[1] + '/' + match[2];
+    if (match && match[1]) {
+        return match[1];
     } else {
         return null;
     }
 }
+
 function tampilkanGambarDariUrl(imageUrl, imgElement) {
     imgElement.src = imageUrl;
 }
