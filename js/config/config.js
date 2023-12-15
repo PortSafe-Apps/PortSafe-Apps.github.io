@@ -1,5 +1,7 @@
 import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.js';
 
+let userToken; // Tambahkan deklarasi variabel userToken
+
 //token
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
@@ -13,12 +15,11 @@ export function getTokenFromAPI() {
     })
     .catch(error => console.error('Gagal mengambil token:', error));
 }
+
 export function GetDataForm() {
   const nipp = document.querySelector("#nipp").value;
   const nama = document.querySelector("#nama").value;
   const jabatan = document.querySelector("#jabatan").value;
-  const divisi = document.querySelector("#divisi").value;
-  const bidang = document.querySelector("#bidang").value;
   const password = document.querySelector("#psw-input").value;
 
   // Set nilai default role langsung di dalam fungsi
@@ -33,8 +34,7 @@ export function GetDataForm() {
     password: password,
     role: role,
   };
-  return data
-
+  return data;
 }
 
 //login
@@ -49,40 +49,40 @@ export function PostLogin() {
   return data;
 }
 
-
 function ResponsePostLogin(response) {
   if (response && response.status) {
     setCookieWithExpireHour('Login', response.token, 2);
 
-    const userRole = response.role; 
+    const userRole = response.role;
+    const loginSuccess = true; // Sesuaikan dengan logika atau kondisi yang benar
 
     if (loginSuccess) {
       if (userRole === 'user') {
-        Swal.fire({
+        showAlert({
           icon: 'success',
           text: 'Login berhasil!',
           showConfirmButton: false,
         });
         setTimeout(() => {
-          window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; 
-        }, 2500); 
+          window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
+        }, 2500);
       } else if (userRole === 'admin') {
-        Swal.fire({
+        showAlert({
           icon: 'success',
           text: 'Login berhasil!',
           showConfirmButton: false,
         });
         setTimeout(() => {
           window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-        }, 2500); 
+        }, 2500);
       } else {
-        Swal.fire({
+        showAlert({
           icon: 'error',
           text: `Role tidak dikenali: ${userRole}`,
         });
       }
     } else {
-      Swal.fire({
+      showAlert({
         icon: 'error',
         text: 'Login gagal. Silakan coba lagi.',
       });
@@ -90,16 +90,16 @@ function ResponsePostLogin(response) {
   }
 }
 
-const showAlert = (message, type = 'success') => {
-  Swal.fire({
-    icon: type,
-    text: message,
-    showConfirmButton: false,
-  });
+const showAlert = (options) => {
+  Swal.fire(options);
 };
 
 export function AlertPost(value) {
-  showAlert(`${value.message}\nRegistrasi Berhasil`, 'success');
+  showAlert({
+    icon: 'success',
+    text: `${value.message}\nRegistrasi Berhasil`,
+    showConfirmButton: false,
+  });
   setTimeout(() => {
     window.location.href = "https://portsafe-apps.github.io/";
   }, 2500); // Delay sebelum redirect (dalam milidetik)
@@ -110,5 +110,5 @@ export function ResponsePost(result) {
 }
 
 export function ResponseLogin(result) {
-  ResponsePostLogin(result)
+  ResponsePostLogin(result);
 }
