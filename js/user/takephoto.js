@@ -12,13 +12,19 @@ function ambilFotoObservasi() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => response.text())  // Mengambil teks dari respons
         .then(data => {
-            // Server akan mengembalikan objek JSON yang mungkin berisi URL gambar
-            const imageUrl = data.url;
+            // Menampilkan respons di console (opsional)
+            console.log("Server Response:", data);
 
-            // Menetapkan URL sebagai sumber gambar
-            tampilkanGambarDariUrl(imageUrl, imgHasilFotoObservasi);
+            // Menampilkan respons ke pengguna (misalnya, sebagai pemberitahuan di halaman web)
+            alert(data);
+
+            // Jika respons berisi URL gambar, Anda dapat mengekstraknya dan menetapkan sebagai sumber gambar
+            const imageUrl = extractImageUrlFromResponse(data);
+            if (imageUrl) {
+                imgHasilFotoObservasi.src = imageUrl;
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -26,13 +32,15 @@ function ambilFotoObservasi() {
     }
 }
 
-function tampilkanGambarDariUrl(imageUrl, imgElement) {
-    // Menetapkan URL sebagai sumber gambar
-    imgElement.src = imageUrl;
+// Fungsi untuk mengekstrak URL gambar dari respons teks
+function extractImageUrlFromResponse(responseText) {
+    const urlMatch = responseText.match(/URL publik: (\S+)/);
+    return urlMatch ? urlMatch[1] : null;
 }
 
 // Menambahkan event listener untuk memanggil fungsi ambilFotoObservasi saat ada perubahan pada input file
 inputFotoObservasi.addEventListener('change', ambilFotoObservasi);
+
 
 
 const inputFotoPerbaikan = document.getElementById('fotoPerbaikan');
@@ -49,13 +57,19 @@ function ambilFotoPerbaikan() {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => response.text())  // Mengambil teks dari respons
         .then(data => {
-            // Server akan mengembalikan objek JSON yang mungkin berisi URL gambar
-            const imageUrl = data.url;
+            // Menampilkan respons di console (opsional)
+            console.log("Server Response:", data);
 
-            // Menetapkan URL sebagai sumber gambar
-            tampilkanGambarDariUrl(imageUrl, imgHasilFotoPerbaikan);
+            // Menampilkan respons ke pengguna (misalnya, sebagai pemberitahuan di halaman web)
+            alert(data);
+
+            // Jika respons berisi URL gambar, Anda dapat mengekstraknya dan menetapkan sebagai sumber gambar
+            const imageUrl = extractImageUrlFromResponse(data);
+            if (imageUrl) {
+                imgHasilFotoPerbaikan.src = imageUrl;
+            }
         })
         .catch(error => {
             console.error('Error:', error);
@@ -63,5 +77,12 @@ function ambilFotoPerbaikan() {
     }
 }
 
+// Fungsi untuk mengekstrak URL gambar dari respons teks
+function extractImageUrlFromResponse(responseText) {
+    const urlMatch = responseText.match(/URL publik: (\S+)/);
+    return urlMatch ? urlMatch[1] : null;
+}
+
 // Menambahkan event listener untuk memanggil fungsi ambilFotoPerbaikan saat ada perubahan pada input file
 inputFotoPerbaikan.addEventListener('change', ambilFotoPerbaikan);
+

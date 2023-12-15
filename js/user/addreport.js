@@ -1,23 +1,3 @@
-const getTokenFromCookies = (cookieName) => {
-  const cookies = document.cookie.split(';');
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
-    if (name === cookieName) {
-      return value;
-    }
-  }
-  return null;
-};
-
-const showAlert = (message, type = 'success') => {
-  Swal.fire({
-    icon: type,
-    text: message,
-    showConfirmButton: true,
-    timer: 1500
-  });
-};
-
 const insertObservationReport = async (event) => {
   event.preventDefault();
 
@@ -28,12 +8,6 @@ const insertObservationReport = async (event) => {
     return;
   }
 
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
-
-  const myHeaders = new Headers();
-  myHeaders.append('Login', token);
-  myHeaders.append('Content-Type', 'application/json');
-
   try {
     function getCheckedCheckboxes() {
       var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
@@ -41,7 +15,7 @@ const insertObservationReport = async (event) => {
 
       checkboxes.forEach(function (checkbox) {
         var typeId = checkbox.name;
-        var typeName = checkbox.dataset.typeName; // Mengambil Type Name dari dataset
+        var typeName = checkbox.dataset.typeName;
 
         checkedValues.push({
           TypeId: typeId,
@@ -52,6 +26,18 @@ const insertObservationReport = async (event) => {
 
       return checkedValues;
     }
+
+    // Mengambil URL gambar dari elemen imgHasilFotoObservasi
+    const observationPhotoUrl = document.getElementById('hasilFotoObservasi').src;
+
+    // Mengambil URL gambar dari elemen imgHasilFotoPerbaikan
+    const improvementPhotoUrl = document.getElementById('hasilFotoPerbaikan').src;
+
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
+
+    const myHeaders = new Headers();
+    myHeaders.append('Login', token);
+    myHeaders.append('Content-Type', 'application/json');
 
     const requestOptions = {
       method: 'POST',
@@ -64,13 +50,13 @@ const insertObservationReport = async (event) => {
           LocationName: document.getElementById('autoCompleteLocation').value,
         },
         Description: document.getElementById('deskripsiPengamatan').value,
-        ObservationPhoto: fotoObservasiBase64,
+        ObservationPhoto: observationPhotoUrl,
         TypeDangerousActions: getCheckedCheckboxes(),
         Area: {
           AreaName: document.getElementById('newAreaName').value,
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
-        ImprovementPhoto: fotoPerbaikanBase64,
+        ImprovementPhoto: improvementPhotoUrl,
         CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
