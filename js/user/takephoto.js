@@ -7,17 +7,25 @@ function generateRandomID() {
 function ambilFoto(inputElement, imgElement) {
     const fileInput = inputElement.files[0];
 
+    console.log('File Input:', fileInput); // Added for debugging
+
     if (fileInput) {
         const formData = new FormData();
 
         // Mendapatkan jenis foto dari atribut data-jenis pada elemen input
         const jenisFoto = inputElement.getAttribute('data-jenis');
 
+        console.log('Jenis Foto:', jenisFoto); // Added for debugging
+
         // Generate ID acak berdasarkan jenis foto
         const randomID = generateRandomID();
 
+        console.log('Random ID:', randomID); // Added for debugging
+
         // Generate nama file yang unik dengan awalan sesuai jenis foto
         const uniqueFileName = `${jenisFoto}${randomID}_${fileInput.name}`;
+
+        console.log('Unique File Name:', uniqueFileName); // Added for debugging
 
         formData.append('image', fileInput, uniqueFileName);
 
