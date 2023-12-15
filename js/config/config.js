@@ -85,11 +85,6 @@ function ResponsePostLogin(response) {
         text: `Login gagal: ${response.Message}`,
       });
     }
-  } else {
-    showAlert({
-      icon: 'error',
-      text: 'Login gagal. Silakan coba lagi.',
-    });
   }
 }
 
