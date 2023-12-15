@@ -67,13 +67,10 @@ function extractImageUrl(responseText) {
 function tampilkanGambarDariUrl(imageUrl, imgElement) {
     imgElement.src = imageUrl;
 }
+document.getElementById('fotoObservasi').addEventListener('change', function() {
+    ambilFoto(this, document.getElementById('hasilFotoObservasi'));
+  });
 
-// Gunakan fungsi tersebut saat memanggil ambilFotoObservasi untuk foto observasi
-inputFotoObservasi.addEventListener('change', function() {
-    ambilFoto(inputFotoObservasi, imgHasilFotoObservasi);
-});
-
-// Gunakan fungsi tersebut saat memanggil ambilFotoPerbaikan untuk foto perbaikan
-inputFotoPerbaikan.addEventListener('change', function() {
-    ambilFoto(inputFotoPerbaikan, imgHasilFotoPerbaikan);
-});
+  document.getElementById('fotoPerbaikan').addEventListener('change', function() {
+    ambilFoto(this, document.getElementById('hasilFotoPerbaikan'));
+  });
