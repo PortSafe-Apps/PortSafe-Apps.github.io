@@ -57,34 +57,22 @@ function ResponsePostLogin(response) {
 
     const userRole = response.Role;
 
-    if (response.Status === true) {
-      showAlert({
-        icon: 'success',
-        text: 'Login berhasil!',
-        showConfirmButton: false,
-      });
-
-      // Redirect berdasarkan peran pengguna
-      if (userRole === 'user') {
-        setTimeout(() => {
-          window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
-        }, 2500);
-      } else if (userRole === 'admin') {
-        setTimeout(() => {
-          window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-        }, 2500);
-      } else {
-        showAlert({
-          icon: 'error',
-          text: `Role tidak dikenali: ${userRole}`,
-        });
-      }
+    // Redirect berdasarkan peran pengguna
+    if (userRole === 'user') {
+      window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
+    } else if (userRole === 'admin') {
+      window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin
     } else {
       showAlert({
         icon: 'error',
-        text: `Login gagal: ${response.Message}`,
+        text: `Role tidak dikenali: ${userRole}`,
       });
     }
+  } else {
+    showAlert({
+      icon: 'error',
+      text: `Login gagal: ${response.Message}`,
+    });
   }
 }
 
