@@ -41,6 +41,7 @@ function ambilFoto(inputElement, imgElement) {
     }
 }
 
+
 // Fungsi untuk mengekstrak URL gambar dari respons server
 function extractImageUrl(responseText) {
     const urlPattern = /URL publik:(.*)/; // Ekspresi regex untuk menangkap setiap karakter setelah "URL publik:"
