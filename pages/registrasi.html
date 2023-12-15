@@ -54,9 +54,6 @@
         <div class="register-form mt-4" >
           <h6 class="mb-3 text-center">Register to continue to PortSafe+.</h6>
           <form action="#" method="post">
-            <!-- <div class="form-group text-start mb-3">
-              <input class="form-control" type="text" placeholder="Email address">
-            </div> -->
             <div class="form-group text-start mb-3">
               <input class="form-control" type="text" id="nipp" name="nipp" placeholder="NIPP">
             </div>
@@ -64,23 +61,23 @@
               <input class="form-control" type="text" id="nama" name="nama" placeholder="Nama">
             </div>
             <div class="form-group text-start mb-3">
-              <input class="form-control" type="text" id="jabatan" name="jabatan" placeholder="Jabatan">
-            </div>
-            <div class="form-group text-start mb-3">
-              <input class="form-control" type="text" id="divisi" name="divisi" placeholder="Divisi">
-            </div>
-            <div class="form-group text-start mb-3">
-              <input class="form-control" type="text" id="bidang" name="bidang" placeholder="Bidang">
+                <label class="form-label" for="jabatan">Area</label>
+                <select class="form-select" id="jabatan" name="jabatan" aria-label="Default select example">
+                  <option value="" disabled selected>Pilih Jabatan</option>
+                  <option value="Senior Vice Precident">Senior Vice Precident</option>
+                  <option value="Vice Precident">Vice Precident</option>
+                  <option value="Project Manager">Project Manager</option>
+                  <option value="Branch Manager">Branch Manager</option>
+                  <option value="Deputi Branch Manager">Deputi Branch Manager</option>
+                  <option value="Supervisi">Supervisi</option>
+                  <option value="Koordinator">Koordinator</option> 
+                </select>
             </div>
             <div class="form-group text-start mb-3 position-relative">
               <input class="form-control" id="psw-input" type="password" placeholder="New password">
               <div class="position-absolute" id="password-visibility"><i class="bi bi-eye"></i><i class="bi bi-eye-slash"></i></div>
             </div>
             <div class="mb-3" id="pswmeter"></div>
-            <!-- <div class="form-check mb-3">
-              <input class="form-check-input" id="checkedCheckbox" type="checkbox" value="" checked>
-              <label class="form-check-label text-muted fw-normal" for="checkedCheckbox">I agree with the terms &amp; policy.</label>
-            </div> -->
             <button class="btn btn-primary w-100" type="submit">Sign Up</button>
           </form>
         </div>

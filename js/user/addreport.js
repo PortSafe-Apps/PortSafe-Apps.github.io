@@ -14,7 +14,6 @@ const showAlert = (message, type = 'success') => {
     icon: type,
     text: message,
     showConfirmButton: true,
-    timer: 2000
   });
 };
 
@@ -24,7 +23,14 @@ const insertObservationReport = async (event) => {
   const token = getTokenFromCookies('Login');
 
   if (!token) {
-    showAlert("Header Login Not Found", 'error');
+    // Tangani kesalahan autentikasi jika tidak ada token
+    Swal.fire({
+      icon: 'warning',
+      title: 'Authentication Error',
+      text: 'Kamu Belum Login!',
+    }).then(() => {
+      window.location.href = 'https://portsafe-apps.github.io/';
+    });
     return;
   }
 

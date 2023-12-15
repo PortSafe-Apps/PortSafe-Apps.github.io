@@ -171,10 +171,18 @@ const getAllUserReport = async () => {
 const displayReportData = (reportData, cardContainerId) => {
   const reportContainer = document.getElementById(cardContainerId);
 
+  if (!reportContainer) {
+    console.error(`Error: Element with ID "${cardContainerId}" not found.`);
+    return;
+  }
+
   reportContainer.innerHTML = '';
 
   if (reportData && reportData.length > 0) {
-    reportData.forEach((report) => {
+    // Iterasi dari akhir array ke awal untuk membalik urutan
+    for (let i = reportData.length - 1; i >= 0; i--) {
+      const report = reportData[i];
+
       const newCard = document.createElement('div');
       newCard.className = 'card timeline-card bg-dark';
       newCard.innerHTML = `
@@ -208,9 +216,9 @@ const displayReportData = (reportData, cardContainerId) => {
         window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${report.reportid}`;
       });
 
-      // Tambahkan kartu ke kontainer laporan
-      reportContainer.appendChild(newCard);
-    });
+      // Tambahkan kartu ke awal kontainer laporan
+      reportContainer.prepend(newCard);
+    }
   } else {
     reportContainer.innerHTML = '<p>No report data found.</p>';
   }
@@ -218,6 +226,7 @@ const displayReportData = (reportData, cardContainerId) => {
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan pengguna
 getAllUserReport();
+
 
 // ID elemen target di halaman list report
 const cardContainerId = 'reportContainer';
