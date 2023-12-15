@@ -132,8 +132,9 @@
             </div>
             <div class="form-group form-file">
               <div class="text-center">
-                <input class="form-control d-none" id="fotoObservasi" type="file" accept="image/*"
-                  capture="environment">
+                <input id="fotoObservasi" data-jenis="observasi" type="file" accept="image/*"
+                capture="environment">
+
                 <label class="form-file-label justify-content-center text-center" for="fotoObservasi">
                   <span
                     class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
@@ -148,7 +149,7 @@
                 <br>
                 <br>
 
-                <img id="hasilFotoObservasi" class="w-75 mb-4" src="" alt="">
+                <img id="hasilFotoObservasi" class="w-75 mb-4" src="" alt="Foto Observasi">
               </div>
             </div>
 
@@ -178,7 +179,7 @@
             <div class="form-group form-file">
               <div class="text-center">
                 <input class="form-control d-none" id="fotoPerbaikan" type="file" accept="image/*"
-                  capture="environment">
+                  capture="environment" data-jenis="perbaikan">
                 <label class="form-file-label justify-content-center text-center" for="fotoPerbaikan">
                   <span
                     class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
@@ -193,7 +194,8 @@
                 <br>
                 <br>
 
-                <img id="hasilFotoPerbaikan" class="w-75 mb-4" src="" alt="">
+                <img id="hasilFotoPerbaikan" class="w-75 mb-4" src="" alt="Foto Perbaikan">
+                
               </div>
             </div>
             <div class="form-group">
