@@ -2,6 +2,10 @@ import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.
 
 let userToken; // Tambahkan deklarasi variabel userToken
 
+const showAlert = (options) => {
+  Swal.fire(options);
+};
+
 //token
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
@@ -29,8 +33,6 @@ export function GetDataForm() {
     nipp: nipp,
     nama: nama,
     jabatan: jabatan,
-    divisi: divisi,
-    bidang: bidang,
     password: password,
     role: role,
   };
@@ -50,28 +52,24 @@ export function PostLogin() {
 }
 
 function ResponsePostLogin(response) {
-  if (response && response.status) {
-    setCookieWithExpireHour('Login', response.token, 2);
+  if (response && response.Token) {
+    setCookieWithExpireHour('Login', response.Token, 2);
 
-    const userRole = response.role;
-    const loginSuccess = true; // Sesuaikan dengan logika atau kondisi yang benar
+    const userRole = response.Role;
 
-    if (loginSuccess) {
+    if (response.Status === true) {
+      showAlert({
+        icon: 'success',
+        text: 'Login berhasil!',
+        showConfirmButton: false,
+      });
+
+      // Redirect berdasarkan peran pengguna
       if (userRole === 'user') {
-        showAlert({
-          icon: 'success',
-          text: 'Login berhasil!',
-          showConfirmButton: false,
-        });
         setTimeout(() => {
           window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
         }, 2500);
       } else if (userRole === 'admin') {
-        showAlert({
-          icon: 'success',
-          text: 'Login berhasil!',
-          showConfirmButton: false,
-        });
         setTimeout(() => {
           window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
         }, 2500);
@@ -84,15 +82,16 @@ function ResponsePostLogin(response) {
     } else {
       showAlert({
         icon: 'error',
-        text: 'Login gagal. Silakan coba lagi.',
+        text: `Login gagal: ${response.Message}`,
       });
     }
+  } else {
+    showAlert({
+      icon: 'error',
+      text: 'Login gagal. Silakan coba lagi.',
+    });
   }
 }
-
-const showAlert = (options) => {
-  Swal.fire(options);
-};
 
 export function AlertPost(value) {
   showAlert({
