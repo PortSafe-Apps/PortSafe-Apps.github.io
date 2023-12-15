@@ -1,48 +1,67 @@
-const fotoObservasiInput = document.getElementById('fotoObservasi');
-const hasilFotoObservasi = document.getElementById('hasilFotoObservasi');
-const fotoPerbaikanInput = document.getElementById('fotoPerbaikan');
-const hasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
+const inputFotoObservasi = document.getElementById('fotoObservasi');
+const imgHasilFotoObservasi = document.getElementById('hasilFotoObservasi');
 
-// Fungsi untuk mengambil foto dari file
-const ambilFotoDariFile = (inputElement, imageViewElement) => {
-  inputElement.addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onload = function (e) {
-        imageViewElement.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-    }
-  });
-};
+function ambilFotoObservasi() {
+    const fileInput = inputFotoObservasi.files[0];
 
-// Fungsi untuk mengambil foto dari kamera
-const ambilFotoDariKamera = (inputElement, imageViewElement) => {
-  inputElement.addEventListener('change', function () {
-    const file = this.files[0];
-    if (file) {
-      const formData = new FormData();
-      formData.append('file', file);
+    if (fileInput) {
+        const formData = new FormData();
+        formData.append('image', fileInput);
 
-      fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/uploadImage', {
-        method: 'PUT',
-        body: formData,
-      })
+        fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/uploadImage', {
+            method: 'POST',
+            body: formData
+        })
         .then(response => response.json())
         .then(data => {
-          // Dapatkan URL dari respons server dan tetapkan ke elemen gambar
-          imageViewElement.src = data.url;
+            // Server akan mengembalikan objek JSON yang mungkin berisi URL gambar
+            const imageUrl = data.url;
+
+            // Menetapkan URL sebagai sumber gambar
+            tampilkanGambarDariUrl(imageUrl, imgHasilFotoObservasi);
         })
         .catch(error => {
-          console.error('Error:', error);
+            console.error('Error:', error);
         });
     }
-  });
-};
+}
 
-// Panggil fungsi untuk kedua input foto
-ambilFotoDariFile(fotoObservasiInput, hasilFotoObservasi);
-ambilFotoDariKamera(fotoObservasiInput, hasilFotoObservasi);
-ambilFotoDariFile(fotoPerbaikanInput, hasilFotoPerbaikan);
-ambilFotoDariKamera(fotoPerbaikanInput, hasilFotoPerbaikan);
+function tampilkanGambarDariUrl(imageUrl, imgElement) {
+    // Menetapkan URL sebagai sumber gambar
+    imgElement.src = imageUrl;
+}
+
+// Menambahkan event listener untuk memanggil fungsi ambilFotoObservasi saat ada perubahan pada input file
+inputFotoObservasi.addEventListener('change', ambilFotoObservasi);
+
+
+const inputFotoPerbaikan = document.getElementById('fotoPerbaikan');
+const imgHasilFotoPerbaikan = document.getElementById('hasilFotoPerbaikan');
+
+function ambilFotoPerbaikan() {
+    const fileInput = inputFotoPerbaikan.files[0];
+
+    if (fileInput) {
+        const formData = new FormData();
+        formData.append('image', fileInput);
+
+        fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/uploadImage', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Server akan mengembalikan objek JSON yang mungkin berisi URL gambar
+            const imageUrl = data.url;
+
+            // Menetapkan URL sebagai sumber gambar
+            tampilkanGambarDariUrl(imageUrl, imgHasilFotoPerbaikan);
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }
+}
+
+// Menambahkan event listener untuk memanggil fungsi ambilFotoPerbaikan saat ada perubahan pada input file
+inputFotoPerbaikan.addEventListener('change', ambilFotoPerbaikan);
