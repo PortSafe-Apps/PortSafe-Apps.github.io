@@ -31,11 +31,12 @@ function ambilFoto(inputElement, imgElement) {
 }
 
 function extractImageUrl(responseText) {
-    const urlPattern = /URL publik: (\S+)/;
+    const urlPattern = /URL publik: (.+)/;
     const match = responseText.match(urlPattern);
 
     if (match && match[1]) {
-        return match[1];
+        const imageUrl = match[1].trim(); // Menghilangkan spasi ekstra di awal atau akhir
+        return imageUrl;
     } else {
         return null;
     }

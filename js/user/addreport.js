@@ -1,5 +1,4 @@
- // Function to extract the token from cookies
- function getTokenFromCookies(cookieName) {
+const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
     const [name, value] = cookie.trim().split('=');
@@ -8,8 +7,16 @@
     }
   }
   return null;
-}
+};
 
+const showAlert = (message, type = 'success') => {
+  Swal.fire({
+    icon: type,
+    text: message,
+    showConfirmButton: true,
+    timer: 2000
+  });
+};
 
 const insertObservationReport = async (event) => {
   event.preventDefault();
@@ -21,6 +28,17 @@ const insertObservationReport = async (event) => {
     return;
   }
 
+  // Mengambil URL gambar dari elemen imgHasilFotoObservasi
+  const observationPhotoUrl = document.getElementById('hasilFotoObservasi').src;
+  // Mengambil URL gambar dari elemen imgHasilFotoPerbaikan
+  const improvementPhotoUrl = document.getElementById('hasilFotoPerbaikan').src;
+
+  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
+
+  const myHeaders = new Headers();
+  myHeaders.append('Login', token);
+  myHeaders.append('Content-Type', 'application/json');
+
   try {
     function getCheckedCheckboxes() {
       var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
@@ -28,7 +46,7 @@ const insertObservationReport = async (event) => {
 
       checkboxes.forEach(function (checkbox) {
         var typeId = checkbox.name;
-        var typeName = checkbox.dataset.typeName;
+        var typeName = checkbox.dataset.typeName; // Mengambil Type Name dari dataset
 
         checkedValues.push({
           TypeId: typeId,
@@ -40,18 +58,7 @@ const insertObservationReport = async (event) => {
       return checkedValues;
     }
 
-    // Mengambil URL gambar dari elemen imgHasilFotoObservasi
-    const observationPhotoUrl = document.getElementById('hasilFotoObservasi').src;
-
-    // Mengambil URL gambar dari elemen imgHasilFotoPerbaikan
-    const improvementPhotoUrl = document.getElementById('hasilFotoPerbaikan').src;
-
-    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/InsertReport-1';
-
-    const myHeaders = new Headers();
-    myHeaders.append('Login', token);
-    myHeaders.append('Content-Type', 'application/json');
-
+    // Kemudian, saat Anda mengirimkan permintaan POST
     const requestOptions = {
       method: 'POST',
       headers: myHeaders,
