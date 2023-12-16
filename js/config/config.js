@@ -2,7 +2,6 @@ import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.
 
 let userToken; // Tambahkan deklarasi variabel userToken
 
-
 //token
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
@@ -54,32 +53,20 @@ function ResponsePostLogin(response) {
 
     const userRole = response.Role;
 
-    // Redirect berdasarkan peran pengguna
     if (userRole === 'user') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'You have successfully logged in!',
-      }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
-      });
+      window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
     } else if (userRole === 'admin') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'You have successfully logged in!',
-      }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-      });
+      window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin 
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: 'Invalid username, password, or role. Please try again.',
-      });
+      console.error('Role tidak dikenali:', userRole);
     }
+  } else {
+    console.error('Login gagal. Silakan coba lagi.');
   }
 }
+
+
+
 
 export function AlertPost(value) {
   Swal.fire({
