@@ -53,7 +53,7 @@ function ResponsePostLogin(response) {
   console.log('API Response:', response);
 
   if (response && response.token) {
-    const userRole = response.Role.toLowerCase();
+    const userRole = response.role; // Access 'role' directly
 
     if (userRole === 'user') {
       handleLoginSuccess('user');
