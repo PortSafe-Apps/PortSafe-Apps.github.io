@@ -2,15 +2,20 @@ import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.
 
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
-  fetch(tokenUrl)
+  return fetch(tokenUrl)
     .then(response => response.json())
     .then(tokenData => {
       if (tokenData.token) {
-        userToken = tokenData.token;
-        console.log('Token from API:', userToken);
+        console.log('Token from API:', tokenData.token);
+        return tokenData.token;
+      } else {
+        throw new Error('Token not found in API response');
       }
     })
-    .catch(error => console.error('Failed to fetch token:', error));
+    .catch(error => {
+      console.error('Failed to fetch token:', error);
+      throw error;
+    });
 }
 
 export function GetDataForm() {
@@ -46,44 +51,33 @@ function ResponsePostLogin(response) {
   console.log('API Response:', response);
 
   if (response && response.token) {
-    const userRole = response.role; // Access 'role' directly
-
-    if (userRole === 'user') {
-      handleLoginSuccess('user');
-    } else if (userRole === 'admin') {
-      handleLoginSuccess('admin');
-    } else {
-      console.error('Unknown role:', userRole);
-      handleLoginError('Role not recognized');
-    }
+    handleLoginSuccess(response.token, response.role);
   } else {
-    console.error('Token not found in API response');
-    handleLoginError('Token not found in API response');
+    handleLoginError('Invalid username, password, or role. Please try again.');
   }
 }
 
-function handleLoginSuccess(userRole) {
-  if (response && response.token) {
-    setCookieWithExpireHour('Login', response.token, 2);
+function handleLoginSuccess(token, userRole) {
+  setCookieWithExpireHour('Login', token, 2);
 
-    Swal.fire({
-      icon: 'success',
-      title: 'Login Successful',
-      text: 'You have successfully logged in!',
-    }).then(() => {
-      const redirectURL = getRedirectURL(userRole);
-      window.location.href = redirectURL;
-    });
-  }
+  Swal.fire({
+    icon: 'success',
+    title: 'Login Successful',
+    text: 'You have successfully logged in!',
+  }).then(() => {
+    const redirectURL = getRedirectURL(userRole);
+    window.location.href = redirectURL;
+  });
+}
 
-  function getRedirectURL(userRole) {
-    if (userRole === 'user') {
+function getRedirectURL(userRole) {
+  switch (userRole) {
+    case 'user':
       return 'https://portsafe-apps.github.io/pages/user/beranda.html';
-    } else if (userRole === 'admin') {
+    case 'admin':
       return 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-    } else {
+    default:
       return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
-    }
   }
 }
 
