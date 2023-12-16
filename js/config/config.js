@@ -2,9 +2,6 @@ import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.
 
 let userToken; // Tambahkan deklarasi variabel userToken
 
-const showAlert = (options) => {
-  Swal.fire(options);
-};
 
 //token
 export function getTokenFromAPI() {
@@ -52,39 +49,46 @@ export function PostLogin() {
 }
 
 function ResponsePostLogin(response) {
-  if (response && response.Token) {
-    setCookieWithExpireHour('Login', response.Token, 2);
+  if (response && response.token) {
+    setCookieWithExpireHour('Login', response.token, 2);
 
     const userRole = response.Role;
 
     // Redirect berdasarkan peran pengguna
     if (userRole === 'user') {
-      window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have successfully logged in!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html';
+      });
     } else if (userRole === 'admin') {
-      window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have successfully logged in!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
+      });
     } else {
-      showAlert({
+      Swal.fire({
         icon: 'error',
-        text: `Role tidak dikenali: ${userRole}`,
+        title: 'Login Failed',
+        text: 'Invalid username, password, or role. Please try again.',
       });
     }
-  } else {
-    showAlert({
-      icon: 'error',
-      text: `Login gagal: ${response.Message}`,
-    });
   }
 }
 
 export function AlertPost(value) {
-  showAlert({
+  Swal.fire({
     icon: 'success',
-    text: `${value.message}\nRegistrasi Berhasil`,
-    showConfirmButton: false,
-  });
-  setTimeout(() => {
+    title: 'Registration Successful',
+    text: 'You have successfully registered!',
+  }).then(() => {
     window.location.href = "https://portsafe-apps.github.io/";
-  }, 2500); // Delay sebelum redirect (dalam milidetik)
+  });
 }
 
 export function ResponsePost(result) {
