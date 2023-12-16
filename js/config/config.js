@@ -1,23 +1,16 @@
 import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.js';
 
-let userToken;
-
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
-  return fetch(tokenUrl)
+  fetch(tokenUrl)
     .then(response => response.json())
     .then(tokenData => {
       if (tokenData.token) {
         userToken = tokenData.token;
         console.log('Token from API:', userToken);
-        return userToken;
       }
-      throw new Error('Token not found in API response');
     })
-    .catch(error => {
-      console.error('Failed to fetch token:', error);
-      throw error;
-    });
+    .catch(error => console.error('Failed to fetch token:', error));
 }
 
 export function GetDataForm() {
