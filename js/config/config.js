@@ -5,15 +5,19 @@ let userToken; // Tambahkan deklarasi variabel userToken
 //token
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
-  fetch(tokenUrl)
+  return fetch(tokenUrl)
     .then(response => response.json())
     .then(tokenData => {
       if (tokenData.token) {
         userToken = tokenData.token;
         console.log('Token dari API:', userToken);
+        return userToken; // Tambahkan return di sini
       }
     })
-    .catch(error => console.error('Gagal mengambil token:', error));
+    .catch(error => {
+      console.error('Gagal mengambil token:', error);
+      throw error; // Re-throw error untuk menangkapnya di tempat pemanggilan
+    });
 }
 
 export function GetDataForm() {
@@ -54,14 +58,34 @@ function ResponsePostLogin(response) {
     const userRole = response.Role;
 
     if (userRole === 'user') {
-      window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have successfully logged in!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
+      });
     } else if (userRole === 'admin') {
-      window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin 
+      Swal.fire({
+        icon: 'success',
+        title: 'Login Successful',
+        text: 'You have successfully logged in!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin 
+      });
     } else {
-      console.error('Role tidak dikenali:', userRole);
+      Swal.fire({
+        icon: 'error',
+        title: 'Login Failed',
+        text: 'Role tidak dikenali:', userRole,
+      });
     }
   } else {
-    console.error('Login gagal. Silakan coba lagi.');
+    Swal.fire({
+      icon: 'error',
+      title: 'Login Failed',
+      text: 'Login gagal. Silakan coba lagi',
+    });
   }
 }
 
