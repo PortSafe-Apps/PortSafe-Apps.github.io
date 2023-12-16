@@ -44,6 +44,11 @@ const getLatestReport = async () => {
 const latestDisplayReportData = (reportData, cardContainerId) => {
   const latestCardContainer = document.getElementById(cardContainerId);
 
+  if (!latestCardContainer) {
+    console.error(`Error: Element with ID "${cardContainerId}" not found.`);
+    return;
+  }
+
   latestCardContainer.innerHTML = '';
 
   if (reportData && reportData.length > 0) {
@@ -52,29 +57,30 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
     const newCard = document.createElement('div');
     newCard.className = 'card timeline-card bg-dark';
     newCard.innerHTML = `
-        <div class="card-body">
-          <div class="d-flex justify-content-between">
-            <div class="timeline-text mb-2">
-              <h6 class="element-heading fw-bolder">${latestReport.reportid}</h6>
-              <span>${latestReport.location.locationName}</span>
-            </div>
-            <div class="timeline-text mb-2">
-              <span class="badge mb-2 rounded-pill bg-dark">${latestReport.date}</span>
-            </div>
-          </div>
-          <div class="divider mt-0"></div>
-          <div class="text-content mb-2">
-            <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
-            <div class="timeline-tags">
-              ${latestReport.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">${action.typeName}</span>`).join('')}
-            </div>
-          </div>
-          <div class="text-content mb-0">
-            <h6 class="mb-0">Pengawas</h6>
-            <span class="fw-normal">${latestReport.user.nama}</span> <br> <span class="fw-normal">${latestReport.user.jabatan}</span>
-          </div>
-        </div>
-      `;
+    <div class="card-body">
+    <div class="d-flex justify-content-between">
+      <div class="timeline-text mb-2">
+        <h6 class="element-heading fw-bolder">${latestReport.reportid}</h6>
+        <span>${latestReport.location.locationName}</span>
+      </div>
+      <div class="timeline-text mb-2">
+        <span class="badge mb-2 rounded-pill bg-dark">${latestReport.date}</span>
+      </div>
+    </div>
+    <div class="divider mt-0"></div>
+    <div class="text-content mb-2">
+      <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
+      <div class="timeline-tags">
+        ${latestReport.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">${action.typeName}</span>`).join('')}
+      </div>
+    </div>
+    <div class="text-content mb-0">
+      <h6 class="mb-0">Pengawas</h6>
+      <span class="fw-normal">${latestReport.user.nama}</span> <br> <span class="fw-normal">${latestReport.user.jabatan}</span>
+    </div>
+  </div>
+`;
+
 
     // Tambahkan kartu terbaru ke awal kontainer laporan
     latestCardContainer.prepend(newCard);
