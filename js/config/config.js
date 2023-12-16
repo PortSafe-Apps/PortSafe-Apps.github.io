@@ -1,8 +1,7 @@
 import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.js';
 
-let userToken; // Tambahkan deklarasi variabel userToken
+let userToken;
 
-//token
 export function getTokenFromAPI() {
   const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
   return fetch(tokenUrl)
@@ -10,13 +9,14 @@ export function getTokenFromAPI() {
     .then(tokenData => {
       if (tokenData.token) {
         userToken = tokenData.token;
-        console.log('Token dari API:', userToken);
-        return userToken; // Tambahkan return di sini
+        console.log('Token from API:', userToken);
+        return userToken;
       }
+      throw new Error('Token not found in API response');
     })
     .catch(error => {
-      console.error('Gagal mengambil token:', error);
-      throw error; // Re-throw error untuk menangkapnya di tempat pemanggilan
+      console.error('Failed to fetch token:', error);
+      throw error;
     });
 }
 
@@ -26,8 +26,7 @@ export function GetDataForm() {
   const jabatan = document.querySelector("#jabatan").value;
   const password = document.querySelector("#psw-input").value;
 
-  // Set nilai default role langsung di dalam fungsi
-  const role = "user";
+  const role = "user"; // Set default role
 
   const data = {
     nipp: nipp,
@@ -39,7 +38,6 @@ export function GetDataForm() {
   return data;
 }
 
-//login
 export function PostLogin() {
   const nipp = document.getElementById("nipp").value;
   const password = document.getElementById("psw-input").value;
@@ -52,47 +50,57 @@ export function PostLogin() {
 }
 
 function ResponsePostLogin(response) {
-  if (response && response.token) {
-    setCookieWithExpireHour('Login', response.token, 2);
+  console.log('API Response:', response);
 
-    const userRole = response.Role;
+  if (response && response.token) {
+    const userRole = response.Role.toLowerCase();
 
     if (userRole === 'user') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'You have successfully logged in!',
-      }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/pages/user/beranda.html'; // Redirect untuk role user
-      });
+      handleLoginSuccess('user');
     } else if (userRole === 'admin') {
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: 'You have successfully logged in!',
-      }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/pages/admin/dashboard.html'; // Redirect untuk role admin 
-      });
+      handleLoginSuccess('admin');
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: 'Role tidak dikenali:', userRole,
-      });
+      console.error('Unknown role:', userRole);
+      handleLoginError('Role not recognized');
     }
   } else {
-    Swal.fire({
-      icon: 'error',
-      title: 'Login Failed',
-      text: 'Login gagal. Silakan coba lagi',
-    });
+    console.error('Token not found in API response');
+    handleLoginError('Token not found in API response');
   }
 }
 
+function handleLoginSuccess(userRole) {
+  setCookieWithExpireHour('Login', userToken, 2);
 
+  Swal.fire({
+    icon: 'success',
+    title: 'Login Successful',
+    text: 'You have successfully logged in!',
+  }).then(() => {
+    const redirectURL = getRedirectURL(userRole);
+    window.location.href = redirectURL;
+  });
+}
 
+function getRedirectURL(userRole) {
+  if (userRole === 'user') {
+    return 'https://portsafe-apps.github.io/pages/user/beranda.html';
+  } else if (userRole === 'admin') {
+    return 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
+  } else {
+    return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
+  }
+}
 
-export function AlertPost(value) {
+function handleLoginError(errorMessage) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Login Failed',
+    text: errorMessage,
+  });
+}
+
+export function AlertPost() {
   Swal.fire({
     icon: 'success',
     title: 'Registration Successful',
