@@ -63,25 +63,27 @@ function ResponsePostLogin(response) {
 }
 
 function handleLoginSuccess(userRole) {
-  setCookieWithExpireHour('Login', userToken, 2);
+  if (response && response.token) {
+    setCookieWithExpireHour('Login', response.token, 2);
 
-  Swal.fire({
-    icon: 'success',
-    title: 'Login Successful',
-    text: 'You have successfully logged in!',
-  }).then(() => {
-    const redirectURL = getRedirectURL(userRole);
-    window.location.href = redirectURL;
-  });
-}
+    Swal.fire({
+      icon: 'success',
+      title: 'Login Successful',
+      text: 'You have successfully logged in!',
+    }).then(() => {
+      const redirectURL = getRedirectURL(userRole);
+      window.location.href = redirectURL;
+    });
+  }
 
-function getRedirectURL(userRole) {
-  if (userRole === 'user') {
-    return 'https://portsafe-apps.github.io/pages/user/beranda.html';
-  } else if (userRole === 'admin') {
-    return 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
-  } else {
-    return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
+  function getRedirectURL(userRole) {
+    if (userRole === 'user') {
+      return 'https://portsafe-apps.github.io/pages/user/beranda.html';
+    } else if (userRole === 'admin') {
+      return 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
+    } else {
+      return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
+    }
   }
 }
 
