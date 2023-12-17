@@ -1,76 +1,36 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
-    const cookies = document.cookie.split(';');
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=');
-      if (name === cookieName) {
-        return value;
-      }
-    }
-    return null;
-  }
-  
-  // Fungsi untuk mendapatkan data dari server
-  const fetchDataFromServer = async () => {
-    const token = getTokenFromCookies('Login');
-  
-    if (!token) {
-      Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Error',
-        text: 'Kamu Belum Login!',
-      }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/';
-      });
-      return null;
-    }
-  
-    const url = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
-  
-    try {
-      const response = await fetch(url, {
-        headers: {
-          'Login': token,
-        },
-      });
-  
-      const data = await response.json();
-      return data.data; // Mengembalikan data laporan dari server
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return null;
-    }
-  };
-  
-  // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-  const transformDataForChart = (reportData) => {
-    const seriesData = [];
-  
-    // Logika untuk menghitung jumlah report dan perbanding selama 12 bulan
+// Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
+const transformDataForChart = (reportData) => {
     const monthlyCounts = Array(12).fill(0);
   
     reportData.forEach((report) => {
-      const month = new Date(report.date).getMonth(); // Ambil bulan dari tanggal laporan
-      monthlyCounts[month] += 1; // Tambahkan 1 ke jumlah report per bulan
+      const month = new Date(report.date).getMonth();
+      monthlyCounts[month] += 1;
     });
   
-    // Ubah objek menjadi array yang sesuai dengan struktur series di grafik
-    for (let i = 0; i < 12; i++) {
-      seriesData.push({
-        name: `Bulan ${i + 1}`,
-        data: [monthlyCounts[i] || 0], // Jika tidak ada laporan, set jumlahnya menjadi 0
-      });
-    }
-  
-    return seriesData;
+    return monthlyCounts;
   };
   
   // Fungsi untuk menggambar grafik
   const drawChart = async () => {
+    // Fungsi untuk mengambil data dari server
+    const fetchDataFromServer = async () => {
+      try {
+        const response = await fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser');
+        const data = await response.json();
+        return data.data || [];
+      } catch (error) {
+        console.error('Error fetching data:', error);
+        return [];
+      }
+    };
+  
     const reportData = await fetchDataFromServer();
   
     if (reportData) {
       const transformedData = transformDataForChart(reportData);
+  
+      // Hitung total laporan bulan ini
+      const totalLaporanBulanIni = transformedData.reduce((total, count) => total + count, 0);
   
       var areaChart1 = {
         chart: {
@@ -95,7 +55,7 @@ function getTokenFromCookies(cookieName) {
             show: false
           },
         },
-        colors: ['#0134d4', '#ea4c62'],
+        colors: ['#0134d4'],
         dataLabels: {
           enabled: false
         },
@@ -147,7 +107,7 @@ function getTokenFromCookies(cookieName) {
           }
         },
         title: {
-          text: '$5,394',
+          text: totalLaporanBulanIni.toString(), // Ubah teks title sesuai dengan total laporan bulan ini
           align: 'left',
           margin: 0,
           offsetX: 0,
@@ -221,4 +181,3 @@ function getTokenFromCookies(cookieName) {
   
   // Panggil fungsi untuk menggambar grafik
   drawChart();
-  
