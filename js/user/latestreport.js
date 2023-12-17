@@ -1,3 +1,16 @@
+// Fungsi untuk mendapatkan token dari cookie
+function getTokenFromCookies(cookieName) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split('=');
+    if (name === cookieName) {
+      return value;
+    }
+  }
+  return null;
+}
+
+
 // Fungsi untuk mendapatkan laporan pengguna terbaru tanpa pengurutan
 const getLatestReport = async () => {
   const token = getTokenFromCookies('Login');
