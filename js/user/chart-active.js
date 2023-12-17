@@ -15,7 +15,7 @@ const drawChart = async () => {
     // Fungsi untuk mengambil data dari server
     const fetchDataFromServer = async () => {
         try {
-            const response = await fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUse');
+            const response = await fetch('https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser');
             const data = await response.json();
             return data.data || [];
         } catch (error) {
