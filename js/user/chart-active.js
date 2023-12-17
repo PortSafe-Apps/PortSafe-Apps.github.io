@@ -25,7 +25,7 @@ function getTokenFromCookies(cookieName) {
       return null;
     }
   
-    const url = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUse';
+    const url = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
   
     try {
       const response = await fetch(url, {
