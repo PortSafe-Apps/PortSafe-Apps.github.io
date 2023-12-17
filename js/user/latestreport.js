@@ -52,7 +52,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
   latestCardContainer.innerHTML = '';
 
   if (reportData && reportData.length > 0) {
-    const latestReport = reportData[0]; // Mengambil elemen pertama tanpa pengurutan
+    const latestReport = reportData[reportData.length - 1]; // Mengambil elemen terakhir tanpa pengurutan
 
     const newCard = document.createElement('div');
     newCard.className = 'card timeline-card bg-dark';
@@ -79,8 +79,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
       <span class="fw-normal">${latestReport.user.nama}</span> <br> <span class="fw-normal">${latestReport.user.jabatan}</span>
     </div>
   </div>
-`;
-
+  `;
 
     // Tambahkan kartu terbaru ke awal kontainer laporan
     latestCardContainer.prepend(newCard);

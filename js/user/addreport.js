@@ -1,3 +1,28 @@
+document.addEventListener("DOMContentLoaded", function() {
+  // Mendapatkan elemen input tanggal
+  var inputTanggal = document.getElementById("tanggalPelaporan");
+
+  // Mendapatkan tanggal saat ini
+  var tanggalSekarang = new Date();
+
+  // Membuat fungsi untuk memformat tanggal ke format dd-mm-yyyy
+  function formatDate(date) {
+    var day = date.getDate();
+    var month = date.getMonth() + 1; // Perlu ditambah 1 karena bulan dimulai dari 0
+    var year = date.getFullYear();
+
+    // Menambahkan leading zero jika diperlukan
+    day = day < 10 ? '0' + day : day;
+    month = month < 10 ? '0' + month : month;
+
+    return year + '-' + month + '-' + day;
+  }
+
+  // Mengatur nilai input tanggal menjadi tanggal saat ini dengan format yang diinginkan
+  inputTanggal.value = formatDate(tanggalSekarang);
+});
+
+
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {

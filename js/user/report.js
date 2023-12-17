@@ -171,7 +171,7 @@ const getAllUserReport = async () => {
   }
 };
 
-// Fungsi untuk menampilkan laporan pengguna dalam bentuk kartu
+// Fungsi untuk menampilkan semua laporan pengguna dalam bentuk kartu tanpa pengurutan
 const displayReportData = (reportData, cardContainerId) => {
   const reportContainer = document.getElementById(cardContainerId);
 
