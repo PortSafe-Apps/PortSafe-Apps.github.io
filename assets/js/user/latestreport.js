@@ -90,12 +90,9 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
             (badge) => badge.typeName === action.typeName
           );
 
-          if (existingBadge) {
-            existingBadge.subTypes.push(...action.subTypes);
-          } else {
+          if (!existingBadge) {
             accumulator.push({
               typeName: action.typeName,
-              subTypes: [...action.subTypes],
             });
           }
 
@@ -103,9 +100,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         }, [])
         .map(
           (badge) =>
-            `<span class="badge bg-light text-dark">${
-              badge.typeName
-            }: ${badge.subTypes.join(", ")}</span>`
+            `<span class="badge bg-light text-dark">${badge.typeName}</span>`
         )
         .join("")}
       </div>

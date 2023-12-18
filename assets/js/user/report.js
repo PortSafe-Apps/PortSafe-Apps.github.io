@@ -243,28 +243,23 @@ const displayReportData = (reportData, cardContainerId) => {
       <div class="timeline-text mb-2">
         <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
         <div class="timeline-tags">
-        ${Report.typeDangerousActions
+        ${latestReport.typeDangerousActions
           .reduce((accumulator, action) => {
             const existingBadge = accumulator.find(
               (badge) => badge.typeName === action.typeName
             );
-
-            if (existingBadge) {
-              existingBadge.subTypes.push(...action.subTypes);
-            } else {
+  
+            if (!existingBadge) {
               accumulator.push({
                 typeName: action.typeName,
-                subTypes: [...action.subTypes],
               });
             }
-
+  
             return accumulator;
           }, [])
           .map(
             (badge) =>
-              `<span class="badge bg-light text-dark">${
-                badge.typeName
-              }: ${badge.subTypes.join(", ")}</span>`
+              `<span class="badge bg-light text-dark">${badge.typeName}</span>`
           )
           .join("")}
       </div>
