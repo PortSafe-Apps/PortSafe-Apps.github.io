@@ -1,8 +1,8 @@
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
-  const cookies = document.cookie.split(';');
+  const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
+    const [name, value] = cookie.trim().split("=");
     if (name === cookieName) {
       return value;
     }
@@ -12,29 +12,30 @@ function getTokenFromCookies(cookieName) {
 
 // Fungsi untuk mendapatkan laporan detail dan navigasi ke halaman baru saat card diklik
 const getDetailedReport = async (reportid, detailContainerId) => {
-  const token = getTokenFromCookies('Login');
+  const token = getTokenFromCookies("Login");
 
   if (!token) {
     Swal.fire({
-      icon: 'warning',
-      title: 'Authentication Error',
-      text: 'Kamu Belum Login!',
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
     }).then(() => {
-      window.location.href = 'https://portsafe-apps.github.io/';
+      window.location.href = "https://portsafe-apps.github.io/";
     });
     return;
   }
 
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1';
+  const targetURL =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1";
 
   const myHeaders = new Headers();
-  myHeaders.append('Login', token);
+  myHeaders.append("Login", token);
 
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: myHeaders,
     body: JSON.stringify({ reportid }), // Pass reportid in the request body
-    redirect: 'follow',
+    redirect: "follow",
   };
 
   try {
@@ -46,13 +47,19 @@ const getDetailedReport = async (reportid, detailContainerId) => {
       if (data.status === 200) {
         displayDetailedReport(data.data, detailContainerId);
       } else {
-        console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+        console.error(
+          "Server response:",
+          data.message || "Data tidak dapat ditemukan"
+        );
       }
     } else {
-      console.error('HTTP error:', response.status);
+      console.error("HTTP error:", response.status);
     }
   } catch (error) {
-    console.error('Error:', error.message || 'Terjadi kesalahan yang tidak diketahui');
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 };
 
@@ -65,11 +72,11 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
     return;
   }
 
-  detailContainer.innerHTML = '';
+  detailContainer.innerHTML = "";
 
   if (detailedReport) {
-    const detailCard = document.createElement('div');
-    detailCard.className = 'card';
+    const detailCard = document.createElement("div");
+    detailCard.className = "card";
     detailCard.innerHTML = `
     <div class="card-body">
     <h6 class="mb-0">Nomor Pelaporan</h6>
@@ -90,19 +97,32 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
     
     <h6>Foto Kejadian</h6>
     <div class="text-center">
-      <img class="w-75 mb-4" src="${detailedReport.observationPhoto}" alt="Foto Kejadian">
+      <img class="w-75 mb-4" src="${
+        detailedReport.observationPhoto
+      }" alt="Foto Kejadian">
     </div>
     
     <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
     <ul class="ps-0 fs-6">
-      ${detailedReport.typeDangerousActions.map((action, index) => `
-        <li><span>${index + 1}.</span> ${action.typeName}</li>
-        <ul class="ps-3">
-          ${action.subTypes.map(subType => `
-            <li><i class="bi bi-dash me-2"></i>${subType}</li>
-          `).join('')}
-        </ul>
-      `).join('')}
+      ${detailedReport.typeDangerousActions
+        .map(
+          (action, index) => `
+        <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${
+            action.typeName
+          }
+          <ul class="ps-3">
+            ${action.subTypes
+              .map(
+                (subType) => `
+              <li>${getPrefix(action.subTypes, subType)} ${subType}</li>
+            `
+              )
+              .join("")}
+          </ul>
+        </li>
+      `
+        )
+        .join("")}
     </ul>
 
     <h6 class="mb-0">Area</h6>
@@ -113,7 +133,9 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
 
     <h6>Foto Tindakan Perbaikan</h6>
     <div class="text-center">
-      <img class="w-75 mb-4" src="${detailedReport.improvementPhoto}" alt="Foto Tindakan Perbaikan">
+      <img class="w-75 mb-4" src="${
+        detailedReport.improvementPhoto
+      }" alt="Foto Tindakan Perbaikan">
     </div>
 
     <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
@@ -122,34 +144,48 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
 `;
     detailContainer.appendChild(detailCard);
   } else {
-    detailContainer.innerHTML = '<p>Informasi detail tidak ditemukan.</p>';
+    detailContainer.innerHTML = "<p>Informasi detail tidak ditemukan.</p>";
   }
 };
 
+// Fungsi untuk mendapatkan prefix (angka atau dash) berdasarkan elemen sebelumnya
+function getPrefix(array, _, currentIndex) {
+  if (currentIndex > 0) {
+    const previousItem = array[currentIndex - 1];
+    if (previousItem.subTypes) {
+      return array === getDetailedReport.typeDangerousActions
+        ? `<span>${currentIndex + 1}.</span>`
+        : '<i class="bi bi-dash me-2"></i>';
+    }
+  }
+  return "";
+}
+
 // Fungsi untuk mendapatkan semua laporan pengguna dengan token
 const getAllUserReport = async () => {
-  const token = getTokenFromCookies('Login');
+  const token = getTokenFromCookies("Login");
 
   if (!token) {
     Swal.fire({
-      icon: 'warning',
-      title: 'Authentication Error',
-      text: 'Kamu Belum Login!',
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
     }).then(() => {
-      window.location.href = 'https://portsafe-apps.github.io/';
+      window.location.href = "https://portsafe-apps.github.io/";
     });
     return;
   }
 
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
+  const targetURL =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
 
   const myHeaders = new Headers();
-  myHeaders.append('Login', token);
+  myHeaders.append("Login", token);
 
   const requestOptions = {
-    method: 'POST',
+    method: "POST",
     headers: myHeaders,
-    redirect: 'follow',
+    redirect: "follow",
   };
 
   try {
@@ -159,15 +195,21 @@ const getAllUserReport = async () => {
       const data = await response.json();
 
       if (data.status === 200) {
-        displayReportData(data.data, 'reportContainer');
+        displayReportData(data.data, "reportContainer");
       } else {
-        console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+        console.error(
+          "Server response:",
+          data.message || "Data tidak dapat ditemukan"
+        );
       }
     } else {
-      console.error('HTTP error:', response.status);
+      console.error("HTTP error:", response.status);
     }
   } catch (error) {
-    console.error('Error:', error.message || 'Terjadi kesalahan yang tidak diketahui');
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 };
 
@@ -180,12 +222,12 @@ const displayReportData = (reportData, cardContainerId) => {
     return;
   }
 
-  reportContainer.innerHTML = '';
+  reportContainer.innerHTML = "";
 
   if (reportData && reportData.length > 0) {
     for (const report of reportData) {
-      const newCard = document.createElement('div');
-      newCard.className = 'card timeline-card bg-dark';
+      const newCard = document.createElement("div");
+      newCard.className = "card timeline-card bg-dark";
       newCard.innerHTML = `
       <div class="card-body">
       <div class="d-flex justify-content-between">
@@ -201,23 +243,49 @@ const displayReportData = (reportData, cardContainerId) => {
       <div class="timeline-text mb-2">
         <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
         <div class="timeline-tags">
-          ${report.typeDangerousActions.map(action => `<span class="badge bg-light text-dark">${action.typeName}</span>`).join('')}
+        ${Report.typeDangerousActions
+          .reduce((accumulator, action) => {
+            const existingBadge = accumulator.find(
+              (badge) => badge.typeName === action.typeName
+            );
+
+            if (existingBadge) {
+              existingBadge.subTypes.push(...action.subTypes);
+            } else {
+              accumulator.push({
+                typeName: action.typeName,
+                subTypes: [...action.subTypes],
+              });
+            }
+
+            return accumulator;
+          }, [])
+          .map(
+            (badge) =>
+              `<span class="badge bg-light text-dark">${
+                badge.typeName
+              }: ${badge.subTypes.join(", ")}</span>`
+          )
+          .join("")}
+      </div>
         </div>
       </div>
       <div class="timeline-text mb-0">
         <h6 class="mb-0">Pengawas</h6>
-        <span class="fw-normal">${report.user.nama}</span> <br> <span class="fw-normal">${report.user.jabatan}</span>
+        <span class="fw-normal">${
+          report.user.nama
+        }</span> <br> <span class="fw-normal">${report.user.jabatan}</span>
       </div>
     </div>
   `;
-      newCard.addEventListener('click', () => {
+      newCard.addEventListener("click", () => {
         window.location.href = `https://portsafe-apps.github.io/pages/user/detailreport.html?reportid=${report.reportid}`;
       });
 
       reportContainer.prepend(newCard);
     }
   } else {
-    reportContainer.innerHTML = '<p>No report data found.</p>';
+    reportContainer.innerHTML = "<p>No report data found.</p>";
   }
 };
 
@@ -225,13 +293,13 @@ const displayReportData = (reportData, cardContainerId) => {
 getAllUserReport();
 
 // ID elemen target di halaman list report
-const cardContainerId = 'reportContainer';
+const cardContainerId = "reportContainer";
 
 // ID elemen target di halaman detail report
-const detailContainerId = 'detailContainer';
+const detailContainerId = "detailContainer";
 
 // Ambil reportid dari parameter query
-const reportid = new URLSearchParams(window.location.search).get('reportid');
+const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 // Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
 if (reportid) {

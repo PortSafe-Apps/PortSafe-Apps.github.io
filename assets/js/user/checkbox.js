@@ -22,6 +22,7 @@ var data = {
           "Sistem Pernafasan",
           "Tangan dan Lengan",
           "Dagu",
+          "Badan",
           "Kaki dan Betis"
         ]
       },

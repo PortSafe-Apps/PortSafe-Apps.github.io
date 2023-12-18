@@ -23,6 +23,7 @@
   <link rel="apple-touch-icon" sizes="152x152" href="/assets/img/icons/icon-152x152.png">
   <link rel="apple-touch-icon" sizes="167x167" href="/assets/img/icons/icon-167x167.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/icon-180x180.png">
+  <link href="/assets/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <!-- CSS Libraries -->
   <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="/assets/css/bootstrap-icons.css">
@@ -48,7 +49,8 @@
     <div class="container">
       <div class="header-content header-style-five position-relative d-flex align-items-center justify-content-between">
         <!-- Logo Wrapper -->
-        <div class="logo-wrapper"><a href="/pages/user/beranda.html"><img src="/assets/img/core-img/logo.png" alt=""></a></div>
+        <div class="logo-wrapper"><a href="/pages/user/beranda.html"><img src="/assets/img/core-img/logo.png"
+              alt=""></a></div>
         <!-- Navbar Toggler -->
         <div class="navbar--toggler" id="affanNavbarToggler" data-bs-toggle="offcanvas" data-bs-target="#affanOffcanvas"
           aria-controls="affanOffcanvas"><span class="d-block"></span><span class="d-block"></span><span
@@ -221,16 +223,24 @@
       </div>
     </div>
     <div class="container">
-      <h1 class="element-heading fw-bold mb-2">Statistik K3</h1>  
+      <h1 class="element-heading fw-bold mb-2">Statistik K3</h1>
       <div class="row g-3 justify-content-center">
         <!-- Card "Jumlah Laporan" -->
-        <div class="col-md-6">
+        <div class="col-12 col-lg-6">
           <div class="cards">
-            <div class="background-shape">
-              <h4 class="element-heading fw-bolder text-container">Jumlah Laporan</h4>
-            </div>
             <div class="foreground-shape">
-              <h3 class="element-heading fw-bold count-text"><span class="counter" id="total-reports"></span></h3>
+            </div>
+            <div class="background-shape">
+              <div class="row align-items-center">
+                <div class="col mr-2">
+                  <div class="h5 element-heading fw-normal mb-1">
+                    Jumlah Laporan</div>
+                  <div class="mb-0 text-body fw-bold fs-5"><span class="counter" id="total-reports"></div>
+                </div>
+                <div class="col-auto">
+                  <i class="fas fa-clipboard-check fa-2x text-secondary-300"></i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -248,10 +258,17 @@
         </div>
       </div>
     </div>
-    
+
     <div class="pt-3"></div>
     <div class="container">
-      <h1 class="element-heading fw-bold mb-2">Laporan Terbaru</h1>
+      <div class="d-flex justify-content-between">
+        <div class="timeline-text mb-2">
+          <h1 class="element-heading fw-bold mb-2">Laporan Terbaru</h1>
+        </div>
+        <div class="timeline-text mb-2">
+          <div class="button"><a href="/pages/user/listreport.html"><i class="bi bi-arrow-right-short"></i></a></div>
+        </div>
+      </div>
       <div id="latestCardContainer"></div>
     </div>
     <div class="pt-3"></div>
@@ -316,7 +333,7 @@
     <script src="/assets/js/user/active.js"></script>
     <!-- PWA -->
     <script src="/assets/js/user/pwa.js"></script>
-     <!-- Sweet Alert -->
+    <!-- Sweet Alert -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
     <!-- Modal -->
     <script src="/assets/js/config/modal.js" type="module"></script>
