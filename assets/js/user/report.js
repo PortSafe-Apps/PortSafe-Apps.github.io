@@ -79,69 +79,63 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
     detailCard.className = "card";
     detailCard.innerHTML = `
     <div class="card-body">
-    <h6 class="mb-0">Nomor Pelaporan</h6>
-    <p>${detailedReport.reportid}</p>
-    
-    <h6 class="mb-0">Tanggal Pelaporan</h6>
-    <p>${detailedReport.date}</p>
-    
-    <h6 class="mb-0">Informasi Pengawas</h6>
-    <p class="mb-0">${detailedReport.user.nama}</p>
-    <p>${detailedReport.user.jabatan}</p>
-    
-    <h6 class="mb-0">Lokasi Kejadian</h6>
-    <p>${detailedReport.location.locationName}</p>
-    
-    <h6 class="mb-0">Deskripsi Pengamatan</h6>
-    <p>${detailedReport.description}</p>
-    
-    <h6>Foto Kejadian</h6>
-    <div class="text-center">
-      <img class="w-75 mb-4" src="${
-        detailedReport.observationPhoto
-      }" alt="Foto Kejadian">
+      <h6 class="mb-0">Nomor Pelaporan</h6>
+      <p>${detailedReport.reportid}</p>
+
+      <h6 class="mb-0">Tanggal Pelaporan</h6>
+      <p>${detailedReport.date}</p>
+
+      <h6 class="mb-0">Informasi Pengawas</h6>
+      <p class="mb-0">${detailedReport.user.nama}</p>
+      <p>${detailedReport.user.jabatan}</p>
+
+      <h6 class="mb-0">Lokasi Kejadian</h6>
+      <p>${detailedReport.location.locationName}</p>
+
+      <h6 class="mb-0">Deskripsi Pengamatan</h6>
+      <p>${detailedReport.description}</p>
+
+      <h6>Foto Kejadian</h6>
+      <div class="text-center">
+        <img class="w-75 mb-4" src="${detailedReport.observationPhoto}" alt="Foto Kejadian">
+      </div>
+
+      <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
+      <ul class="ps-0 fs-6">
+        ${detailedReport.typeDangerousActions
+          .map(
+            (action, index) => `
+          <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
+            ${action.subTypes.length > 1 ? '<ul class="ps-3">' : ''}
+              ${action.subTypes
+                .map(
+                  (subType) => `
+                <li>${getPrefix(action.subTypes, subType)} ${subType}</li>
+              `
+                )
+                .join("")}
+            ${action.subTypes.length > 1 ? '</ul>' : ''}
+          </li>
+        `
+          )
+          .join("")}
+      </ul>
+
+      <h6 class="mb-0">Area</h6>
+      <p>${detailedReport.area.areaName}</p>
+
+      <h6 class="mb-0">Tindakan Perbaikan Segera</h6>
+      <p>${detailedReport.immediateAction}</p>
+
+      <h6>Foto Tindakan Perbaikan</h6>
+      <div class="text-center">
+        <img class="w-75 mb-4" src="${detailedReport.improvementPhoto}" alt="Foto Tindakan Perbaikan">
+      </div>
+
+      <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
+      <p>${detailedReport.correctiveAction}</p>
     </div>
-    
-    <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
-    <ul class="ps-0 fs-6">
-      ${detailedReport.typeDangerousActions
-        .map(
-          (action, index) => `
-        <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${
-            action.typeName
-          }
-          <ul class="ps-3">
-            ${action.subTypes
-              .map(
-                (subType) => `
-              <li>${getPrefix(action.subTypes, subType)} ${subType}</li>
-            `
-              )
-              .join("")}
-          </ul>
-        </li>
-      `
-        )
-        .join("")}
-    </ul>
-
-    <h6 class="mb-0">Area</h6>
-    <p>${detailedReport.area.areaName}</p>
-
-    <h6 class="mb-0">Tindakan Perbaikan Segera</h6>
-    <p>${detailedReport.immediateAction}</p>
-
-    <h6>Foto Tindakan Perbaikan</h6>
-    <div class="text-center">
-      <img class="w-75 mb-4" src="${
-        detailedReport.improvementPhoto
-      }" alt="Foto Tindakan Perbaikan">
-    </div>
-
-    <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
-    <p>${detailedReport.correctiveAction}</p>
-  </div>
-`;
+  `;
     detailContainer.appendChild(detailCard);
   } else {
     detailContainer.innerHTML = "<p>Informasi detail tidak ditemukan.</p>";
@@ -153,13 +147,12 @@ function getPrefix(array, _, currentIndex) {
   if (currentIndex > 0) {
     const previousItem = array[currentIndex - 1];
     if (previousItem.subTypes) {
-      return array === getDetailedReport.typeDangerousActions
-        ? `<span>${currentIndex + 1}.</span>`
-        : '<i class="bi bi-dash me-2"></i>';
+      return `<span>${currentIndex + 1}.</span>`;
     }
   }
   return "";
 }
+
 
 // Fungsi untuk mendapatkan semua laporan pengguna dengan token
 const getAllUserReport = async () => {
@@ -240,7 +233,7 @@ const displayReportData = (reportData, cardContainerId) => {
         </div>
       </div>
       <div class="divider mt-0"></div>
-      <div class="timeline-text mb-2">
+      <div class="text-content mb-2">
         <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
         <div class="timeline-tags">
         ${report.typeDangerousActions
@@ -262,14 +255,11 @@ const displayReportData = (reportData, cardContainerId) => {
               `<span class="badge bg-light text-dark">${badge.typeName}</span>`
           )
           .join("")}
-      </div>
         </div>
       </div>
-      <div class="timeline-text mb-0">
+      <div class="text-content mb-0">
         <h6 class="mb-0">Pengawas</h6>
-        <span class="fw-normal">${
-          report.user.nama
-        }</span> <br> <span class="fw-normal">${report.user.jabatan}</span>
+        <span class="fw-normal">${report.user.nama}</span> <br> <span class="fw-normal">${report.user.jabatan}</span>
       </div>
     </div>
   `;
