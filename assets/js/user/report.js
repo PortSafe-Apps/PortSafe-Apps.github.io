@@ -243,7 +243,7 @@ const displayReportData = (reportData, cardContainerId) => {
       <div class="timeline-text mb-2">
         <h6 class="mb-0">Jenis Ketidaksesuaian</h6>
         <div class="timeline-tags">
-        ${latestReport.typeDangerousActions
+        ${report.typeDangerousActions
           .reduce((accumulator, action) => {
             const existingBadge = accumulator.find(
               (badge) => badge.typeName === action.typeName
