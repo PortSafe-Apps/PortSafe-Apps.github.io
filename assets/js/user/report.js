@@ -104,19 +104,26 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <ul class="ps-0 fs-6">
         ${detailedReport.typeDangerousActions
           .map(
-            (action, index) => `
-          <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
-            ${action.subTypes.length > 1 ? '<ul class="ps-3">' : ''}
-              ${action.subTypes
-                .map(
-                  (subType) => `
-                <li>${getPrefix(action.subTypes, subType)} ${subType}</li>
-              `
-                )
-                .join("")}
-            ${action.subTypes.length > 1 ? '</ul>' : ''}
-          </li>
-        `
+            (action, index) => {
+              const groupedSubTypes = detailedReport.typeDangerousActions
+                .filter(item => item.typeName === action.typeName)
+                .flatMap(item => item.subTypes)
+                .filter((value, index, self) => self.indexOf(value) === index);
+
+              return `
+                <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
+                  ${groupedSubTypes.length > 1 ? '<ul class="ps-3">' : ''}
+                    ${groupedSubTypes
+                      .map(
+                        (subType) => `
+                        <li>${getPrefix(groupedSubTypes, subType)} ${subType}</li>
+                      `
+                      )
+                      .join("")}
+                  ${groupedSubTypes.length > 1 ? '</ul>' : ''}
+                </li>
+              `;
+            }
           )
           .join("")}
       </ul>
@@ -152,7 +159,6 @@ function getPrefix(array, _, currentIndex) {
   }
   return "";
 }
-
 
 // Fungsi untuk mendapatkan semua laporan pengguna dengan token
 const getAllUserReport = async () => {
