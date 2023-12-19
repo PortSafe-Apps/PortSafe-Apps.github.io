@@ -66,20 +66,4 @@ function displayUserDataForm(userData) {
   }
 }
 
-// Function to display user data in the user-info div with IDs
-function displayUserDataProfile(userData) {
-  const namaProfil = document.getElementById("nama-profil");
-  const jabatanProfil = document.getElementById("Jabatan-profil");
-
-  if (userData && userData.length > 0) {
-      const user = userData[0];
-      namaProfil.textContent = user.nama;
-      jabatanProfil.textContent = user.jabatan;
-  } else {
-      namaProfil.textContent = 'No user data found';
-      jabatanProfil.textContent = '';
-  }
-}
-
-
 getUserWithToken();
