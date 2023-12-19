@@ -108,7 +108,6 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
               (value, subIndex, self) => self.indexOf(value) === subIndex
             );
             return `
-              ${index > 0 ? '<hr>' : ''} 
               <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
                 ${groupedSubTypes.length > 1 ? '<ul class="ps-3">' : ''}
                   ${groupedSubTypes
@@ -156,18 +155,10 @@ function getPrefix(array, currentAction, currentIndex) {
 }
 
 // Fungsi untuk mendapatkan elemen li untuk setiap subType
-function getSubTypeListItem(currentSubType, currentSubIndex) {
+function getSubTypeListItem(currentSubType) {
   return `
-    <li>${getSubTypePrefix(currentSubIndex)} ${currentSubType}</li>
+    <li><i class="bi bi-dash me-2"></i>${currentSubType}</li>
   `;
-}
-
-// Fungsi untuk mendapatkan prefix (dash) untuk setiap subType
-function getSubTypePrefix(currentSubIndex) {
-  if (currentSubIndex === 0) {
-    return '<i class="bi bi-dash me-2"></i>';
-  }
-  return '';
 }
 
 
