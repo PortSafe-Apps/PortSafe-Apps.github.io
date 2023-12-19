@@ -10,6 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
       var allInputsValid = true;
       var requiredInputs = form.querySelectorAll('input[required], textarea[required], select[required]');
   
+      console.log('allInputsValid:', allInputsValid);
+      console.log('areAllCheckboxesChecked:', areAllCheckboxesChecked);
+      
       for (var i = 0; i < requiredInputs.length; i++) {
         if (!requiredInputs[i].value) {
           // Jika ada elemen yang belum terisi, setel allInputsValid menjadi false dan hentikan loop
@@ -57,10 +60,10 @@ document.addEventListener("DOMContentLoaded", function () {
   function areAllCheckboxesSelected() {
     var checkboxes = document.querySelectorAll('.form-group[for="checkedCheckbox"] .form-check-input[type="checkbox"]');
     for (var i = 0; i < checkboxes.length; i++) {
-      if (checkboxes[i].hasAttribute('required') && !checkboxes[i].checked) {
-        return false;
-      }
+       if (checkboxes[i].hasAttribute('required') && !checkboxes[i].checked) {
+          return false;
+       }
     }
+    console.log('Semua checkbox tercentang');
     return true;
-  }
-  
+ }

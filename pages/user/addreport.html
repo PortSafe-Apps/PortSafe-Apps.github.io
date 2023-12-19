@@ -116,25 +116,25 @@
             <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
             <div class="form-group">
               <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
-              <input class="form-control" type="text" id="nomorPelaporan" readonly>
+              <input class="form-control" type="text" id="nomorPelaporan" readonly required>
             </div>
             <div class="form-group">
               <label class="form-label" for="tanggalPelaporan">Tanggal Laporan</label>
-              <input class="form-control" id="tanggalPelaporan" type="date" readonly>
+              <input class="form-control" id="tanggalPelaporan" type="date" readonly required>
             </div>
             <div class="form-group">
               <label class="form-label" for="namaPengawas">Nama Pengawas</label>
-              <input class="form-control" id="namaPengawas" type="text" value="" readonly>
+              <input class="form-control" id="namaPengawas" type="text" value="" readonly required>
             </div>
             <div class="form-group">
               <label class="form-label" for="jabatanPengawas">Jabatan Pengawas</label>
-              <input class="form-control" id="jabatanPengawas" value="" type="text" readonly>
+              <input class="form-control" id="jabatanPengawas" value="" type="text" readonly required>
             </div>
             <h5>Langkah 2: Berhenti dan Melihat Dengan Jelas</h5>
             <div class="form-group">
               <label class="form-label" for="autoCompleteLocation">Unit Kerja</label>
               <input class="form-control" id="autoCompleteLocation" type="text" name="myLocation"
-                placeholder="Cari lokasi">
+                placeholder="Cari lokasi" required>
             </div>
             <div class="form-group">
               <label class="form-label" for="deskripsiPengamatan">Deskripsi Pengamatan</label>
@@ -144,7 +144,7 @@
             <div class="form-group form-file">
               <div class="text-center">
                 <input class="form-control d-none" id="fotoObservasi" data-jenis="observasi" type="file"
-                  accept="image/*" capture="environment">
+                  accept="image/*" capture="environment" required>
 
                 <label class="form-file-label justify-content-center text-center" for="fotoObservasi">
                   <span
@@ -171,7 +171,8 @@
             <div class="form-group" id="checkboxContainer"></div>
             <div class="form-group">
               <label class="form-label" for="newAreaName">Area</label>
-              <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example">
+              <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example"
+                required>
                 <option value="" disabled selected>Pilih Area Observasi</option>
                 <option value="Kantor">Kantor</option>
                 <option value="Workshop">Workshop</option>
@@ -183,14 +184,14 @@
             </div>
             <h5>Langkah 4: Bertindak Untuk Memperbaiki</h5>
             <div class="form-group">
-              <label class="form-label" for="deskripsiPerbaikanSegera">Tindakan Segera / Immidiate Action </label>
+              <label class="form-label" for="deskripsiPerbaikanSegera">Tindakan Segera / Immediate Action </label>
               <textarea class="form-control" id="deskripsiPerbaikanSegera" name="textarea" cols="3" rows="5"
                 placeholder="Isi dengan tindakan yang dilakukan untuk perbaikan" required></textarea>
             </div>
             <div class="form-group form-file">
               <div class="text-center">
                 <input class="form-control d-none" id="fotoPerbaikan" type="file" accept="image/*" capture="environment"
-                  data-jenis="perbaikan">
+                  data-jenis="perbaikan" required>
                 <label class="form-file-label justify-content-center text-center" for="fotoPerbaikan">
                   <span
                     class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
@@ -206,7 +207,6 @@
                 <br>
 
                 <img id="hasilFotoPerbaikan" class="w-75 mb-4" src="" alt="">
-
               </div>
             </div>
             <div class="form-group">
@@ -214,7 +214,8 @@
                 Tindakan Pencegahan Agar Tidak Terulang Kembali
               </label>
               <br>
-              <small class="form-text text-muted"><span class="text-danger">*</span>Pastikan langkah pencegahan dilakukan secara berurut</small>
+              <small class="form-text text-muted"><span class="text-danger">*</span>Pastikan langkah pencegahan
+                dilakukan secara berurut</small>
             </div>
             <div class="form-group">
               <div class="form-check mb-3">
@@ -251,6 +252,7 @@
               </svg>
             </button>
           </form>
+
         </div>
       </div>
     </div>
