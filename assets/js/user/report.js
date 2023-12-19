@@ -134,9 +134,6 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <div class="text-center">
         <img class="w-75 mb-4" src="${detailedReport.improvementPhoto}" alt="Foto Tindakan Perbaikan">
       </div>
-
-      <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
-      <p>${detailedReport.correctiveAction}</p>
     </div>
   `;
     detailContainer.appendChild(detailCard);
@@ -158,7 +155,7 @@ function getPrefix(array, currentAction, currentIndex) {
 
 // Fungsi untuk mendapatkan prefix (dash) untuk setiap subType
 function getSubTypePrefix(array, currentSubType, currentSubIndex) {
-  if (currentSubIndex > 0 && array[currentSubIndex - 1] !== currentSubType) {
+  if (currentSubIndex === 0) {
     return '<i class="bi bi-dash me-2"></i>';
   }
   return '';
