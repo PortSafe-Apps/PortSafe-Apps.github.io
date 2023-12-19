@@ -1,4 +1,35 @@
 document.addEventListener("DOMContentLoaded", function() {
+  // Temukan formulir dan tombol submit
+  var form = document.getElementById('newReportForm');
+  var submitButton = form.querySelector('button[type="submit"]');
+
+  // Tambahkan event listener pada setiap elemen input untuk memeriksa validasi saat nilai berubah
+  form.addEventListener('input', function () {
+    // Cek setiap elemen input yang diperlukan
+    var allInputsValid = true;
+    var requiredInputs = form.querySelectorAll('input[required], textarea[required], select[required]');
+
+    for (var i = 0; i < requiredInputs.length; i++) {
+      if (!requiredInputs[i].value) {
+        // Jika ada elemen yang belum terisi, setel allInputsValid menjadi false dan hentikan loop
+        allInputsValid = false;
+        break;
+      }
+    }
+
+    // Aktifkan atau nonaktifkan tombol submit berdasarkan kevalidan input
+    submitButton.disabled = !allInputsValid;
+
+    // Ubah warna tombol sesuai dengan keadaan formulir
+    if (allInputsValid) {
+      submitButton.classList.remove('btn-secondary');
+      submitButton.classList.add('btn-primary');
+    } else {
+      submitButton.classList.remove('btn-primary');
+      submitButton.classList.add('btn-secondary');
+    }
+  });
+
   // Mendapatkan elemen input tanggal
   var inputTanggal = document.getElementById("tanggalPelaporan");
 
@@ -15,13 +46,12 @@ document.addEventListener("DOMContentLoaded", function() {
     day = day < 10 ? '0' + day : day;
     month = month < 10 ? '0' + month : month;
 
-    return year + '-' + month + '-' + day;
+    return day + '-' + month + '-' + year;
   }
 
   // Mengatur nilai input tanggal menjadi tanggal saat ini dengan format yang diinginkan
   inputTanggal.value = formatDate(tanggalSekarang);
 });
-
 
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(';');
