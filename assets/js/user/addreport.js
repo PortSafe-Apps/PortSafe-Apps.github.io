@@ -138,7 +138,6 @@ const insertObservationReport = async (event) => {
         },
         ImmediateAction: document.getElementById('deskripsiPerbaikanSegera').value,
         ImprovementPhoto: improvementPhotoUrl,
-        CorrectiveAction: document.getElementById('deskripsiPencegahanTerulangKembali').value,
       }),
       redirect: 'follow',
     };
