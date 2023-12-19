@@ -103,24 +103,23 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
       <ul class="ps-0 fs-6">
         ${detailedReport.typeDangerousActions
-          .map(
-            (action, index) => {
-              const groupedSubTypes = action.subTypes.filter((value, index, self) => self.indexOf(value) === index);
-              return `
-                <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
-                  ${groupedSubTypes.length > 1 ? '<ul class="ps-3">' : ''}
-                    ${groupedSubTypes
-                      .map(
-                        (subType, subIndex) => `
-                          <li>${getSubTypePrefix(groupedSubTypes, subType, subIndex)} ${subType}</li>
-                        `
-                      )
-                      .join("")}
-                    ${groupedSubTypes.length > 1 ? '</ul>' : ''}
-                </li>
-              `;
-            }
-          )
+          .map((action, index) => {
+            const groupedSubTypes = action.subTypes.filter(
+              (value, subIndex, self) => self.indexOf(value) === subIndex
+            );
+            return `
+              ${index > 0 ? '<hr>' : ''} 
+              <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
+                ${groupedSubTypes.length > 1 ? '<ul class="ps-3">' : ''}
+                  ${groupedSubTypes
+                    .map(
+                      (subType, subIndex) => getSubTypeListItem(subType, subIndex)
+                    )
+                    .join("")}
+                  ${groupedSubTypes.length > 1 ? '</ul>' : ''}
+              </li>
+            `;
+          })
           .join("")}
       </ul>
 
@@ -134,6 +133,9 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <div class="text-center">
         <img class="w-75 mb-4" src="${detailedReport.improvementPhoto}" alt="Foto Tindakan Perbaikan">
       </div>
+
+      <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
+      <p>${detailedReport.correctiveAction}</p>
     </div>
   `;
     detailContainer.appendChild(detailCard);
@@ -153,13 +155,21 @@ function getPrefix(array, currentAction, currentIndex) {
   return `<span>${currentIndex + 1}.</span>`;
 }
 
+// Fungsi untuk mendapatkan elemen li untuk setiap subType
+function getSubTypeListItem(currentSubType, currentSubIndex) {
+  return `
+    <li>${getSubTypePrefix(currentSubIndex)} ${currentSubType}</li>
+  `;
+}
+
 // Fungsi untuk mendapatkan prefix (dash) untuk setiap subType
-function getSubTypePrefix(array, currentSubType, currentSubIndex) {
+function getSubTypePrefix(currentSubIndex) {
   if (currentSubIndex === 0) {
     return '<i class="bi bi-dash me-2"></i>';
   }
   return '';
 }
+
 
 // Fungsi untuk mendapatkan semua laporan pengguna dengan token
 const getAllUserReport = async () => {
