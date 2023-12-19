@@ -42,7 +42,6 @@ async function getUserWithToken() {
 
     if (data.status === true) {
       displayUserDataForm(data.data);
-      displayUserDataProfile(data.data);
     } else {
       alert(data.message);
     }
