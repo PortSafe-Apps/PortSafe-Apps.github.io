@@ -1619,7 +1619,7 @@ textarea:invalid {
 .bg-overlay::after {
   position: absolute;
   content: "";
-  background-color: #061238;
+  background-color: #02172C;
   opacity: 0.75;
   top: 0;
   left: 0;

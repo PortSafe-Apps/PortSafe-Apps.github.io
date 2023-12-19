@@ -96,156 +96,157 @@
         </div>
       </div>
     </div>
-
-    <div class="page-content-wrapper py-3">
-      <div class="container">
-        <!-- Element Heading -->
-        <div class="element-heading">
-          <h3 class="text-center">Pelaporan Observasi</h3>
-          <div class="divider mt-0"></div>
-        </div>
+  </div>
+  <div class="page-content-wrapper py-3">
+    <div class="container">
+      <!-- Element Heading -->
+      <div class="element-heading">
+        <h3 class="text-center">Pelaporan Observasi</h3>
+        <div class="divider mt-0"></div>
       </div>
-      <div class="container">
-        <div class="card">
-          <div class="card-body">
-            <form id="newReportForm" autocomplete="off">
-              <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
-              <div class="form-group">
-                <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
-                <input class="form-control" type="text" id="nomorPelaporan" readonly>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="tanggalPelaporan">Tanggal Laporan</label>
-                <input class="form-control" id="tanggalPelaporan" type="date">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="namaPengawas">Nama Pengawas</label>
-                <input class="form-control" id="namaPengawas" type="text" value="" readonly>
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="jabatanPengawas">Jabatan Pengawas</label>
-                <input class="form-control" id="jabatanPengawas" value="" type="text" readonly>
-              </div>
-              <h5>Langkah 2: Berhenti dan Melihat Dengan Jelas</h5>
-              <div class="form-group">
-                <label class="form-label" for="autoCompleteLocation">Unit Kerja</label>
-                <input class="form-control" id="autoCompleteLocation" type="text" name="myLocation"
-                  placeholder="Cari lokasi">
-              </div>
-              <div class="form-group">
-                <label class="form-label" for="deskripsiPengamatan">Deskripsi Pengamatan</label>
-                <textarea class="form-control" id="deskripsiPengamatan" name="textarea" cols="3" rows="5"
-                  placeholder="Isi sesuai dengan pengamatan dilapangan" required></textarea>
-              </div>
-              <div class="form-group form-file">
-                <div class="text-center">
-                  <input class="form-control d-none" id="fotoObservasi" data-jenis="observasi" type="file"
-                    accept="image/*" capture="environment">
+    </div>
+    <div class="container">
+      <div class="card">
+        <div class="card-body">
+          <form id="newReportForm" autocomplete="off">
+            <h5>Langkah 1: Keputusan Untuk Melakukan Pengamatan</h5>
+            <div class="form-group">
+              <label class="form-label" for="nomorPelaporan">Nomor Pelaporan</label>
+              <input class="form-control" type="text" id="nomorPelaporan" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="tanggalPelaporan">Tanggal Laporan</label>
+              <input class="form-control" id="tanggalPelaporan" type="date">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="namaPengawas">Nama Pengawas</label>
+              <input class="form-control" id="namaPengawas" type="text" value="" readonly>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="jabatanPengawas">Jabatan Pengawas</label>
+              <input class="form-control" id="jabatanPengawas" value="" type="text" readonly>
+            </div>
+            <h5>Langkah 2: Berhenti dan Melihat Dengan Jelas</h5>
+            <div class="form-group">
+              <label class="form-label" for="autoCompleteLocation">Unit Kerja</label>
+              <input class="form-control" id="autoCompleteLocation" type="text" name="myLocation"
+                placeholder="Cari lokasi">
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="deskripsiPengamatan">Deskripsi Pengamatan</label>
+              <textarea class="form-control" id="deskripsiPengamatan" name="textarea" cols="3" rows="5"
+                placeholder="Isi sesuai dengan pengamatan dilapangan" required></textarea>
+            </div>
+            <div class="form-group form-file">
+              <div class="text-center">
+                <input class="form-control d-none" id="fotoObservasi" data-jenis="observasi" type="file"
+                  accept="image/*" capture="environment">
 
-                  <label class="form-file-label justify-content-center text-center" for="fotoObservasi">
-                    <span
-                      class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
-                      <svg class="bi bi-card-image me-2" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path
-                          d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5z" />
-                      </svg>Ambil Foto Observasi
-                    </span>
-                  </label>
-                  <br>
-                  <br>
+                <label class="form-file-label justify-content-center text-center" for="fotoObservasi">
+                  <span
+                    class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
+                    <svg class="bi bi-card-image me-2" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                      <path
+                        d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                    </svg>Ambil Foto Observasi
+                  </span>
+                </label>
+                <br>
+                <br>
 
-                  <img id="hasilFotoObservasi" class="w-75 mb-4" src="" alt="">
-                </div>
+                <img id="hasilFotoObservasi" class="w-75 mb-4" src="" alt="">
               </div>
+            </div>
 
-              <h5>Langkah 3: Pengamatan Perilaku Tidak Standar</h5>
-              <div class="element-heading">
-                <h6>Jenis Tindakan Berbahaya</h6>
-              </div>
-              <div class="form-group" id="checkboxContainer"></div>
-              <div class="form-group">
-                <label class="form-label" for="newAreaName">Area</label>
-                <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example">
-                  <option value="" disabled selected>Pilih Area Observasi</option>
-                  <option value="Kantor">Kantor</option>
-                  <option value="Workshop">Workshop</option>
-                  <option value="Gudang">Gudang</option>
-                  <option value="Dermaga">Dermaga</option>
-                  <option value="Lapangan Penumpukan">Lapangan Penumpukan</option>
-                  <option value="Area kerja lainnya">Area kerja lainnya</option>
-                </select>
-              </div>
-              <h5>Langkah 4: Bertindak Untuk Memperbaiki</h5>
-              <div class="form-group">
-                <label class="form-label" for="deskripsiPerbaikanSegera">Tindakan Segera / Immidiate Action </label>
-                <textarea class="form-control" id="deskripsiPerbaikanSegera" name="textarea" cols="3" rows="5"
-                  placeholder="Isi dengan tindakan yang dilakukan untuk perbaikan" required></textarea>
-              </div>
-              <div class="form-group form-file">
-                <div class="text-center">
-                  <input class="form-control d-none" id="fotoPerbaikan" type="file" accept="image/*"
-                    capture="environment" data-jenis="perbaikan">
-                  <label class="form-file-label justify-content-center text-center" for="fotoPerbaikan">
-                    <span
-                      class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
-                      <svg class="bi bi-card-image me-2" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"
-                        xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
-                        <path
-                          d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5z" />
-                      </svg>Ambil Foto Perbaikan
-                    </span>
-                  </label>
-                  <br>
-                  <br>
+            <h5>Langkah 3: Pengamatan Perilaku Tidak Standar</h5>
+            <div class="element-heading">
+              <h6>Jenis Tindakan Berbahaya</h6>
+            </div>
+            <div class="form-group" id="checkboxContainer"></div>
+            <div class="form-group">
+              <label class="form-label" for="newAreaName">Area</label>
+              <select class="form-select" id="newAreaName" name="newAreaName" aria-label="Default select example">
+                <option value="" disabled selected>Pilih Area Observasi</option>
+                <option value="Kantor">Kantor</option>
+                <option value="Workshop">Workshop</option>
+                <option value="Gudang">Gudang</option>
+                <option value="Dermaga">Dermaga</option>
+                <option value="Lapangan Penumpukan">Lapangan Penumpukan</option>
+                <option value="Area kerja lainnya">Area kerja lainnya</option>
+              </select>
+            </div>
+            <h5>Langkah 4: Bertindak Untuk Memperbaiki</h5>
+            <div class="form-group">
+              <label class="form-label" for="deskripsiPerbaikanSegera">Tindakan Segera / Immidiate Action </label>
+              <textarea class="form-control" id="deskripsiPerbaikanSegera" name="textarea" cols="3" rows="5"
+                placeholder="Isi dengan tindakan yang dilakukan untuk perbaikan" required></textarea>
+            </div>
+            <div class="form-group form-file">
+              <div class="text-center">
+                <input class="form-control d-none" id="fotoPerbaikan" type="file" accept="image/*" capture="environment"
+                  data-jenis="perbaikan">
+                <label class="form-file-label justify-content-center text-center" for="fotoPerbaikan">
+                  <span
+                    class="form-file-button btn btn-danger d-flex align-items-center justify-content-center shadow-lg">
+                    <svg class="bi bi-card-image me-2" width="22" height="22" fill="currentColor" viewBox="0 0 16 16"
+                      xmlns="http://www.w3.org/2000/svg">
+                      <path d="M6.002 5.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0" />
+                      <path
+                        d="M1.5 2A1.5 1.5 0 0 0 0 3.5v9A1.5 1.5 0 0 0 1.5 14h13a1.5 1.5 0 0 0 1.5-1.5v-9A1.5 1.5 0 0 0 14.5 2zm13 1a.5.5 0 0 1 .5.5v6l-3.775-1.947a.5.5 0 0 0-.577.093l-3.71 3.71-2.66-1.772a.5.5 0 0 0-.63.062L1.002 12v.54A.505.505 0 0 1 1 12.5v-9a.5.5 0 0 1 .5-.5z" />
+                    </svg>Ambil Foto Perbaikan
+                  </span>
+                </label>
+                <br>
+                <br>
 
-                  <img id="hasilFotoPerbaikan" class="w-75 mb-4" src="" alt="">
+                <img id="hasilFotoPerbaikan" class="w-75 mb-4" src="" alt="">
 
-                </div>
               </div>
-              <div class="form-group">
-                <div class="form-check mb-3">
-                  <input class="form-check-input" id="checkedCheckbox" type="checkbox" value="" checked>
-                  <label class="form-check-label text-muted fw-normal" for="checkedCheckbox">I agree with the terms &amp; policy.</label>
-                </div>
+            </div>
+            <div class="form-group">
+              <div class="form-check mb-3">
+                <input class="form-check-input" id="checkedCheckbox" type="checkbox" value="" checked>
+                <label class="form-check-label text-muted fw-normal" for="checkedCheckbox">I agree with the terms
+                  &amp; policy.</label>
               </div>
-              <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="submit">5.
-                Submit Laporan
-                <svg class="bi bi-arrow-right-short" width="24" height="24" viewBox="0 0 16 16" fill="currentColor"
-                  xmlns="http://www.w3.org/2000/svg">
-                  <path fill-rule="evenodd"
-                    d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
-                  </path>
-                </svg>
-              </button>
-            </form>
-          </div>
+            </div>
+            <button class="btn btn-primary w-100 d-flex align-items-center justify-content-center" type="submit">5.
+              Submit Laporan
+              <svg class="bi bi-arrow-right-short" width="24" height="24" viewBox="0 0 16 16" fill="currentColor"
+                xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd"
+                  d="M4 8a.5.5 0 0 1 .5-.5h5.793L8.146 5.354a.5.5 0 1 1 .708-.708l3 3a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708-.708L10.293 8.5H4.5A.5.5 0 0 1 4 8z">
+                </path>
+              </svg>
+            </button>
+          </form>
         </div>
       </div>
     </div>
+  </div>
 
-    <!-- All JavaScript Files -->
-    <script src="/assets/js/authorization/logout.js" type="module"></script>
-    <script src="/assets/js/user/addreport.js" type="module"></script>
-    <script src="/assets/js/user/userform.js" type="module"></script>
-    <script src="/assets/js/user/userprofile.js" type="module"></script>
-    <script src="/assets/js/user/takephoto.js" type="module"></script>
-    <script src="/assets/js/user/numreport.js" type="module"></script>
-    <script src="/assets/js/user/checkbox.js" type="module"></script>
-    <script src="/assets/js/user/form-autocomplete.js"></script>
-    <script src="/assets/js/user/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/user/internet-status.js"></script>
-    <script src="/assets/js/user/index.js"></script>
-    <script src="/assets/js/user/dark-rtl.js"></script>
-    <script src="/assets/js/user/active.js"></script>
-    <!-- PWA -->
-    <script src="/assets/js/user/pwa.js"></script>
-    <!-- Sweet Alert -->
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-    <!-- Modal -->
-    <script src="/assets/js/config/modal.js" type="module"></script>
+  <!-- All JavaScript Files -->
+  <script src="/assets/js/authorization/logout.js" type="module"></script>
+  <script src="/assets/js/user/addreport.js" type="module"></script>
+  <script src="/assets/js/user/userform.js" type="module"></script>
+  <script src="/assets/js/user/userprofile.js" type="module"></script>
+  <script src="/assets/js/user/takephoto.js" type="module"></script>
+  <script src="/assets/js/user/numreport.js" type="module"></script>
+  <script src="/assets/js/user/checkbox.js" type="module"></script>
+  <script src="/assets/js/user/form-autocomplete.js"></script>
+  <script src="/assets/js/user/bootstrap.bundle.min.js"></script>
+  <script src="/assets/js/user/internet-status.js"></script>
+  <script src="/assets/js/user/index.js"></script>
+  <script src="/assets/js/user/dark-rtl.js"></script>
+  <script src="/assets/js/user/active.js"></script>
+  <!-- PWA -->
+  <script src="/assets/js/user/pwa.js"></script>
+  <!-- Sweet Alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+  <!-- Modal -->
+  <script src="/assets/js/config/modal.js" type="module"></script>
 </body>
 
 </html>
