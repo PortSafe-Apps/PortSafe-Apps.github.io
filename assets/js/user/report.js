@@ -103,23 +103,27 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
       <ul class="ps-0 fs-6">
         ${detailedReport.typeDangerousActions
-          .map((action, index) => {
-            const groupedSubTypes = action.subTypes.filter(
-              (value, subIndex, self) => self.indexOf(value) === subIndex
-            );
-            return `
-              <li>${getPrefix(detailedReport.typeDangerousActions, action, index)} ${action.typeName}
-                ${groupedSubTypes.length > 1 ? '<ul class="ps-3">' : ''}
-                  ${groupedSubTypes
-                    .map(
-                      (subType, subIndex) => getSubTypeListItem(subType, subIndex)
-                    )
-                    .join("")}
-                  ${groupedSubTypes.length > 1 ? '</ul>' : ''}
-              </li>
-            `;
-          })
-          .join("")}
+          .reduce((accumulator, action) => {
+            const existingIndex = accumulator.findIndex((item) => item.typeName === action.typeName);
+            if (existingIndex !== -1) {
+              accumulator[existingIndex].subTypes.push(...action.subTypes);
+            } else {
+              accumulator.push({
+                typeName: action.typeName,
+                subTypes: [...action.subTypes],
+              });
+            }
+            return accumulator;
+          }, [])
+          .map((badge) => `
+            <li>${badge.typeName}
+              ${badge.subTypes.length > 1 ? '<ul class="ps-3">' : ''}
+                ${badge.subTypes.map((subType) => `
+                  <li><i class="bi bi-dash me-2"></i>${subType}</li>
+                `).join('')}
+                ${badge.subTypes.length > 1 ? '</ul>' : ''}
+            </li>
+          `).join('')}
       </ul>
 
       <h6 class="mb-0">Area</h6>
@@ -143,23 +147,6 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
   }
 };
 
-// Fungsi untuk mendapatkan prefix (angka atau dash) berdasarkan elemen sebelumnya
-function getPrefix(array, currentAction, currentIndex) {
-  if (currentIndex > 0) {
-    const previousAction = array[currentIndex - 1];
-    if (previousAction.typeName === currentAction.typeName) {
-      return "";
-    }
-  }
-  return `<span>${currentIndex + 1}.</span>`;
-}
-
-// Fungsi untuk mendapatkan elemen li untuk setiap subType
-function getSubTypeListItem(currentSubType) {
-  return `
-    <li><i class="bi bi-dash me-2"></i>${currentSubType}</li>
-  `;
-}
 
 
 // Fungsi untuk mendapatkan semua laporan pengguna dengan token
