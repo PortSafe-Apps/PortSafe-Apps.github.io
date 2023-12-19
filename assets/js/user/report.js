@@ -154,7 +154,11 @@ function getPrefix(array, _, currentIndex) {
   if (currentIndex > 0) {
     const previousItem = array[currentIndex - 1];
     if (previousItem.subTypes) {
-      return `<span>${currentIndex + 1}.</span>`;
+      const count = array
+        .slice(0, currentIndex)
+        .filter(item => item.typeName === previousItem.typeName)
+        .reduce((sum, item) => sum + item.subTypes.length, 0);
+      return `<span>${count + 1}.</span>`;
     }
   }
   return "";
