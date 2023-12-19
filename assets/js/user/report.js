@@ -103,7 +103,7 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <h6 class="mb-0">Tindakan Berbahaya yang Dilakukan</h6>
       <ul class="ps-0 fs-6">
         ${detailedReport.typeDangerousActions
-          .reduce((accumulator, action) => {
+          .reduce((accumulator, action, index) => {
             const existingIndex = accumulator.findIndex((item) => item.typeName === action.typeName);
             if (existingIndex !== -1) {
               accumulator[existingIndex].subTypes.push(...action.subTypes);
@@ -111,12 +111,13 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
               accumulator.push({
                 typeName: action.typeName,
                 subTypes: [...action.subTypes],
+                index: accumulator.length + 1, // Menambahkan index untuk nomor urut
               });
             }
             return accumulator;
           }, [])
           .map((badge) => `
-            <li>${badge.typeName}
+            <li>${badge.index}. ${badge.typeName}
               ${badge.subTypes.length > 1 ? '<ul class="ps-3">' : ''}
                 ${badge.subTypes.map((subType) => `
                   <li><i class="bi bi-dash me-2"></i>${subType}</li>
@@ -146,6 +147,7 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
     detailContainer.innerHTML = "<p>Informasi detail tidak ditemukan.</p>";
   }
 };
+
 
 
 
