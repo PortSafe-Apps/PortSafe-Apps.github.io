@@ -402,12 +402,14 @@ const fetchDataFromServer = async () => {
 
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
+    console.log("Data from server:", data); // Log data yang diterima dari server
     return data.data || [];
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
   }
 };
+
 
 function processDataAndCreateCharts(data) {
   const allMonths = Array.from(
@@ -514,6 +516,7 @@ function processDataAndCreateCharts(data) {
   );
 
   function updateLocationChart(locationIndex) {
+    console.log("Location index:", locationIndex);
     const selectedLocation =
       allChartData.location.chartData.xaxis.categories[locationIndex];
     const locationData = data.filter(
@@ -524,6 +527,7 @@ function processDataAndCreateCharts(data) {
   }
 
   function updateAreaChart(data) {
+    console.log("Area data:", data);
     const areas = Array.from(
       new Set(data.map((report) => report.area.areaName))
     );
@@ -556,6 +560,7 @@ function processDataAndCreateCharts(data) {
   }
 
   function updateTypeChart(areaData) {
+    console.log("Type areaData:", areaData);
     const types = Array.from(
       new Set(
         areaData.flatMap((report) =>
@@ -577,6 +582,8 @@ function processDataAndCreateCharts(data) {
 }
 
 function createApexChart(chartId, chartOptions, clickCallback) {
+  console.log("Creating chart with options:", chartOptions);
+
   const options = {
     chart: {
       type: chartOptions.chart.type,
@@ -596,11 +603,13 @@ function createApexChart(chartId, chartOptions, clickCallback) {
 
   document.getElementById(chartId).addEventListener("click", function (event) {
     const clickedIndex = chart.w.globals.selectedDataPoints[0].dataPointIndex;
+    console.log("Chart clicked at index:", clickedIndex);
     if (clickCallback) {
       clickCallback(clickedIndex);
     }
   });
 }
+
 
 function monthToLabel(month) {
   const monthNames = [
