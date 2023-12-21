@@ -103,49 +103,43 @@ const fetchDataFromServer = async () => {
   }
 };
 
-const createApexChart = (chartId, chartOptions, clickCallback) => {
+const createApexChart = (chartId, chartType, clickCallback) => {
   try {
+    // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
+    const chartOptions = allChartData[chartType].chartData;
+
+    // Membuat opsi chart
     const options = {
       chart: {
-        height: chartOptions.chart?.height || 240,
-        type: chartOptions.chart.type || {},
-        animations: chartOptions.chart?.animations || {
+        height: chartOptions.chart.height || 240,
+        animations: chartOptions.chart.animations || {
           enabled: true,
           easing: "easeinout",
           speed: 1000,
         },
-        dropShadow: chartOptions.chart?.dropShadow || {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 18,
-        },
-        zoom: chartOptions.chart?.zoom || {
-          enabled: false,
-        },
-        toolbar: chartOptions.chart?.toolbar || {
-          show: false,
-        },
       },
+      type: chartOptions.type || [],
       series: chartOptions.series || [],
       xaxis: chartOptions.xaxis || {},
-      yaxis: chartOptions.yaxis || {},
       plotOptions: chartOptions.plotOptions || {},
       colors: chartOptions.colors || [],
-      padding: chartOptions.padding || {},
-      grid: chartOptions.grid || {},
-      fill: chartOptions.fill || {},
       legend: chartOptions.legend || {},
       tooltip: chartOptions.tooltip || {},
-      subtitle: chartOptions.subtitle || {},
       dataLabels: chartOptions.dataLabels || {},
+      yaxis: chartOptions.yaxis || {},
+      padding: chartOptions.padding || {},
+      fill: chartOptions.fill || {},
+      grid: chartOptions.grid || {},
     };
 
-    const chart = new ApexCharts(document.getElementById(chartId), options);
+    // Menggabungkan opsi grafik yang diberikan dengan opsi default
+    const mergedOptions = { ...options, ...chartOptions };
+
+    const chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
     chart.render();
 
-    if (chartOptions.xaxis && chartOptions.xaxis.categories) {
+    // Menangani logika klik
+    if (mergedOptions.xaxis && mergedOptions.xaxis.categories) {
       document.getElementById(chartId).addEventListener("click", function () {
         try {
           if (
@@ -856,8 +850,8 @@ async function processDataAndCreateCharts() {
     );
     updateLocationChart(data);
     updateAreaChart(data);
-    updateTypeChart();
-    updateSubtypeChart();
+    updateTypeChart(data);
+    updateSubtypeChart(data);
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
   }
