@@ -284,7 +284,8 @@ async function processDataAndCreateCharts() {
       return count;
     }
 
-    function updateLocationChart(data) {
+    // Fungsi untuk mengupdate chart lokasi
+    function updateLocationChart() {
       try {
         if (!Array.isArray(data)) {
           throw new Error("Invalid data format for updateLocationChart");
@@ -329,7 +330,7 @@ async function processDataAndCreateCharts() {
     }
 
     // Update the function like this:
-    function updateAreaChart(data) {
+    function updateAreaChart() {
       try {
         if (!Array.isArray(data)) {
           throw new Error("Invalid data format for updateAreaChart");
@@ -380,7 +381,7 @@ async function processDataAndCreateCharts() {
         };
 
         createApexChart(
-          "typeChart", // Make sure this ID exists in your HTML
+          "typeChart", // Pastikan ID ini ada dalam HTML Anda
           typeChartData.chartData,
           typeChartData.updateCallback
         );
@@ -408,18 +409,21 @@ async function processDataAndCreateCharts() {
 
     // Render grafik
     createApexChart(
-      "monthlyChart", // Make sure this ID exists in your HTML
+      "monthlyChart", // Pastikan ID ini ada dalam HTML Anda
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateLocationChart(data);
-    updateAreaChart(data);
+    updateLocationChart();
+    updateAreaChart();
     updateTypeChart();
     updateSubtypeChart();
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
   }
 }
+
+// Pemanggilan fungsi utama
+processDataAndCreateCharts();
 
 // Objek chart data
 const allChartData = {
@@ -584,5 +588,3 @@ const allChartData = {
   },
 };
 
-// Pemanggilan fungsi utama
-processDataAndCreateCharts();
