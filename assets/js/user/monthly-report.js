@@ -594,7 +594,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
 };
 
 // Fungsi untuk memproses data dan membuat grafik
-const processDataAndCreateCharts = (data) => {
+const processDataAndCreateCharts = async (data) => {
   try {
     // Pastikan data yang diterima dari server sesuai dengan yang diharapkan
     if (!Array.isArray(data)) {
@@ -652,8 +652,11 @@ const processDataAndCreateCharts = (data) => {
     };
 
     console.log("Trying to create monthlyChart");
-    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
-    
+    createApexChart(
+      "monthlyChart",
+      allChartData.monthly.chartData,
+      allChartData.monthly.updateCallback
+    );
 
     // Fungsi untuk mengupdate grafik lokasi
     function updateLocationChart(locationIndex) {
@@ -783,53 +786,58 @@ const processDataAndCreateCharts = (data) => {
         return 0;
       }
     }
-
-    // Fungsi untuk mengupdate grafik jenis
-    function updateTypeChart(data) {
-      try {
-        const typeChartData = {
-          chartData: getTypeChartOptions(data),
-          updateCallback: null,
-        };
-
-        createApexChart(
-          "typeChart",
-          typeChartData.chartData,
-          typeChartData.updateCallback
-        );
-      } catch (error) {
-        console.error("Error updating type chart:", error);
-      }
-    }
-
-    // Fungsi untuk mengupdate grafik subtipe
-    function updateSubtypeChart(data) {
-      try {
-        const subtypeChartData = {
-          chartData: getSubtypeChartOptions(data),
-          updateCallback: null,
-        };
-
-        createApexChart(
-          "subtypeChart",
-          subtypeChartData.chartData,
-          subtypeChartData.updateCallback
-        );
-      } catch (error) {
-        console.error("Error updating subtype chart:", error);
-      }
-    }
- 
-    // Membaca data dari server dan memprosesnya
-    fetchDataFromServer()
-      .then((data) => {
-        processDataAndCreateCharts(data);
-        updateTypeChart(data); // Perbarui grafik jenis
-        updateSubtypeChart(data); // Perbarui grafik subtipe
-      })
-      console.error("Error fetching data:", error.message);
   } catch (error) {
     console.error("Error in processDataAndCreateCharts:", error);
   }
 };
 
+// Fungsi untuk mengupdate grafik jenis
+function updateTypeChart(data) {
+  try {
+    const typeChartData = {
+      chartData: getTypeChartOptions(data),
+      updateCallback: null,
+    };
+
+    createApexChart(
+      "typeChart",
+      typeChartData.chartData,
+      typeChartData.updateCallback
+    );
+  } catch (error) {
+    console.error("Error updating type chart:", error);
+  }
+}
+
+// Fungsi untuk mengupdate grafik subtipe
+function updateSubtypeChart(data) {
+  try {
+    const subtypeChartData = {
+      chartData: getSubtypeChartOptions(data),
+      updateCallback: null,
+    };
+
+    createApexChart(
+      "subtypeChart",
+      subtypeChartData.chartData,
+      subtypeChartData.updateCallback
+    );
+  } catch (error) {
+    console.error("Error updating subtype chart:", error);
+  }
+}
+fetchDataFromServer()
+  .then((data) => {
+    processDataAndCreateCharts(data);
+    console.log("Trying to create monthlyChart");
+    createApexChart(
+      "monthlyChart",
+      allChartData.monthly.chartData,
+      allChartData.monthly.updateCallback
+    );
+    updateTypeChart(data); // Perbarui grafik jenis
+    updateSubtypeChart(data); // Perbarui grafik subtipe
+  })
+  .catch((error) => {
+    console.error("Error fetching data:", error.message);
+  });
