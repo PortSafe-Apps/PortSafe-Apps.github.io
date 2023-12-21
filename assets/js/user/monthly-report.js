@@ -433,20 +433,136 @@ function getSubtypeReportsCount(data, subtype) {
   ).length;
 }
 
-function createApexChart(chartId, chartOptions, clickCallback) {
+const createApexChart = (chartId, chartOptions, clickCallback) => {
   try {
     const options = {
       chart: {
-        type: chartOptions.chart.type,
-        height: chartOptions.chart.height,
-        plotOptions: chartOptions.plotOptions,
+        height: chartOptions.chart.height || 240,
+        type: chartOptions.chart.type || "line",
+        animations: chartOptions.chart.animations || {
+          enabled: true,
+          easing: "easeinout",
+          speed: 1000,
+        },
+        dropShadow: chartOptions.chart.dropShadow || {
+          enabled: true,
+          opacity: 0.1,
+          blur: 1,
+          left: -5,
+          top: 18,
+        },
+        zoom: chartOptions.chart.zoom || {
+          enabled: false,
+        },
+        toolbar: chartOptions.chart.toolbar || {
+          show: false,
+        },
       },
-      colors: chartOptions.colors,
-      legend: chartOptions.legend,
-      tooltip: chartOptions.tooltip,
-      dataLabels: chartOptions.dataLabels,
-      xaxis: chartOptions.xaxis,
-      yaxis: chartOptions.yaxis,
+      colors: chartOptions.colors || ["#02172C"],
+      dataLabels: chartOptions.dataLabels || {
+        enabled: false,
+      },
+      fill: chartOptions.fill || {
+        type: "gradient",
+        gradient: {
+          type: "vertical",
+          shadeIntensity: 1,
+          inverseColors: true,
+          opacityFrom: 0.15,
+          opacityTo: 0.02,
+          stops: [40, 100],
+        },
+      },
+      grid: chartOptions.grid || {
+        borderColor: "#dbeaea",
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        padding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
+      },
+      legend: chartOptions.legend || {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      tooltip: chartOptions.tooltip || {
+        backgroundColor: "#ffffff",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        fontSize: "14px",
+        style: {
+          color: "#343a40",
+        },
+      },
+      subtitle: chartOptions.subtitle || {
+        text: "Tren Jumlah Pelanggaran Setiap Bulan",
+        align: "left",
+        margin: 0,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "15px",
+          color: "text-dark",
+          fontWeight: "bold",
+          marginBottom: "1rem",
+          fontFamily: "Poppins",
+        },
+      },
+      stroke: chartOptions.stroke || {
+        show: true,
+        curve: "smooth",
+        width: 3,
+      },
+      xaxis: chartOptions.xaxis || {
+        categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+        labels: {
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
+          },
+        },
+        tooltip: {
+          enabled: false,
+        },
+      },
+      yaxis: chartOptions.yaxis || {
+        labels: {
+          offsetX: -10,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
+          },
+        },
+      },
     };
 
     const chart = new ApexCharts(document.getElementById(chartId), options);
@@ -472,8 +588,7 @@ function createApexChart(chartId, chartOptions, clickCallback) {
   } catch (error) {
     console.error("Error creating ApexChart:", error);
   }
-}
-
+};
 const processDataAndCreateCharts = (data) => {
   const allChartData = {
     monthly: {
