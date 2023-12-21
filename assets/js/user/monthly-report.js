@@ -1,102 +1,3 @@
-// Fungsi untuk mendapatkan opsi chart jenis
-function getTypeChartOptions() {
-  return {
-    chart: {
-      height: 240,
-      type: "pie",
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 1000,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: [
-      "rgba(255, 99, 132, 1)",
-      "rgba(255, 159, 64, 1)",
-      "rgba(255, 205, 86, 1)",
-    ],
-    legend: {
-      position: "bottom",
-      horizontalAlign: "center",
-      offsetY: 4,
-      fontSize: "14px",
-      markers: {
-        width: 9,
-        height: 9,
-        strokeWidth: 0,
-        radius: 20,
-      },
-      itemMargin: {
-        horizontal: 5,
-        vertical: 0,
-      },
-    },
-    tooltip: {
-      backgroundColor: "#ffffff",
-      boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-      fontSize: "14px",
-      style: {
-        color: "#343a40",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-  };
-}
-
-// Fungsi untuk mendapatkan opsi chart subtipe
-function getSubtypeChartOptions() {
-  return {
-    chart: {
-      height: 240,
-      type: "doughnut",
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 1000,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: [
-      "rgba(255, 99, 132, 1)",
-      "rgba(255, 159, 64, 1)",
-      "rgba(255, 205, 86, 1)",
-    ],
-    legend: {
-      position: "bottom",
-      horizontalAlign: "center",
-      offsetY: 4,
-      fontSize: "14px",
-      markers: {
-        width: 9,
-        height: 9,
-        strokeWidth: 0,
-        radius: 20,
-      },
-      itemMargin: {
-        horizontal: 5,
-        vertical: 0,
-      },
-    },
-    tooltip: {
-      backgroundColor: "#ffffff",
-      boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-      fontSize: "14px",
-      style: {
-        color: "#343a40",
-      },
-    },
-    dataLabels: {
-      enabled: false,
-    },
-  };
-}
 
 // Data untuk location
 const locationData = [
@@ -430,7 +331,146 @@ function getAreaReportsCount(data, area) {
 
   return count;
 }
-// Perbarui fungsi-fungsi seperti ini:
+
+// Fungsi untuk mendapatkan opsi chart jenis
+function getTypeChartOptions(data) {
+  try {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format for getTypeChartOptions");
+    }
+
+    const types = Array.from(
+      new Set(
+        data.flatMap((report) =>
+          report.typeDangerousActions.map((type) => type.typeName)
+        )
+      )
+    );
+
+    const colors = generateColors(types.length);
+
+    return {
+      chart: {
+        height: 240,
+        type: "pie",
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 1000,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: colors,
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      tooltip: {
+        backgroundColor: "#ffffff",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        fontSize: "14px",
+        style: {
+          color: "#343a40",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    };
+  } catch (error) {
+    console.error("Error getting type chart options:", error.message);
+    return null;
+  }
+}
+
+// Fungsi untuk mendapatkan opsi chart subtipe
+function getSubtypeChartOptions(data) {
+  try {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format for getSubtypeChartOptions");
+    }
+
+    const subtypes = Array.from(
+      new Set(
+        data.flatMap((report) =>
+          report.typeDangerousActions.flatMap((type) => type.subTypes)
+        )
+      )
+    );
+
+    const colors = generateColors(subtypes.length);
+
+    return {
+      chart: {
+        height: 240,
+        type: "doughnut",
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 1000,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: colors,
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      tooltip: {
+        backgroundColor: "#ffffff",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        fontSize: "14px",
+        style: {
+          color: "#343a40",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    };
+  } catch (error) {
+    console.error("Error getting subtype chart options:", error.message);
+    return null;
+  }
+}
+
+// Fungsi untuk menghasilkan warna secara dinamis berdasarkan jumlah
+function generateColors(count) {
+  return Array.from({ length: count }, (_, index) => {
+    const hue = (index * (360 / count)) % 360;
+    return `hsla(${hue}, 70%, 50%, 1)`;
+  });
+}
+
+
 function updateLocationChart(data) {
   try {
     if (!Array.isArray(data)) {
