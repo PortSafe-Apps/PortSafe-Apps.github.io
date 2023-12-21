@@ -371,6 +371,46 @@ const subtypeChartOptions = {
   },
 };
 
+// Fungsi untuk membuat chart ApexCharts
+function createApexChart(chartId, chartOptions, clickCallback) {
+  try {
+    const options = {
+      chart: {
+        type: chartOptions.chart.type,
+        height: chartOptions.chart.height,
+        plotOptions: chartOptions.plotOptions,
+      },
+      colors: chartOptions.colors,
+      legend: chartOptions.legend,
+      tooltip: chartOptions.tooltip,
+      dataLabels: chartOptions.dataLabels,
+      xaxis: chartOptions.xaxis,
+      yaxis: chartOptions.yaxis,
+    };
+
+    const chart = new ApexCharts(document.getElementById(chartId), options);
+    chart.render();
+
+    document.getElementById(chartId).addEventListener("click", function () {
+      try {
+        const selectedDataPoints = chart.w.globals.selectedDataPoints;
+
+        if (selectedDataPoints && selectedDataPoints.length > 0) {
+          const clickedIndex = selectedDataPoints[0].dataPointIndex;
+
+          if (clickCallback) {
+            clickCallback(clickedIndex);
+          }
+        }
+      } catch (error) {
+        console.error("Error handling click event:", error);
+      }
+    });
+  } catch (error) {
+    console.error("Error creating ApexChart:", error);
+  }
+}
+
 // Fungsi untuk mengambil data dari server
 const fetchDataFromServer = async () => {
   try {
@@ -410,6 +450,7 @@ const fetchDataFromServer = async () => {
   }
 };
 
+// Fungsi untuk memproses data dan membuat chart
 function processDataAndCreateCharts(data) {
   const allMonths = Array.from(
     new Set(data.map((report) => new Date(report.date).getMonth()))
@@ -580,45 +621,7 @@ function processDataAndCreateCharts(data) {
   }
 }
 
-function createApexChart(chartId, chartOptions, clickCallback) {
-  try {
-    const options = {
-      chart: {
-        type: chartOptions.chart.type,
-        height: chartOptions.chart.height,
-        plotOptions: chartOptions.plotOptions,
-      },
-      colors: chartOptions.colors,
-      legend: chartOptions.legend,
-      tooltip: chartOptions.tooltip,
-      dataLabels: chartOptions.dataLabels,
-      xaxis: chartOptions.xaxis,
-      yaxis: chartOptions.yaxis,
-    };
-
-    const chart = new ApexCharts(document.getElementById(chartId), options);
-    chart.render();
-
-    document.getElementById(chartId).addEventListener("click", function () {
-      try {
-        const selectedDataPoints = chart.w.globals.selectedDataPoints;
-
-        if (selectedDataPoints && selectedDataPoints.length > 0) {
-          const clickedIndex = selectedDataPoints[0].dataPointIndex;
-
-          if (clickCallback) {
-            clickCallback(clickedIndex);
-          }
-        }
-      } catch (error) {
-        console.error("Error handling click event:", error);
-      }
-    });
-  } catch (error) {
-    console.error("Error creating ApexChart:", error);
-  }
-}
-
+// Fungsi untuk mengonversi bulan menjadi label singkat
 function monthToLabel(month) {
   const monthNames = [
     "Jan",
@@ -637,34 +640,41 @@ function monthToLabel(month) {
   return monthNames[month];
 }
 
+// Fungsi untuk mendapatkan jumlah laporan berdasarkan bulan
 function getReportsCountByMonth(data, month) {
   return data.filter((report) => new Date(report.date).getMonth() === month)
     .length;
 }
 
+// Fungsi untuk mendapatkan jumlah laporan berdasarkan lokasi
 function getLocationReportsCount(data, location) {
   return data.filter((report) => report.location.locationName === location)
     .length;
 }
 
+// Fungsi untuk mendapatkan jumlah laporan berdasarkan area
 function getAreaReportsCount(data, area) {
   return data.filter((report) => report.area.areaName === area).length;
 }
 
+// Fungsi untuk mendapatkan jumlah laporan berdasarkan tipe
 function getTypeReportsCount(data, type) {
   return data.filter((report) =>
     report.typeDangerousActions.some((t) => t.typeName === type)
   ).length;
 }
 
+// Fungsi untuk mendapatkan jumlah laporan berdasarkan sub-tipe
 function getSubtypeReportsCount(data, subtype) {
   return data.filter((report) =>
     report.typeDangerousActions.some((t) => t.subTypes.includes(subtype))
   ).length;
 }
 
+// Memanggil fungsi untuk mengambil data dari server
 fetchDataFromServer()
   .then((data) => {
+    // Memproses data dan membuat chart
     processDataAndCreateCharts(data);
   })
   .catch((error) => console.error("Error fetching data:", error));
