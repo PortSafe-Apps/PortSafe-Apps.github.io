@@ -98,6 +98,42 @@ function getSubtypeChartOptions() {
   };
 }
 
+// Data untuk location
+const locationData = [
+  { locationName: "Kantor Pusat SPMT" },
+  { locationName: "Branch Dumai" },
+  { locationName: "Branch Belawan" },
+  { locationName: "Branch Tanjung Intan" },
+  { locationName: "Branch Bumiharjo - Bagendang" },
+  { locationName: "Branch Tanjung Wangi" },
+  { locationName: "Branch Makassar" },
+  { locationName: "Branch Balikpapan" },
+  { locationName: "Branch Trisakti - Mekar Putih" },
+  { locationName: "Branch Jamrud Nilam Mirah" },
+  { locationName: "Branch Lembar - Badas" },
+  { locationName: "Branch Tanjung Emas" },
+  { locationName: "Branch ParePare - Garongkong" },
+  { locationName: "Branch Lhokseumawe" },
+  { locationName: "Branch Malahayati" },
+  { locationName: "Branch Gresik" },
+];
+
+// Data untuk area
+const areaData = [
+  { areaName: "Kantor" },
+  { areaName: "Workshop" },
+  { areaName: "Gudang" },
+  { areaName: "Dermaga" },
+  { areaName: "Lapangan Penumpukan" },
+  { areaName: "Area kerja lainnya" },
+];
+
+// Mengonversi data location menjadi label
+const locationLabels = locationData.map((location) => location.locationName);
+
+// Mengonversi data area menjadi label
+const areaLabels = areaData.map((area) => area.areaName);
+
 // Fungsi untuk mengonversi angka bulan menjadi label bulan
 function monthToLabel(month) {
   const monthNames = [
@@ -260,6 +296,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
         show: true,
         curve: "smooth",
         width: 3,
+        colors: ["#02172C"], // Tambahkan properti warna di sini
       },
       fill: chartOptions.fill || {
         type: "gradient",
@@ -554,7 +591,7 @@ const allChartData = {
         },
       ],
       xaxis: {
-        categories: [], // Placeholder data
+        categories: locationLabels,
       },
     },
     updateCallback: updateLocationChart,
@@ -576,7 +613,7 @@ const allChartData = {
         },
       ],
       xaxis: {
-        categories: [], // Placeholder data
+        categories: areaLabels,
       },
     },
     updateCallback: updateAreaChart,
@@ -686,6 +723,9 @@ async function processDataAndCreateCharts() {
   try {
     const data = await fetchDataFromServer();
 
+    // Tambahkan log untuk memeriksa data yang diterima
+    console.log("Data received:", data);
+
     if (!Array.isArray(data) || data.length === 0) {
       console.error("Invalid or empty data");
       return;
@@ -719,6 +759,5 @@ async function processDataAndCreateCharts() {
     console.error("Error processing data and creating charts:", error.message);
   }
 }
-
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
