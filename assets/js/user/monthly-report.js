@@ -370,8 +370,50 @@ function getSubtypeChartOptions() {
     },
   };
 }
+// Move this outside the processDataAndCreateCharts function
+const allChartData = {
+  monthly: {
+    chartData: {
+      chart: {
+        type: "line",
+      },
+      series: [
+        {
+          name: "Total Reports per Month",
+          data: Array.from(new Array(12), () => 0), // Placeholder data
+        },
+      ],
+      xaxis: {
+        categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+      },
+    },
+    updateCallback: null,
+  },
+  location: {
+    chartData: {
+      chart: {
+        type: "bar",
+      },
+      plotOptions: {
+        bar: {
+          horizontal: true,
+        },
+      },
+      series: [
+        {
+          name: "Total Reports by Location",
+          data: [], // Placeholder data
+        },
+      ],
+      xaxis: {
+        categories: [],
+      },
+    },
+    updateCallback: updateLocationChart,
+  },
+  // ... (add other chart data if needed)
+};
 
-// Fungsi untuk menangani permintaan data dari server
 const fetchDataFromServer = async () => {
   try {
     const token = getTokenFromCookies("Login");
@@ -560,33 +602,37 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
       },
     };
 
-    const chart = new ApexCharts(document.getElementById(chartId), options);
-    chart.render();
+    try {
+      const chart = new ApexCharts(document.getElementById(chartId), options);
+      chart.render();
 
-    // Tambahkan pengecekan apakah ada data sebelum menambahkan event listener
-    if (options.xaxis && options.xaxis.categories) {
-      document.getElementById(chartId).addEventListener("click", function () {
-        try {
-          if (
-            chart &&
-            chart.w &&
-            chart.w.globals &&
-            chart.w.globals.selectedDataPoints
-          ) {
-            const selectedDataPoints = chart.w.globals.selectedDataPoints;
+      // Tambahkan pengecekan apakah ada data sebelum menambahkan event listener
+      if (options.xaxis && options.xaxis.categories) {
+        document.getElementById(chartId).addEventListener("click", function () {
+          try {
+            if (
+              chart &&
+              chart.w &&
+              chart.w.globals &&
+              chart.w.globals.selectedDataPoints
+            ) {
+              const selectedDataPoints = chart.w.globals.selectedDataPoints;
 
-            if (selectedDataPoints && selectedDataPoints.length > 0) {
-              const clickedIndex = selectedDataPoints[0].dataPointIndex;
+              if (selectedDataPoints && selectedDataPoints.length > 0) {
+                const clickedIndex = selectedDataPoints[0].dataPointIndex;
 
-              if (clickCallback) {
-                clickCallback(clickedIndex);
+                if (clickCallback) {
+                  clickCallback(clickedIndex);
+                }
               }
             }
+          } catch (error) {
+            console.error("Error handling click event:", error);
           }
-        } catch (error) {
-          console.error("Error handling click event:", error);
-        }
-      });
+        });
+      }
+    } catch (error) {
+      console.error(`Error creating ApexChart for ${chartId}:`, error);
     }
   } catch (error) {
     console.error("Error creating ApexChart:", error);
@@ -602,54 +648,19 @@ const processDataAndCreateCharts = async (data) => {
       return;
     }
 
-    const allChartData = {
-      monthly: {
-        chartData: {
-          chart: {
-            type: "line",
-          },
-          series: [
-            {
-              name: "Total Reports per Month",
-              data: Array.from(new Array(12), (_, i) =>
-                getReportsCountByMonth(data, i)
-              ),
-            },
-          ],
-          xaxis: {
-            categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
-          },
-        },
-        updateCallback: null,
-      },
-      location: {
-        chartData: {
-          chart: {
-            type: "bar",
-          },
-          plotOptions: {
-            bar: {
-              horizontal: true,
-            },
-          },
-          series: [
-            {
-              name: "Total Reports by Location",
-              data: Array.from(
-                new Set(data.map((report) => report.location.locationName))
-              ).map((location) => getLocationReportsCount(data, location)),
-            },
-          ],
-          xaxis: {
-            categories: Array.from(
-              new Set(data.map((report) => report.location.locationName))
-            ),
-          },
-        },
-        updateCallback: updateLocationChart,
-      },
-      // Tambahkan data grafik lain jika diperlukan
-    };
+    // Update allChartData based on actual data
+    allChartData.monthly.chartData.series[0].data = Array.from(
+      new Array(12),
+      (_, i) => getReportsCountByMonth(data, i)
+    );
+
+    allChartData.location.chartData.series[0].data = Array.from(
+      new Set(data.map((report) => report.location.locationName))
+    ).map((location) => getLocationReportsCount(data, location));
+
+    allChartData.location.chartData.xaxis.categories = Array.from(
+      new Set(data.map((report) => report.location.locationName))
+    );
 
     console.log("Trying to create monthlyChart");
     createApexChart(
@@ -657,68 +668,6 @@ const processDataAndCreateCharts = async (data) => {
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-
-    // Fungsi untuk mengupdate grafik lokasi
-    function updateLocationChart(locationIndex) {
-      try {
-        const xaxisCategories =
-          allChartData.location.chartData.xaxis.categories;
-
-        // Periksa apakah indeks lokasi valid
-        if (xaxisCategories && xaxisCategories.length > locationIndex) {
-          const selectedLocation = xaxisCategories[locationIndex];
-          const locationData = data.filter(
-            (report) => report.location.locationName === selectedLocation
-          );
-
-          // Memperbarui grafik area
-          updateAreaChart(locationData);
-        }
-      } catch (error) {
-        console.error("Error updating location chart:", error);
-      }
-    }
-
-    // Fungsi untuk mengupdate grafik area
-    function updateAreaChart(data) {
-      try {
-        const areas = Array.from(
-          new Set(data.map((report) => report.area.areaName))
-        );
-
-        // Periksa apakah ada area yang valid
-        if (areas && areas.length > 0) {
-          const areaChartData = {
-            chart: {
-              type: "bar",
-            },
-            plotOptions: {
-              bar: {
-                horizontal: false,
-              },
-            },
-            series: [
-              {
-                name: "Total Reports by Area",
-                data: areas.map((area) => getAreaReportsCount(data, area)),
-              },
-            ],
-            xaxis: {
-              categories: areas,
-            },
-          };
-
-          // Membuat atau memperbarui grafik area
-          createApexChart(
-            "areaChart",
-            areaChartData,
-            allChartData.location.updateCallback
-          );
-        }
-      } catch (error) {
-        console.error("Error updating area chart:", error);
-      }
-    }
 
     // Fungsi untuk menghitung jumlah laporan per bulan
     function getReportsCountByMonth(data, month) {
@@ -764,28 +713,7 @@ const processDataAndCreateCharts = async (data) => {
         return 0;
       }
     }
-
-    // Fungsi untuk menghitung jumlah laporan per area
-    function getAreaReportsCount(data, area) {
-      try {
-        // Pastikan data tidak kosong
-        if (!Array.isArray(data) || data.length === 0) {
-          console.error("Invalid or empty data for getAreaReportsCount");
-          return 0;
-        }
-
-        return data.filter((report) => {
-          // Pastikan 'area' ada dan sesuai dengan format yang diharapkan
-          if (report.area && report.area.areaName) {
-            return report.area.areaName === area;
-          }
-          return false;
-        }).length;
-      } catch (error) {
-        console.error("Error in getAreaReportsCount:", error);
-        return 0;
-      }
-    }
+    
   } catch (error) {
     console.error("Error in processDataAndCreateCharts:", error);
   }
@@ -826,6 +754,7 @@ function updateSubtypeChart(data) {
     console.error("Error updating subtype chart:", error);
   }
 }
+
 fetchDataFromServer()
   .then((data) => {
     processDataAndCreateCharts(data);
@@ -839,5 +768,5 @@ fetchDataFromServer()
     updateSubtypeChart(data); // Perbarui grafik subtipe
   })
   .catch((error) => {
-    console.error("Error fetching data:", error.message);
+    console.error("Error fetching data:", error);
   });
