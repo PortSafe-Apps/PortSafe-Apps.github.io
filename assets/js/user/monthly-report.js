@@ -356,36 +356,39 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
       },
     };
 
-    const chart = new ApexCharts(document.getElementById(chartId), options);
-    chart.render();
+  // Menggabungkan opsi grafik yang diberikan dengan opsi default
+  const mergedOptions = { ...options, ...chartOptions };
 
-    if (options.xaxis && options.xaxis.categories) {
-      document.getElementById(chartId).addEventListener("click", function () {
-        try {
-          if (
-            chart &&
-            chart.w &&
-            chart.w.globals &&
-            chart.w.globals.selectedDataPoints
-          ) {
-            const selectedDataPoints = chart.w.globals.selectedDataPoints;
+  const chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
+  chart.render();
 
-            if (selectedDataPoints && selectedDataPoints.length > 0) {
-              const clickedIndex = selectedDataPoints[0].dataPointIndex;
+  if (mergedOptions.xaxis && mergedOptions.xaxis.categories) {
+    document.getElementById(chartId).addEventListener("click", function () {
+      try {
+        if (
+          chart &&
+          chart.w &&
+          chart.w.globals &&
+          chart.w.globals.selectedDataPoints
+        ) {
+          const selectedDataPoints = chart.w.globals.selectedDataPoints;
 
-              if (clickCallback) {
-                clickCallback(clickedIndex);
-              }
+          if (selectedDataPoints && selectedDataPoints.length > 0) {
+            const clickedIndex = selectedDataPoints[0].dataPointIndex;
+
+            if (clickCallback) {
+              clickCallback(clickedIndex);
             }
           }
-        } catch (error) {
-          console.error("Error handling click event:", error);
         }
-      });
-    }
-  } catch (error) {
-    console.error(`Error creating ApexChart for ${chartId}:`, error);
+      } catch (error) {
+        console.error("Error handling click event:", error);
+      }
+    });
   }
+} catch (error) {
+  console.error(`Error creating ApexChart for ${chartId}:`, error);
+}
 };
 
 // Fungsi untuk mendapatkan jumlah laporan per bulan
@@ -566,7 +569,6 @@ function updateTypeChart(data) {
     console.error("Error updating type chart:", error.message);
   }
 }
-
 
 // Perbarui fungsi-fungsi seperti ini:
 function updateSubtypeChart(data) {
