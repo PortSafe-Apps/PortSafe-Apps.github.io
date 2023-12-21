@@ -170,32 +170,32 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
   try {
     const options = {
       chart: {
-        height: chartOptions?.chart?.height || 240,
-        type: chartOptions?.chart?.type || "area",
-        animations: chartOptions?.chart?.animations || {
+        height: chartOptions.chart.height || 240,
+        type: chartOptions.chart.type || "area",
+        animations: chartOptions.chart.animations || {
           enabled: true,
           easing: "easeinout",
           speed: 1000,
         },
-        dropShadow: chartOptions?.chart?.dropShadow || {
+        dropShadow: chartOptions.chart.dropShadow || {
           enabled: true,
           opacity: 0.1,
           blur: 1,
           left: -5,
           top: 18,
         },
-        zoom: chartOptions?.chart?.zoom || {
+        zoom: chartOptions.chart.zoom || {
           enabled: false,
         },
-        toolbar: chartOptions?.chart?.toolbar || {
+        toolbar: chartOptions.chart.toolbar || {
           show: false,
         },
       },
-      series: chartOptions?.series || [],
-      xaxis: chartOptions?.xaxis || {},
-      plotOptions: chartOptions?.plotOptions || {},
-      colors: chartOptions?.colors || ["#02172C"],
-      legend: chartOptions?.legend || {
+      series: chartOptions.series || [],
+      xaxis: chartOptions.xaxis || {},
+      plotOptions: chartOptions.plotOptions || {},
+      colors: chartOptions.colors || ["#02172C"],
+      legend: chartOptions.legend || {
         position: "bottom",
         horizontalAlign: "center",
         offsetY: 4,
@@ -211,7 +211,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           vertical: 0,
         },
       },
-      tooltip: chartOptions?.tooltip || {
+      tooltip: chartOptions.tooltip || {
         backgroundColor: "rgb(255,255,255)",
         bodyFontColor: "#858796",
         titleMarginBottom: 10,
@@ -225,8 +225,8 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
         intersect: false,
         mode: "index",
         caretPadding: 10,
-        custom: function ({ series, seriesIndex, dataPointIndex, w }) {
-          const month = transformedData[dataPointIndex]?.month || "";
+        custom: function ({ series, dataPointIndex }) {
+          const month = options.xaxis.categories[dataPointIndex] || "";
           const value = series[0]?.[dataPointIndex] || 0;
           return (
             '<div style="width: 135px; height: 45px;">' +
@@ -241,7 +241,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           );
         },
       },
-      subtitle: chartOptions?.subtitle || {
+      subtitle: chartOptions.subtitle || {
         text: "Tren Jumlah Pelanggaran Setiap Bulan",
         align: "left",
         margin: 0,
@@ -256,12 +256,12 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           fontFamily: "Poppins",
         },
       },
-      stroke: chartOptions?.stroke || {
+      stroke: chartOptions.stroke || {
         show: true,
         curve: "smooth",
         width: 3,
       },
-      fill: chartOptions?.fill || {
+      fill: chartOptions.fill || {
         type: "gradient",
         gradient: {
           type: "vertical",
@@ -272,7 +272,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           stops: [40, 100],
         },
       },
-      grid: chartOptions?.grid || {
+      grid: chartOptions.grid || {
         borderColor: "#dbeaea",
         strokeDashArray: 4,
         xaxis: {
@@ -293,7 +293,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
         },
       },
     };
-    
+
     const chart = new ApexCharts(document.getElementById(chartId), options);
     chart.render();
 
@@ -397,6 +397,21 @@ function updateLocationChart(data) {
         xaxis: {
           categories: locations,
         },
+        subtitle: {
+          text: "Jumlah Laporan Berdasarkan Unit Kerja",
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+            fontFamily: "Poppins",
+          },
+        },
       };
 
       createApexChart(
@@ -439,6 +454,21 @@ function updateAreaChart(data) {
         ],
         xaxis: {
           categories: areas,
+        },
+        subtitle: {
+          text: "Jumlah Laporan Berdasarkan Area",
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "1rem",
+            fontFamily: "Poppins",
+          },
         },
       };
 
