@@ -652,8 +652,11 @@ const processDataAndCreateCharts = (data) => {
     };
 
     console.log("Trying to create monthlyChart");
-    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
-    
+    createApexChart(
+      "monthlyChart",
+      allChartData.monthly.chartData,
+      allChartData.monthly.updateCallback
+    );
 
     // Fungsi untuk mengupdate grafik lokasi
     function updateLocationChart(locationIndex) {
@@ -715,34 +718,6 @@ const processDataAndCreateCharts = (data) => {
       } catch (error) {
         console.error("Error updating area chart:", error);
       }
-    }
-
-    // Perbarui fungsi createOrUpdateTypeChart
-    function createOrUpdateTypeChart(data) {
-      const typeChartData = {
-        chartData: getTypeChartOptions(data),
-        updateCallback: null,
-      };
-
-      createApexChart(
-        "typeChart",
-        typeChartData.chartData,
-        typeChartData.updateCallback
-      );
-    }
-
-    // Perbarui fungsi createOrUpdateSubtypeChart
-    function createOrUpdateSubtypeChart(data) {
-      const subtypeChartData = {
-        chartData: getSubtypeChartOptions(data),
-        updateCallback: null,
-      };
-
-      createApexChart(
-        "subtypeChart",
-        subtypeChartData.chartData,
-        subtypeChartData.updateCallback
-      );
     }
 
     // Fungsi untuk menghitung jumlah laporan per bulan
@@ -848,12 +823,32 @@ const processDataAndCreateCharts = (data) => {
       }
     }
 
+    // Default options for charts
+    const defaultChartOptions = {
+      chart: {
+        height: 240,
+        type: "line",
+        // ... other default options
+      },
+      colors: ["#02172C"],
+      // ... other default options
+    };
+
     // Membaca data dari server dan memprosesnya
     fetchDataFromServer()
       .then((data) => {
-        processDataAndCreateCharts(data);
-        updateTypeChart(data); // Perbarui grafik jenis
-        updateSubtypeChart(data); // Perbarui grafik subtipe
+        if (data.length > 0) {
+          processDataAndCreateCharts(data);
+          updateTypeChart(data); // Perbarui grafik jenis
+          updateSubtypeChart(data); // Perbarui grafik subtipe
+        } else {
+          // Display a message or handle the absence of data
+          console.log("No data available to display charts.");
+
+          // Create a placeholder chart with default options
+          createApexChart("monthlyChart", defaultChartOptions);
+          // You can create additional charts or handle the absence of data here.
+        }
       })
       .catch((error) => console.error("Error fetching data:", error));
   } catch (error) {
