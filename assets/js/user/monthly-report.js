@@ -459,9 +459,13 @@ function getLocationReportsCount(data, location) {
   }
 }
 
-// Update the function like this:
 function updateLocationChart(data) {
   try {
+    if (!Array.isArray(data)) {
+      console.error("Invalid data format for updateLocationChart");
+      return;
+    }
+
     const locations = Array.from(
       new Set(data.map((report) => report.location.locationName))
     );
@@ -500,9 +504,15 @@ function updateLocationChart(data) {
   }
 }
 
-// Tambahkan fungsi updateAreaChart
+
+// Update the function like this:
 function updateAreaChart(data) {
   try {
+    if (!Array.isArray(data)) {
+      console.error("Invalid data format for updateAreaChart");
+      return;
+    }
+
     const areas = Array.from(
       new Set(data.map((report) => report.area.areaName))
     );
@@ -539,7 +549,8 @@ function updateAreaChart(data) {
   }
 }
 
-// Tambahkan fungsi updateTypeChart
+
+// Update the functions like this:
 function updateTypeChart() {
   try {
     const typeChartData = {
@@ -548,7 +559,7 @@ function updateTypeChart() {
     };
 
     createApexChart(
-      "typeChart", 
+      "typeChart", // Make sure this ID exists in your HTML
       typeChartData.chartData,
       typeChartData.updateCallback
     );
@@ -565,7 +576,7 @@ function updateSubtypeChart() {
     };
 
     createApexChart(
-      "subtypeChart",
+      "subtypeChart", // Make sure this ID exists in your HTML
       subtypeChartData.chartData,
       subtypeChartData.updateCallback
     );
@@ -594,7 +605,6 @@ function getAreaReportsCount(data, area) {
   }
 };
 
-
 // Panggil fungsi-fungsi yang diperlukan
 fetchDataFromServer()
   .then((data) => {
@@ -604,7 +614,7 @@ fetchDataFromServer()
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateLocationChart();
+    updateLocationChart(data);
     updateAreaChart(data);
     updateTypeChart();
     updateSubtypeChart();
