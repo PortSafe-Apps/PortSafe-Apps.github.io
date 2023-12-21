@@ -93,31 +93,12 @@ const drawChart = async () => {
     // Ambil data dari server
     const reportData = await fetchDataFromServer();
 
-    if (reportData) {
+    if (reportData && reportData.length > 0) {
       // Transformasikan data untuk grafik
       const transformedData = transformDataForChart(reportData);
 
-      var mainChart = new ApexCharts(document.querySelector("#mainChart"), {
-        series: [],
-        xaxis: {
-          categories: [], // Inisialisasi categories sebagai array kosong
-        },
-      });
-
-      mainChart.updateOptions({
-        xaxis: {
-          categories: transformedData.map((entry) => entry.month),
-        },
-        series: [{
-          data: transformedData.map(({ month, value }) => ({
-            x: month,
-            y: value,
-          })),
-        }],
-      });
-
-      // Tambahkan konfigurasi tampilan
-      var mainChartOptions = {
+      // Inisialisasi mainChartOptions
+      const mainChartOptions = {
         chart: {
           height: 240,
           type: "area",
@@ -256,10 +237,23 @@ const drawChart = async () => {
         },
       };
 
-      mainChart.updateOptions(mainChartOptions);
-      mainChart.render();
+      var mainChart = new ApexCharts(document.querySelector("#mainChart"), {
+        series: [{
+          data: transformedData.map(({ month, value }) => ({
+            x: month,
+            y: value,
+          })),
+        }],
+        xaxis: {
+          categories: transformedData.map((entry) => entry.month),
+        },
+        ...mainChartOptions,
+      });
 
-      // Perbarui data dan opsi grafik breakdown
+      // Tambahkan konfigurasi tampilan
+      mainChart.updateOptions(mainChartOptions);
+
+      // Tambahkan konfigurasi tampilan
       var breakdownChartOptions = {
         chart: {
           height: 240,
@@ -327,7 +321,6 @@ const drawChart = async () => {
         breakdownChartOptions
       );
       breakdownChart.render();
-      breakdownChart.updateOptions(breakdownChartOptions);
 
       // Update area chart data dan konfigurasi tampilan
       var areaChartOptions = {
@@ -397,7 +390,6 @@ const drawChart = async () => {
         areaChartOptions
       );
       areaChart.render();
-      areaChart.updateOptions(areaChartOptions);
 
       // Update unit chart data dan konfigurasi tampilan
       var unitChartOptions = {
@@ -448,7 +440,6 @@ const drawChart = async () => {
         unitChartOptions
       );
       unitChart.render();
-      unitChart.updateOptions(unitChartOptions);
 
       // Update sub-unit chart data dan konfigurasi tampilan
       var subUnitChartOptions = {
@@ -499,7 +490,6 @@ const drawChart = async () => {
         subUnitChartOptions
       );
       subUnitChart.render();
-      subUnitChart.updateOptions(subUnitChartOptions);
     }
   } catch (error) {
     console.error("Error drawing chart:", error);
