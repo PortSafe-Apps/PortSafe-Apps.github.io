@@ -387,11 +387,13 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
   }
 };
 
-// Lengkapi fungsi processDataAndCreateCharts
-const processDataAndCreateCharts = async (data) => {
+// Properly handle promises and update the processDataAndCreateCharts function
+async function processDataAndCreateCharts() {
   try {
-    if (!Array.isArray(data)) {
-      console.error("Invalid data format");
+    const data = await fetchDataFromServer();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data");
       return;
     }
 
@@ -399,226 +401,141 @@ const processDataAndCreateCharts = async (data) => {
       getReportsCountByMonth(data, i)
     );
 
-    allChartData.location.chartData.series[0].data = Array.from(
-      new Set(data.map((report) => report.location.locationName))
-    ).map((location) => getLocationReportsCount(data, location));
-
-    allChartData.location.chartData.xaxis.categories = Array.from(
-      new Set(data.map((report) => report.location.locationName))
+    // Update location chart data
+    const locations = Array.from(new Set(data.map((report) => report.location.locationName)));
+    allChartData.location.chartData.series[0].data = locations.map((location) =>
+      getLocationReportsCount(data, location)
     );
+    allChartData.location.chartData.xaxis.categories = locations;
 
-    createApexChart(
-      "monthlyChart",
-      allChartData.monthly.chartData,
-      allChartData.monthly.updateCallback
-    );
-
-  } catch (error) {
-    console.error("Error processing data and creating charts:", error);
-  }
-};
-
-// Lengkapi fungsi getReportsCountByMonth
-function getReportsCountByMonth(data, month) {
-  try {
-    if (!Array.isArray(data) || data.length === 0) {
-      console.error("Invalid or empty data for getReportsCountByMonth");
-      return 0;
-    }
-
-    return data.filter((report) => {
-      if (report.date && typeof report.date === "string") {
-        const reportMonth = new Date(report.date).getMonth();
-        return reportMonth === month;
+    function updateLocationChart(data) {
+      try {
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format for updateLocationChart");
+        }
+    
+        const locations = Array.from(new Set(data.map((report) => report.location.locationName)));
+    
+        if (locations && locations.length > 0) {
+          const locationChartData = {
+            chart: {
+              type: "bar",
+            },
+            plotOptions: {
+              bar: {
+                horizontal: true,
+              },
+            },
+            series: [
+              {
+                name: "Total Reports by Location",
+                data: locations.map((location) =>
+                  getLocationReportsCount(data, location)
+                ),
+              },
+            ],
+            xaxis: {
+              categories: locations,
+            },
+          };
+    
+          createApexChart(
+            "locationChart",
+            locationChartData,
+            allChartData.location.updateCallback
+          );
+        }
+      } catch (error) {
+        console.error("Error updating location chart:", error.message);
       }
-      return false;
-    }).length;
-  } catch (error) {
-    console.error("Error in getReportsCountByMonth:", error);
-    return 0;
-  }
-}
-
-// Lengkapi fungsi getLocationReportsCount
-function getLocationReportsCount(data, location) {
-  try {
-    if (!Array.isArray(data) || data.length === 0) {
-      console.error("Invalid or empty data for getLocationReportsCount");
-      return 0;
     }
-
-    return data.filter((report) => {
-      if (report.location && report.location.locationName) {
-        return report.location.locationName === location;
+    
+    // Update the function like this:
+    function updateAreaChart(data) {
+      try {
+        if (!Array.isArray(data)) {
+          throw new Error("Invalid data format for updateAreaChart");
+        }
+    
+        const areas = Array.from(new Set(data.map((report) => report.area.areaName)));
+    
+        if (areas && areas.length > 0) {
+          const areaChartData = {
+            chart: {
+              type: "bar",
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+              },
+            },
+            series: [
+              {
+                name: "Total Reports by Area",
+                data: areas.map((area) => getAreaReportsCount(data, area)),
+              },
+            ],
+            xaxis: {
+              categories: areas,
+            },
+          };
+    
+          createApexChart(
+            "areaChart",
+            areaChartData,
+            allChartData.area.updateCallback
+          );
+        }
+      } catch (error) {
+        console.error("Error updating area chart:", error.message);
       }
-      return false;
-    }).length;
-  } catch (error) {
-    console.error("Error in getLocationReportsCount:", error);
-    return 0;
-  }
-}
-
-function updateLocationChart(data) {
-  try {
-    if (!Array.isArray(data)) {
-      console.error("Invalid data format for updateLocationChart");
-      return;
     }
-
-    const locations = Array.from(
-      new Set(data.map((report) => report.location.locationName))
-    );
-
-    if (locations && locations.length > 0) {
-      const locationChartData = {
-        chart: {
-          type: "bar",
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-          },
-        },
-        series: [
-          {
-            name: "Total Reports by Location",
-            data: locations.map((location) =>
-              getLocationReportsCount(data, location)
-            ),
-          },
-        ],
-        xaxis: {
-          categories: locations,
-        },
-      };
-
-      createApexChart(
-        "locationChart",
-        locationChartData,
-        allChartData.location.updateCallback
-      );
-    }
-  } catch (error) {
-    console.error("Error updating location chart:", error);
-  }
-}
-
-
-// Update the function like this:
-function updateAreaChart(data) {
-  try {
-    if (!Array.isArray(data)) {
-      console.error("Invalid data format for updateAreaChart");
-      return;
-    }
-
-    const areas = Array.from(
-      new Set(data.map((report) => report.area.areaName))
-    );
-
-    if (areas && areas.length > 0) {
-      const areaChartData = {
-        chart: {
-          type: "bar",
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-          },
-        },
-        series: [
-          {
-            name: "Total Reports by Area",
-            data: areas.map((area) => getAreaReportsCount(data, area)),
-          },
-        ],
-        xaxis: {
-          categories: areas,
-        },
-      };
-
-      createApexChart(
-        "areaChart",
-        areaChartData,
-        allChartData.area.updateCallback
-      );
-    }
-  } catch (error) {
-    console.error("Error updating area chart:", error);
-  }
-}
-
-
-// Update the functions like this:
-function updateTypeChart() {
-  try {
-    const typeChartData = {
-      chartData: getTypeChartOptions(),
-      updateCallback: null,
-    };
-
-    createApexChart(
-      "typeChart", // Make sure this ID exists in your HTML
-      typeChartData.chartData,
-      typeChartData.updateCallback
-    );
-  } catch (error) {
-    console.error("Error updating type chart:", error);
-  }
-}
-
-function updateSubtypeChart() {
-  try {
-    const subtypeChartData = {
-      chartData: getSubtypeChartOptions(),
-      updateCallback: null,
-    };
-
-    createApexChart(
-      "subtypeChart", // Make sure this ID exists in your HTML
-      subtypeChartData.chartData,
-      subtypeChartData.updateCallback
-    );
-  } catch (error) {
-    console.error("Error updating subtype chart:", error);
-  }
-}
-
-// Lengkapi fungsi getAreaReportsCount
-function getAreaReportsCount(data, area) {
-  try {
-    if (!Array.isArray(data) || data.length === 0) {
-      console.error("Invalid or empty data for getAreaReportsCount");
-      return 0;
-    }
-
-    return data.filter((report) => {
-      if (report.area && report.area.areaName) {
-        return report.area.areaName === area;
+    
+    // Update the functions like this:
+    function updateTypeChart() {
+      try {
+        const typeChartData = {
+          chartData: getTypeChartOptions(),
+          updateCallback: null,
+        };
+    
+        createApexChart(
+          "typeChart", // Make sure this ID exists in your HTML
+          typeChartData.chartData,
+          typeChartData.updateCallback
+        );
+      } catch (error) {
+        console.error("Error updating type chart:", error.message);
       }
-      return false;
-    }).length;
-  } catch (error) {
-    console.error("Error in getAreaReportsCount:", error);
-    return 0;
-  }
-};
+    }
+    
+    function updateSubtypeChart() {
+      try {
+        const subtypeChartData = {
+          chartData: getSubtypeChartOptions(),
+          updateCallback: null,
+        };
+    
+        createApexChart(
+          "subtypeChart", 
+          subtypeChartData.chartData,
+          subtypeChartData.updateCallback
+        );
+      } catch (error) {
+        console.error("Error updating subtype chart:", error.message);
+      }
+    }    
 
-// Panggil fungsi-fungsi yang diperlukan
-fetchDataFromServer()
-  .then((data) => {
-    processDataAndCreateCharts(data);
-    createApexChart(
-      "monthlyChart",
-      allChartData.monthly.chartData,
-      allChartData.monthly.updateCallback
-    );
+    // Render the charts
+    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
     updateLocationChart(data);
     updateAreaChart(data);
     updateTypeChart();
     updateSubtypeChart();
-  })
-  .catch((error) => {
-    console.error("Error fetching data:", error);
-  });
+  } catch (error) {
+    console.error("Error processing data and creating charts:", error.message);
+  }
+}
+
+// Call the function
+processDataAndCreateCharts();
