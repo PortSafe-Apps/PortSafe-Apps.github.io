@@ -137,9 +137,6 @@ const displayDetailedReport = (detailedReport, detailContainerId) => {
       <div class="text-center">
         <img class="w-75 mb-4" src="${detailedReport.improvementPhoto}" alt="Foto Tindakan Perbaikan">
       </div>
-
-      <h6 class="mb-0">Tindakan Pencegahan Terulang Kembali</h6>
-      <p>${detailedReport.correctiveAction}</p>
     </div>
   `;
     detailContainer.appendChild(detailCard);

@@ -61,7 +61,6 @@ document.addEventListener("DOMContentLoaded", function () {
         return false;
       }
     }
-    console.log('Semua checkbox tercentang');
     return true;
   }
   

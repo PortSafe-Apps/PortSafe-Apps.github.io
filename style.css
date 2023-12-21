@@ -3952,6 +3952,25 @@ form .btn.btn-sm {
   font-size: 36px;
 }
 
+.apexcharts-tooltip {
+  background-color: #fff;
+  border: 1px solid #dddfeb;
+  padding: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  max-width: 200px; /* Sesuaikan sesuai kebutuhan */
+}
+
+.apexcharts-tooltip-title {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+.apexcharts-tooltip-text {
+  display: block;
+}
+
+
 /* :: Dangerous CSS */
 #dangerous-actions-section {
   background-color: #ffffff;
