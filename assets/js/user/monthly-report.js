@@ -66,9 +66,7 @@ const fetchDataFromServer = async () => {
       return [];
     }
 
-    // Ganti URL ini dengan endpoint API server Anda
-    
-  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser`;
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -98,12 +96,24 @@ const drawChart = async () => {
       // Transformasikan data untuk grafik
       const transformedData = transformDataForChart(reportData);
 
+      // Inisialisasi mainChart
+      var mainChart = new Chart(document.querySelector("#mainChart"), {
+        series: [],
+        xaxis: {},
+      });
+
       // Update main chart data
-      mainChart.xaxis.categories = transformedData.map((entry) => entry.month);
-      mainChart.series[0].data = transformedData.map(({ month, value }) => ({
-        x: month,
-        y: value,
-      }));
+      mainChart.updateOptions({
+        xaxis: {
+          categories: transformedData.map((entry) => entry.month),
+        },
+        series: [{
+          data: transformedData.map(({ month, value }) => ({
+            x: month,
+            y: value,
+          })),
+        }],
+      });
 
       // Tambahkan konfigurasi tampilan
       var mainChartOptions = {
@@ -249,12 +259,6 @@ const drawChart = async () => {
       mainChart.render();
 
       // Perbarui data dan opsi grafik breakdown
-      breakdownChartOptions.labels = transformedData[0].reports.map(
-        (report) => report.location.locationName
-      );
-      breakdownChartOptions.datasets[0].data = transformedData[0].reports.map(
-        (report) => report.value
-      );
       var breakdownChartOptions = {
         chart: {
           height: 240,
@@ -319,14 +323,12 @@ const drawChart = async () => {
 
       var breakdownChart = new Chart(
         document.querySelector("#breakdownChart"),
-        breakdownChart
+        breakdownChartOptions
       );
       breakdownChart.render();
       breakdownChart.updateOptions(breakdownChartOptions);
 
       // Update area chart data dan konfigurasi tampilan
-      areaChart.labels = transformedData.map((entry) => entry.area.areaName);
-      areaChart.datasets[0].data = transformedData.map((entry) => entry.value);
       var areaChartOptions = {
         chart: {
           height: 240,
@@ -389,17 +391,11 @@ const drawChart = async () => {
         },
       };
 
-      var areaChart = new Chart(
-        document.querySelector("#areaChart"),
-        areaChart
-      );
+      var areaChart = new Chart(document.querySelector("#areaChart"), areaChartOptions);
       areaChart.render();
       areaChart.updateOptions(areaChartOptions);
 
       // Update unit chart data dan konfigurasi tampilan
-      // Perbarui data dan opsi grafik unit
-      unitChart.labels = transformedData.map((entry) => entry.type[0].typeName);
-      unitChart.datasets[0].data = transformedData.map((entry) => entry.value);
       var unitChartOptions = {
         chart: {
           height: 240,
@@ -443,20 +439,11 @@ const drawChart = async () => {
         },
       };
 
-      var unitChart = new Chart(
-        document.querySelector("#unitChart"),
-        unitChart
-      );
+      var unitChart = new Chart(document.querySelector("#unitChart"), unitChartOptions);
       unitChart.render();
       unitChart.updateOptions(unitChartOptions);
 
       // Update sub-unit chart data dan konfigurasi tampilan
-      subUnitChart.labels = transformedData.map(
-        (entry) => entry.type[0].subTypes[0]
-      );
-      subUnitChart.datasets[0].data = transformedData.map(
-        (entry) => entry.value
-      );
       var subUnitChartOptions = {
         chart: {
           height: 240,
@@ -500,10 +487,7 @@ const drawChart = async () => {
         },
       };
 
-      var subUnitChart = new Chart(
-        document.querySelector("#subUnitChart"),
-        subUnitChart
-      );
+      var subUnitChart = new Chart(document.querySelector("#subUnitChart"), subUnitChartOptions);
       subUnitChart.render();
       subUnitChart.updateOptions(subUnitChartOptions);
     }
