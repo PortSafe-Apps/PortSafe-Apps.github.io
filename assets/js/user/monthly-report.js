@@ -459,6 +459,47 @@ function getLocationReportsCount(data, location) {
   }
 }
 
+// Fungsi untuk memperbarui grafik lokasi
+function updateLocationChart(data) {
+  try {
+    const locations = Array.from(
+      new Set(data.map((report) => report.location.locationName))
+    );
+
+    if (locations && locations.length > 0) {
+      const locationChartData = {
+        chart: {
+          type: "bar",
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+          },
+        },
+        series: [
+          {
+            name: "Total Reports by Location",
+            data: locations.map((location) =>
+              getLocationReportsCount(data, location)
+            ),
+          },
+        ],
+        xaxis: {
+          categories: locations,
+        },
+      };
+
+      createApexChart(
+        "locationChart",
+        locationChartData,
+        allChartData.location.updateCallback
+      );
+    }
+  } catch (error) {
+    console.error("Error updating location chart:", error);
+  }
+}
+
 // Tambahkan fungsi updateAreaChart
 function updateAreaChart(data) {
   try {
