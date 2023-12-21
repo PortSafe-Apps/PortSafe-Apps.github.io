@@ -393,13 +393,16 @@ function createApexChart(chartId, chartOptions, clickCallback) {
 
     document.getElementById(chartId).addEventListener("click", function () {
       try {
-        const selectedDataPoints = chart.w.globals.selectedDataPoints;
-
-        if (selectedDataPoints && selectedDataPoints.length > 0) {
-          const clickedIndex = selectedDataPoints[0].dataPointIndex;
-
-          if (clickCallback) {
-            clickCallback(clickedIndex);
+        // Periksa apakah globals dan selectedDataPoints terdefinisi
+        if (chart && chart.w && chart.w.globals && chart.w.globals.selectedDataPoints) {
+          const selectedDataPoints = chart.w.globals.selectedDataPoints;
+    
+          if (selectedDataPoints && selectedDataPoints.length > 0) {
+            const clickedIndex = selectedDataPoints[0].dataPointIndex;
+    
+            if (clickCallback) {
+              clickCallback(clickedIndex);
+            }
           }
         }
       } catch (error) {
