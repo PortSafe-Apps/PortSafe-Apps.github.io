@@ -570,151 +570,245 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
 
 // Fungsi untuk memproses data dan membuat grafik
 const processDataAndCreateCharts = (data) => {
-  const allChartData = {
-    monthly: {
-      chartData: {
-        chart: {
-          type: "line",
-        },
-        series: [
-          {
-            name: "Total Reports per Month",
-            data: Array.from(new Array(12), (_, i) => getReportsCountByMonth(data, i)),
-          },
-        ],
-        xaxis: {
-          categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
-        },
-      },
-      updateCallback: null,
-    },
-    location: {
-      chartData: {
-        chart: {
-          type: "bar",
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-          },
-        },
-        series: [
-          {
-            name: "Total Reports by Location",
-            data: Array.from(new Set(data.map((report) => report.location.locationName)))
-              .map((location) => getLocationReportsCount(data, location)),
-          },
-        ],
-        xaxis: {
-          categories: Array.from(new Set(data.map((report) => report.location.locationName))),
-        },
-      },
-      updateCallback: updateLocationChart,
-    },
-    // Tambahkan data grafik lain jika diperlukan
-  };
-
-  // Membuat grafik bulanan
-  createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
-
-  // Fungsi untuk mengupdate grafik lokasi
-  function updateLocationChart(locationIndex) {
-    try {
-      const xaxisCategories = allChartData.location.chartData.xaxis.categories;
-
-      // Periksa apakah indeks lokasi valid
-      if (xaxisCategories && xaxisCategories.length > locationIndex) {
-        const selectedLocation = xaxisCategories[locationIndex];
-        const locationData = data.filter((report) => report.location.locationName === selectedLocation);
-
-        // Memperbarui grafik area
-        updateAreaChart(locationData);
-      }
-    } catch (error) {
-      console.error("Error updating location chart:", error);
+  try {
+    // Pastikan data yang diterima dari server sesuai dengan yang diharapkan
+    if (!Array.isArray(data)) {
+      console.error("Invalid data format");
+      return;
     }
-  }
 
-  // Fungsi untuk mengupdate grafik area
-  function updateAreaChart(data) {
-    try {
-      const areas = Array.from(new Set(data.map((report) => report.area.areaName)));
-
-      // Periksa apakah ada area yang valid
-      if (areas && areas.length > 0) {
-        const areaChartData = {
+    const allChartData = {
+      monthly: {
+        chartData: {
+          chart: {
+            type: "line",
+          },
+          series: [
+            {
+              name: "Total Reports per Month",
+              data: Array.from(new Array(12), (_, i) => getReportsCountByMonth(data, i)),
+            },
+          ],
+          xaxis: {
+            categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+          },
+        },
+        updateCallback: null,
+      },
+      location: {
+        chartData: {
           chart: {
             type: "bar",
           },
           plotOptions: {
             bar: {
-              horizontal: false,
+              horizontal: true,
             },
           },
           series: [
             {
-              name: "Total Reports by Area",
-              data: areas.map((area) => getAreaReportsCount(data, area)),
+              name: "Total Reports by Location",
+              data: Array.from(new Set(data.map((report) => report.location.locationName)))
+                .map((location) => getLocationReportsCount(data, location)),
             },
           ],
           xaxis: {
-            categories: areas,
+            categories: Array.from(new Set(data.map((report) => report.location.locationName))),
           },
-        };
+        },
+        updateCallback: updateLocationChart,
+      },
+      // Tambahkan data grafik lain jika diperlukan
+    };
 
-        // Membuat atau memperbarui grafik area
-        createApexChart("areaChart", areaChartData, allChartData.location.updateCallback);
+    // Membuat grafik bulanan
+    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
+
+    // Fungsi untuk mengupdate grafik lokasi
+    function updateLocationChart(locationIndex) {
+      try {
+        const xaxisCategories = allChartData.location.chartData.xaxis.categories;
+
+        // Periksa apakah indeks lokasi valid
+        if (xaxisCategories && xaxisCategories.length > locationIndex) {
+          const selectedLocation = xaxisCategories[locationIndex];
+          const locationData = data.filter((report) => report.location.locationName === selectedLocation);
+
+          // Memperbarui grafik area
+          updateAreaChart(locationData);
+        }
+      } catch (error) {
+        console.error("Error updating location chart:", error);
       }
-    } catch (error) {
-      console.error("Error updating area chart:", error);
     }
+
+    // Fungsi untuk mengupdate grafik area
+    function updateAreaChart(data) {
+      try {
+        const areas = Array.from(new Set(data.map((report) => report.area.areaName)));
+
+        // Periksa apakah ada area yang valid
+        if (areas && areas.length > 0) {
+          const areaChartData = {
+            chart: {
+              type: "bar",
+            },
+            plotOptions: {
+              bar: {
+                horizontal: false,
+              },
+            },
+            series: [
+              {
+                name: "Total Reports by Area",
+                data: areas.map((area) => getAreaReportsCount(data, area)),
+              },
+            ],
+            xaxis: {
+              categories: areas,
+            },
+          };
+
+          // Membuat atau memperbarui grafik area
+          createApexChart("areaChart", areaChartData, allChartData.location.updateCallback);
+        }
+      } catch (error) {
+        console.error("Error updating area chart:", error);
+      }
+    }
+
+    // Membuat grafik jenis
+    const typeChartData = {
+      chartData: getTypeChartOptions(data),
+      updateCallback: null,
+    };
+
+    createApexChart("typeChart", typeChartData.chartData, typeChartData.updateCallback);
+
+    // Membuat grafik subtipe
+    const subtypeChartData = {
+      chartData: getSubtypeChartOptions(data),
+      updateCallback: null,
+    };
+
+    createApexChart("subtypeChart", subtypeChartData.chartData, subtypeChartData.updateCallback);
+
+  } catch (error) {
+    console.error("Error processing data and creating charts:", error);
   }
-
-  // Membuat grafik jenis
-  const typeChartData = {
-    chartData: typeChartOptions,
-    updateCallback: null,
-  };
-
-  createApexChart("typeChart", typeChartData.chartData, typeChartData.updateCallback);
-
-  // Membuat grafik subtipe
-  const subtypeChartData = {
-    chartData: subtypeChartOptions,
-    updateCallback: null,
-  };
-
-  createApexChart("subtypeChart", subtypeChartData.chartData, subtypeChartData.updateCallback);
 };
 
 // Fungsi untuk menghitung jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
-  return data.filter((report) => new Date(report.date).getMonth() === month).length;
+  try {
+    // Pastikan data tidak kosong
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getReportsCountByMonth");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      // Pastikan 'date' ada dan sesuai dengan format yang diharapkan
+      if (report.date && typeof report.date === "string") {
+        const reportMonth = new Date(report.date).getMonth();
+        return reportMonth === month;
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getReportsCountByMonth:", error);
+    return 0;
+  }
 }
 
 // Fungsi untuk menghitung jumlah laporan per lokasi
 function getLocationReportsCount(data, location) {
-  return data.filter((report) => report.location.locationName === location).length;
+  try {
+    // Pastikan data tidak kosong
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getLocationReportsCount");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      // Pastikan 'location' ada dan sesuai dengan format yang diharapkan
+      if (report.location && report.location.locationName) {
+        return report.location.locationName === location;
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getLocationReportsCount:", error);
+    return 0;
+  }
 }
 
 // Fungsi untuk menghitung jumlah laporan per area
 function getAreaReportsCount(data, area) {
-  return data.filter((report) => report.area.areaName === area).length;
+  try {
+    // Pastikan data tidak kosong
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getAreaReportsCount");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      // Pastikan 'area' ada dan sesuai dengan format yang diharapkan
+      if (report.area && report.area.areaName) {
+        return report.area.areaName === area;
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getAreaReportsCount:", error);
+    return 0;
+  }
 }
 
 // Fungsi untuk menghitung jumlah laporan per jenis
 function getTypeReportsCount(data, type) {
-  return data.filter((report) =>
-    report.typeDangerousActions.some((t) => t.typeName === type)
-  ).length;
+  try {
+    // Pastikan data tidak kosong
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getTypeReportsCount");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      // Pastikan 'typeDangerousActions' ada dan sesuai dengan format yang diharapkan
+      if (report.typeDangerousActions && Array.isArray(report.typeDangerousActions)) {
+        return report.typeDangerousActions.some((t) => t.typeName === type);
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getTypeReportsCount:", error);
+    return 0;
+  }
 }
 
 // Fungsi untuk menghitung jumlah laporan per subtipe
 function getSubtypeReportsCount(data, subtype) {
-  return data.filter((report) =>
-    report.typeDangerousActions.some((t) => t.subTypes.includes(subtype))
-  ).length;
-};
+  try {
+    // Pastikan data tidak kosong
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getSubtypeReportsCount");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      // Pastikan 'typeDangerousActions' ada dan sesuai dengan format yang diharapkan
+      if (report.typeDangerousActions && Array.isArray(report.typeDangerousActions)) {
+        return report.typeDangerousActions.some((t) => t.subTypes && t.subTypes.includes(subtype));
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getSubtypeReportsCount:", error);
+    return 0;
+  }
+}
+
 
 // Mengambil data dari server dan memprosesnya
 fetchDataFromServer()
