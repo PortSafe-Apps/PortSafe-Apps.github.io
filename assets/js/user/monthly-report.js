@@ -651,12 +651,9 @@ const processDataAndCreateCharts = (data) => {
       // Tambahkan data grafik lain jika diperlukan
     };
 
-    // Membuat grafik bulanan
-    createApexChart(
-      "monthlyChart",
-      allChartData.monthly.chartData,
-      allChartData.monthly.updateCallback
-    );
+    console.log("Trying to create monthlyChart");
+    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
+    
 
     // Fungsi untuk mengupdate grafik lokasi
     function updateLocationChart(locationIndex) {
