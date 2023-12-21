@@ -9,268 +9,6 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-const mainChartOptions = {
-  chart: {
-    height: 240,
-    type: "area",
-    animations: {
-      enabled: true,
-      easing: "easeinout",
-      speed: 1000,
-    },
-    dropShadow: {
-      enabled: true,
-      opacity: 0.1,
-      blur: 1,
-      left: -5,
-      top: 18,
-    },
-    zoom: {
-      enabled: false,
-    },
-    toolbar: {
-      show: false,
-    },
-  },
-  colors: ["#02172C"],
-  dataLabels: {
-    enabled: false,
-  },
-  fill: {
-    type: "gradient",
-    gradient: {
-      type: "vertical",
-      shadeIntensity: 1,
-      inverseColors: true,
-      opacityFrom: 0.15,
-      opacityTo: 0.02,
-      stops: [40, 100],
-    },
-  },
-  grid: {
-    borderColor: "#dbeaea",
-    strokeDashArray: 4,
-    xaxis: {
-      lines: {
-        show: true,
-      },
-    },
-    yaxis: {
-      lines: {
-        show: false,
-      },
-    },
-    padding: {
-      top: 0,
-      right: 0,
-      bottom: 0,
-      left: 0,
-    },
-  },
-  legend: {
-    position: "bottom",
-    horizontalAlign: "center",
-    offsetY: 4,
-    fontSize: "14px",
-    markers: {
-      width: 9,
-      height: 9,
-      strokeWidth: 0,
-      radius: 20,
-    },
-    itemMargin: {
-      horizontal: 5,
-      vertical: 0,
-    },
-  },
-  tooltip: {
-    backgroundColor: "#ffffff",
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    fontSize: "14px",
-    style: {
-      color: "#343a40",
-    },
-  },
-  subtitle: {
-    text: "Tren Jumlah Pelanggaran Setiap Bulan",
-    align: "left",
-    margin: 0,
-    offsetX: 0,
-    offsetY: 0,
-    floating: false,
-    style: {
-      fontSize: "15px",
-      color: "text-dark",
-      fontWeight: "bold",
-      marginBottom: "1rem",
-      fontFamily: "Poppins",
-    },
-  },
-  stroke: {
-    show: true,
-    curve: "smooth",
-    width: 3,
-  },
-  xaxis: {
-    categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
-    labels: {
-      offsetX: 0,
-      offsetY: 0,
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-    tooltip: {
-      enabled: false,
-    },
-  },
-  yaxis: {
-    labels: {
-      offsetX: -10,
-      offsetY: 0,
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-  },
-};
-
-const locationChartOptions = {
-  chart: {
-    height: 240,
-    type: "bar",
-    animations: {
-      enabled: true,
-      easing: "easeinout",
-      speed: 1000,
-    },
-    toolbar: {
-      show: false,
-    },
-  },
-  colors: ["rgba(255, 99, 132, 1)"],
-  legend: {
-    position: "bottom",
-    horizontalAlign: "center",
-    offsetY: 4,
-    fontSize: "14px",
-    markers: {
-      width: 9,
-      height: 9,
-      strokeWidth: 0,
-      radius: 20,
-    },
-    itemMargin: {
-      horizontal: 5,
-      vertical: 0,
-    },
-  },
-  tooltip: {
-    backgroundColor: "#ffffff",
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    fontSize: "14px",
-    style: {
-      color: "#343a40",
-    },
-  },
-  plotOptions: {
-    bar: {
-      horizontal: true,
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    labels: {
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-  },
-  yaxis: {
-    labels: {
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-  },
-};
-
-const areaChartOptions = {
-  chart: {
-    height: 240,
-    type: "bar",
-    animations: {
-      enabled: true,
-      easing: "easeinout",
-      speed: 1000,
-    },
-    toolbar: {
-      show: false,
-    },
-  },
-  colors: ["rgba(54, 162, 235, 1)"],
-  legend: {
-    position: "bottom",
-    horizontalAlign: "center",
-    offsetY: 4,
-    fontSize: "14px",
-    markers: {
-      width: 9,
-      height: 9,
-      strokeWidth: 0,
-      radius: 20,
-    },
-    itemMargin: {
-      horizontal: 5,
-      vertical: 0,
-    },
-  },
-  tooltip: {
-    backgroundColor: "#ffffff",
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    fontSize: "14px",
-    style: {
-      color: "#343a40",
-    },
-  },
-  plotOptions: {
-    bar: {
-      horizontal: false,
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  xaxis: {
-    labels: {
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-  },
-  yaxis: {
-    labels: {
-      style: {
-        colors: "#8480ae",
-        fontSize: "12px",
-        fontFamily: "Poppins",
-      },
-    },
-  },
-};
-
 // Fungsi untuk mendapatkan opsi chart jenis
 function getTypeChartOptions() {
   return {
@@ -370,7 +108,7 @@ function getSubtypeChartOptions() {
     },
   };
 }
-// Move this outside the processDataAndCreateCharts function
+
 const allChartData = {
   monthly: {
     chartData: {
@@ -380,7 +118,7 @@ const allChartData = {
       series: [
         {
           name: "Total Reports per Month",
-          data: Array.from(new Array(12), () => 0), // Placeholder data
+          data: Array.from(new Array(12), () => 0),
         },
       ],
       xaxis: {
@@ -406,14 +144,132 @@ const allChartData = {
         },
       ],
       xaxis: {
-        categories: [],
+        categories: [], // Placeholder data
       },
     },
     updateCallback: updateLocationChart,
   },
-  // ... (add other chart data if needed)
+  area: {
+    chartData: {
+      chart: {
+        type: "bar",
+      },
+      plotOptions: {
+        bar: {
+          horizontal: false,
+        },
+      },
+      series: [
+        {
+          name: "Total Reports by Area",
+          data: [], // Placeholder data
+        },
+      ],
+      xaxis: {
+        categories: [], // Placeholder data
+      },
+    },
+    updateCallback: updateAreaChart,
+  },
+  type: {
+    chartData: {
+      chart: {
+        height: 240,
+        type: "pie",
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 1000,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: [
+        "rgba(255, 99, 132, 1)",
+        "rgba(255, 159, 64, 1)",
+        "rgba(255, 205, 86, 1)",
+      ],
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      tooltip: {
+        backgroundColor: "#ffffff",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        fontSize: "14px",
+        style: {
+          color: "#343a40",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    },
+    updateCallback: updateTypeChart,
+  },
+  subtype: {
+    chartData: {
+      chart: {
+        height: 240,
+        type: "doughnut",
+        animations: {
+          enabled: true,
+          easing: "easeinout",
+          speed: 1000,
+        },
+        toolbar: {
+          show: false,
+        },
+      },
+      colors: [
+        "rgba(255, 99, 132, 1)",
+        "rgba(255, 159, 64, 1)",
+        "rgba(255, 205, 86, 1)",
+      ],
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      tooltip: {
+        backgroundColor: "#ffffff",
+        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+        fontSize: "14px",
+        style: {
+          color: "#343a40",
+        },
+      },
+      dataLabels: {
+        enabled: false,
+      },
+    },
+    updateCallback: updateSubtypeChart,
+  },
 };
-
 const fetchDataFromServer = async () => {
   try {
     const token = getTokenFromCookies("Login");
@@ -470,6 +326,7 @@ function monthToLabel(month) {
   return monthNames[month];
 }
 
+// Lengkapi fungsi createApexChart
 const createApexChart = (chartId, chartOptions, clickCallback) => {
   try {
     const options = {
@@ -495,163 +352,49 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           show: false,
         },
       },
-      colors: chartOptions.colors || ["#02172C"],
-      dataLabels: chartOptions.dataLabels || {
-        enabled: false,
-      },
-      fill: chartOptions.fill || {
-        type: "gradient",
-        gradient: {
-          type: "vertical",
-          shadeIntensity: 1,
-          inverseColors: true,
-          opacityFrom: 0.15,
-          opacityTo: 0.02,
-          stops: [40, 100],
-        },
-      },
-      grid: chartOptions.grid || {
-        borderColor: "#dbeaea",
-        strokeDashArray: 4,
-        xaxis: {
-          lines: {
-            show: true,
-          },
-        },
-        yaxis: {
-          lines: {
-            show: false,
-          },
-        },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
-        },
-      },
-      legend: chartOptions.legend || {
-        position: "bottom",
-        horizontalAlign: "center",
-        offsetY: 4,
-        fontSize: "14px",
-        markers: {
-          width: 9,
-          height: 9,
-          strokeWidth: 0,
-          radius: 20,
-        },
-        itemMargin: {
-          horizontal: 5,
-          vertical: 0,
-        },
-      },
-      tooltip: chartOptions.tooltip || {
-        backgroundColor: "#ffffff",
-        boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-        fontSize: "14px",
-        style: {
-          color: "#343a40",
-        },
-      },
-      subtitle: chartOptions.subtitle || {
-        text: "Tren Jumlah Pelanggaran Setiap Bulan",
-        align: "left",
-        margin: 0,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: "15px",
-          color: "text-dark",
-          fontWeight: "bold",
-          marginBottom: "1rem",
-          fontFamily: "Poppins",
-        },
-      },
-      stroke: chartOptions.stroke || {
-        show: true,
-        curve: "smooth",
-        width: 3,
-      },
-      xaxis: chartOptions.xaxis || {
-        categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
-        labels: {
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            colors: "#8480ae",
-            fontSize: "12px",
-            fontFamily: "Poppins",
-          },
-        },
-        tooltip: {
-          enabled: false,
-        },
-      },
-      yaxis: chartOptions.yaxis || {
-        labels: {
-          offsetX: -10,
-          offsetY: 0,
-          style: {
-            colors: "#8480ae",
-            fontSize: "12px",
-            fontFamily: "Poppins",
-          },
-        },
-      },
+      // ... (isikan sesuai kebutuhan)
     };
 
+    const chart = new ApexCharts(document.getElementById(chartId), options);
+    chart.render();
 
-    try {
-      const chart = new ApexCharts(document.getElementById(chartId), options);
-      chart.render();
+    if (options.xaxis && options.xaxis.categories) {
+      document.getElementById(chartId).addEventListener("click", function () {
+        try {
+          if (
+            chart &&
+            chart.w &&
+            chart.w.globals &&
+            chart.w.globals.selectedDataPoints
+          ) {
+            const selectedDataPoints = chart.w.globals.selectedDataPoints;
 
-      // Tambahkan pengecekan apakah ada data sebelum menambahkan event listener
-      if (options.xaxis && options.xaxis.categories) {
-        document.getElementById(chartId).addEventListener("click", function () {
-          try {
-            if (
-              chart &&
-              chart.w &&
-              chart.w.globals &&
-              chart.w.globals.selectedDataPoints
-            ) {
-              const selectedDataPoints = chart.w.globals.selectedDataPoints;
+            if (selectedDataPoints && selectedDataPoints.length > 0) {
+              const clickedIndex = selectedDataPoints[0].dataPointIndex;
 
-              if (selectedDataPoints && selectedDataPoints.length > 0) {
-                const clickedIndex = selectedDataPoints[0].dataPointIndex;
-
-                if (clickCallback) {
-                  clickCallback(clickedIndex);
-                }
+              if (clickCallback) {
+                clickCallback(clickedIndex);
               }
             }
-          } catch (error) {
-            console.error("Error handling click event:", error);
           }
-        });
-      }
-
-    } catch (error) {
-      console.error(`Error creating ApexChart for ${chartId}:`, error);
+        } catch (error) {
+          console.error("Error handling click event:", error);
+        }
+      });
     }
-
   } catch (error) {
-    console.error("Error creating ApexChart:", error);
+    console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
 
-// Fungsi untuk memproses data dan membuat grafik
+// Lengkapi fungsi processDataAndCreateCharts
 const processDataAndCreateCharts = async (data) => {
   try {
-    // Pastikan data yang diterima dari server sesuai dengan yang diharapkan
     if (!Array.isArray(data)) {
       console.error("Invalid data format");
       return;
     }
 
-    // Update allChartData based on actual data
     allChartData.monthly.chartData.series[0].data = Array.from(new Array(12), (_, i) =>
       getReportsCountByMonth(data, i)
     );
@@ -664,7 +407,6 @@ const processDataAndCreateCharts = async (data) => {
       new Set(data.map((report) => report.location.locationName))
     );
 
-    console.log("Trying to create monthlyChart");
     createApexChart(
       "monthlyChart",
       allChartData.monthly.chartData,
@@ -676,17 +418,15 @@ const processDataAndCreateCharts = async (data) => {
   }
 };
 
-// Fungsi untuk menghitung jumlah laporan per bulan
+// Lengkapi fungsi getReportsCountByMonth
 function getReportsCountByMonth(data, month) {
   try {
-    // Pastikan data tidak kosong
     if (!Array.isArray(data) || data.length === 0) {
       console.error("Invalid or empty data for getReportsCountByMonth");
       return 0;
     }
 
     return data.filter((report) => {
-      // Pastikan 'date' ada dan sesuai dengan format yang diharapkan
       if (report.date && typeof report.date === "string") {
         const reportMonth = new Date(report.date).getMonth();
         return reportMonth === month;
@@ -699,17 +439,15 @@ function getReportsCountByMonth(data, month) {
   }
 }
 
-// Fungsi untuk menghitung jumlah laporan per lokasi
+// Lengkapi fungsi getLocationReportsCount
 function getLocationReportsCount(data, location) {
   try {
-    // Pastikan data tidak kosong
     if (!Array.isArray(data) || data.length === 0) {
       console.error("Invalid or empty data for getLocationReportsCount");
       return 0;
     }
 
     return data.filter((report) => {
-      // Pastikan 'location' ada dan sesuai dengan format yang diharapkan
       if (report.location && report.location.locationName) {
         return report.location.locationName === location;
       }
@@ -721,11 +459,50 @@ function getLocationReportsCount(data, location) {
   }
 }
 
-// Fungsi untuk mengupdate grafik jenis
-function updateTypeChart(data) {
+// Tambahkan fungsi updateAreaChart
+function updateAreaChart(data) {
+  try {
+    const areas = Array.from(
+      new Set(data.map((report) => report.area.areaName))
+    );
+
+    if (areas && areas.length > 0) {
+      const areaChartData = {
+        chart: {
+          type: "bar",
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+          },
+        },
+        series: [
+          {
+            name: "Total Reports by Area",
+            data: areas.map((area) => getAreaReportsCount(data, area)),
+          },
+        ],
+        xaxis: {
+          categories: areas,
+        },
+      };
+
+      createApexChart(
+        "areaChart",
+        areaChartData,
+        allChartData.location.updateCallback
+      );
+    }
+  } catch (error) {
+    console.error("Error updating area chart:", error);
+  }
+}
+
+// Tambahkan fungsi updateTypeChart
+function updateTypeChart() {
   try {
     const typeChartData = {
-      chartData: getTypeChartOptions(data),
+      chartData: getTypeChartOptions(),
       updateCallback: null,
     };
 
@@ -739,11 +516,11 @@ function updateTypeChart(data) {
   }
 }
 
-// Fungsi untuk mengupdate grafik subtipe
-function updateSubtypeChart(data) {
+// Tambahkan fungsi updateSubtypeChart
+function updateSubtypeChart() {
   try {
     const subtypeChartData = {
-      chartData: getSubtypeChartOptions(data),
+      chartData: getSubtypeChartOptions(),
       updateCallback: null,
     };
 
@@ -755,23 +532,43 @@ function updateSubtypeChart(data) {
   } catch (error) {
     console.error("Error updating subtype chart:", error);
   }
-
 }
 
-// Fetch data from the server and create charts
+// Lengkapi fungsi getAreaReportsCount
+function getAreaReportsCount(data, area) {
+  try {
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data for getAreaReportsCount");
+      return 0;
+    }
+
+    return data.filter((report) => {
+      if (report.area && report.area.areaName) {
+        return report.area.areaName === area;
+      }
+      return false;
+    }).length;
+  } catch (error) {
+    console.error("Error in getAreaReportsCount:", error);
+    return 0;
+  }
+};
+
+
+// Panggil fungsi-fungsi yang diperlukan
 fetchDataFromServer()
   .then((data) => {
     processDataAndCreateCharts(data);
-    console.log("Trying to create monthlyChart");
     createApexChart(
       "monthlyChart",
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateTypeChart(data); // Update type chart
-    updateSubtypeChart(data); // Update subtype chart
+    updateLocationChart();
+    updateAreaChart(data);
+    updateTypeChart();
+    updateSubtypeChart();
   })
   .catch((error) => {
     console.error("Error fetching data:", error);
   });
-
