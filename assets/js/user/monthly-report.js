@@ -67,7 +67,8 @@ const fetchDataFromServer = async () => {
     }
 
     // Ganti URL ini dengan endpoint API server Anda
-    const targetURL = "https://example.com/api/data";
+    
+  const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser`;
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
