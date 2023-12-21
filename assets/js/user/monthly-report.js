@@ -410,7 +410,6 @@ const fetchDataFromServer = async () => {
   }
 };
 
-
 function processDataAndCreateCharts(data) {
   const allMonths = Array.from(
     new Set(data.map((report) => new Date(report.date).getMonth()))
@@ -582,34 +581,43 @@ function processDataAndCreateCharts(data) {
 }
 
 function createApexChart(chartId, chartOptions, clickCallback) {
-  console.log("Creating chart with options:", chartOptions);
+  try {
+    const options = {
+      chart: {
+        type: chartOptions.chart.type,
+        height: chartOptions.chart.height,
+        plotOptions: chartOptions.plotOptions,
+      },
+      colors: chartOptions.colors,
+      legend: chartOptions.legend,
+      tooltip: chartOptions.tooltip,
+      dataLabels: chartOptions.dataLabels,
+      xaxis: chartOptions.xaxis,
+      yaxis: chartOptions.yaxis,
+    };
 
-  const options = {
-    chart: {
-      type: chartOptions.chart.type,
-      height: chartOptions.chart.height,
-      plotOptions: chartOptions.plotOptions,
-    },
-    colors: chartOptions.colors,
-    legend: chartOptions.legend,
-    tooltip: chartOptions.tooltip,
-    dataLabels: chartOptions.dataLabels,
-    xaxis: chartOptions.xaxis,
-    yaxis: chartOptions.yaxis,
-  };
+    const chart = new ApexCharts(document.getElementById(chartId), options);
+    chart.render();
 
-  const chart = new ApexCharts(document.getElementById(chartId), options);
-  chart.render();
+    document.getElementById(chartId).addEventListener("click", function () {
+      try {
+        const selectedDataPoints = chart.w.globals.selectedDataPoints;
 
-  document.getElementById(chartId).addEventListener("click", function (event) {
-    const clickedIndex = chart.w.globals.selectedDataPoints[0].dataPointIndex;
-    console.log("Chart clicked at index:", clickedIndex);
-    if (clickCallback) {
-      clickCallback(clickedIndex);
-    }
-  });
+        if (selectedDataPoints && selectedDataPoints.length > 0) {
+          const clickedIndex = selectedDataPoints[0].dataPointIndex;
+
+          if (clickCallback) {
+            clickCallback(clickedIndex);
+          }
+        }
+      } catch (error) {
+        console.error("Error handling click event:", error);
+      }
+    });
+  } catch (error) {
+    console.error("Error creating ApexChart:", error);
+  }
 }
-
 
 function monthToLabel(month) {
   const monthNames = [
