@@ -9,6 +9,362 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+const mainChartOptions = {
+  chart: {
+    height: 240,
+    type: "area",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    dropShadow: {
+      enabled: true,
+      opacity: 0.1,
+      blur: 1,
+      left: -5,
+      top: 18,
+    },
+    zoom: {
+      enabled: false,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: ["#02172C"],
+  dataLabels: {
+    enabled: false,
+  },
+  fill: {
+    type: "gradient",
+    gradient: {
+      type: "vertical",
+      shadeIntensity: 1,
+      inverseColors: true,
+      opacityFrom: 0.15,
+      opacityTo: 0.02,
+      stops: [40, 100],
+    },
+  },
+  grid: {
+    borderColor: "#dbeaea",
+    strokeDashArray: 4,
+    xaxis: {
+      lines: {
+        show: true,
+      },
+    },
+    yaxis: {
+      lines: {
+        show: false,
+      },
+    },
+    padding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
+  },
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  subtitle: {
+    text: "Tren Jumlah Pelanggaran Setiap Bulan",
+    align: "left",
+    margin: 0,
+    offsetX: 0,
+    offsetY: 0,
+    floating: false,
+    style: {
+      fontSize: "15px",
+      color: "text-dark",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      fontFamily: "Poppins",
+    },
+  },
+  stroke: {
+    show: true,
+    curve: "smooth",
+    width: 3,
+  },
+  xaxis: {
+    categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+    labels: {
+      offsetX: 0,
+      offsetY: 0,
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+    tooltip: {
+      enabled: false,
+    },
+  },
+  yaxis: {
+    labels: {
+      offsetX: -10,
+      offsetY: 0,
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+  },
+};
+
+const locationChartOptions = {
+  chart: {
+    height: 240,
+    type: "bar",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: ["rgba(255, 99, 132, 1)"],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  xaxis: {
+    labels: {
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+  },
+};
+
+const areaChartOptions = {
+  chart: {
+    height: 240,
+    type: "bar",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: ["rgba(54, 162, 235, 1)"],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  plotOptions: {
+    bar: {
+      horizontal: false,
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+  xaxis: {
+    labels: {
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+  },
+  yaxis: {
+    labels: {
+      style: {
+        colors: "#8480ae",
+        fontSize: "12px",
+        fontFamily: "Poppins",
+      },
+    },
+  },
+};
+
+const typeChartOptions = {
+  chart: {
+    height: 240,
+    type: "pie",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: [
+    "rgba(255, 99, 132, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(255, 205, 86, 1)",
+  ],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+};
+
+const subtypeChartOptions = {
+  chart: {
+    height: 240,
+    type: "doughnut",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: [
+    "rgba(255, 99, 132, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(255, 205, 86, 1)",
+  ],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+};
+
 const fetchDataFromServer = async () => {
   try {
     const token = getTokenFromCookies("Login");
@@ -174,7 +530,7 @@ const processDataAndCreateCharts = (data) => {
 
   function updateAreaChart(data) {
     const areas = Array.from(new Set(data.map((report) => report.area.areaName)));
-
+  
     const areaChartData = {
       chart: {
         type: "bar",
@@ -194,12 +550,23 @@ const processDataAndCreateCharts = (data) => {
         categories: areas,
       },
     };
-
-    createApexChart("areaChart", areaChartData, allChartData.area.updateCallback);
+  
+    createApexChart("areaChart", areaChartData, allChartData.location.updateCallback);
   }
+  
+  const typeChartData = {
+    chartData: typeChartOptions,
+    updateCallback: null,
+  };
 
-  // Continue updating other charts as needed
+  createApexChart("typeChart", typeChartData.chartData, typeChartData.updateCallback);
 
+  const subtypeChartData = {
+    chartData: subtypeChartOptions,
+    updateCallback: null,
+  };
+
+  createApexChart("subtypeChart", subtypeChartData.chartData, subtypeChartData.updateCallback);
 };
 
 fetchDataFromServer()
