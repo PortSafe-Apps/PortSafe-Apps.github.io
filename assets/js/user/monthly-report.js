@@ -1,5 +1,5 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
+ // Fungsi untuk mendapatkan token dari cookie
+ function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
     const [name, value] = cookie.trim().split("=");
@@ -9,45 +9,6 @@ function getTokenFromCookies(cookieName) {
   }
   return null;
 }
-
-const transformDataForChart = (reportData) => {
-  const monthlyCounts = Array(12).fill(0);
-
-  reportData.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthlyCounts[month] += 1;
-  });
-
-  return monthlyCounts.map((value, index) => ({
-    month: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "Mei",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Okt",
-      "Nov",
-      "Dec",
-    ][index],
-    value: value,
-    reports: reportData
-      .filter((report) => new Date(report.date).getMonth() === index)
-      .map((report) => ({
-        location: report.location.locationName,
-        area: {
-          areaName: report.area.areaName,
-        },
-        type: report.typeDangerousActions.map((type) => ({
-          typeName: type.typeName,
-          subTypes: type.subTypes,
-        })),
-      })),
-  }));
-};
 
 // Fungsi untuk mengambil data dari server
 const fetchDataFromServer = async () => {
@@ -66,8 +27,7 @@ const fetchDataFromServer = async () => {
       return [];
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -87,414 +47,152 @@ const fetchDataFromServer = async () => {
   }
 };
 
-// Fungsi untuk menggambar grafik
-const drawChart = async () => {
-  try {
-    // Ambil data dari server
-    const reportData = await fetchDataFromServer();
+// Fungsi untuk Memproses Data dan Membuat Grafik menggunakan ApexCharts
+function processDataAndCreateCharts(data) {
+  const months = Array.from(new Set(data.map(report => new Date(report.date).getMonth())));
+  const monthLabels = months.map(month => monthToLabel(month));
 
-    if (reportData && reportData.length > 0) {
-      // Transformasikan data untuk grafik
-      const transformedData = transformDataForChart(reportData);
-
-      // Inisialisasi mainChartOptions
-      const mainChartOptions = {
-        chart: {
-          height: 240,
-          type: "area",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 18,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["#02172C"],
-        dataLabels: {
-          enabled: false,
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            type: "vertical",
-            shadeIntensity: 1,
-            inverseColors: true,
-            opacityFrom: 0.15,
-            opacityTo: 0.02,
-            stops: [40, 100],
-          },
-        },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          yaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          backgroundColor: "rgb(255,255,255)",
-          // ... (sesuai dengan konfigurasi tooltip dari mainChart)
-        },
-        subtitle: {
-          text: "Tren Jumlah Pelanggaran Setiap Bulan",
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-            fontFamily: "Poppins",
-          },
-        },
-        stroke: {
-          show: true,
-          curve: "smooth",
-          width: 3,
-        },
-        xaxis: {
-          categories: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "Mei",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Okt",
-            "Nov",
-            "Dec",
-          ],
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-          tooltip: {
-            enabled: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            offsetX: -10,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-      };
-
-      var mainChart = new ApexCharts(document.querySelector("#mainChart"), {
-        series: [{
-          data: transformedData.map(({ month, value }) => ({
-            x: month,
-            y: value,
-          })),
-        }],
-        xaxis: {
-          categories: transformedData.map((entry) => entry.month),
-        },
-        ...mainChartOptions,
-      });
-
-      // Tambahkan konfigurasi tampilan
-      mainChart.updateOptions(mainChartOptions);
-
-      // Tambahkan konfigurasi tampilan
-      var breakdownChartOptions = {
-        chart: {
-          height: 240,
-          type: "horizontalBar",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["rgba(255, 99, 132, 1)"],
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          backgroundColor: "rgb(255,255,255)",
-          // ... (sesuai dengan konfigurasi tooltip dari mainChart)
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        xaxis: {
-          labels: {
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-      };
-
-      var breakdownChart = new ApexCharts(
-        document.querySelector("#breakdownChart"),
-        breakdownChartOptions
-      );
-      breakdownChart.render();
-
-      // Update area chart data dan konfigurasi tampilan
-      var areaChartOptions = {
-        chart: {
-          height: 240,
-          type: "bar",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["rgba(54, 162, 235, 1)"],
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          backgroundColor: "rgb(255,255,255)",
-          // ... (sesuai dengan konfigurasi tooltip dari mainChart)
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-          },
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        xaxis: {
-          labels: {
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-        yaxis: {
-          labels: {
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-      };
-
-      var areaChart = new ApexCharts(
-        document.querySelector("#areaChart"),
-        areaChartOptions
-      );
-      areaChart.render();
-
-      // Update unit chart data dan konfigurasi tampilan
-      var unitChartOptions = {
-        chart: {
-          height: 240,
-          type: "pie",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(255, 159, 64, 1)",
-          "rgba(255, 205, 86, 1)",
-        ],
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          backgroundColor: "rgb(255,255,255)",
-          // ... (sesuai dengan konfigurasi tooltip dari mainChart)
-        },
-        dataLabels: {
-          enabled: false,
-        },
-      };
-
-      var unitChart = new ApexCharts(
-        document.querySelector("#unitChart"),
-        unitChartOptions
-      );
-      unitChart.render();
-
-      // Update sub-unit chart data dan konfigurasi tampilan
-      var subUnitChartOptions = {
-        chart: {
-          height: 240,
-          type: "doughnut",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: [
-          "rgba(255, 99, 132, 1)",
-          "rgba(255, 159, 64, 1)",
-          "rgba(255, 205, 86, 1)",
-        ],
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          backgroundColor: "rgb(255,255,255)",
-          // ... (sesuai dengan konfigurasi tooltip dari mainChart)
-        },
-        dataLabels: {
-          enabled: false,
-        },
-      };
-
-      var subUnitChart = new ApexCharts(
-        document.querySelector("#subUnitChart"),
-        subUnitChartOptions
-      );
-      subUnitChart.render();
+  const monthlyChartData = {
+    chart: {
+      type: 'line'
+    },
+    series: [{
+      name: 'Total Reports per Month',
+      data: months.map(month => getReportsCountByMonth(data, month))
+    }],
+    xaxis: {
+      categories: monthLabels
     }
-  } catch (error) {
-    console.error("Error drawing chart:", error);
-  }
-};
+  };
 
-// Pemanggilan fungsi drawChart
-drawChart();
+  // Panggil fungsi untuk membuat grafik dengan ApexCharts
+  createApexChart("monthlyChart", monthlyChartData, function (monthIndex) {
+    const selectedMonth = months[monthIndex];
+    const monthlyData = data.filter(report => new Date(report.date).getMonth() === selectedMonth);
+
+    const locations = Array.from(new Set(monthlyData.map(report => report.location.locationName)));
+    const areas = Array.from(new Set(monthlyData.map(report => report.area.areaName)));
+    const types = Array.from(new Set(monthlyData.flatMap(report => report.typeDangerousActions.map(type => type.typeName))));
+    const subtypes = Array.from(new Set(monthlyData.flatMap(report => report.typeDangerousActions.flatMap(type => type.subTypes))));
+
+    const locationChartData = {
+      chart: {
+        type: 'bar'
+      },
+      series: [{
+        name: 'Total Reports by Location',
+        data: locations.map(location => getLocationReportsCount(monthlyData, location))
+      }],
+      xaxis: {
+        categories: locations
+      }
+    };
+
+    const areaChartData = {
+      chart: {
+        type: 'bar'
+      },
+      series: [{
+        name: 'Total Reports by Area',
+        data: areas.map(area => getAreaReportsCount(monthlyData, area))
+      }],
+      xaxis: {
+        categories: areas
+      }
+    };
+
+    const typeChartData = {
+      chart: {
+        type: 'pie'
+      },
+      series: types.map(type => getTypeReportsCount(monthlyData, type)),
+      labels: types
+    };
+
+    const subtypeChartData = {
+      chart: {
+        type: 'donut'
+      },
+      series: subtypes.map(subtype => getSubtypeReportsCount(monthlyData, subtype)),
+      labels: subtypes
+    };
+
+    // Create Location Chart
+    createApexChart('locationChart', locationChartData, function (locationIndex) {
+    });
+
+    // Create Area Chart
+    createApexChart('areaChart', areaChartData, function (areaIndex) {
+    });
+
+    // Create Type Chart
+    createApexChart('typeChart', typeChartData, function (typeIndex) {
+    });
+
+    // Create Subtype Chart
+    createApexChart('subtypeChart', subtypeChartData, function (subtypeIndex) {
+    });
+  });
+}
+
+// Fungsi bantu untuk mengonversi bulan menjadi label
+function monthToLabel(month) {
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return monthNames[month];
+}
+
+// Fungsi bantu untuk mendapatkan jumlah pelaporan per bulan
+function getReportsCountByMonth(data, month) {
+  return data.filter(report => new Date(report.date).getMonth() === month).length;
+}
+
+// Fungsi bantu untuk mendapatkan jumlah pelaporan per lokasi
+function getLocationReportsCount(data, location) {
+  return data.filter(report => report.location.locationName === location).length;
+}
+
+// Fungsi bantu untuk mendapatkan jumlah pelaporan per area
+function getAreaReportsCount(data, area) {
+  return data.filter(report => report.area.areaName === area).length;
+}
+
+// Fungsi bantu untuk mendapatkan jumlah pelaporan per jenis
+function getTypeReportsCount(data, type) {
+  return data.filter(report => report.typeDangerousActions.some(t => t.typeName === type)).length;
+}
+
+// Fungsi bantu untuk mendapatkan jumlah pelaporan per subjenis
+function getSubtypeReportsCount(data, subtype) {
+  return data.filter(report => report.typeDangerousActions.some(t => t.subTypes.includes(subtype))).length;
+}
+
+// Fungsi bantu untuk Membuat Grafik dengan ApexCharts
+function createApexChart(chartId, chartOptions, clickCallback) {
+  const options = {
+    chart: {
+      type: chartOptions.chart.type,
+    },
+    series: chartOptions.series,
+    xaxis: chartOptions.xaxis,
+  };
+
+  const chart = new ApexCharts(document.getElementById(chartId), options);
+  chart.render();
+
+  // Tambahkan event listener untuk meng-handle klik pada grafik (jika diperlukan)
+  document.getElementById(chartId).addEventListener("click", function (event) {
+    const clickedIndex = chart.w.globals.selectedDataPoints[0].dataPointIndex;
+    if (clickCallback) {
+      clickCallback(clickedIndex);
+    }
+  });
+}
+
+// Ambil Data dari Server dan Jalankan Proses Pembuatan Grafik
+fetchDataFromServer()
+  .then((data) => {
+    // Proses data dan panggil fungsi untuk membuat grafik
+    processDataAndCreateCharts(data);
+  })
+  .catch((error) => console.error("Error fetching data:", error));
+
