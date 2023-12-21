@@ -459,7 +459,7 @@ function getLocationReportsCount(data, location) {
   }
 }
 
-// Fungsi untuk memperbarui grafik lokasi
+// Update the function like this:
 function updateLocationChart(data) {
   try {
     const locations = Array.from(
@@ -531,7 +531,7 @@ function updateAreaChart(data) {
       createApexChart(
         "areaChart",
         areaChartData,
-        allChartData.location.updateCallback
+        allChartData.area.updateCallback
       );
     }
   } catch (error) {
@@ -548,7 +548,7 @@ function updateTypeChart() {
     };
 
     createApexChart(
-      "typeChart",
+      "typeChart", 
       typeChartData.chartData,
       typeChartData.updateCallback
     );
@@ -557,7 +557,6 @@ function updateTypeChart() {
   }
 }
 
-// Tambahkan fungsi updateSubtypeChart
 function updateSubtypeChart() {
   try {
     const subtypeChartData = {
