@@ -198,8 +198,59 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
       legend: chartOptions.legend || {},
       tooltip: chartOptions.tooltip || {},
       dataLabels: chartOptions.dataLabels || {},
+      fill: chartOptions.fill || {
+        type: "gradient",
+        gradient: {
+          type: "vertical",
+          shadeIntensity: 1,
+          inverseColors: true,
+          opacityFrom: 0.15,
+          opacityTo: 0.02,
+          stops: [40, 100],
+        },
+      },
+      grid: chartOptions.grid || {
+        borderColor: "#dbeaea",
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        padding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
+      },
+      subtitle: chartOptions.subtitle || {
+        text: "Tren Jumlah Pelanggaran Setiap Bulan",
+        align: "left",
+        margin: 0,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "15px",
+          color: "text-dark",
+          fontWeight: "bold",
+          marginBottom: "1rem",
+          fontFamily: "Poppins",
+        },
+      },
+      stroke: chartOptions.stroke || {
+        show: true,
+        curve: "smooth",
+        width: 3,
+      },
     };
-
+    
     const chart = new ApexCharts(document.getElementById(chartId), options);
     chart.render();
 
@@ -259,9 +310,8 @@ function getLocationReportsCount(data, location) {
   return count;
 }
 
-
-// Update the functions like this:
-function updateLocationChart() {
+// Perbarui fungsi-fungsi seperti ini:
+function updateLocationChart(data) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateLocationChart");
@@ -305,8 +355,8 @@ function updateLocationChart() {
   }
 }
 
-// Update the function like this:
-function updateAreaChart() {
+// Perbarui fungsi-fungsi seperti ini:
+function updateAreaChart(data) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateAreaChart");
@@ -546,7 +596,7 @@ const allChartData = {
   },
 };
 
-// Fungsi untuk mengolah data dan membuat grafik
+
 async function processDataAndCreateCharts() {
   try {
     const data = await fetchDataFromServer();
@@ -561,7 +611,7 @@ async function processDataAndCreateCharts() {
       (_, i) => getReportsCountByMonth(data, i)
     );
 
-    // Update location chart data
+    // Perbarui data grafik lokasi
     const locations = Array.from(
       new Set(data.map((report) => report.location.locationName))
     );
@@ -576,8 +626,8 @@ async function processDataAndCreateCharts() {
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateLocationChart();
-    updateAreaChart();
+    updateLocationChart(data);
+    updateAreaChart(data);
     updateTypeChart();
     updateSubtypeChart();
   } catch (error) {
