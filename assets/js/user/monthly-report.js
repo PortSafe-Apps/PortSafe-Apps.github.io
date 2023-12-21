@@ -271,99 +271,105 @@ const areaChartOptions = {
   },
 };
 
-const typeChartOptions = {
-  chart: {
-    height: 240,
-    type: "pie",
-    animations: {
-      enabled: true,
-      easing: "easeinout",
-      speed: 1000,
+// Fungsi untuk mendapatkan opsi chart jenis
+function getTypeChartOptions() {
+  return {
+    chart: {
+      height: 240,
+      type: "pie",
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 1000,
+      },
+      toolbar: {
+        show: false,
+      },
     },
-    toolbar: {
-      show: false,
+    colors: [
+      "rgba(255, 99, 132, 1)",
+      "rgba(255, 159, 64, 1)",
+      "rgba(255, 205, 86, 1)",
+    ],
+    legend: {
+      position: "bottom",
+      horizontalAlign: "center",
+      offsetY: 4,
+      fontSize: "14px",
+      markers: {
+        width: 9,
+        height: 9,
+        strokeWidth: 0,
+        radius: 20,
+      },
+      itemMargin: {
+        horizontal: 5,
+        vertical: 0,
+      },
     },
-  },
-  colors: [
-    "rgba(255, 99, 132, 1)",
-    "rgba(255, 159, 64, 1)",
-    "rgba(255, 205, 86, 1)",
-  ],
-  legend: {
-    position: "bottom",
-    horizontalAlign: "center",
-    offsetY: 4,
-    fontSize: "14px",
-    markers: {
-      width: 9,
-      height: 9,
-      strokeWidth: 0,
-      radius: 20,
+    tooltip: {
+      backgroundColor: "#ffffff",
+      boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+      fontSize: "14px",
+      style: {
+        color: "#343a40",
+      },
     },
-    itemMargin: {
-      horizontal: 5,
-      vertical: 0,
+    dataLabels: {
+      enabled: false,
     },
-  },
-  tooltip: {
-    backgroundColor: "#ffffff",
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    fontSize: "14px",
-    style: {
-      color: "#343a40",
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-};
+  };
+}
 
-const subtypeChartOptions = {
-  chart: {
-    height: 240,
-    type: "doughnut",
-    animations: {
-      enabled: true,
-      easing: "easeinout",
-      speed: 1000,
+// Fungsi untuk mendapatkan opsi chart subtipe
+function getSubtypeChartOptions() {
+  return {
+    chart: {
+      height: 240,
+      type: "doughnut",
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 1000,
+      },
+      toolbar: {
+        show: false,
+      },
     },
-    toolbar: {
-      show: false,
+    colors: [
+      "rgba(255, 99, 132, 1)",
+      "rgba(255, 159, 64, 1)",
+      "rgba(255, 205, 86, 1)",
+    ],
+    legend: {
+      position: "bottom",
+      horizontalAlign: "center",
+      offsetY: 4,
+      fontSize: "14px",
+      markers: {
+        width: 9,
+        height: 9,
+        strokeWidth: 0,
+        radius: 20,
+      },
+      itemMargin: {
+        horizontal: 5,
+        vertical: 0,
+      },
     },
-  },
-  colors: [
-    "rgba(255, 99, 132, 1)",
-    "rgba(255, 159, 64, 1)",
-    "rgba(255, 205, 86, 1)",
-  ],
-  legend: {
-    position: "bottom",
-    horizontalAlign: "center",
-    offsetY: 4,
-    fontSize: "14px",
-    markers: {
-      width: 9,
-      height: 9,
-      strokeWidth: 0,
-      radius: 20,
+    tooltip: {
+      backgroundColor: "#ffffff",
+      boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+      fontSize: "14px",
+      style: {
+        color: "#343a40",
+      },
     },
-    itemMargin: {
-      horizontal: 5,
-      vertical: 0,
+    dataLabels: {
+      enabled: false,
     },
-  },
-  tooltip: {
-    backgroundColor: "#ffffff",
-    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
-    fontSize: "14px",
-    style: {
-      color: "#343a40",
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-};
+  };
+}
 
 // Fungsi untuk menangani permintaan data dari server
 const fetchDataFromServer = async () => {
@@ -677,21 +683,31 @@ const processDataAndCreateCharts = (data) => {
       }
     }
 
-    // Membuat grafik jenis
-    const typeChartData = {
-      chartData: getTypeChartOptions(data),
-      updateCallback: null,
-    };
+    // Fungsi untuk membuat atau memperbarui grafik jenis
+    function createOrUpdateTypeChart() {
+      const typeChartData = {
+        chartData: getTypeChartOptions(data),
+        updateCallback: null,
+      };
 
-    createApexChart("typeChart", typeChartData.chartData, typeChartData.updateCallback);
+      createApexChart("typeChart", typeChartData.chartData, typeChartData.updateCallback);
+    }
+
+    // Fungsi untuk membuat atau memperbarui grafik subtipe
+    function createOrUpdateSubtypeChart() {
+      const subtypeChartData = {
+        chartData: getSubtypeChartOptions(data),
+        updateCallback: null,
+      };
+
+      createApexChart("subtypeChart", subtypeChartData.chartData, subtypeChartData.updateCallback);
+    }
+
+    // Membuat grafik jenis
+    createOrUpdateTypeChart();
 
     // Membuat grafik subtipe
-    const subtypeChartData = {
-      chartData: getSubtypeChartOptions(data),
-      updateCallback: null,
-    };
-
-    createApexChart("subtypeChart", subtypeChartData.chartData, subtypeChartData.updateCallback);
+    createOrUpdateSubtypeChart();
 
   } catch (error) {
     console.error("Error processing data and creating charts:", error);
