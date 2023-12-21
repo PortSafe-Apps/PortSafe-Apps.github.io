@@ -206,32 +206,63 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
   try {
     const options = {
       chart: {
-        height: chartOptions.chart.height || 240,
-        type: chartOptions.chart.type || "area",
-        animations: chartOptions.chart.animations || {
+        height: 240,
+        type: "area",
+        animations: {
           enabled: true,
           easing: "easeinout",
           speed: 1000,
         },
-        dropShadow: chartOptions.chart.dropShadow || {
+        dropShadow: {
           enabled: true,
           opacity: 0.1,
           blur: 1,
           left: -5,
           top: 18,
         },
-        zoom: chartOptions.chart.zoom || {
+        zoom: {
           enabled: false,
         },
-        toolbar: chartOptions.chart.toolbar || {
+        toolbar: {
           show: false,
         },
       },
-      series: chartOptions.series || [],
-      xaxis: chartOptions.xaxis || {},
-      plotOptions: chartOptions.plotOptions || {},
-      colors: chartOptions.colors || ["#02172C"],
-      legend: chartOptions.legend || {
+      colors: ["#02172C"],
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          type: "vertical",
+          shadeIntensity: 1,
+          inverseColors: true,
+          opacityFrom: 0.15,
+          opacityTo: 0.02,
+          stops: [40, 100],
+        },
+      },
+      grid: {
+        borderColor: "#dbeaea",
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        padding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
+      },
+      legend: {
         position: "bottom",
         horizontalAlign: "center",
         offsetY: 4,
@@ -247,7 +278,7 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           vertical: 0,
         },
       },
-      tooltip: chartOptions.tooltip || {
+      tooltip: {
         backgroundColor: "rgb(255,255,255)",
         bodyFontColor: "#858796",
         titleMarginBottom: 10,
@@ -266,18 +297,19 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           const value = series[0]?.[dataPointIndex] || 0;
           return (
             '<div style="width: 135px; height: 45px;">' +
-            '<span>' +
+            "<span>" +
             month +
-            '</span>' +
-            '<br>' +
-            '<span>' +
-            "Jumlah Laporan : " + value +
+            "</span>" +
+            "<br>" +
+            "<span>" +
+            "Jumlah Laporan : " +
+            value +
             "</span>" +
             "</div>"
           );
         },
       },
-      subtitle: chartOptions.subtitle || {
+      subtitle: {
         text: "Tren Jumlah Pelanggaran Setiap Bulan",
         align: "left",
         margin: 0,
@@ -292,41 +324,34 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
           fontFamily: "Poppins",
         },
       },
-      stroke: chartOptions.stroke || {
+      stroke: {
         show: true,
         curve: "smooth",
         width: 3,
-        colors: ["#02172C"], // Tambahkan properti warna di sini
       },
-      fill: chartOptions.fill || {
-        type: "gradient",
-        gradient: {
-          type: "vertical",
-          shadeIntensity: 1,
-          inverseColors: true,
-          opacityFrom: 0.15,
-          opacityTo: 0.02,
-          stops: [40, 100],
-        },
-      },
-      grid: chartOptions.grid || {
-        borderColor: "#dbeaea",
-        strokeDashArray: 4,
-        xaxis: {
-          lines: {
-            show: true,
+      xaxis: {
+        labels: {
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
           },
         },
-        yaxis: {
-          lines: {
-            show: false,
-          },
+        tooltip: {
+          enabled: false,
         },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0,
+      },
+      yaxis: {
+        labels: {
+          offsetX: -10,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
+          },
         },
       },
     };
@@ -363,8 +388,8 @@ const createApexChart = (chartId, chartOptions, clickCallback) => {
   }
 };
 
- // Fungsi untuk mendapatkan jumlah laporan per bulan
- function getReportsCountByMonth(data, month) {
+// Fungsi untuk mendapatkan jumlah laporan per bulan
+function getReportsCountByMonth(data, month) {
   // Menggunakan reduce untuk menghitung jumlah laporan pada bulan tertentu
   const count = data.reduce((total, report) => {
     const reportDate = new Date(report.date); // Ganti "date" dengan properti tanggal pada objek laporan
@@ -432,7 +457,7 @@ function updateLocationChart(data) {
           },
         ],
         xaxis: {
-          categories: locations,
+          categories: locationLabels,
         },
         subtitle: {
           text: "Jumlah Laporan Berdasarkan Unit Kerja",
@@ -490,7 +515,7 @@ function updateAreaChart(data) {
           },
         ],
         xaxis: {
-          categories: areas,
+          categories: areaLabels,
         },
         subtitle: {
           text: "Jumlah Laporan Berdasarkan Area",
@@ -521,15 +546,19 @@ function updateAreaChart(data) {
 }
 
 // Update the functions like this:
-function updateTypeChart() {
+function updateTypeChart(data) {
   try {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format for updateTypeChart");
+    }
+
     const typeChartData = {
       chartData: getTypeChartOptions(),
       updateCallback: null,
     };
 
     createApexChart(
-      "typeChart", // Pastikan ID ini ada dalam HTML Anda
+      "typeChart",
       typeChartData.chartData,
       typeChartData.updateCallback
     );
@@ -538,8 +567,14 @@ function updateTypeChart() {
   }
 }
 
-function updateSubtypeChart() {
+
+// Perbarui fungsi-fungsi seperti ini:
+function updateSubtypeChart(data) {
   try {
+    if (!Array.isArray(data)) {
+      throw new Error("Invalid data format for updateSubtypeChart");
+    }
+
     const subtypeChartData = {
       chartData: getSubtypeChartOptions(),
       updateCallback: null,
@@ -717,7 +752,6 @@ const allChartData = {
     updateCallback: updateSubtypeChart,
   },
 };
-
 
 async function processDataAndCreateCharts() {
   try {
