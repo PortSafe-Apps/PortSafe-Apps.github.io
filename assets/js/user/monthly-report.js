@@ -97,7 +97,7 @@ const drawChart = async () => {
       const transformedData = transformDataForChart(reportData);
 
       // Inisialisasi mainChart
-      var mainChart = new Chart(document.querySelector("#mainChart"), {
+      var mainChart = new ApexCharts(document.querySelector("#mainChart"), {
         series: [],
         xaxis: {},
       });
@@ -321,10 +321,7 @@ const drawChart = async () => {
         },
       };
 
-      var breakdownChart = new Chart(
-        document.querySelector("#breakdownChart"),
-        breakdownChartOptions
-      );
+      var breakdownChart = new ApexCharts(document.querySelector("#breakdownChart"), breakdownChartOptions);
       breakdownChart.render();
       breakdownChart.updateOptions(breakdownChartOptions);
 
@@ -391,7 +388,7 @@ const drawChart = async () => {
         },
       };
 
-      var areaChart = new Chart(document.querySelector("#areaChart"), areaChartOptions);
+      var areaChart = new ApexCharts(document.querySelector("#areaChart"), areaChartOptions);
       areaChart.render();
       areaChart.updateOptions(areaChartOptions);
 
@@ -439,7 +436,7 @@ const drawChart = async () => {
         },
       };
 
-      var unitChart = new Chart(document.querySelector("#unitChart"), unitChartOptions);
+      var unitChart = new ApexCharts(document.querySelector("#unitChart"), unitChartOptions);
       unitChart.render();
       unitChart.updateOptions(unitChartOptions);
 
@@ -487,7 +484,7 @@ const drawChart = async () => {
         },
       };
 
-      var subUnitChart = new Chart(document.querySelector("#subUnitChart"), subUnitChartOptions);
+      var subUnitChart = new ApexCharts(document.querySelector("#subUnitChart"), subUnitChartOptions);
       subUnitChart.render();
       subUnitChart.updateOptions(subUnitChartOptions);
     }
