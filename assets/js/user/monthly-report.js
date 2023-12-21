@@ -139,23 +139,16 @@ const createApexChart = (chartId, chartType, clickCallback) => {
     chart.render();
 
     // Menangani logika klik
-    if (mergedOptions.xaxis && mergedOptions.xaxis.categories) {
+    if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
       document.getElementById(chartId).addEventListener("click", function () {
         try {
-          if (
-            chart &&
-            chart.w &&
-            chart.w.globals &&
-            chart.w.globals.selectedDataPoints
-          ) {
-            const selectedDataPoints = chart.w.globals.selectedDataPoints;
+          const selectedDataPoints = chart.w.globals.selectedDataPoints;
 
-            if (selectedDataPoints && selectedDataPoints.length > 0) {
-              const clickedIndex = selectedDataPoints[0].dataPointIndex;
+          if (selectedDataPoints && selectedDataPoints.length > 0) {
+            const clickedIndex = selectedDataPoints[0].dataPointIndex;
 
-              if (clickCallback) {
-                clickCallback(clickedIndex);
-              }
+            if (clickCallback) {
+              clickCallback(clickedIndex);
             }
           }
         } catch (error) {
@@ -167,6 +160,7 @@ const createApexChart = (chartId, chartType, clickCallback) => {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
+
 
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
@@ -347,7 +341,7 @@ function generateColors(count) {
 }
 
 
-function updateLocationChart(data) {
+function updateLocationChart(data, locationLabels, allChartData) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateLocationChart");
@@ -406,8 +400,7 @@ function updateLocationChart(data) {
   }
 }
 
-// Perbarui fungsi-fungsi seperti ini:
-function updateAreaChart(data) {
+function updateAreaChart(data, areaLabels, allChartData) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateAreaChart");
@@ -464,44 +457,42 @@ function updateAreaChart(data) {
   }
 }
 
-// Update the functions like this:
-function updateTypeChart(data) {
+function updateTypeChart(data, allChartData) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateTypeChart");
     }
 
     const typeChartData = {
-      chartData: getTypeChartOptions(),
+      chartData: getTypeChartOptions(data),
       updateCallback: null,
     };
 
     createApexChart(
       "typeChart",
-      typeChartData.chartData,
-      typeChartData.updateCallback
+      typeChartData,
+      allChartData.type.updateCallback
     );
   } catch (error) {
     console.error("Error updating type chart:", error.message);
   }
 }
 
-// Perbarui fungsi-fungsi seperti ini:
-function updateSubtypeChart(data) {
+function updateSubtypeChart(data, allChartData) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateSubtypeChart");
     }
 
     const subtypeChartData = {
-      chartData: getSubtypeChartOptions(),
+      chartData: getSubtypeChartOptions(data),
       updateCallback: null,
     };
 
     createApexChart(
       "subtypeChart",
       subtypeChartData.chartData,
-      subtypeChartData.updateCallback
+      allChartData.subtype.updateCallback
     );
   } catch (error) {
     console.error("Error updating subtype chart:", error.message);
@@ -834,9 +825,7 @@ async function processDataAndCreateCharts() {
     );
 
     // Perbarui data grafik lokasi
-    const locations = Array.from(
-      new Set(data.map((report) => report.location.locationName))
-    );
+    const locations = Array.from(new Set(data.map((report) => report.location.locationName)));
     allChartData.location.chartData.series[0].data = locations.map((location) =>
       getLocationReportsCount(data, location)
     );
@@ -848,10 +837,10 @@ async function processDataAndCreateCharts() {
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateLocationChart(data);
-    updateAreaChart(data);
-    updateTypeChart(data);
-    updateSubtypeChart(data);
+    updateLocationChart(data, allChartData.location.chartData.xaxis.categories, allChartData);
+    updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
+    updateTypeChart(data, allChartData);
+    updateSubtypeChart(data, allChartData);
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
   }
