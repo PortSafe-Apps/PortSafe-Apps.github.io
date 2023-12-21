@@ -652,11 +652,8 @@ const processDataAndCreateCharts = (data) => {
     };
 
     console.log("Trying to create monthlyChart");
-    createApexChart(
-      "monthlyChart",
-      allChartData.monthly.chartData,
-      allChartData.monthly.updateCallback
-    );
+    createApexChart("monthlyChart", allChartData.monthly.chartData, allChartData.monthly.updateCallback);
+    
 
     // Fungsi untuk mengupdate grafik lokasi
     function updateLocationChart(locationIndex) {
@@ -822,36 +819,17 @@ const processDataAndCreateCharts = (data) => {
         console.error("Error updating subtype chart:", error);
       }
     }
-
-    // Default options for charts
-    const defaultChartOptions = {
-      chart: {
-        height: 240,
-        type: "line",
-        // ... other default options
-      },
-      colors: ["#02172C"],
-      // ... other default options
-    };
-
+ 
     // Membaca data dari server dan memprosesnya
     fetchDataFromServer()
       .then((data) => {
-        if (data.length > 0) {
-          processDataAndCreateCharts(data);
-          updateTypeChart(data); // Perbarui grafik jenis
-          updateSubtypeChart(data); // Perbarui grafik subtipe
-        } else {
-          // Display a message or handle the absence of data
-          console.log("No data available to display charts.");
-
-          // Create a placeholder chart with default options
-          createApexChart("monthlyChart", defaultChartOptions);
-          // You can create additional charts or handle the absence of data here.
-        }
+        processDataAndCreateCharts(data);
+        updateTypeChart(data); // Perbarui grafik jenis
+        updateSubtypeChart(data); // Perbarui grafik subtipe
       })
-      .catch((error) => console.error("Error fetching data:", error));
+      console.error("Error fetching data:", error.message);
   } catch (error) {
     console.error("Error in processDataAndCreateCharts:", error);
   }
 };
+
