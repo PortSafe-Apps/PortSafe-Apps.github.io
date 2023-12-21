@@ -65,8 +65,8 @@ const getallUserReportWithTokenPerDay = async () => {
         const data = await response.json();
 
         if (data.status === 200) {
-            // Panggil fungsi untuk menampilkan jumlah total data report per hari di dalam elemen dengan ID 'total-reports'
-            displaySumReportsPerDay(data.data, 'total-reports');
+            // Panggil fungsi untuk menampilkan jumlah total data report per hari di dalam elemen dengan ID 'daily-reports'
+            displaySumReportsPerDay(data.data, 'daily-reports');
         } else {
             console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
         }
