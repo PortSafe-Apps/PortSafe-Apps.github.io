@@ -106,7 +106,7 @@ const fetchDataFromServer = async () => {
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
     // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
-    const chartOptions = allChartData[chartType].chartData;
+    const chartOptions = allChartData[chartType]?.chartData || {};
 
     // Membuat opsi chart
     const options = {
