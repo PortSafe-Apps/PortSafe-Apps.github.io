@@ -107,13 +107,244 @@ const fetchDataFromServer = async () => {
  } 
 };
 
-// Deklarasi variabel chart di luar fungsi atau blok yang sesuai
+// Monthly Report Chart
+allChartData.monthly.chartData = {
+  chart: {
+    height: 240,
+    type: "area",
+  },
+  series: [
+    {
+      name: "Total Reports per Month",
+      data: Array.from(new Array(12), () => 0),
+    },
+  ],
+  xaxis: {
+    categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+  },
+  animations: {
+    enabled: true,
+    easing: "easeinout",
+    speed: 1000,
+  },
+  dropShadow: {
+    enabled: true,
+    opacity: 0.1,
+    blur: 1,
+    left: -5,
+    top: 18,
+  },
+  zoom: {
+    enabled: false,
+  },
+  toolbar: {
+    show: false,
+  },
+  colors: ["#02172C"],
+  dataLabels: {
+    enabled: false,
+  },
+  fill: {
+    type: "gradient",
+    gradient: {
+      type: "vertical",
+      shadeIntensity: 1,
+      inverseColors: true,
+      opacityFrom: 0.15,
+      opacityTo: 0.02,
+      stops: [40, 100],
+    },
+  },
+  grid: {
+    borderColor: "#dbeaea",
+    strokeDashArray: 4,
+    xaxis: {
+      lines: {
+        show: true,
+      },
+    },
+    yaxis: {
+      lines: {
+        show: false,
+      },
+    },
+    padding: {
+      top: 0,
+      right: 0,
+      bottom: 0,
+      left: 0,
+    },
+  },
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+};
+
+// Location Chart
+allChartData.location.chartData = {
+  chart: {
+    height: 240,
+    type: "bar",
+  },
+  series: [
+    {
+      name: "Total Reports per Location",
+      data: [],
+    },
+  ],
+  xaxis: {
+    categories: [],
+  },
+  plotOptions: {
+    bar: {
+      horizontal: true,
+    },
+  },
+};
+
+// Area Chart
+allChartData.area.chartData = {
+  chart: {
+    height: 240,
+    type: "line",
+  },
+  series: [
+    {
+      name: "Total Reports per Area",
+      data: [],
+    },
+  ],
+  xaxis: {
+    categories: [],
+  },
+  plotOptions: {
+    line: {
+      curve: "smooth",
+    },
+  },
+};
+
+// Type Chart
+allChartData.type.chartData = {
+  chart: {
+    height: 240,
+    type: "donut",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: [
+    "rgba(255, 99, 132, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(255, 205, 86, 1)",
+  ],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+};
+
+// Subtype Chart
+allChartData.subtype.chartData = {
+  chart: {
+    height: 240,
+    type: "pie",
+    animations: {
+      enabled: true,
+      easing: "easeinout",
+      speed: 1000,
+    },
+    toolbar: {
+      show: false,
+    },
+  },
+  colors: [
+    "rgba(255, 99, 132, 1)",
+    "rgba(255, 159, 64, 1)",
+    "rgba(255, 205, 86, 1)",
+  ],
+  legend: {
+    position: "bottom",
+    horizontalAlign: "center",
+    offsetY: 4,
+    fontSize: "14px",
+    markers: {
+      width: 9,
+      height: 9,
+      strokeWidth: 0,
+      radius: 20,
+    },
+    itemMargin: {
+      horizontal: 5,
+      vertical: 0,
+    },
+  },
+  tooltip: {
+    backgroundColor: "#ffffff",
+    boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.1)",
+    fontSize: "14px",
+    style: {
+      color: "#343a40",
+    },
+  },
+  dataLabels: {
+    enabled: false,
+  },
+};
+
 let chart;
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   console.log("Creating chart:", chartId);
+
   try {
     const chartData = allChartData[chartType]?.chartData || {};
+
+    if (!chartData.type) {
+      // Set default chart type if none is provided
+      chartData.type = "line";
+    }
 
     if (chart) {
       chart.destroy();
@@ -143,6 +374,7 @@ const createApexChart = (chartId, chartType, clickCallback) => {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
+    
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
   // Menggunakan reduce untuk menghitung jumlah laporan pada bulan tertentu
@@ -321,7 +553,7 @@ function generateColors(count) {
   });
 }
 
-function updateLocationChart(data, locationLabels, allChartData) {
+const updateLocationChart = () => {
   try {
     console.log("Updating location chart...");
     if (!Array.isArray(data) || data.length === 0) {
@@ -382,7 +614,7 @@ function updateLocationChart(data, locationLabels, allChartData) {
   }
 }
 
-function updateAreaChart(data, areaLabels, allChartData) {
+const updateAreaChart = () => {
   try {
     if (!Array.isArray(data) || data.length === 0) {
       console.error("Invalid or empty data");
@@ -440,7 +672,7 @@ function updateAreaChart(data, areaLabels, allChartData) {
   }
 }
 
-function updateTypeChart(data, allChartData) {
+const updateTypeChart = () => {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateTypeChart");
@@ -461,7 +693,7 @@ function updateTypeChart(data, allChartData) {
   }
 }
 
-function updateSubtypeChart(data, allChartData) {
+const updateSubtypeChart = () => {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateSubtypeChart");
@@ -481,6 +713,7 @@ function updateSubtypeChart(data, allChartData) {
     console.error("Error updating subtype chart:", error.message);
   }
 }
+
 
 // Objek chart data
 const allChartData = {
@@ -793,8 +1026,9 @@ const allChartData = {
   },
 };
 
-async function processDataAndCreateCharts() {
+const processDataAndCreateCharts = async () => {
   try {
+    console.log("Data processed successfully.");
     const data = await fetchDataFromServer();
 
     console.log("Data received:", data);
@@ -823,33 +1057,17 @@ async function processDataAndCreateCharts() {
     );
     allChartData.location.chartData.xaxis.categories = locations;
 
-    createApexChart(
-      "monthlyChart",
-      allChartData.monthly.chartData,
-      allChartData.monthly.updateCallback
-    );
-
-    updateLocationChart(data, locationLabels, allChartData);
-    updateAreaChart(
-      data,
-      allChartData.area.chartData.xaxis.categories,
-      allChartData
-    );
-    updateTypeChart(data, allChartData);
-    updateSubtypeChart(data, allChartData);
-
-    console.log("Data processed successfully.");
-
+    
+    createApexChart("monthlyChart", "monthly");
+    updateLocationChart();
+    updateAreaChart();
+    updateTypeChart();
+    updateSubtypeChart();
   } catch (error) {
-    console.error("Error processing data and creating charts:", error.message);
+    console.error("Error processing data:", error);
   }
 }
 
-// Pemanggilan fungsi utama
+// Call the function initially when the page is loaded
 processDataAndCreateCharts();
-
-// Pemanggilan fungsi utama setelah DOM sepenuhnya dimuat
-document.addEventListener("DOMContentLoaded", function () {
-  processDataAndCreateCharts();
-});
 
