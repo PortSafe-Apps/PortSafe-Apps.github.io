@@ -111,6 +111,7 @@ const fetchDataFromServer = async () => {
 let chart;
 
 const createApexChart = (chartId, chartType, clickCallback) => {
+  console.log("Creating chart:", chartId);
   try {
     const chartOptions = allChartData[chartType]?.chartData || {};
     const options = {
@@ -347,6 +348,7 @@ function generateColors(count) {
 
 function updateLocationChart(data, locationLabels, allChartData) {
   try {
+    console.log("Updating location chart...");
     if (!Array.isArray(data) || data.length === 0) {
       console.error("Invalid or empty data");
       return;
@@ -870,4 +872,9 @@ async function processDataAndCreateCharts() {
 
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
+
+// Pemanggilan fungsi utama setelah DOM sepenuhnya dimuat
+document.addEventListener("DOMContentLoaded", function () {
+  processDataAndCreateCharts();
+});
 
