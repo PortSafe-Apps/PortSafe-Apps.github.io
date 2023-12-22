@@ -52,6 +52,15 @@ const drawChart = async () => {
   const reportData = await fetchDataFromServer();
 
   if (reportData) {
+    // Menggambar Monthly Chart
+    const transformedMonthlyData = transformDataForChart(reportData, "monthChart");
+    const monthlyChartConfig = createChartConfig(
+      "Monthly Chart",
+      "Jumlah Laporan Berdasarkan Bulan",
+      transformedMonthlyData,
+      "monthChart"
+    );
+    renderChart("#monthlyChart", monthlyChartConfig);
     // Menggambar Location Chart
     const transformedLocationData = transformDataForChart(
       reportData,
@@ -103,6 +112,24 @@ const drawChart = async () => {
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
   switch (chartType) {
+    case "monthChart":
+      const monthCounts = {};
+      const monthLabels = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+
+      reportData.forEach((report) => {
+        const reportDate = new Date(report.createdAt);
+        const month = reportDate.getMonth();
+        const monthName = monthLabels[month] || "Unknown Month";
+        monthCounts[monthName] = (monthCounts[monthName] || 0) + 1;
+      });
+
+      return {
+        labels: monthLabels,
+        series: Object.values(monthCounts),
+      };
     case "locationChart":
       const locationCounts = {};
       const locationLabels = [
@@ -226,6 +253,126 @@ const transformDataForChart = (reportData, chartType) => {
 // Fungsi untuk membuat konfigurasi grafik
 const createChartConfig = (chartTitle, data, chartType) => {
   switch (chartType) {
+    case "monthChart":
+      return {
+        chart: {
+          height: 240,
+          type: "bar",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
+          },
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: chartTitle,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+          },
+        },
+        xaxis: {
+          categories: data.labels || [], // Sesuaikan dengan label bulan Anda
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+        },
+        series: [
+          {
+            name: chartTitle,
+            data: data.series || [],
+          },
+        ],
+      };
     case "locationChart":
       return {
         chart: {
