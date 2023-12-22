@@ -204,38 +204,6 @@ const createApexChart = (chartId, chartType, clickCallback, allChartData) => {
           fontFamily: "Poppins",
         },
       },
-      tooltip: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleMarginBottom: 10,
-        titleFontColor: "#6e707e",
-        titleFontSize: 14,
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 20,
-        yPadding: 15,
-        displayColors: false,
-        intersect: false,
-        mode: "index",
-        caretPadding: 10,
-        custom: function ({ series, dataPointIndex }) {
-          const month =
-            allChartData.monthly.chartData.xaxis.categories[dataPointIndex] || "";
-          const value = series[0]?.[dataPointIndex] || 0;
-          return (
-            '<div style="width: 135px; height: 45px;">' +
-            "<span>" +
-            month +
-            "</span>" +
-            "<br>" +
-            "<span>" +
-            "Jumlah Laporan : " +
-            value +
-            "</span>" +
-            "</div>"
-          );
-        },
-      },
       stroke: {
         show: true,
         curve: "smooth",
@@ -910,3 +878,6 @@ async function processDataAndCreateCharts() {
 
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
+
+
+
