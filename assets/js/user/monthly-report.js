@@ -112,10 +112,7 @@ let chart;
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
-    // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartOptions = allChartData[chartType]?.chartData || {};
-
-    // Membuat opsi chart
     const options = {
       chart: {
         height: chartOptions.chart?.height || 240,
@@ -139,44 +136,36 @@ const createApexChart = (chartId, chartType, clickCallback) => {
       grid: chartOptions.grid || {},
     };
 
-    // Menggabungkan opsi grafik yang diberikan dengan opsi default
     const mergedOptions = { ...options, ...chartOptions };
 
-    // Hapus chart sebelumnya jika ada
     if (chart) {
       chart.destroy();
     }
 
-    // Buat dan render chart baru
     chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
     chart.render();
 
-    // Menangani logika klik
     if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
-      const chartElement = document.getElementById(chartId);
-      if (chartElement) {
-        chartElement.addEventListener("click", function () {
-          try {
-            const selectedDataPoints = chart?.w?.globals?.selectedDataPoints;
+      document.getElementById(chartId).addEventListener("click", function () {
+        try {
+          const selectedDataPoints = chart?.w?.globals?.selectedDataPoints;
 
-            if (selectedDataPoints && selectedDataPoints.length > 0) {
-              const clickedIndex = selectedDataPoints[0].dataPointIndex;
+          if (selectedDataPoints && selectedDataPoints.length > 0) {
+            const clickedIndex = selectedDataPoints[0].dataPointIndex;
 
-              if (clickCallback) {
-                clickCallback(clickedIndex);
-              }
+            if (clickCallback) {
+              clickCallback(clickedIndex);
             }
-          } catch (error) {
-            console.error("Error handling click event:", error);
           }
-        });
-      }
+        } catch (error) {
+          console.error("Error handling click event:", error);
+        }
+      });
     }
   } catch (error) {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
-
 
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
@@ -843,7 +832,11 @@ async function processDataAndCreateCharts() {
       (_, i) => getReportsCountByMonth(data, i)
     );
 
-    // Perbarui data grafik lokasi
+    allChartData.monthly.chartData.xaxis.categories = Array.from(
+      new Array(12),
+      (_, i) => monthToLabel(i)
+    );
+
     const locations = Array.from(
       new Set(data.map((report) => report.location.locationName))
     );
@@ -853,27 +846,19 @@ async function processDataAndCreateCharts() {
     );
     allChartData.location.chartData.xaxis.categories = locations;
 
-    // Render grafik
     createApexChart(
       "monthlyChart",
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
 
-    // Update grafik lokasi
     updateLocationChart(data, locationLabels, allChartData);
-
-    // Update grafik area
     updateAreaChart(
       data,
       allChartData.area.chartData.xaxis.categories,
       allChartData
     );
-
-    // Update grafik tipe
     updateTypeChart(data, allChartData);
-
-    // Update grafik subtipe
     updateSubtypeChart(data, allChartData);
 
     console.log("Data processed successfully.");
@@ -885,3 +870,4 @@ async function processDataAndCreateCharts() {
 
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
+
