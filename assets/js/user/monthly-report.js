@@ -108,6 +108,7 @@ let chart;
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
+
     // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartOptions = allChartData[chartType]?.chartData || {};
 
@@ -169,7 +170,6 @@ const createApexChart = (chartId, chartType, clickCallback) => {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
-
 
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
@@ -398,16 +398,13 @@ function updateLocationChart(data, locationLabels, allChartData) {
         },
       };
 
-      createApexChart(
-        "locationChart",
-        locationChartData,
-        allChartData.location.updateCallback
-      );
+      createApexChart("locationChart", locationChartData, allChartData.location.updateCallback);
     }
   } catch (error) {
     console.error("Error updating location chart:", error.message);
   }
 }
+
 
 function updateAreaChart(data, areaLabels, allChartData) {
   try {
@@ -513,7 +510,7 @@ const allChartData = {
   monthly: {
     chartData: {
       chart: {
-        height: 240, 
+        height: 240,
         type: "area",
       },
       series: [
@@ -595,88 +592,88 @@ const allChartData = {
         vertical: 0,
       },
     },
-    
+
+  },
+  subtitle: {
+    text: "Tren Jumlah Pelanggaran Setiap Bulan",
+    align: "left",
+    margin: 0,
+    offsetX: 0,
+    offsetY: 0,
+    floating: false,
+    style: {
+      fontSize: "15px",
+      color: "text-dark",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      fontFamily: "Poppins",
     },
-    subtitle: {
-      text: "Tren Jumlah Pelanggaran Setiap Bulan",
-      align: "left",
-      margin: 0,
+  },
+  tooltip: {
+    backgroundColor: "rgb(255,255,255)",
+    bodyFontColor: "#858796",
+    titleMarginBottom: 10,
+    titleFontColor: "#6e707e",
+    titleFontSize: 14,
+    borderColor: "#dddfeb",
+    borderWidth: 1,
+    xPadding: 20,
+    yPadding: 15,
+    displayColors: false,
+    intersect: false,
+    mode: "index",
+    caretPadding: 10,
+    custom: function ({ series, dataPointIndex }) {
+      const month = options.xaxis.categories[dataPointIndex] || "";
+      const value = series[0]?.[dataPointIndex] || 0;
+      return (
+        '<div style="width: 135px; height: 45px;">' +
+        "<span>" +
+        month +
+        "</span>" +
+        "<br>" +
+        "<span>" +
+        "Jumlah Laporan : " +
+        value +
+        "</span>" +
+        "</div>"
+      );
+    },
+  },
+  stroke: {
+    show: true,
+    curve: "smooth",
+    width: 3,
+  },
+  xaxis: {
+    labels: {
       offsetX: 0,
       offsetY: 0,
-      floating: false,
       style: {
-        fontSize: "15px",
-        color: "text-dark",
-        fontWeight: "bold",
-        marginBottom: "1rem",
+        colors: "#8480ae",
+        fontSize: "12px",
         fontFamily: "Poppins",
       },
     },
-    tooltip: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 20,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      custom: function ({ series, dataPointIndex }) {
-        const month = options.xaxis.categories[dataPointIndex] || "";
-        const value = series[0]?.[dataPointIndex] || 0;
-        return (
-          '<div style="width: 135px; height: 45px;">' +
-          "<span>" +
-          month +
-          "</span>" +
-          "<br>" +
-          "<span>" +
-          "Jumlah Laporan : " +
-          value +
-          "</span>" +
-          "</div>"
-        );
+
+  },
+  yaxis: {
+    labels: {
+      offsetX: -10,
+      offsetY: 0,
+      style: {
+        colors: "#8480ae",
+        fontSize: "10px",
+        fontFamily: "Poppins",
       },
     },
-    stroke: {
-      show: true,
-      curve: "smooth",
-      width: 3,
-    },
-    xaxis: {
-      labels: {
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
-        },
-      },
- 
-    },
-    yaxis: {
-      labels: {
-        offsetX: -10,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "10px",
-          fontFamily: "Poppins",
-        },
-      },
     updateCallback: null,
   },
-  
+
   location: {
     chartData: {
       chart: {
-        height: 240, 
+        height: 240,
         type: "bar",
       },
       plotOptions: {
@@ -687,7 +684,7 @@ const allChartData = {
       series: [
         {
           name: "Total Reports by Location",
-          data: [], // Placeholder data
+          data: Array(locations.length).fill(0),
         },
       ],
       xaxis: {
@@ -699,7 +696,7 @@ const allChartData = {
   area: {
     chartData: {
       chart: {
-        height: 240, 
+        height: 240,
         type: "bar",
       },
       plotOptions: {
@@ -823,7 +820,6 @@ async function processDataAndCreateCharts() {
   try {
     const data = await fetchDataFromServer();
 
-    // Tambahkan log untuk memeriksa data yang diterima
     console.log("Data received:", data);
 
     if (!Array.isArray(data) || data.length === 0) {
@@ -837,7 +833,10 @@ async function processDataAndCreateCharts() {
     );
 
     // Perbarui data grafik lokasi
-    const locations = Array.from(new Set(data.map((report) => report.location.locationName)));
+    const locations = Array.from(
+      new Set(data.map((report) => report.location.locationName))
+    );
+
     allChartData.location.chartData.series[0].data = locations.map((location) =>
       getLocationReportsCount(data, location)
     );
@@ -849,7 +848,7 @@ async function processDataAndCreateCharts() {
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
-    updateLocationChart(data, allChartData.location.chartData.xaxis.categories, allChartData);
+    updateLocationChart(data, locationLabels, allChartData);
     updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
     updateTypeChart(data, allChartData);
     updateSubtypeChart(data, allChartData);
@@ -857,5 +856,6 @@ async function processDataAndCreateCharts() {
     console.error("Error processing data and creating charts:", error.message);
   }
 }
+
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
