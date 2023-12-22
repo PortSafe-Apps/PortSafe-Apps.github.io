@@ -102,7 +102,6 @@ const fetchDataFromServer = async () => {
   }
 };
 
-
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
   // Menggunakan reduce untuk menghitung jumlah laporan pada bulan tertentu
@@ -359,7 +358,7 @@ function updateLocationChart(data, allChartData) {
         "locationChart",
         allChartData.location,
         allChartData.location.updateCallback
-      );      
+      );
     }
   } catch (error) {
     console.error("Error updating location chart:", error.message);
@@ -595,11 +594,11 @@ const allChartData = {
     updateCallback: updateAreaChart,
   },
   type: {
-    chartData: getTypeChartOptions(data),  // Menggunakan fungsi getTypeChartOptions untuk mendapatkan opsi chart
+    chartData: {},  // Biarkan kosong untuk sekarang
     updateCallback: updateTypeChart,
   },
   subtype: {
-    chartData: getSubtypeChartOptions(data),  // Menggunakan fungsi getSubtypeChartOptions untuk mendapatkan opsi chart
+    chartData: {},  // Biarkan kosong untuk sekarang
     updateCallback: updateSubtypeChart,
   },
 };
@@ -626,7 +625,9 @@ async function processDataAndCreateCharts() {
     const locations = Array.from(
       new Set(data.map((report) => report.location.locationName))
     );
-    allChartData.location.chartData.series[0].data = Array(locations.length).fill(0);
+    allChartData.location.chartData.series[0].data = Array(
+      locations.length
+    ).fill(0);
     allChartData.location.chartData.xaxis.categories = locations;
     createApexChart(
       "locationChart",
@@ -647,7 +648,10 @@ async function processDataAndCreateCharts() {
     );
 
     // Perbarui data grafik tipe dan subtipe
+    allChartData.type.chartData = getTypeChartOptions(data);
     updateTypeChart(data, allChartData);
+
+    allChartData.subtype.chartData = getSubtypeChartOptions(data);
     updateSubtypeChart(data, allChartData);
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
@@ -656,6 +660,3 @@ async function processDataAndCreateCharts() {
 
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
-
-
-
