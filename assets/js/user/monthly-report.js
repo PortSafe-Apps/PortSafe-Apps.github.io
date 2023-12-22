@@ -113,40 +113,16 @@ let chart;
 const createApexChart = (chartId, chartType, clickCallback) => {
   console.log("Creating chart:", chartId);
   try {
-    const chartOptions = allChartData[chartType]?.chartData || {};
-    const options = {
-      chart: {
-        height: chartOptions.chart?.height || 240,
-        animations: chartOptions.chart?.animations || {
-          enabled: true,
-          easing: "easeinout",
-          speed: 1000,
-        },
-      },
-      type: chartOptions.type || "",
-      series: chartOptions.series || [],
-      xaxis: chartOptions.xaxis || {},
-      plotOptions: chartOptions.plotOptions || {},
-      colors: chartOptions.colors || [],
-      legend: chartOptions.legend || {},
-      tooltip: chartOptions.tooltip || {},
-      dataLabels: chartOptions.dataLabels || {},
-      yaxis: chartOptions.yaxis || {},
-      padding: chartOptions.padding || {},
-      fill: chartOptions.fill || {},
-      grid: chartOptions.grid || {},
-    };
-
-    const mergedOptions = { ...options, ...chartOptions };
+    const chartData = allChartData[chartType]?.chartData || {};
 
     if (chart) {
       chart.destroy();
     }
 
-    chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
+    chart = new ApexCharts(document.getElementById(chartId), chartData);
     chart.render();
 
-    if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
+    if (clickCallback && chartData.xaxis && chartData.xaxis.categories) {
       document.getElementById(chartId).addEventListener("click", function () {
         try {
           const selectedDataPoints = chart?.w?.globals?.selectedDataPoints;
@@ -167,7 +143,6 @@ const createApexChart = (chartId, chartType, clickCallback) => {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
-
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
   // Menggunakan reduce untuk menghitung jumlah laporan pada bulan tertentu
