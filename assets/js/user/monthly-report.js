@@ -104,7 +104,7 @@ const fetchDataFromServer = async () => {
 };
 
 
-const createApexChart = (chartId, chartType, clickCallback) => {
+const createApexChart = (chartId, chartType, clickCallback, allChartData) => {
   try {
     // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartOptions = allChartData[chartType]?.chartData || {};
@@ -119,18 +119,151 @@ const createApexChart = (chartId, chartType, clickCallback) => {
           speed: 1000,
         },
       },
-      type: chartOptions.type || [],
-      series: chartOptions.series || [],
-      xaxis: chartOptions.xaxis || {},
-      plotOptions: chartOptions.plotOptions || {},
-      colors: chartOptions.colors || [],
-      legend: chartOptions.legend || {},
-      tooltip: chartOptions.tooltip || {},
-      dataLabels: chartOptions.dataLabels || {},
-      yaxis: chartOptions.yaxis || {},
-      padding: chartOptions.padding || {},
-      fill: chartOptions.fill || {},
-      grid: chartOptions.grid || {},
+      xaxis: {
+        categories: Array.from(new Array(12), (_, i) => monthToLabel(i)),
+      },
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 1000,
+      },
+      dropShadow: {
+        enabled: true,
+        opacity: 0.1,
+        blur: 1,
+        left: -5,
+        top: 18,
+      },
+      zoom: {
+        enabled: false,
+      },
+      toolbar: {
+        show: false,
+      },
+      colors: ["#02172C"],
+      dataLabels: {
+        enabled: false,
+      },
+      fill: {
+        type: "gradient",
+        gradient: {
+          type: "vertical",
+          shadeIntensity: 1,
+          inverseColors: true,
+          opacityFrom: 0.15,
+          opacityTo: 0.02,
+          stops: [40, 100],
+        },
+      },
+      grid: {
+        borderColor: "#dbeaea",
+        strokeDashArray: 4,
+        xaxis: {
+          lines: {
+            show: true,
+          },
+        },
+        yaxis: {
+          lines: {
+            show: false,
+          },
+        },
+        padding: {
+          top: 0,
+          right: 0,
+          bottom: 0,
+          left: 0,
+        },
+      },
+      legend: {
+        position: "bottom",
+        horizontalAlign: "center",
+        offsetY: 4,
+        fontSize: "14px",
+        markers: {
+          width: 9,
+          height: 9,
+          strokeWidth: 0,
+          radius: 20,
+        },
+        itemMargin: {
+          horizontal: 5,
+          vertical: 0,
+        },
+      },
+      subtitle: {
+        text: "Tren Jumlah Pelanggaran Setiap Bulan",
+        align: "left",
+        margin: 0,
+        offsetX: 0,
+        offsetY: 0,
+        floating: false,
+        style: {
+          fontSize: "15px",
+          color: "text-dark",
+          fontWeight: "bold",
+          marginBottom: "1rem",
+          fontFamily: "Poppins",
+        },
+      },
+      tooltip: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: "#6e707e",
+        titleFontSize: 14,
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 20,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: "index",
+        caretPadding: 10,
+        custom: function ({ series, dataPointIndex }) {
+          const month = chartOptions.xaxis.categories[dataPointIndex] || "";
+          const value = series[0]?.[dataPointIndex] || 0;
+          return (
+            '<div style="width: 135px; height: 45px;">' +
+            "<span>" +
+            month +
+            "</span>" +
+            "<br>" +
+            "<span>" +
+            "Jumlah Laporan : " +
+            value +
+            "</span>" +
+            "</div>"
+          );
+        },
+      },
+      stroke: {
+        show: true,
+        curve: "smooth",
+        width: 3,
+      },
+      xaxis: {
+        labels: {
+          offsetX: 0,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
+          },
+        },
+      },
+      yaxis: {
+        labels: {
+          offsetX: -10,
+          offsetY: 0,
+          style: {
+            colors: "#8480ae",
+            fontSize: "10px",
+            fontFamily: "Poppins",
+          },
+        },
+      },
     };
 
     // Membuat opsi chart
@@ -393,11 +526,7 @@ function updateLocationChart(data, locationLabels, allChartData) {
         },
       };
 
-      createApexChart(
-        "locationChart",
-        locationChartData,
-        allChartData.location.updateCallback
-      );
+      createApexChart("locationChart", locationChartData, allChartData.location.updateCallback);
     }
   } catch (error) {
     console.error("Error updating location chart:", error.message);
@@ -464,18 +593,14 @@ function updateAreaChart(data, areaLabels, allChartData) {
 function updateTypeChart(data, allChartData) {
   try {
     if (!Array.isArray(data)) {
-      throw new Error("Invalid data format for updateTypeChart");
+      throw new Error("Format data tidak valid untuk updateTypeChart");
     }
-
-    const typeChartData = {
-      chartData: getTypeChartOptions(data),
-      updateCallback: null,
-    };
 
     createApexChart(
       "typeChart",
-      typeChartData,
-      allChartData.type.updateCallback
+      "pie",  // Sesuaikan dengan jenis chart yang benar
+      allChartData.type.updateCallback,
+      getTypeChartOptions(data)  // Langsung terapkan hasil dari getTypeChartOptions
     );
   } catch (error) {
     console.error("Error updating type chart:", error.message);
@@ -485,18 +610,16 @@ function updateTypeChart(data, allChartData) {
 function updateSubtypeChart(data, allChartData) {
   try {
     if (!Array.isArray(data)) {
-      throw new Error("Invalid data format for updateSubtypeChart");
+      throw new Error("Format data tidak valid untuk updateSubtypeChart");
     }
 
-    const subtypeChartData = {
-      chartData: getSubtypeChartOptions(data),
-      updateCallback: null,
-    };
+    const subtypeChartData = getSubtypeChartOptions(data);
 
     createApexChart(
       "subtypeChart",
-      subtypeChartData.chartData,
-      allChartData.subtype.updateCallback
+      "doughnut",  // Sesuaikan dengan jenis chart yang benar
+      allChartData.subtype.updateCallback,
+      subtypeChartData  // Pass the chart data directly to the createApexChart function
     );
   } catch (error) {
     console.error("Error updating subtype chart:", error.message);
@@ -589,84 +712,84 @@ const allChartData = {
         vertical: 0,
       },
     },
-    
+
+  },
+  subtitle: {
+    text: "Tren Jumlah Pelanggaran Setiap Bulan",
+    align: "left",
+    margin: 0,
+    offsetX: 0,
+    offsetY: 0,
+    floating: false,
+    style: {
+      fontSize: "15px",
+      color: "text-dark",
+      fontWeight: "bold",
+      marginBottom: "1rem",
+      fontFamily: "Poppins",
     },
-    subtitle: {
-      text: "Tren Jumlah Pelanggaran Setiap Bulan",
-      align: "left",
-      margin: 0,
+  },
+  tooltip: {
+    backgroundColor: "rgb(255,255,255)",
+    bodyFontColor: "#858796",
+    titleMarginBottom: 10,
+    titleFontColor: "#6e707e",
+    titleFontSize: 14,
+    borderColor: "#dddfeb",
+    borderWidth: 1,
+    xPadding: 20,
+    yPadding: 15,
+    displayColors: false,
+    intersect: false,
+    mode: "index",
+    caretPadding: 10,
+    custom: function ({ series, dataPointIndex }) {
+      const month = options.xaxis.categories[dataPointIndex] || "";
+      const value = series[0]?.[dataPointIndex] || 0;
+      return (
+        '<div style="width: 135px; height: 45px;">' +
+        "<span>" +
+        month +
+        "</span>" +
+        "<br>" +
+        "<span>" +
+        "Jumlah Laporan : " +
+        value +
+        "</span>" +
+        "</div>"
+      );
+    },
+  },
+  stroke: {
+    show: true,
+    curve: "smooth",
+    width: 3,
+  },
+  xaxis: {
+    labels: {
       offsetX: 0,
       offsetY: 0,
-      floating: false,
       style: {
-        fontSize: "15px",
-        color: "text-dark",
-        fontWeight: "bold",
-        marginBottom: "1rem",
+        colors: "#8480ae",
+        fontSize: "12px",
         fontFamily: "Poppins",
       },
     },
-    tooltip: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 20,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      custom: function ({ series, dataPointIndex }) {
-        const month = options.xaxis.categories[dataPointIndex] || "";
-        const value = series[0]?.[dataPointIndex] || 0;
-        return (
-          '<div style="width: 135px; height: 45px;">' +
-          "<span>" +
-          month +
-          "</span>" +
-          "<br>" +
-          "<span>" +
-          "Jumlah Laporan : " +
-          value +
-          "</span>" +
-          "</div>"
-        );
+
+  },
+  yaxis: {
+    labels: {
+      offsetX: -10,
+      offsetY: 0,
+      style: {
+        colors: "#8480ae",
+        fontSize: "10px",
+        fontFamily: "Poppins",
       },
     },
-    stroke: {
-      show: true,
-      curve: "smooth",
-      width: 3,
-    },
-    xaxis: {
-      labels: {
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
-        },
-      },
- 
-    },
-    yaxis: {
-      labels: {
-        offsetX: -10,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "10px",
-          fontFamily: "Poppins",
-        },
-      },
     updateCallback: null,
   },
-  
+
   location: {
     chartData: {
       chart: {
