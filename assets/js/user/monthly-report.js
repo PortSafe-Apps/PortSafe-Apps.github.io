@@ -105,41 +105,50 @@ const fetchDataFromServer = async () => {
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
-    // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
-    const chartOptions = allChartData[chartType]?.chartData || {};
+    // Pastikan allChartData[chartType] terdefinisi dan memiliki properti chartData
+    const chartData = allChartData[chartType]?.chartData;
 
-    // Membuat opsi chart
-    const options = {
+    if (!chartData) {
+      console.error(`Invalid chart data for ${chartType}`);
+      return;
+    }
+
+    // Opsi default chart
+    const defaultOptions = {
       chart: {
-        height: chartOptions.chart.height || 240,
-        animations: chartOptions.chart.animations || {
+        height: 240,
+        animations: {
           enabled: true,
           easing: "easeinout",
           speed: 1000,
         },
       },
-      type: chartOptions.type || [],
-      series: chartOptions.series || [],
-      xaxis: chartOptions.xaxis || {},
-      plotOptions: chartOptions.plotOptions || {},
-      colors: chartOptions.colors || [],
-      legend: chartOptions.legend || {},
-      tooltip: chartOptions.tooltip || {},
-      dataLabels: chartOptions.dataLabels || {},
-      yaxis: chartOptions.yaxis || {},
-      padding: chartOptions.padding || {},
-      fill: chartOptions.fill || {},
-      grid: chartOptions.grid || {},
+      type: [],
+      series: [],
+      xaxis: {},
+      plotOptions: {},
+      colors: [],
+      legend: {},
+      tooltip: {},
+      dataLabels: {},
+      yaxis: {},
+      padding: {},
+      fill: {},
+      grid: {},
     };
 
-    // Menggabungkan opsi grafik yang diberikan dengan opsi default
-    const mergedOptions = { ...options, ...chartOptions };
+    // Gabungkan opsi default dengan opsi dari chartData
+    const options = {
+      ...defaultOptions,
+      ...chartData,
+    };
 
-    const chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
+    // Buat chart dengan opsi yang sudah digabung
+    const chart = new ApexCharts(document.getElementById(chartId), options);
     chart.render();
 
-    // Menangani logika klik
-    if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
+    // Tangani logika klik jika xaxis dan categories terdefinisi
+    if (clickCallback && chartData.xaxis && chartData.xaxis.categories) {
       document.getElementById(chartId).addEventListener("click", function () {
         try {
           const selectedDataPoints = chart.w.globals.selectedDataPoints;
@@ -504,6 +513,7 @@ const allChartData = {
   monthly: {
     chartData: {
       chart: {
+        height: 240, 
         type: "area",
       },
       series: [
@@ -666,6 +676,7 @@ const allChartData = {
   location: {
     chartData: {
       chart: {
+        height: 240, 
         type: "bar",
       },
       plotOptions: {
@@ -688,6 +699,7 @@ const allChartData = {
   area: {
     chartData: {
       chart: {
+        height: 240, 
         type: "bar",
       },
       plotOptions: {
