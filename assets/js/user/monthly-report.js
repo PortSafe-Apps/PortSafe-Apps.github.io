@@ -61,13 +61,13 @@ const drawChart = async () => {
       "monthChart"
     );
     renderChart("#monthlyChart", monthlyChartConfig);
+
     // Menggambar Location Chart
     const transformedLocationData = transformDataForChart(
       reportData,
       "locationChart"
     );
     const locationChartConfig = createChartConfig(
-      "locationChart",
       "Jumlah Laporan Berdasarkan Lokasi",
       transformedLocationData,
       "locationChart"
@@ -77,7 +77,6 @@ const drawChart = async () => {
     // Menggambar Area Chart
     const transformedAreaData = transformDataForChart(reportData, "areaChart");
     const areaChartConfig = createChartConfig(
-      "areaChart",
       "Jumlah Laporan Berdasarkan Area",
       transformedAreaData,
       "areaChart"
@@ -85,25 +84,23 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(reportData, "typeChart");
+    const transformedTypeData = transformDataForChart(reportData, "typeChartCategory");
     const typeChartConfig = createChartConfig(
-      "typeChart",
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
-      "typeChart"
+      "typeChartCategory"
     );
     renderChart("#typeChart", typeChartConfig);
 
     // Menggambar Subtype Chart
     const transformedSubtypeData = transformDataForChart(
       reportData,
-      "subtypeChart"
+      "subtypeChartCategory"
     );
     const subtypeChartConfig = createChartConfig(
-      "subtypeChart",
       "Jumlah Laporan Berdasarkan Sub Jenis Pelanggaran",
       transformedSubtypeData,
-      "subtypeChart"
+      "subtypeChartCategory"
     );
     renderChart("#subtypeChart", subtypeChartConfig);
   }
@@ -178,7 +175,7 @@ const transformDataForChart = (reportData, chartType) => {
         series: Object.values(areaCounts),
       };
 
-    case "typeChart":
+    case "typeChartCategory":
       const typeCounts = {};
       const typeLabels = [
         "REAKSI ORANG",
@@ -199,7 +196,7 @@ const transformDataForChart = (reportData, chartType) => {
         series: Object.values(typeCounts),
       };
 
-    case "subtypeChart":
+    case "subtypeChartCategory":
       const subtypeCounts = {};
       const subtypeLabels = [
         "Merubah Fungsi Alat Pelindung Diri",
@@ -613,7 +610,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
       };
-    case "typeChart":
+    case "typeChartCategory":
       return {
         chart: {
           height: 240,
@@ -670,7 +667,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         labels: data.labels || [], // Sesuaikan dengan label jenis pelanggaran Anda
       };
 
-    case "subtypeChart":
+    case "subtypeChartCategory":
       return {
         chart: {
           height: 240,
