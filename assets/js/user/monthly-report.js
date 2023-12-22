@@ -66,7 +66,7 @@ const drawChart = async () => {
   if (reportData) {
     const transformedData = transformDataForChart(reportData);
 
-    var areaChart1 = {
+    var monthlyChart = {
       chart: {
         height: 240,
         type: 'area',
@@ -199,8 +199,8 @@ const drawChart = async () => {
       }],
     };
 
-    var areaChart_01 = new ApexCharts(document.querySelector("#areaChart1"), areaChart1);
-    areaChart_01.render();
+    var monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), monthlyChart);
+    monthlyChart.render();
   }
 };
 
