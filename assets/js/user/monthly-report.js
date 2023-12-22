@@ -1,8 +1,8 @@
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
-  const cookies = document.cookie.split(';');
+  const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split('=');
+    const [name, value] = cookie.trim().split("=");
     if (name === cookieName) {
       return value;
     }
@@ -10,198 +10,585 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-const transformDataForChart = (reportData) => {
-  const monthlyCounts = Array(12).fill(0);
+// Fungsi untuk mengambil data dari server
+async function fetchDataFromServer() {
+  try {
+    const token = getTokenFromCookies("Login");
 
-  reportData.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthlyCounts[month] += 1;
-  });
+    if (!token) {
+      // Tangani kesalahan autentikasi jika tidak ada token
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return [];
+    }
 
-  return monthlyCounts;
-};
+    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser`;
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+    return data.data || [];
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return [];
+  }
+}
 
 // Fungsi untuk menggambar grafik
 const drawChart = async () => {
-  // Fungsi untuk mengambil data dari server
-  const fetchDataFromServer = async () => {
-    try {
-      const token = getTokenFromCookies('Login');
-
-      if (!token) {
-        // Tangani kesalahan autentikasi jika tidak ada token
-        Swal.fire({
-          icon: 'warning',
-          title: 'Authentication Error',
-          text: 'Kamu Belum Login!',
-        }).then(() => {
-          window.location.href = 'https://portsafe-apps.github.io/';
-        });
-        return [];
-      }
-
-      const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser`;
-
-      const myHeaders = new Headers();
-      myHeaders.append('Login', token);
-
-      const requestOptions = {
-        method: 'POST',
-        headers: myHeaders,
-        redirect: 'follow',
-      };
-
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
-      return data.data || [];
-    } catch (error) {
-      console.error('Error fetching data:', error);
-      return [];
-    }
-  };
-
   const reportData = await fetchDataFromServer();
 
   if (reportData) {
-    const transformedData = transformDataForChart(reportData);
+    // Menggambar Location Chart
+    const transformedLocationData = transformDataForChart(
+      reportData,
+      "locationChart"
+    );
+    const locationChartConfig = createChartConfig(
+      "locationChart",
+      "Jumlah Laporan Berdasarkan Lokasi",
+      transformedLocationData,
+      "locationChart"
+    );
+    renderChart("#locationChart", locationChartConfig);
 
-    var monthlyChart = {
-      chart: {
-        height: 240,
-        type: 'area',
-        animations: {
-          enabled: true,
-          easing: 'easeinout',
-          speed: 1000
-        },
-        dropShadow: {
-          enabled: true,
-          opacity: 0.1,
-          blur: 1,
-          left: -5,
-          top: 18
-        },
-        zoom: {
-          enabled: false
-        },
-        toolbar: {
-          show: false
-        },
-      },
-      colors: ['#02172C'],
-      dataLabels: {
-        enabled: false
-      },
-      fill: {
-        type: "gradient",
-        gradient: {
-          type: "vertical",
-          shadeIntensity: 1,
-          inverseColors: true,
-          opacityFrom: 0.15,
-          opacityTo: 0.02,
-          stops: [40, 100],
-        }
-      },
-      grid: {
-        borderColor: '#dbeaea',
-        strokeDashArray: 4,
-        xaxis: {
-          lines: {
-            show: true
-          }
-        },
-        yaxis: {
-          lines: {
+    // Menggambar Area Chart
+    const transformedAreaData = transformDataForChart(reportData, "areaChart");
+    const areaChartConfig = createChartConfig(
+      "areaChart",
+      "Jumlah Laporan Berdasarkan Area",
+      transformedAreaData,
+      "areaChart"
+    );
+    renderChart("#areaChart", areaChartConfig);
+
+    // Menggambar Type Chart
+    const transformedTypeData = transformDataForChart(reportData, "typeChart");
+    const typeChartConfig = createChartConfig(
+      "typeChart",
+      "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
+      transformedTypeData,
+      "typeChart"
+    );
+    renderChart("#typeChart", typeChartConfig);
+
+    // Menggambar Subtype Chart
+    const transformedSubtypeData = transformDataForChart(
+      reportData,
+      "subtypeChart"
+    );
+    const subtypeChartConfig = createChartConfig(
+      "subtypeChart",
+      "Jumlah Laporan Berdasarkan Sub Jenis Pelanggaran",
+      transformedSubtypeData,
+      "subtypeChart"
+    );
+    renderChart("#subtypeChart", subtypeChartConfig);
+  }
+};
+
+// Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
+const transformDataForChart = (reportData, chartType) => {
+  switch (chartType) {
+    case "locationChart":
+      const locationCounts = {};
+      const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ];
+      reportData.forEach((report) => {
+        const locationName = report.location.locationName || "Unknown Location";
+        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+      });
+      return {
+        labels: locationLabels,
+        series: Object.values(locationCounts),
+      };
+
+    case "areaChart":
+      const areaCounts = {};
+      const areaLabels = [
+        "Kantor",
+        "Workshop",
+        "Gudang",
+        "Dermaga",
+        "Lapangan Penumpukan",
+        "Area kerja lainnya",
+      ];
+      reportData.forEach((report) => {
+        const areaName = report.area.areaName || "Unknown Area";
+        areaCounts[areaName] = (areaCounts[areaName] || 0) + 1;
+      });
+      return {
+        labels: areaLabels,
+        series: Object.values(areaCounts),
+      };
+
+    case "typeChart":
+      const typeCounts = {};
+      const typeLabels = [
+        "REAKSI ORANG",
+        "ALAT PELINDUNG DIRI",
+        "POSISI ORANG",
+        "ALAT DAN PERLENGKAPAN",
+        "PROSEDUR DAN CARA KERJA",
+      ];
+
+      reportData.forEach((report) => {
+        const typeName =
+          report.typeDangerousActions[0].typeName || "Unknown Type";
+        typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
+      });
+
+      return {
+        labels: typeLabels,
+        series: Object.values(typeCounts),
+      };
+
+    case "subtypeChart":
+      const subtypeCounts = {};
+      const subtypeLabels = [
+        "Merubah Fungsi Alat Pelindung Diri",
+        "Merubah Posisi",
+        "Merubah Cara Kerja",
+        "Menghentikan Pekerjaan",
+        "Jatuh ke Lantai",
+        "Terkunci",
+        "Kepala",
+        "Mata dan Wajah",
+        "Telinga",
+        "Sistem Pernafasan",
+        "Tangan dan Lengan",
+        "Dagu",
+        "Badan",
+        "Kaki dan Betis",
+        "Terbentur Pada",
+        "Tertabrak oleh",
+        "Terjepit didalam, pada atau diantara",
+        "Terjatuh",
+        "Terkena Temperatur Tinggi",
+        "Tersengat Arus Listrik",
+        "Terhirup",
+        "Terisap, Terserap",
+        "Tertelan Benda Berbahaya",
+        "Memaksakan Pekerjaan yang Terlalu Berat",
+        "Tidak Sesuai Dengan Jenis Pekerjaan",
+        "Digunakan Secara Tidak Benar",
+        "Dalam Kondisi yang Tidak Aman",
+        "Tidak Memenuhi",
+        "Tidak diketahui/dimengerti",
+        "Tidak diikuti",
+      ];
+
+      reportData.forEach((report) => {
+        const subTypeName =
+          report.typeDangerousActions[0].subTypes[0] || "Unknown Subtype";
+        subtypeCounts[subTypeName] = (subtypeCounts[subTypeName] || 0) + 1;
+      });
+
+      return {
+        labels: subtypeLabels,
+        series: Object.values(subtypeCounts),
+      };
+
+    default:
+      return {};
+  }
+};
+
+// Fungsi untuk membuat konfigurasi grafik
+const createChartConfig = (chartTitle, data, chartType) => {
+  switch (chartType) {
+    case "locationChart":
+      return {
+        chart: {
+          height: 240,
+          type: "bar", // Menggunakan tipe bar
+          toolbar: {
             show: false,
-          }
+          },
         },
-        padding: {
-          top: 0,
-          right: 0,
-          bottom: 0,
-          left: 0
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
         },
-      },
-      legend: {
-        position: 'bottom',
-        horizontalAlign: 'center',
-        offsetY: 4,
-        fontSize: '14px',
-        markers: {
-          width: 9,
-          height: 9,
-          strokeWidth: 0,
-          radius: 20
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
+          },
         },
-        itemMargin: {
-          horizontal: 5,
-          vertical: 0
-        }
-      },
-      tooltip: {
-        theme: 'dark',
-        marker: {
-          show: true,
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
         },
-        x: {
-          show: false,
-        }
-      },
-      subtitle: {
-        text: 'Tren Jumlah Pelanggaran Setiap Bulan',
-        align: 'left',
-        margin: 0,
-        offsetX: 0,
-        offsetY: 0,
-        floating: false,
-        style: {
-          fontSize: '15px',
-          color: 'text-dark',
-          fontWeight: 'bold',
-          marginBottom: '10rem',
-          fontFamily: 'Poppins',
-        },
-      },
-      stroke: {
-        show: true,
-        curve: 'smooth',
-        width: 3
-      },
-      xaxis: {
-        categories: ['Jan', 'Feb', 'Mar', 'Apr', 'Mei', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
-        labels: {
-          offsetX: 0,
-          offsetY: 0,
-          style: {
-            colors: '#8480ae',
-            fontSize: '12px',
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
           },
         },
         tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: chartTitle,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true, // Mengatur orientasi bar menjadi horizontal
+          },
+        },
+        xaxis: {
+          categories: data.labels || [], // Sesuaikan dengan label lokasi Anda
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+        },
+        series: [
+          {
+            name: chartTitle,
+            data: data.series || [],
+          },
+        ],
+      };
+    case "areaChart":
+      return {
+        chart: {
+          height: 240,
+          type: "bar",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
           enabled: false,
         },
-      },
-      yaxis: {
-        labels: {
-          offsetX: -10,
-          offsetY: 0,
-          style: {
-            colors: '#8480ae',
-            fontSize: '12px',
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
           },
-        }
-      },
-      series: [{
-        name: 'Jumlah Laporan',
-        data: transformedData, // Menggunakan data yang telah diubah
-      }],
-    };
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: chartTitle,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        stroke: {
+          show: true,
+          curve: "smooth",
+          width: 3,
+        },
+        xaxis: {
+          categories: data.labels || [], // Sesuaikan dengan label area Anda
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+            },
+          },
+        },
+        series: [
+          {
+            name: chartTitle,
+            data: data.series || [],
+          },
+        ],
+      };
+    case "typeChart":
+      return {
+        chart: {
+          height: 240,
+          type: "pie",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: chartTitle,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        series: data,
+        labels: data.labels || [], // Sesuaikan dengan label jenis pelanggaran Anda
+      };
 
-    var monthlyChart = new ApexCharts(document.querySelector("#monthlyChart"), monthlyChart);
-    monthlyChart.render();
+    case "subtypeChart":
+      return {
+        chart: {
+          height: 240,
+          type: "donut",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: chartTitle,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        series: data,
+        labels: data.labels || [], // Sesuaikan dengan label subjenis pelanggaran Anda
+      };
+
+    default:
+      return {};
   }
+};
+
+// Fungsi untuk merender grafik
+const renderChart = (chartId, chartConfig) => {
+  const chart = new ApexCharts(document.querySelector(chartId), chartConfig);
+  chart.render();
 };
 
 // Panggil fungsi untuk menggambar grafik
