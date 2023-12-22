@@ -684,7 +684,8 @@ const allChartData = {
       series: [
         {
           name: "Total Reports by Location",
-          data: Array(locations.length).fill(0),
+          data: Array.from({ length: locationLabels.length }).fill(0),
+          // Ganti dengan locationLabels jika locations belum diisi sebelumnya
         },
       ],
       xaxis: {
