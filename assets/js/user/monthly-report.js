@@ -848,9 +848,17 @@ async function processDataAndCreateCharts() {
       allChartData.monthly.chartData,
       allChartData.monthly.updateCallback
     );
+
+    // Update grafik lokasi
     updateLocationChart(data, locationLabels, allChartData);
+
+    // Update grafik area
     updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
+
+    // Update grafik tipe
     updateTypeChart(data, allChartData);
+
+    // Update grafik subtipe
     updateSubtypeChart(data, allChartData);
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
