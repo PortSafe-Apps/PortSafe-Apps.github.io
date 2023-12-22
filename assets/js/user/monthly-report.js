@@ -564,7 +564,7 @@ const allChartData = {
         },
       ],
       xaxis: {
-        categories: locationLabels,
+        categories: [],
       },
     },
     updateCallback: updateLocationChart,
@@ -586,20 +586,21 @@ const allChartData = {
         },
       ],
       xaxis: {
-        categories: areaLabels,
+        categories: [],
       },
     },
     updateCallback: updateAreaChart,
   },
   type: {
-    chartData: {}, // Biarkan kosong untuk sekarang
+    chartData: {},  // Biarkan kosong untuk sekarang
     updateCallback: updateTypeChart,
   },
   subtype: {
-    chartData: {}, // Biarkan kosong untuk sekarang
+    chartData: {},  // Biarkan kosong untuk sekarang
     updateCallback: updateSubtypeChart,
   },
 };
+
 
 async function processDataAndCreateCharts() {
   try {
