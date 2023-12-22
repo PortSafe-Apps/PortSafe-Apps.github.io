@@ -1,4 +1,3 @@
-
 // Data untuk location
 const locationData = [
   { locationName: "Kantor Pusat SPMT" },
@@ -37,31 +36,31 @@ const areaLabels = areaData.map((area) => area.areaName);
 
 // Fungsi untuk mengonversi angka bulan menjadi label bulan
 function monthToLabel(month) {
-  const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-  return monthNames[month];
+   const monthNames = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+   ];
+   return month >= 0 && month < monthNames.length ? monthNames[month] : null;
 }
 
 // Fungsi untuk mendapatkan token dari cookies
-function getTokenFromCookies(cookieName) {
+function getTokenFromCookies() {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === cookieName) {
-      return value;
-    }
+     const [name, value] = cookie.trim().split("=");
+     if (name === "Login") {
+        return value;
+     }
   }
   return null;
 }
@@ -99,8 +98,13 @@ const fetchDataFromServer = async () => {
     return data.data || [];
   } catch (error) {
     console.error("Error fetching data:", error);
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "Terjadi kesalahan saat mengambil data. Silakan coba lagi nanti.",
+    });
     return [];
-  }
+ } 
 };
 
 // Deklarasi variabel chart di luar fungsi atau blok yang sesuai
@@ -108,7 +112,6 @@ let chart;
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
-
     // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartOptions = allChartData[chartType]?.chartData || {};
 
@@ -349,12 +352,12 @@ function generateColors(count) {
   });
 }
 
-
 function updateLocationChart(data, locationLabels, allChartData) {
   try {
-    if (!Array.isArray(data)) {
-      throw new Error("Invalid data format for updateLocationChart");
-    }
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data");
+      return;
+  }
 
     const locations = Array.from(
       new Set(data.map((report) => report.location.locationName))
@@ -398,19 +401,23 @@ function updateLocationChart(data, locationLabels, allChartData) {
         },
       };
 
-      createApexChart("locationChart", locationChartData, allChartData.location.updateCallback);
+      createApexChart(
+        "locationChart",
+        locationChartData,
+        allChartData.location.updateCallback
+      );
     }
   } catch (error) {
     console.error("Error updating location chart:", error.message);
   }
 }
 
-
 function updateAreaChart(data, areaLabels, allChartData) {
   try {
-    if (!Array.isArray(data)) {
-      throw new Error("Invalid data format for updateAreaChart");
-    }
+    if (!Array.isArray(data) || data.length === 0) {
+      console.error("Invalid or empty data");
+      return;
+  }
 
     const areas = Array.from(
       new Set(data.map((report) => report.area.areaName))
@@ -592,7 +599,6 @@ const allChartData = {
         vertical: 0,
       },
     },
-
   },
   subtitle: {
     text: "Tren Jumlah Pelanggaran Setiap Bulan",
@@ -624,7 +630,8 @@ const allChartData = {
     mode: "index",
     caretPadding: 10,
     custom: function ({ series, dataPointIndex }) {
-      const month = options.xaxis.categories[dataPointIndex] || "";
+      const month =
+        allChartData.monthly.chartData.xaxis.categories[dataPointIndex] || "";
       const value = series[0]?.[dataPointIndex] || 0;
       return (
         '<div style="width: 135px; height: 45px;">' +
@@ -655,7 +662,6 @@ const allChartData = {
         fontFamily: "Poppins",
       },
     },
-
   },
   yaxis: {
     labels: {
@@ -854,7 +860,11 @@ async function processDataAndCreateCharts() {
     updateLocationChart(data, locationLabels, allChartData);
 
     // Update grafik area
-    updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
+    updateAreaChart(
+      data,
+      allChartData.area.chartData.xaxis.categories,
+      allChartData
+    );
 
     // Update grafik tipe
     updateTypeChart(data, allChartData);
