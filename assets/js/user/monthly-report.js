@@ -356,7 +356,7 @@ function updateLocationChart(data, allChartData) {
     if (locations && locations.length > 0) {
       createApexChart(
         "locationChart",
-        allChartData.location,
+        "location",  // Sesuaikan dengan properti yang ingin Anda akses di allChartData
         allChartData.location.updateCallback
       );
     }
