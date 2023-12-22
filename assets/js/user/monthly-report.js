@@ -105,13 +105,15 @@ const fetchDataFromServer = async () => {
 
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
-    // Pastikan allChartData[chartType] terdefinisi dan memiliki properti chartData
+    // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartData = allChartData[chartType]?.chartData;
 
     if (!chartData) {
-      console.error(`Invalid chart data for ${chartType}`);
+      console.error(`Invalid chart data for ${chartType}`, allChartData[chartType]);
       return;
     }
+
+    console.log(`Chart Data for ${chartType}:`, chartData);
 
     // Opsi default chart
     const defaultOptions = {
