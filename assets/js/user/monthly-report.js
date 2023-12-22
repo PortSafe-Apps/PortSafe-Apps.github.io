@@ -1,4 +1,3 @@
-
 // Data untuk location
 const locationData = [
   { locationName: "Kantor Pusat SPMT" },
@@ -102,7 +101,6 @@ const fetchDataFromServer = async () => {
     return [];
   }
 };
-
 
 const createApexChart = (chartId, chartType, clickCallback, allChartData) => {
   try {
@@ -298,7 +296,6 @@ const createApexChart = (chartId, chartType, clickCallback, allChartData) => {
   }
 };
 
-
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
   // Menggunakan reduce untuk menghitung jumlah laporan pada bulan tertentu
@@ -477,8 +474,7 @@ function generateColors(count) {
   });
 }
 
-
-function updateLocationChart(data, locationLabels, allChartData) {
+function updateLocationChart(data, allChartData) {
   try {
     if (!Array.isArray(data)) {
       throw new Error("Invalid data format for updateLocationChart");
@@ -489,44 +485,11 @@ function updateLocationChart(data, locationLabels, allChartData) {
     );
 
     if (locations && locations.length > 0) {
-      const locationChartData = {
-        chart: {
-          type: "bar",
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-          },
-        },
-        series: [
-          {
-            name: "Total Reports by Location",
-            data: locations.map((location) =>
-              getLocationReportsCount(data, location)
-            ),
-          },
-        ],
-        xaxis: {
-          categories: locationLabels,
-        },
-        subtitle: {
-          text: "Jumlah Laporan Berdasarkan Unit Kerja",
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-            fontFamily: "Poppins",
-          },
-        },
-      };
-
-      createApexChart("locationChart", locationChartData, allChartData.location.updateCallback);
+      createApexChart(
+        "locationChart",
+        allChartData.location.chartData,
+        allChartData.location.updateCallback
+      );
     }
   } catch (error) {
     console.error("Error updating location chart:", error.message);
@@ -544,44 +507,9 @@ function updateAreaChart(data, areaLabels, allChartData) {
     );
 
     if (areas && areas.length > 0) {
-      const areaChartData = {
-        chart: {
-          type: "bar",
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-          },
-        },
-        series: [
-          {
-            name: "Total Reports by Area",
-            data: areas.map((area) => getAreaReportsCount(data, area)),
-          },
-        ],
-        xaxis: {
-          categories: areaLabels,
-        },
-        subtitle: {
-          text: "Jumlah Laporan Berdasarkan Area",
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "1rem",
-            fontFamily: "Poppins",
-          },
-        },
-      };
-
       createApexChart(
         "areaChart",
-        areaChartData,
+        allChartData.area.chartData,
         allChartData.area.updateCallback
       );
     }
@@ -598,9 +526,8 @@ function updateTypeChart(data, allChartData) {
 
     createApexChart(
       "typeChart",
-      "pie",  // Sesuaikan dengan jenis chart yang benar
-      allChartData.type.updateCallback,
-      getTypeChartOptions(data)  // Langsung terapkan hasil dari getTypeChartOptions
+      allChartData.type.chartData,
+      allChartData.type.updateCallback
     );
   } catch (error) {
     console.error("Error updating type chart:", error.message);
@@ -613,18 +540,16 @@ function updateSubtypeChart(data, allChartData) {
       throw new Error("Format data tidak valid untuk updateSubtypeChart");
     }
 
-    const subtypeChartData = getSubtypeChartOptions(data);
-
     createApexChart(
       "subtypeChart",
-      "doughnut",  // Sesuaikan dengan jenis chart yang benar
-      allChartData.subtype.updateCallback,
-      subtypeChartData  // Pass the chart data directly to the createApexChart function
+      allChartData.subtype.chartData,
+      allChartData.subtype.updateCallback
     );
   } catch (error) {
     console.error("Error updating subtype chart:", error.message);
   }
 }
+
 
 // Objek chart data
 const allChartData = {
@@ -712,7 +637,6 @@ const allChartData = {
         vertical: 0,
       },
     },
-
   },
   subtitle: {
     text: "Tren Jumlah Pelanggaran Setiap Bulan",
@@ -775,7 +699,6 @@ const allChartData = {
         fontFamily: "Poppins",
       },
     },
-
   },
   yaxis: {
     labels: {
@@ -952,21 +875,30 @@ async function processDataAndCreateCharts() {
     );
 
     // Perbarui data grafik lokasi
-    const locations = Array.from(new Set(data.map((report) => report.location.locationName)));
+    const locations = Array.from(
+      new Set(data.map((report) => report.location.locationName))
+    );
     allChartData.location.chartData.series[0].data = locations.map((location) =>
       getLocationReportsCount(data, location)
     );
     allChartData.location.chartData.xaxis.categories = locations;
 
-    // Render grafik
     createApexChart(
       "monthlyChart",
-      "monthly",  // Pass the chart type instead of chart data
+      allChartData.monthly.chartData, // Pass the chart data instead of chart type
       allChartData.monthly.updateCallback
     );
 
-    updateLocationChart(data, allChartData.location.chartData.xaxis.categories, allChartData);
-    updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
+    updateLocationChart(
+      data,
+      allChartData.location.chartData.xaxis.categories,
+      allChartData
+    );
+    updateAreaChart(
+      data,
+      allChartData.area.chartData.xaxis.categories,
+      allChartData
+    );
     updateTypeChart(data, allChartData);
     updateSubtypeChart(data, allChartData);
   } catch (error) {
@@ -976,5 +908,3 @@ async function processDataAndCreateCharts() {
 
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
-
-
