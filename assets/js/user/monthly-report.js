@@ -356,7 +356,7 @@ function updateLocationChart(data, allChartData) {
     if (locations && locations.length > 0) {
       createApexChart(
         "locationChart",
-        "location",  // Sesuaikan dengan properti yang ingin Anda akses di allChartData
+        "location", // Sesuaikan dengan properti yang ingin Anda akses di allChartData
         allChartData.location.updateCallback
       );
     }
@@ -376,11 +376,9 @@ function updateAreaChart(data, allChartData) {
     );
 
     if (areas && areas.length > 0) {
-      createApexChart(
-        "areaChart",
-        allChartData.area,
-        allChartData.area.updateCallback
-      );
+      "areaChart",
+        "area", // Sesuaikan dengan properti yang ingin Anda akses di allChartData
+        allChartData;
     }
   } catch (error) {
     console.error("Error updating area chart:", error.message);
@@ -395,8 +393,8 @@ function updateTypeChart(data, allChartData) {
 
     createApexChart(
       "typeChart",
-      allChartData.type.chartData,
-      allChartData.type.updateCallback
+      "type",  // Sesuaikan dengan properti yang ingin Anda akses di allChartData
+      allChartData
     );
   } catch (error) {
     console.error("Error updating type chart:", error.message);
@@ -411,8 +409,8 @@ function updateSubtypeChart(data, allChartData) {
 
     createApexChart(
       "subtypeChart",
-      allChartData.subtype.chartData,
-      allChartData.subtype.updateCallback
+      "subtype",  // Sesuaikan dengan properti yang ingin Anda akses di allChartData
+      allChartData
     );
   } catch (error) {
     console.error("Error updating subtype chart:", error.message);
@@ -594,11 +592,11 @@ const allChartData = {
     updateCallback: updateAreaChart,
   },
   type: {
-    chartData: {},  // Biarkan kosong untuk sekarang
+    chartData: {}, // Biarkan kosong untuk sekarang
     updateCallback: updateTypeChart,
   },
   subtype: {
-    chartData: {},  // Biarkan kosong untuk sekarang
+    chartData: {}, // Biarkan kosong untuk sekarang
     updateCallback: updateSubtypeChart,
   },
 };
