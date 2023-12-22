@@ -125,7 +125,7 @@ const createApexChart = (chartId, chartType, clickCallback) => {
           speed: 1000,
         },
       },
-      type: chartOptions.type || [],
+      type: chartOptions.type || "",
       series: chartOptions.series || [],
       xaxis: chartOptions.xaxis || {},
       plotOptions: chartOptions.plotOptions || {},
@@ -153,26 +153,30 @@ const createApexChart = (chartId, chartType, clickCallback) => {
 
     // Menangani logika klik
     if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
-      document.getElementById(chartId).addEventListener("click", function () {
-        try {
-          const selectedDataPoints = chart?.w?.globals?.selectedDataPoints;
+      const chartElement = document.getElementById(chartId);
+      if (chartElement) {
+        chartElement.addEventListener("click", function () {
+          try {
+            const selectedDataPoints = chart?.w?.globals?.selectedDataPoints;
 
-          if (selectedDataPoints && selectedDataPoints.length > 0) {
-            const clickedIndex = selectedDataPoints[0].dataPointIndex;
+            if (selectedDataPoints && selectedDataPoints.length > 0) {
+              const clickedIndex = selectedDataPoints[0].dataPointIndex;
 
-            if (clickCallback) {
-              clickCallback(clickedIndex);
+              if (clickCallback) {
+                clickCallback(clickedIndex);
+              }
             }
+          } catch (error) {
+            console.error("Error handling click event:", error);
           }
-        } catch (error) {
-          console.error("Error handling click event:", error);
-        }
-      });
+        });
+      }
     }
   } catch (error) {
     console.error(`Error creating ApexChart for ${chartId}:`, error);
   }
 };
+
 
 // Fungsi untuk mendapatkan jumlah laporan per bulan
 function getReportsCountByMonth(data, month) {
@@ -871,6 +875,9 @@ async function processDataAndCreateCharts() {
 
     // Update grafik subtipe
     updateSubtypeChart(data, allChartData);
+
+    console.log("Data processed successfully.");
+
   } catch (error) {
     console.error("Error processing data and creating charts:", error.message);
   }
