@@ -103,16 +103,17 @@ const fetchDataFromServer = async () => {
   }
 };
 
+
 const createApexChart = (chartId, chartType, clickCallback) => {
   try {
     // Mendapatkan opsi chart dari objek allChartData berdasarkan jenis chart
     const chartOptions = allChartData[chartType]?.chartData || {};
 
-    // Membuat opsi chart
-    const options = {
+    // Default options for chart
+    const defaultOptions = {
       chart: {
-        height: chartOptions.chart.height || 240,
-        animations: chartOptions.chart.animations || {
+        height: 240,
+        animations: {
           enabled: true,
           easing: "easeinout",
           speed: 1000,
@@ -132,14 +133,17 @@ const createApexChart = (chartId, chartType, clickCallback) => {
       grid: chartOptions.grid || {},
     };
 
-    // Menggabungkan opsi grafik yang diberikan dengan opsi default
-    const mergedOptions = { ...options, ...chartOptions };
+    // Membuat opsi chart
+    const options = {
+      ...defaultOptions,
+      ...chartOptions,
+    };
 
-    const chart = new ApexCharts(document.getElementById(chartId), mergedOptions);
+    const chart = new ApexCharts(document.getElementById(chartId), options);
     chart.render();
 
     // Menangani logika klik
-    if (clickCallback && chartOptions.xaxis && chartOptions.xaxis.categories) {
+    if (clickCallback && options.xaxis && options.xaxis.categories) {
       document.getElementById(chartId).addEventListener("click", function () {
         try {
           const selectedDataPoints = chart.w.globals.selectedDataPoints;
@@ -834,9 +838,10 @@ async function processDataAndCreateCharts() {
     // Render grafik
     createApexChart(
       "monthlyChart",
-      allChartData.monthly.chartData,
+      "monthly",  // Pass the chart type instead of chart data
       allChartData.monthly.updateCallback
     );
+
     updateLocationChart(data, allChartData.location.chartData.xaxis.categories, allChartData);
     updateAreaChart(data, allChartData.area.chartData.xaxis.categories, allChartData);
     updateTypeChart(data, allChartData);
@@ -845,5 +850,8 @@ async function processDataAndCreateCharts() {
     console.error("Error processing data and creating charts:", error.message);
   }
 }
+
 // Pemanggilan fungsi utama
 processDataAndCreateCharts();
+
+
