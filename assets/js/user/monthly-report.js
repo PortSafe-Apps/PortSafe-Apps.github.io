@@ -61,7 +61,6 @@ const drawChart = async () => {
       "monthChart"
     );
     const monthlyChartConfig = createChartConfig(
-      "Monthly Chart",
       "Jumlah Laporan Berdasarkan Bulan",
       transformedMonthlyData,
       "monthChart"
