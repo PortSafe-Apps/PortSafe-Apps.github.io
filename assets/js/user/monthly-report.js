@@ -51,9 +51,15 @@ async function fetchDataFromServer() {
 const drawChart = async () => {
   const reportData = await fetchDataFromServer();
 
+  // Log reportData untuk memeriksa strukturnya
+  console.log(reportData);
+
   if (reportData) {
     // Menggambar Monthly Chart
-    const transformedMonthlyData = transformDataForChart(reportData, "monthChart");
+    const transformedMonthlyData = transformDataForChart(
+      reportData,
+      "monthChart"
+    );
     const monthlyChartConfig = createChartConfig(
       "Monthly Chart",
       "Jumlah Laporan Berdasarkan Bulan",
@@ -84,7 +90,10 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(reportData, "typeChartCategory");
+    const transformedTypeData = transformDataForChart(
+      reportData,
+      "typeChartCategory"
+    );
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
@@ -108,12 +117,26 @@ const drawChart = async () => {
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
+  if (!reportData || reportData.length === 0) {
+    return { labels: [], series: [] };
+  }
+
   switch (chartType) {
     case "monthChart":
       const monthCounts = {};
       const monthLabels = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
       ];
 
       reportData.forEach((report) => {
