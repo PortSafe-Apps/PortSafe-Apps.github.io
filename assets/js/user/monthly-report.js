@@ -210,7 +210,9 @@ const transformDataForChart = (reportData, chartType) => {
 
       reportData.forEach((report) => {
         const typeName =
-          report.typeDangerousActions[0].typeName || "Unknown Type";
+          report.typeDangerousActions.length > 0
+            ? report.typeDangerousActions[0].typeName
+            : "Unknown Type";
         typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
       });
 
@@ -255,8 +257,12 @@ const transformDataForChart = (reportData, chartType) => {
       ];
 
       reportData.forEach((report) => {
+        const subTypes =
+          report.typeDangerousActions.length > 0
+            ? report.typeDangerousActions[0].subTypes
+            : [];
         const subTypeName =
-          report.typeDangerousActions[0].subTypes[0] || "Unknown Subtype";
+          subTypes.length > 0 ? subTypes[0] : "Unknown Subtype";
         subtypeCounts[subTypeName] = (subtypeCounts[subTypeName] || 0) + 1;
       });
 
