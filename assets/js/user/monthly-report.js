@@ -278,12 +278,19 @@ const transformDataForChart = (reportData, chartType) => {
 
 // Fungsi untuk membuat konfigurasi grafik
 const createChartConfig = (chartTitle, data, chartType) => {
+  // Pengecekan keberadaan data.labels dan data.series
+  const xCategories = data.labels ? data.labels : [];
+  const seriesData = data.series ? data.series : [];
+
+  // Pengecekan keberadaan chartTitle
+  const subtitleText = chartTitle || '';
+
   switch (chartType) {
     case "monthChart":
       return {
         chart: {
           height: 240,
-          type: "bar",
+          type: "area",
           toolbar: {
             show: false,
           },
@@ -349,7 +356,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         subtitle: {
-          text: chartTitle,
+          text: subtitleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -369,7 +376,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         xaxis: {
-          categories: data.labels || [], // Sesuaikan dengan label bulan Anda
+          categories: xCategories,
           labels: {
             offsetX: 0,
             offsetY: 0,
@@ -394,8 +401,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: chartTitle,
-            data: data.series || [],
+            name: subtitleText,
+            data: seriesData,
           },
         ],
       };
@@ -469,7 +476,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         subtitle: {
-          text: chartTitle,
+          text: subtitleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -489,7 +496,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         xaxis: {
-          categories: data.labels || [], // Sesuaikan dengan label lokasi Anda
+          categories: xCategories,
           labels: {
             offsetX: 0,
             offsetY: 0,
@@ -514,8 +521,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: chartTitle,
-            data: data.series || [],
+            name: subtitleText,
+            data: seriesData,
           },
         ],
       };
@@ -589,7 +596,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         subtitle: {
-          text: chartTitle,
+          text: subtitleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -609,7 +616,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           width: 3,
         },
         xaxis: {
-          categories: data.labels || [], // Sesuaikan dengan label area Anda
+          categories: xCategories,
           labels: {
             offsetX: 0,
             offsetY: 0,
@@ -634,8 +641,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: chartTitle,
-            data: data.series || [],
+            name: subtitleText,
+            data: seriesData,
           },
         ],
       };
@@ -678,7 +685,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         subtitle: {
-          text: chartTitle,
+          text: subtitleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -692,8 +699,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
-        series: data,
-        labels: data.labels || [], // Sesuaikan dengan label jenis pelanggaran Anda
+        series: seriesData,
+        labels: xCategories,
       };
 
     case "subtypeChartCategory":
@@ -735,7 +742,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         subtitle: {
-          text: chartTitle,
+          text: subtitleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -749,8 +756,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
-        series: data,
-        labels: data.labels || [], // Sesuaikan dengan label subjenis pelanggaran Anda
+        series: seriesData,
+        labels: xCategories,
       };
 
     default:
