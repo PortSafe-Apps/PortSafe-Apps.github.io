@@ -125,10 +125,10 @@ const transformDataForChart = (reportData, chartType) => {
       const monthCounts = Array(12).fill(0);
 
       reportData.forEach((report) => {
-        const month = new Date(report.createdAt).getMonth();
+        const month = new Date(report.date).getMonth();
         monthCounts[month] += 1;
       });
-
+      
       return {
         labels: [
           "Jan",
