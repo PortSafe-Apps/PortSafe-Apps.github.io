@@ -438,7 +438,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
       return {
         series: [
           {
-            data: seriesData[0], // Menggunakan data.series langsung
+            data: seriesData[0] || [], // Menggunakan data.series langsung
           },
         ],
         chart: {
@@ -572,6 +572,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
       };
+
     case "areaChart":
       return {
         chart: {
