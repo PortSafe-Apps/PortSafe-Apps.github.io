@@ -426,7 +426,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "locationChart":
       return {
         chart: {
-          height: 240,
+          height: 350,
           type: "bar",
           animations: {
             enabled: true,
