@@ -464,7 +464,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         plotOptions: {
           bar: {
-            horizontal: true,
+            horizontal: false,
             columnWidth: "40%",
             endingShape: "rounded",
           },
@@ -519,10 +519,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
           tooltip: {
-            enabled: true,
-            formatter: function(val) {
-              return parseInt(val); // Format nilai sebagai integer
-            },
+            enabled: false,
           },
         },
         yaxis: {
