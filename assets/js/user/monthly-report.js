@@ -148,6 +148,7 @@ const transformDataForChart = (reportData, chartType) => {
       };
 
     case "locationChart":
+      const locationCounts = {};
       const locationLabels = [
         "Kantor Pusat SPMT",
         "Branch Dumai",
@@ -166,20 +167,15 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
-    
-      const locationCounts = {};
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-    
-      // Pastikan semua lokasi memiliki jumlah laporan yang sesuai
-      const seriesData = locationLabels.map((label) => locationCounts[label] || 0);
-    
       return {
         labels: locationLabels,
-        series: seriesData,
-    };
+        series: Object.values(locationCounts),
+      };
+
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -430,7 +426,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "locationChart":
       return {
         chart: {
-          height: 380,
+          height: 240,
           type: "bar",
           animations: {
             enabled: true,
@@ -451,31 +447,20 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true,
-            columnWidth: "40%",
-            endingShape: "rounded",
-          },
-        },
         colors: ["#02172C"],
         dataLabels: {
           enabled: false,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
+          },
         },
         grid: {
           borderColor: "#dbeaea",
@@ -500,13 +485,13 @@ const createChartConfig = (chartTitle, data, chartType) => {
         legend: {
           position: "bottom",
           horizontalAlign: "center",
-          offsetY: 6,
-          fontSize: "12px",
+          offsetY: 4,
+          fontSize: "14px",
           markers: {
-            width: 10,
-            height: 10,
+            width: 9,
+            height: 9,
             strokeWidth: 0,
-            radius: 2,
+            radius: 20,
           },
           itemMargin: {
             horizontal: 5,
@@ -514,7 +499,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         tooltip: {
-          theme: "light",
+          theme: "dark",
           marker: {
             show: true,
           },
@@ -522,10 +507,25 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        stroke: {
-          show: true,
-          colors: ["transparent"],
-          width: 3,
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true, // Mengatur orientasi bar menjadi horizontal
+          },
         },
         xaxis: {
           categories: xCategories,
@@ -535,7 +535,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins"
             },
           },
           tooltip: {
@@ -544,15 +543,11 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
-            formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
-            },
             offsetX: -10,
             offsetY: 0,
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins"
             },
           },
         },
