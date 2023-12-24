@@ -167,15 +167,16 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
-      reportData.forEach((report) => {
-        const locationName = report.location.locationName || "Unknown Location";
-        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+      locationLabels.forEach((label) => {
+        locationCounts[label] = (locationCounts[label] || 0) + 1;
       });
+
+      const locationSeriesData = locationLabels.map((label) => Math.round(locationCounts[label] || 0));
+
       return {
         labels: locationLabels,
-        series: Object.values(locationCounts),
+        series: [locationSeriesData],
       };
-
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -537,7 +538,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
                 fontFamily: "Poppins",
               },
             },
-            forceNiceScale: true, // Menyebabkan sumbu Y untuk menggunakan skala yang "bagus"
           },
           series: [
             {
