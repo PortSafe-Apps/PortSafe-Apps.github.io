@@ -148,44 +148,41 @@ const transformDataForChart = (reportData, chartType) => {
       };
 
       case "locationChart":
-      const locationCounts = {};
-      const locationLabels = [
-        "Kantor Pusat SPMT",
-        "Branch Dumai",
-        "Branch Belawan",
-        "Branch Tanjung Intan",
-        "Branch Bumiharjo - Bagendang",
-        "Branch Tanjung Wangi",
-        "Branch Makassar",
-        "Branch Balikpapan",
-        "Branch Trisakti - Mekar Putih",
-        "Branch Jamrud Nilam Mirah",
-        "Branch Lembar - Badas",
-        "Branch Tanjung Emas",
-        "Branch ParePare - Garongkong",
-        "Branch Lhokseumawe",
-        "Branch Malahayati",
-        "Branch Gresik",
-      ];
-
-      reportData.forEach((report) => {
-        const locationName = report.location.locationName || "Unknown Location";
-        locationCounts[locationName] = Math.floor((locationCounts[locationName] || 0) + 1);
-      });
-
-      const labels = locationLabels.map(label => {
-        const count = locationCounts[label] || 0;
-        console.log(`Location: ${label}, Current Count: ${count}`);
-        return label;
-      });
-
-      console.log("Final Location Counts:", locationCounts);
-
-      return {
-        labels: labels,
-        series: Object.values(locationCounts),
-      };
-
+        const locationCounts = {};
+        const locationLabels = [
+          "Kantor Pusat SPMT",
+          "Branch Dumai",
+          "Branch Belawan",
+          "Branch Tanjung Intan",
+          "Branch Bumiharjo - Bagendang",
+          "Branch Tanjung Wangi",
+          "Branch Makassar",
+          "Branch Balikpapan",
+          "Branch Trisakti - Mekar Putih",
+          "Branch Jamrud Nilam Mirah",
+          "Branch Lembar - Badas",
+          "Branch Tanjung Emas",
+          "Branch ParePare - Garongkong",
+          "Branch Lhokseumawe",
+          "Branch Malahayati",
+          "Branch Gresik",
+        ];
+      
+        reportData.forEach((report) => {
+          const locationName = report.location.locationName || "Unknown Location";
+          locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+        });
+      
+        const labels = locationLabels.map((label) => {
+          return label;
+        });
+      
+        console.log("Final Location Counts:", locationCounts);
+      
+        return {
+          labels: labels,
+          series: Object.values(locationCounts),
+        };
 
     case "areaChart":
       const areaCounts = {};
@@ -437,126 +434,76 @@ const createChartConfig = (chartTitle, data, chartType) => {
 
     case "locationChart":
       return {
+        series: [{
+          data: [], // Data akan diisi oleh fungsi drawChart
+        }],
         chart: {
-      height: 380,
-      type: "bar",
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["#02172C"],
-    dataLabels: {
-      enabled: false,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        type: "vertical",
-        shadeIntensity: 1,
-        inverseColors: true,
-        opacityFrom: 0.15,
-        opacityTo: 0.02,
-        stops: [40, 100],
-      },
-    },
-    grid: {
-      borderColor: "#dbeaea",
-      strokeDashArray: 4,
-      xaxis: {
-        lines: {
-          show: true,
+          type: 'bar',
+          height: 380,
         },
-      },
-      yaxis: {
-        lines: {
-          show: false,
+        plotOptions: {
+          bar: {
+            barHeight: '100%',
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: 'bottom',
+            },
+          },
         },
-      },
-      padding: {
-        top: 0,
-        right: 0,
-        bottom: 0,
-        left: 0,
-      },
-    },
-    legend: {
-      position: "bottom",
-      horizontalAlign: "center",
-      offsetY: 4,
-      fontSize: "14px",
-      markers: {
-        width: 9,
-        height: 9,
-        strokeWidth: 0,
-        radius: 20,
-      },
-      itemMargin: {
-        horizontal: 5,
-        vertical: 0,
-      },
-    },
-    tooltip: {
-      theme: "dark",
-      marker: {
-        show: true,
-      },
-      x: {
-        show: false,
-      },
-    },
-    subtitle: {
-      text: subtitleText,
-      align: "left",
-      margin: 0,
-      offsetX: 0,
-      offsetY: 0,
-      floating: false,
-      style: {
-        fontSize: "15px",
-        color: "text-dark",
-        fontWeight: "bold",
-        marginBottom: "10rem",
-        fontFamily: "Poppins",
-      },
-    },
-    stroke: {
-      show: true,
-      curve: "smooth",
-      width: 3,
-    },
-    xaxis: {
-      categories: xCategories,
-      labels: {
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
+        colors: ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f', '#f9a3a4', '#90ee7e',
+          '#f48024', '#69d2e7', '#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f'
+        ],
+        dataLabels: {
+          enabled: true,
+          textAnchor: 'start',
+          style: {
+            colors: ['#fff'],
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+          },
+          offsetX: 0,
+          dropShadow: {
+            enabled: true,
+          },
         },
-      },
-      tooltip: {
-        enabled: false,
-      },
-    },
-    yaxis: {
-      labels: {
-        offsetX: -10,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
+        stroke: {
+          width: 1,
+          colors: ['#fff'],
         },
-      },
-    },
-    series: [
-      {
-        name: "Jumlah Laporan",
-        data: seriesData,
-      },
-    ],
-  };
+        xaxis: {
+          categories: [], // Data akan diisi oleh fungsi drawChart
+        },
+        yaxis: {
+          labels: {
+            show: false,
+          },
+        },
+        title: {
+          text: 'Jumlah Laporan Berdasarkan Lokasi',
+          align: 'center',
+          floating: true,
+        },
+        subtitle: {
+          text: 'Data laporan berdasarkan lokasi',
+          align: 'center',
+        },
+        tooltip: {
+          theme: 'dark',
+          x: {
+            show: false,
+          },
+          y: {
+            title: {
+              formatter: function () {
+                return '';
+              },
+            },
+          },
+        },
+      };
+      
     case "areaChart":
       return {
         chart: {
