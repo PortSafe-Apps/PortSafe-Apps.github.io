@@ -480,7 +480,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             enabled: true,
             textAnchor: "start",
             style: {
-              color: "text-dark",
+              colors: ["#02172C"],
               fontWeight: "normal",
               marginBottom: "10rem",
               fontFamily: "Poppins",
