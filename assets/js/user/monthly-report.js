@@ -149,6 +149,24 @@ const transformDataForChart = (reportData, chartType) => {
 
     case "locationChart":
       const locationCounts = {};
+      const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ];
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
@@ -490,24 +508,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           width: 3,
         },
         xaxis: {
-          categories: [
-            "Kantor Pusat SPMT",
-            "Branch Dumai",
-            "Branch Belawan",
-            "Branch Tanjung Intan",
-            "Branch Bumiharjo - Bagendang",
-            "Branch Tanjung Wangi",
-            "Branch Makassar",
-            "Branch Balikpapan",
-            "Branch Trisakti - Mekar Putih",
-            "Branch Jamrud Nilam Mirah",
-            "Branch Lembar - Badas",
-            "Branch Tanjung Emas",
-            "Branch ParePare - Garongkong",
-            "Branch Lhokseumawe",
-            "Branch Malahayati",
-            "Branch Gresik",
-          ],
+          categories: xCategories,
           labels: {
             offsetX: 0,
             offsetY: 0,
@@ -518,14 +519,14 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
           tooltip: {
-            enabled: false,
-          },
-        },        
-        yaxis: {
-          labels: {
-            formatter: function (val) {
+            enabled: true,
+            formatter: function(val) {
               return parseInt(val); // Format nilai sebagai integer
             },
+          },
+        },
+        yaxis: {
+          labels: {
             offsetX: -10,
             offsetY: 0,
             style: {
