@@ -514,6 +514,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
         xaxis: {
           categories: xCategories,
           labels: {
+            formatter: function (val) {
+              return parseInt(val); // Format nilai sebagai integer
+            },
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -534,6 +537,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
               colors: "#8480ae",
               fontSize: "12px",
               fontFamily: "Poppins"
+            },
+            formatter: function (val) {
+              return parseInt(val); // Format nilai sebagai integer
             },
           },
         },
