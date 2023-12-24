@@ -122,33 +122,31 @@ const transformDataForChart = (reportData, chartType) => {
 
   switch (chartType) {
     case "monthChart":
-      const monthCounts = {};
-      const monthLabels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
+      const monthCounts = Array(12).fill(0);
 
       reportData.forEach((report) => {
-        const reportDate = new Date(report.createdAt);
-        const month = reportDate.getMonth();
-        const monthName = monthLabels[month] || "Unknown Month";
-        monthCounts[monthName] = (monthCounts[monthName] || 0) + 1;
+        const month = new Date(report.createdAt).getMonth();
+        monthCounts[month] += 1;
       });
 
       return {
-        labels: monthLabels,
-        series: Object.values(monthCounts),
+        labels: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
+        series: monthCounts,
       };
+
     case "locationChart":
       const locationCounts = {};
       const locationLabels = [
@@ -282,7 +280,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
   const seriesData = data.series ? data.series : [];
 
   // Pengecekan keberadaan chartTitle
-  const subtitleText = chartTitle || '';
+  const subtitleText = chartTitle || "";
 
   switch (chartType) {
     case "monthChart":
@@ -370,8 +368,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         plotOptions: {
-          bar: {
-            horizontal: false,
+          area: {
+            // Mengatur apakah garis bagian atas area terlihat atau tidak
+            line: {
+              show: false,
+            },
+            // Menyembunyikan label di bawah area chart
+            labels: {
+              show: false,
+            },
           },
         },
         xaxis: {
@@ -400,7 +405,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: subtitleText,
+            name: "jumlah laporan",
             data: seriesData,
           },
         ],
@@ -520,7 +525,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: subtitleText,
+            name: "jumlah laporan",
             data: seriesData,
           },
         ],
@@ -622,6 +627,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins",
             },
           },
           tooltip: {
@@ -635,12 +641,13 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins",
             },
           },
         },
         series: [
           {
-            name: subtitleText,
+            name: "jumlah laporan",
             data: seriesData,
           },
         ],
