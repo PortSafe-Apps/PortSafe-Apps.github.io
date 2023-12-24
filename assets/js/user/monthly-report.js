@@ -128,7 +128,7 @@ const transformDataForChart = (reportData, chartType) => {
         const month = new Date(report.date).getMonth();
         monthCounts[month] += 1;
       });
-      
+
       return {
         labels: [
           "Jan",
@@ -292,20 +292,20 @@ const createChartConfig = (chartTitle, data, chartType) => {
             enabled: true,
             easing: 'easeinout',
             speed: 1000
-        },
-        dropShadow: {
+          },
+          dropShadow: {
             enabled: true,
             opacity: 0.1,
             blur: 1,
             left: -5,
             top: 5
-        },
-        zoom: {
+          },
+          zoom: {
             enabled: false
-        },
-        toolbar: {
+          },
+          toolbar: {
             show: false
-        },
+          },
         },
         colors: ["#02172C"],
         dataLabels: {
@@ -318,45 +318,45 @@ const createChartConfig = (chartTitle, data, chartType) => {
             shadeIntensity: 1,
             inverseColors: true,
             opacityFrom: 0.15,
-            opacityTo: 0.02,
+            opacityTo: 0.05,
             stops: [40, 100],
-          },
+          }
         },
         grid: {
-          borderColor: "#dbeaea",
+          borderColor: '#dbeaea',
           strokeDashArray: 4,
           xaxis: {
             lines: {
-              show: true,
-            },
+              show: true
+            }
           },
           yaxis: {
             lines: {
               show: false,
-            },
+            }
           },
           padding: {
             top: 0,
             right: 0,
             bottom: 0,
-            left: 0,
+            left: 0
           },
         },
         legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
+          position: 'top',
+          horizontalAlign: 'right',
+          offsetY: -60,
+          fontSize: '14px',
           markers: {
             width: 9,
             height: 9,
             strokeWidth: 0,
-            radius: 20,
+            radius: 20
           },
           itemMargin: {
             horizontal: 5,
-            vertical: 0,
-          },
+            vertical: 0
+          }
         },
         tooltip: {
           theme: "dark",
@@ -380,18 +380,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontWeight: "bold",
             marginBottom: "10rem",
             fontFamily: "Poppins",
-          },
-        },
-        plotOptions: {
-          area: {
-            // Mengatur apakah garis bagian atas area terlihat atau tidak
-            line: {
-              show: false,
-            },
-            // Menyembunyikan label di bawah area chart
-            labels: {
-              show: false,
-            },
           },
         },
         xaxis: {
