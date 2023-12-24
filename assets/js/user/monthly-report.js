@@ -147,8 +147,7 @@ const transformDataForChart = (reportData, chartType) => {
         series: monthCounts,
       };
 
-    case "locationChart":
-    case "locationChart":
+      case "locationChart":
       const locationCounts = {};
       const locationLabels = [
         "Kantor Pusat SPMT",
@@ -174,17 +173,17 @@ const transformDataForChart = (reportData, chartType) => {
         locationCounts[locationName] = Math.floor((locationCounts[locationName] || 0) + 1);
       });
 
-      const seriesData = locationLabels.map(label => {
+      const labels = locationLabels.map(label => {
         const count = locationCounts[label] || 0;
         console.log(`Location: ${label}, Current Count: ${count}`);
-        return count;
+        return label;
       });
 
       console.log("Final Location Counts:", locationCounts);
 
       return {
-        labels: locationLabels,
-        series: seriesData,
+        labels: labels,
+        series: Object.values(locationCounts),
       };
 
 
@@ -519,6 +518,16 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            barHeight: "80%",
+            distributed: true,
+            dataLabels: {
+              position: "bottom",
+            },
+          },
+        },
         stroke: {
           show: true,
           curve: "smooth",
@@ -526,6 +535,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         xaxis: {
           categories: xCategories,
+          type: 'category',  // Menetapkan tipe data kategori untuk sumbu x
           labels: {
             offsetX: 0,
             offsetY: 0,
@@ -552,7 +562,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         series: [
           {
-            name: "jumlah laporan",
+            name: "Jumlah Laporan",
             data: seriesData,
           },
         ],
