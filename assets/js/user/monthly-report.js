@@ -114,6 +114,16 @@ const drawChart = async () => {
   }
 };
 
+// Fungsi untuk menghasilkan palet warna berdasarkan jumlah label
+function generateColorPalette(count) {
+  const palette = [];
+  for (let i = 0; i < count; i++) {
+    const hue = (360 / count) * i;
+    palette.push(`hsl(${hue}, 70%, 50%)`);
+  }
+  return palette;
+}
+
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
   if (!reportData || reportData.length === 0) {
@@ -146,7 +156,6 @@ const transformDataForChart = (reportData, chartType) => {
         ],
         series: monthCounts,
       };
-
     case "locationChart":
       const locationCounts = {};
       const locationLabels = [
@@ -171,11 +180,11 @@ const transformDataForChart = (reportData, chartType) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
+      const seriesData = Object.values(locationCounts).map(value => parseInt(value));
       return {
         labels: locationLabels,
-        series: Object.values(locationCounts),
+        series: seriesData,
       };
-
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -469,7 +478,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             endingShape: "rounded",
           },
         },
-        colors: ["#02172C"],
+        colors: generateColorPalette(locationLabels.length),
         dataLabels: {
           enabled: false,
         },
@@ -500,9 +509,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
           x: {
             show: false,
-          },
-          formatter: function (val) {
-            return parseInt(val); // Mengonversi nilai menjadi integer
           },
         },
         stroke: {
@@ -549,7 +555,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "areaChart":
       return {
         chart: {
-          height: 240,
+          height: 350,
           type: "bar",
           toolbar: {
             show: false,
