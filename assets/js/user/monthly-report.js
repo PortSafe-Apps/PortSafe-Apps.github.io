@@ -550,10 +550,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
             offsetX: -10,
             offsetY: 0,
             style: {
-                colors: '#8380ae',
-                fontSize: '12px'
+              colors: "#8380ae",
+              fontSize: "12px",
             },
-        }
+          },
         },
         tooltip: {
           theme: "light",
@@ -572,7 +572,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
       };
-
     case "areaChart":
       return {
         chart: {
