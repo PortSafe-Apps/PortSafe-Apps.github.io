@@ -425,122 +425,126 @@ const createChartConfig = (chartTitle, data, chartType) => {
       };
     case "locationChart":
       return {
-        chart: {
-          height: 380,
-          type: "bar",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 2,
-            left: -1,
-            top: 5,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: false,
-            columnWidth: "40%",
-            endingShape: "rounded",
-          },
-        },
-        colors: ["#02172C"],
-        dataLabels: {
-          enabled: false,
-        },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          yaxis: {
-            lines: {
+          chart: {
+            height: 380,
+            type: "bar",
+            toolbar: {
               show: false,
             },
           },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
+          colors: ["#02172C"],
+          dataLabels: {
+            enabled: false,
           },
-        },
-        tooltip: {
-          theme: "light",
-          marker: {
-            show: true,
+          fill: {
+            type: "gradient",
+            gradient: {
+              type: "vertical",
+              shadeIntensity: 1,
+              inverseColors: true,
+              opacityFrom: 0.15,
+              opacityTo: 0.02,
+              stops: [40, 100],
+            },
           },
-          x: {
-            show: false,
+          grid: {
+            borderColor: "#dbeaea",
+            strokeDashArray: 4,
+            xaxis: {
+              lines: {
+                show: true,
+              },
+            },
+            yaxis: {
+              lines: {
+                show: false,
+              },
+            },
+            padding: {
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            },
           },
-        },
-        stroke: {
-          show: true,
-          colors: ["transparent"],
-          width: 3,
-        },
-        xaxis: {
-          categories: xCategories,
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins"
+          legend: {
+            position: "bottom",
+            horizontalAlign: "center",
+            offsetY: 4,
+            fontSize: "14px",
+            markers: {
+              width: 9,
+              height: 9,
+              strokeWidth: 0,
+              radius: 20,
+            },
+            itemMargin: {
+              horizontal: 5,
+              vertical: 0,
             },
           },
           tooltip: {
-            enabled: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            offsetX: -10,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins"
+            theme: "dark",
+            marker: {
+              show: true,
+            },
+            x: {
+              show: false,
             },
           },
-        },
-        
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData,
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
           },
-        ],
-      };
+          stroke: {
+            show: true,
+            curve: "smooth",
+            width: 3,
+          },
+          xaxis: {
+            categories: xCategories,
+            labels: {
+              offsetX: 0,
+              offsetY: 0,
+              style: {
+                colors: "#8480ae",
+                fontSize: "12px",
+                fontFamily: "Poppins",
+              },
+            },
+            tooltip: {
+              enabled: false,
+            },
+          },
+          yaxis: {
+            labels: {
+              offsetX: -10,
+              offsetY: 0,
+              style: {
+                colors: "#8480ae",
+                fontSize: "12px",
+                fontFamily: "Poppins",
+              },
+            },
+          },
+          series: [
+            {
+              name: "jumlah laporan",
+              data: seriesData,
+            },
+          ],
+        };
     case "areaChart":
       return {
         chart: {
