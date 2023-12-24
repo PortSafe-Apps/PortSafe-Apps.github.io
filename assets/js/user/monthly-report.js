@@ -407,6 +407,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
+            formatter: function (val) {
+              // Format nilai sebagai integer
+              return val % 1 === 0 ? val : '';
+            },
             offsetX: -10,
             offsetY: 0,
             style: {
