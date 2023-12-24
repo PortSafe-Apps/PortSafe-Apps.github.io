@@ -114,16 +114,6 @@ const drawChart = async () => {
   }
 };
 
-// Fungsi untuk menghasilkan palet warna berdasarkan jumlah label
-function generateColorPalette(count) {
-  const palette = [];
-  for (let i = 0; i < count; i++) {
-    const hue = (360 / count) * i;
-    palette.push(`hsl(${hue}, 70%, 50%)`);
-  }
-  return palette;
-}
-
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
   let locationLabels; // Pindahkan deklarasi keluar dari blok switch
@@ -478,7 +468,11 @@ const createChartConfig = (chartTitle, data, chartType) => {
             horizontal: true,
             columnWidth: "40%",
             endingShape: "rounded",
-            colors: generateColorPalette(xCategories.length), 
+            colors: [
+              '#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF',
+              '#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF',
+              '#FF5733', '#33FF57', '#5733FF', '#FF5733', // Atur warna batang secara langsung
+            ],
           },
         },
         dataLabels: {
