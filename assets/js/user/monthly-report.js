@@ -515,7 +515,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           categories: xCategories,
           labels: {
             formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
+              return val; // Biarkan nilai aslinya tanpa perubahan
             },
             offsetX: 0,
             offsetY: 0,
@@ -531,15 +531,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
+            formatter: function (val) {
+              return parseInt(val); // Format nilai sebagai integer
+            },
             offsetX: -10,
             offsetY: 0,
             style: {
               colors: "#8480ae",
               fontSize: "12px",
               fontFamily: "Poppins"
-            },
-            formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
             },
           },
         },
