@@ -167,18 +167,20 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
+
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-    
-      const locationSeriesData = locationLabels.map((label) => locationCounts[label] || 0);
-    
+
+      const seriesData = locationLabels.map(
+        (label) => locationCounts[label] || 0
+      );
+
       return {
         labels: locationLabels,
-        series: locationSeriesData,
+        series: [seriesData],
       };
-    
 
     case "areaChart":
       const areaCounts = {};
@@ -277,6 +279,16 @@ const transformDataForChart = (reportData, chartType) => {
   }
 };
 
+// Fungsi untuk menghasilkan warna sesuai dengan jumlah lokasi
+const generateColors = (count) => {
+  const colors = [
+    "#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
+    "#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
+    "#FF5733", "#33FF57", "#5733FF", "#FF5733"
+  ];
+  return colors.slice(0, count);
+};
+
 // Fungsi untuk membuat konfigurasi grafik
 const createChartConfig = (chartTitle, data, chartType) => {
   // Pengecekan keberadaan data.labels dan data.series
@@ -294,21 +306,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
           type: "area",
           animations: {
             enabled: true,
-            easing: 'easeinout',
-            speed: 1000
+            easing: "easeinout",
+            speed: 1000,
           },
           dropShadow: {
             enabled: true,
             opacity: 0.1,
             blur: 1,
             left: -5,
-            top: 5
+            top: 5,
           },
           zoom: {
-            enabled: false
+            enabled: false,
           },
           toolbar: {
-            show: false
+            show: false,
           },
         },
         colors: ["#02172C"],
@@ -324,43 +336,43 @@ const createChartConfig = (chartTitle, data, chartType) => {
             opacityFrom: 0.15,
             opacityTo: 0.05,
             stops: [40, 100],
-          }
+          },
         },
         grid: {
-          borderColor: '#dbeaea',
+          borderColor: "#dbeaea",
           strokeDashArray: 4,
           xaxis: {
             lines: {
-              show: true
-            }
+              show: true,
+            },
           },
           yaxis: {
             lines: {
               show: false,
-            }
+            },
           },
           padding: {
             top: 0,
             right: 0,
             bottom: 0,
-            left: 0
+            left: 0,
           },
         },
         legend: {
-          position: 'top',
-          horizontalAlign: 'right',
+          position: "top",
+          horizontalAlign: "right",
           offsetY: -60,
-          fontSize: '14px',
+          fontSize: "14px",
           markers: {
             width: 9,
             height: 9,
             strokeWidth: 0,
-            radius: 20
+            radius: 20,
           },
           itemMargin: {
             horizontal: 5,
-            vertical: 0
-          }
+            vertical: 0,
+          },
         },
         tooltip: {
           theme: "dark",
@@ -473,10 +485,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             endingShape: "rounded",
           },
         },
-        colors: ["#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
-        "#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
-        "#FF5733", "#33FF57", "#5733FF", "#FF5733"],
-
+        colors: generateColors(seriesData[0].length), // Fungsi untuk menghasilkan warna
         dataLabels: {
           enabled: false,
         },
@@ -525,7 +534,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins"
+              fontFamily: "Poppins",
             },
           },
           tooltip: {
@@ -542,16 +551,14 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins"
+              fontFamily: "Poppins",
             },
           },
         },
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData,
-          },
-        ],
+        series: seriesData.map((data, index) => ({
+          name: xCategories[index],
+          data: data,
+        })),
       };
     case "areaChart":
       return {
