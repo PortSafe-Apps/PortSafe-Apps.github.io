@@ -437,7 +437,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
       case "locationChart":
         return {
           series: [{
-            data: data.series[0],  // Sesuaikan dengan struktur data yang diharapkan
+            data: data.series || [], // Gunakan data.series atau array kosong jika tidak ada
           }],
           chart: {
             type: "bar",
@@ -480,7 +480,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             colors: ["#fff"],
           },
           xaxis: {
-            categories: data.labels,
+            categories: data.labels || [], // Gunakan data.labels atau array kosong jika tidak ada
           },
           yaxis: {
             labels: {
