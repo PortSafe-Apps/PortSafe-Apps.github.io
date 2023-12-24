@@ -147,37 +147,47 @@ const transformDataForChart = (reportData, chartType) => {
         series: monthCounts,
       };
 
-      case "locationChart":
-        const locationCounts = {};
-        const locationLabels = [
-          "Kantor Pusat SPMT",
-          "Branch Dumai",
-          "Branch Belawan",
-          "Branch Tanjung Intan",
-          "Branch Bumiharjo - Bagendang",
-          "Branch Tanjung Wangi",
-          "Branch Makassar",
-          "Branch Balikpapan",
-          "Branch Trisakti - Mekar Putih",
-          "Branch Jamrud Nilam Mirah",
-          "Branch Lembar - Badas",
-          "Branch Tanjung Emas",
-          "Branch ParePare - Garongkong",
-          "Branch Lhokseumawe",
-          "Branch Malahayati",
-          "Branch Gresik",
-        ];
-        reportData.forEach((report) => {
-          const locationName = report.location.locationName || "Unknown Location";
-          const currentCount = locationCounts[locationName] || 0;
-          console.log(`Location: ${locationName}, Current Count: ${currentCount}`);
-          locationCounts[locationName] = Math.floor(currentCount + 1);
-        });
-        return {
-          labels: locationLabels,
-          series: Object.values(locationCounts),
-        };
-      
+    case "locationChart":
+    case "locationChart":
+      const locationCounts = {};
+      const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ];
+
+      reportData.forEach((report) => {
+        const locationName = report.location.locationName || "Unknown Location";
+        locationCounts[locationName] = Math.floor((locationCounts[locationName] || 0) + 1);
+      });
+
+      const seriesData = locationLabels.map(label => {
+        const count = locationCounts[label] || 0;
+        console.log(`Location: ${label}, Current Count: ${count}`);
+        return count;
+      });
+
+      console.log("Final Location Counts:", locationCounts);
+
+      return {
+        labels: locationLabels,
+        series: seriesData,
+      };
+
+
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -427,126 +437,126 @@ const createChartConfig = (chartTitle, data, chartType) => {
       };
     case "locationChart":
       return {
-          chart: {
-            height: 380,
-            type: "bar",
-            toolbar: {
-              show: false,
-            },
+        chart: {
+          height: 380,
+          type: "bar",
+          toolbar: {
+            show: false,
           },
-          colors: ["#02172C"],
-          dataLabels: {
-            enabled: false,
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
           },
-          fill: {
-            type: "gradient",
-            gradient: {
-              type: "vertical",
-              shadeIntensity: 1,
-              inverseColors: true,
-              opacityFrom: 0.15,
-              opacityTo: 0.02,
-              stops: [40, 100],
-            },
-          },
-          grid: {
-            borderColor: "#dbeaea",
-            strokeDashArray: 4,
-            xaxis: {
-              lines: {
-                show: true,
-              },
-            },
-            yaxis: {
-              lines: {
-                show: false,
-              },
-            },
-            padding: {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
-            },
-          },
-          legend: {
-            position: "bottom",
-            horizontalAlign: "center",
-            offsetY: 4,
-            fontSize: "14px",
-            markers: {
-              width: 9,
-              height: 9,
-              strokeWidth: 0,
-              radius: 20,
-            },
-            itemMargin: {
-              horizontal: 5,
-              vertical: 0,
-            },
-          },
-          tooltip: {
-            theme: "dark",
-            marker: {
-              show: true,
-            },
-            x: {
-              show: false,
-            },
-          },
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-          },
-          stroke: {
-            show: true,
-            curve: "smooth",
-            width: 3,
-          },
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
           xaxis: {
-            categories: xCategories,
-            labels: {
-              offsetX: 0,
-              offsetY: 0,
-              style: {
-                colors: "#8480ae",
-                fontSize: "12px",
-                fontFamily: "Poppins",
-              },
-            },
-            tooltip: {
-              enabled: false,
+            lines: {
+              show: true,
             },
           },
           yaxis: {
-            labels: {
-              offsetX: -10,
-              offsetY: 0,
-              style: {
-                colors: "#8480ae",
-                fontSize: "12px",
-                fontFamily: "Poppins",
-              },
+            lines: {
+              show: false,
             },
           },
-          series: [
-            {
-              name: "jumlah laporan",
-              data: seriesData,
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        stroke: {
+          show: true,
+          curve: "smooth",
+          width: 3,
+        },
+        xaxis: {
+          categories: xCategories,
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
             },
-          ],
-        };
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
+            },
+          },
+        },
+        series: [
+          {
+            name: "jumlah laporan",
+            data: seriesData,
+          },
+        ],
+      };
     case "areaChart":
       return {
         chart: {
