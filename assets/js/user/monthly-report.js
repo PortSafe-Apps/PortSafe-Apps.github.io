@@ -480,8 +480,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         plotOptions: {
           bar: {
+            barHeight: '100%',
+            distributed: true,
             horizontal: true,
-            columnWidth: "40%",
             endingShape: "rounded",
           },
         },
