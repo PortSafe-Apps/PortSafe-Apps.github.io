@@ -147,40 +147,34 @@ const transformDataForChart = (reportData, chartType) => {
         series: monthCounts,
       };
 
-      case "locationChart":
-        const locationCounts = {};
-        const locationLabels = [
-          "Kantor Pusat SPMT",
-          "Branch Dumai",
-          "Branch Belawan",
-          "Branch Tanjung Intan",
-          "Branch Bumiharjo - Bagendang",
-          "Branch Tanjung Wangi",
-          "Branch Makassar",
-          "Branch Balikpapan",
-          "Branch Trisakti - Mekar Putih",
-          "Branch Jamrud Nilam Mirah",
-          "Branch Lembar - Badas",
-          "Branch Tanjung Emas",
-          "Branch ParePare - Garongkong",
-          "Branch Lhokseumawe",
-          "Branch Malahayati",
-          "Branch Gresik",
-        ];
-      
-        reportData.forEach((report) => {
-          const locationName = report.location.locationName || "Unknown Location";
-          locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
-        });
-      
-        // Konversi nilai-nilai di dalam series menjadi bilangan bulat
-        const seriesData = Object.values(locationCounts).map((value) => parseInt(value));
-      
-        return {
-          labels: locationLabels,
-          series: seriesData,
-        };
-      
+    case "locationChart":
+      const locationCounts = {};
+      const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ];
+      reportData.forEach((report) => {
+        const locationName = report.location.locationName || "Unknown Location";
+        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+      });
+      return {
+        labels: locationLabels,
+        series: Object.values(locationCounts),
+      };
 
     case "areaChart":
       const areaCounts = {};
@@ -543,6 +537,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
                 fontFamily: "Poppins",
               },
             },
+            forceNiceScale: true, // Menyebabkan sumbu Y untuk menggunakan skala yang "bagus"
           },
           series: [
             {
