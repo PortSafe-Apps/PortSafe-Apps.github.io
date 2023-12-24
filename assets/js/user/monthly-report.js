@@ -435,94 +435,85 @@ const createChartConfig = (chartTitle, data, chartType) => {
         ],
       };
 
-    case "locationChart":
-      return {
-        series: [
-          {
-            data: [], // Data akan diisi oleh fungsi drawChart
+      case "locationChart":
+        return {
+          series: [{
+            data: data.series,
+          }],
+          chart: {
+            type: "bar",
+            height: 380,
           },
-        ],
-        chart: {
-          type: "bar",
-          height: 380,
-        },
-        plotOptions: {
-          bar: {
-            barHeight: "100%",
-            distributed: true,
-            horizontal: true,
-            dataLabels: {
-              position: "bottom",
-            },
-          },
-        },
-        colors: [
-          "#33b2df",
-          "#546E7A",
-          "#d4526e",
-          "#13d8aa",
-          "#A5978B",
-          "#2b908f",
-          "#f9a3a4",
-          "#90ee7e",
-          "#f48024",
-          "#69d2e7",
-          "#33b2df",
-          "#546E7A",
-          "#d4526e",
-          "#13d8aa",
-          "#A5978B",
-          "#2b908f",
-        ],
-        dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          style: {
-            colors: ["#fff"],
-          },
-          formatter: function (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
-          },
-          offsetX: 0,
-          dropShadow: {
-            enabled: true,
-          },
-        },
-        stroke: {
-          width: 1,
-          colors: ["#fff"],
-        },
-        xaxis: {
-          categories: [], // Data akan diisi oleh fungsi drawChart
-        },
-        yaxis: {
-          labels: {
-            show: false,
-          },
-        },
-        title: {
-          text: "Jumlah Laporan Berdasarkan Lokasi",
-          align: "center",
-          floating: true,
-        },
-        subtitle: {
-          text: "Data laporan berdasarkan lokasi",
-          align: "center",
-        },
-        tooltip: {
-          theme: "dark",
-          x: {
-            show: false,
-          },
-          y: {
-            title: {
-              formatter: function () {
-                return "";
+          plotOptions: {
+            bar: {
+              barHeight: "100%",
+              distributed: true,
+              horizontal: true,
+              dataLabels: {
+                position: "bottom",
               },
             },
           },
-        },
-      };
+          colors: [
+            "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
+            "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
+            "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
+          ],
+          dataLabels: {
+            enabled: true,
+            textAnchor: "start",
+            style: {
+              colors: ["#fff"],
+            },
+            formatter: function (val, opt) {
+              return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+            },
+            offsetX: 0,
+            dropShadow: {
+              enabled: true,
+            },
+          },
+          stroke: {
+            width: 1,
+            colors: ["#fff"],
+          },
+          xaxis: {
+            categories: data.labels,
+          },
+          yaxis: {
+            labels: {
+              show: false,
+            },
+          },
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
+          },
+          tooltip: {
+            theme: "dark",
+            x: {
+              show: false,
+            },
+            y: {
+              title: {
+                formatter: function () {
+                  return "";
+                },
+              },
+            },
+          },
+        };
 
     case "areaChart":
       return {
