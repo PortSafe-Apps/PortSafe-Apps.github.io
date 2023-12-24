@@ -168,7 +168,7 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Gresik",
       ];
       reportData.forEach((report) => {
-        const locationName = report.area.locationName || "Unknown Location";
+        const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
       return {
