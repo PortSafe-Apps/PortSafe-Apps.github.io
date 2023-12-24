@@ -167,19 +167,13 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
-
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-
-      const seriesData = locationLabels.map(
-        (label) => locationCounts[label] || 0
-      );
-
       return {
         labels: locationLabels,
-        series: [seriesData],
+        series: Object.values(locationCounts),
       };
 
     case "areaChart":
@@ -279,29 +273,6 @@ const transformDataForChart = (reportData, chartType) => {
   }
 };
 
-// Fungsi untuk menghasilkan warna sesuai dengan jumlah lokasi
-const generateColors = (count) => {
-  const colors = [
-    "#FF5733",
-    "#33FF57",
-    "#5733FF",
-    "#FF5733",
-    "#33FF57",
-    "#5733FF",
-    "#FF5733",
-    "#33FF57",
-    "#5733FF",
-    "#FF5733",
-    "#33FF57",
-    "#5733FF",
-    "#FF5733",
-    "#33FF57",
-    "#5733FF",
-    "#FF5733",
-  ];
-  return colors.slice(0, count);
-};
-
 // Fungsi untuk membuat konfigurasi grafik
 const createChartConfig = (chartTitle, data, chartType) => {
   // Pengecekan keberadaan data.labels dan data.series
@@ -319,21 +290,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
           type: "area",
           animations: {
             enabled: true,
-            easing: "easeinout",
-            speed: 1000,
+            easing: 'easeinout',
+            speed: 1000
           },
           dropShadow: {
             enabled: true,
             opacity: 0.1,
             blur: 1,
             left: -5,
-            top: 5,
+            top: 5
           },
           zoom: {
-            enabled: false,
+            enabled: false
           },
           toolbar: {
-            show: false,
+            show: false
           },
         },
         colors: ["#02172C"],
@@ -349,43 +320,43 @@ const createChartConfig = (chartTitle, data, chartType) => {
             opacityFrom: 0.15,
             opacityTo: 0.05,
             stops: [40, 100],
-          },
+          }
         },
         grid: {
-          borderColor: "#dbeaea",
+          borderColor: '#dbeaea',
           strokeDashArray: 4,
           xaxis: {
             lines: {
-              show: true,
-            },
+              show: true
+            }
           },
           yaxis: {
             lines: {
               show: false,
-            },
+            }
           },
           padding: {
             top: 0,
             right: 0,
             bottom: 0,
-            left: 0,
+            left: 0
           },
         },
         legend: {
-          position: "top",
-          horizontalAlign: "right",
+          position: 'top',
+          horizontalAlign: 'right',
           offsetY: -60,
-          fontSize: "14px",
+          fontSize: '14px',
           markers: {
             width: 9,
             height: 9,
             strokeWidth: 0,
-            radius: 20,
+            radius: 20
           },
           itemMargin: {
             horizontal: 5,
-            vertical: 0,
-          },
+            vertical: 0
+          }
         },
         tooltip: {
           theme: "dark",
@@ -498,7 +469,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             endingShape: "rounded",
           },
         },
-        colors: generateColors(xCategories.length), // Menggunakan fungsi generateColors
+        colors: ["#02172C"],
         dataLabels: {
           enabled: false,
         },
@@ -522,6 +493,22 @@ const createChartConfig = (chartTitle, data, chartType) => {
             left: 0,
           },
         },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 6,
+          fontSize: "12px",
+          markers: {
+            width: 10,
+            height: 10,
+            strokeWidth: 0,
+            radius: 2,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
         tooltip: {
           theme: "light",
           marker: {
@@ -537,17 +524,14 @@ const createChartConfig = (chartTitle, data, chartType) => {
           width: 3,
         },
         xaxis: {
-          categories: xCategories, // Menggunakan labels dari data
-          crosshairs: {
-            show: true,
-          },
+          categories: xCategories,
           labels: {
             offsetX: 0,
             offsetY: 0,
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins",
+              fontFamily: "Poppins"
             },
           },
           tooltip: {
@@ -564,16 +548,139 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins"
+            },
+          },
+        },
+        series: [
+          {
+            name: "jumlah laporan",
+            data: seriesData,
+          },
+        ],
+      };
+    case "areaChart":
+      return {
+        chart: {
+          height: 240,
+          type: "bar",
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.02,
+            stops: [40, 100],
+          },
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        legend: {
+          position: "bottom",
+          horizontalAlign: "center",
+          offsetY: 4,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          marker: {
+            show: true,
+          },
+          x: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        stroke: {
+          show: true,
+          curve: "smooth",
+          width: 3,
+        },
+        xaxis: {
+          categories: xCategories,
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
               fontFamily: "Poppins",
             },
           },
         },
-        series: seriesData.map((data, index) => ({
-          name: xCategories[index], // Menggunakan labels dari data
-          data: data,
-        })),
+        series: [
+          {
+            name: "jumlah laporan",
+            data: seriesData,
+          },
+        ],
       };
-
     case "typeChartCategory":
       return {
         chart: {
