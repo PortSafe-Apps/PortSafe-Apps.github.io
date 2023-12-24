@@ -149,24 +149,6 @@ const transformDataForChart = (reportData, chartType) => {
 
     case "locationChart":
       const locationCounts = {};
-      const locationLabels = [
-        "Kantor Pusat SPMT",
-        "Branch Dumai",
-        "Branch Belawan",
-        "Branch Tanjung Intan",
-        "Branch Bumiharjo - Bagendang",
-        "Branch Tanjung Wangi",
-        "Branch Makassar",
-        "Branch Balikpapan",
-        "Branch Trisakti - Mekar Putih",
-        "Branch Jamrud Nilam Mirah",
-        "Branch Lembar - Badas",
-        "Branch Tanjung Emas",
-        "Branch ParePare - Garongkong",
-        "Branch Lhokseumawe",
-        "Branch Malahayati",
-        "Branch Gresik",
-      ];
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
@@ -508,11 +490,25 @@ const createChartConfig = (chartTitle, data, chartType) => {
           width: 3,
         },
         xaxis: {
-          categories: xCategories,
+          categories: [
+            "Kantor Pusat SPMT",
+            "Branch Dumai",
+            "Branch Belawan",
+            "Branch Tanjung Intan",
+            "Branch Bumiharjo - Bagendang",
+            "Branch Tanjung Wangi",
+            "Branch Makassar",
+            "Branch Balikpapan",
+            "Branch Trisakti - Mekar Putih",
+            "Branch Jamrud Nilam Mirah",
+            "Branch Lembar - Badas",
+            "Branch Tanjung Emas",
+            "Branch ParePare - Garongkong",
+            "Branch Lhokseumawe",
+            "Branch Malahayati",
+            "Branch Gresik",
+          ],
           labels: {
-            formatter: function (val) {
-              return val; // Biarkan nilai aslinya tanpa perubahan
-            },
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -524,7 +520,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           tooltip: {
             enabled: false,
           },
-        },
+        },        
         yaxis: {
           labels: {
             formatter: function (val) {
