@@ -436,100 +436,89 @@ const createChartConfig = (chartTitle, data, chartType) => {
       };
 
       case "locationChart":
-        return {
-          series: seriesData, // Menggunakan data.series langsung
-          chart: {
-            type: "bar",
-            height: 380,
-            animations: {
-              enabled: true,
-              easing: "easeinout",
-              speed: 1000,
-            },
-            dropShadow: {
-              enabled: true,
-              opacity: 0.1,
-              blur: 1,
-              left: -5,
-              top: 5,
-            },
-            zoom: {
-              enabled: false,
-            },
-            toolbar: {
-              show: false,
+      return {
+        series: [
+          {
+            data: seriesData, // Menggunakan data.series langsung
+          },
+        ],
+        chart: {
+          type: "bar",
+          height: 380,
+          toolbar: {
+            show: false,
+          },
+        },
+        plotOptions: {
+          bar: {
+            barHeight: "100%",
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: "bottom",
             },
           },
-          plotOptions: {
-            bar: {
-              barHeight: "100%",
-              distributed: true,
-              horizontal: true,
-              dataLabels: {
-                position: "bottom",
-              },
-            },
-          },
-          colors: [
-            "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
-            "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
-            "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
-          ],
-          dataLabels: {
-            enabled: true,
-            textAnchor: "start",
-            style: {
-              colors: ["#fff"],
-            },
-            formatter: function (val, opt) {
-              return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
-            },
-            offsetX: 0,
-            dropShadow: {
-              enabled: true,
-            },
-          },
-          stroke: {
-            width: 1,
+        },
+        colors: [
+          "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
+          "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
+          "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
+        ],
+        dataLabels: {
+          enabled: true,
+          textAnchor: "start",
+          style: {
             colors: ["#fff"],
           },
-          xaxis: {
-            categories: xCategories,
+          formatter: function (val, opt) {
+            return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
           },
-          yaxis: {
-            labels: {
-              show: false,
-            },
+          offsetX: 0,
+          dropShadow: {
+            enabled: true,
           },
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
+        },
+        stroke: {
+          width: 1,
+          colors: ["#fff"],
+        },
+        xaxis: {
+          categories: xCategories,
+        },
+        yaxis: {
+          labels: {
+            show: false,
           },
-          tooltip: {
-            theme: "dark",
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function () {
-                  return "";
-                },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        tooltip: {
+          theme: "dark",
+          x: {
+            show: false,
+          },
+          y: {
+            title: {
+              formatter: function () {
+                return "";
               },
             },
           },
-        };
+        },
+      };
 
     case "areaChart":
       return {
