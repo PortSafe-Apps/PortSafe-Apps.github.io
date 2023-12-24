@@ -434,6 +434,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
       };
+
       case "locationChart":
         return {
           series: [
@@ -475,21 +476,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
             "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
           ],
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-          },
           dataLabels: {
             enabled: true,
             textAnchor: "start",
@@ -516,7 +502,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
               show: false,
             },
           },
-         
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
+          },
           tooltip: {
             theme: "light",
             x: {
