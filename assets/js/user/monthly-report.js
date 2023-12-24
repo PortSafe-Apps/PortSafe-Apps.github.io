@@ -116,8 +116,6 @@ const drawChart = async () => {
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
-  let locationLabels; // Pindahkan deklarasi keluar dari blok switch
-
   if (!reportData || reportData.length === 0) {
     return { labels: [], series: [] };
   }
@@ -172,7 +170,10 @@ const transformDataForChart = (reportData, chartType) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-      const seriesData = Object.values(locationCounts).map(value => parseInt(value));
+      const seriesData = Object.values(locationCounts).map((value) =>
+        parseInt(value)
+      );
+      
       return {
         labels: locationLabels,
         series: seriesData,
@@ -469,9 +470,22 @@ const createChartConfig = (chartTitle, data, chartType) => {
             columnWidth: "40%",
             endingShape: "rounded",
             colors: [
-              '#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF',
-              '#FF5733', '#33FF57', '#5733FF', '#FF5733', '#33FF57', '#5733FF',
-              '#FF5733', '#33FF57', '#5733FF', '#FF5733', // Atur warna batang secara langsung
+              "#FF5733",
+              "#33FF57",
+              "#5733FF",
+              "#FF5733",
+              "#33FF57",
+              "#5733FF",
+              "#FF5733",
+              "#33FF57",
+              "#5733FF",
+              "#FF5733",
+              "#33FF57",
+              "#5733FF",
+              "#FF5733",
+              "#33FF57",
+              "#5733FF",
+              "#FF5733", // Atur warna batang secara langsung
             ],
           },
         },
