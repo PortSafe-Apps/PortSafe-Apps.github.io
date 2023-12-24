@@ -148,7 +148,6 @@ const transformDataForChart = (reportData, chartType) => {
       };
 
     case "locationChart":
-      const locationCounts = {};
       const locationLabels = [
         "Kantor Pusat SPMT",
         "Branch Dumai",
@@ -167,15 +166,20 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
+    
+      const locationCounts = {};
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
+    
+      // Pastikan semua lokasi memiliki jumlah laporan yang sesuai
+      const seriesData = locationLabels.map((label) => locationCounts[label] || 0);
+    
       return {
         labels: locationLabels,
-        series: Object.values(locationCounts),
-      };
-
+        series: seriesData,
+    };
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
