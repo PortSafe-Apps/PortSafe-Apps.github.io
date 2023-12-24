@@ -426,26 +426,52 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "locationChart":
       return {
         chart: {
-          height: 240,
-          type: "bar", // Menggunakan tipe bar
+          height: 400,
+          type: "bar",
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 1000,
+          },
+          dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 2,
+            left: -1,
+            top: 5,
+          },
+          zoom: {
+            enabled: false,
+          },
           toolbar: {
             show: false,
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            columnWidth: "60%",
+            endingShape: "rounded",
           },
         },
         colors: ["#02172C"],
         dataLabels: {
           enabled: false,
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            type: "vertical",
-            shadeIntensity: 1,
-            inverseColors: true,
-            opacityFrom: 0.15,
-            opacityTo: 0.02,
-            stops: [40, 100],
-          },
         },
         grid: {
           borderColor: "#dbeaea",
@@ -470,13 +496,13 @@ const createChartConfig = (chartTitle, data, chartType) => {
         legend: {
           position: "bottom",
           horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
+          offsetY: 6,
+          fontSize: "12px",
           markers: {
-            width: 9,
-            height: 9,
+            width: 10,
+            height: 10,
             strokeWidth: 0,
-            radius: 20,
+            radius: 2,
           },
           itemMargin: {
             horizontal: 5,
@@ -484,7 +510,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         tooltip: {
-          theme: "dark",
+          theme: "light",
           marker: {
             show: true,
           },
@@ -492,25 +518,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        plotOptions: {
-          bar: {
-            horizontal: true, // Mengatur orientasi bar menjadi horizontal
-          },
+        stroke: {
+          show: true,
+          colors: ["transparent"],
+          width: 3,
         },
         xaxis: {
           categories: xCategories,
@@ -520,6 +531,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins"
             },
           },
           tooltip: {
@@ -533,6 +545,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins"
             },
           },
         },
