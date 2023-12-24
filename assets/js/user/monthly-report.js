@@ -171,10 +171,14 @@ const transformDataForChart = (reportData, chartType) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
+    
+      const locationSeriesData = locationLabels.map((label) => locationCounts[label] || 0);
+    
       return {
         labels: locationLabels,
-        series: Object.values(locationCounts),
+        series: locationSeriesData,
       };
+    
 
     case "areaChart":
       const areaCounts = {};
