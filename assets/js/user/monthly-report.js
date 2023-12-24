@@ -169,7 +169,9 @@ const transformDataForChart = (reportData, chartType) => {
         ];
         reportData.forEach((report) => {
           const locationName = report.location.locationName || "Unknown Location";
-          locationCounts[locationName] = Math.floor((locationCounts[locationName] || 0) + 1); // Ubah nilai ke bilangan bulat
+          const currentCount = locationCounts[locationName] || 0;
+          console.log(`Location: ${locationName}, Current Count: ${currentCount}`);
+          locationCounts[locationName] = Math.floor(currentCount + 1);
         });
         return {
           labels: locationLabels,
