@@ -288,9 +288,24 @@ const createChartConfig = (chartTitle, data, chartType) => {
         chart: {
           height: 240,
           type: "area",
-          toolbar: {
-            show: false,
-          },
+          animations: {
+            enabled: true,
+            easing: 'easeinout',
+            speed: 1000
+        },
+        dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 1,
+            left: -5,
+            top: 5
+        },
+        zoom: {
+            enabled: false
+        },
+        toolbar: {
+            show: false
+        },
         },
         colors: ["#02172C"],
         dataLabels: {
@@ -387,6 +402,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins",
             },
           },
           tooltip: {
@@ -400,6 +416,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
+              fontFamily: "Poppins",
             },
           },
         },
