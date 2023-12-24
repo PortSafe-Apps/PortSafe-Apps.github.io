@@ -167,16 +167,15 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Malahayati",
         "Branch Gresik",
       ];
-      locationLabels.forEach((label) => {
-        locationCounts[label] = (locationCounts[label] || 0) + 1;
+      reportData.forEach((report) => {
+        const locationName = report.area.locationName || "Unknown Location";
+        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-
-      const locationSeriesData = locationLabels.map((label) => Math.round(locationCounts[label] || 0));
-
       return {
         labels: locationLabels,
-        series: [locationSeriesData],
+        series: Object.values(locationCounts),
       };
+
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
