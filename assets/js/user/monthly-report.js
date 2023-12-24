@@ -389,6 +389,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         xaxis: {
           categories: xCategories,
+          crosshairs: {
+            show: true,
+          },
           labels: {
             offsetX: 0,
             offsetY: 0,
