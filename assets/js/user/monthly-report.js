@@ -126,6 +126,8 @@ function generateColorPalette(count) {
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
+  let locationLabels; // Pindahkan deklarasi keluar dari blok switch
+
   if (!reportData || reportData.length === 0) {
     return { labels: [], series: [] };
   }
@@ -476,9 +478,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
             horizontal: true,
             columnWidth: "40%",
             endingShape: "rounded",
+            colors: generateColorPalette(xCategories.length), 
           },
         },
-        colors: generateColorPalette(locationLabels.length),
         dataLabels: {
           enabled: false,
         },
