@@ -426,7 +426,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "locationChart":
       return {
         chart: {
-          height: 400,
+          height: 240,
           type: "bar",
           animations: {
             enabled: true,
@@ -464,8 +464,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         plotOptions: {
           bar: {
-            horizontal: true,
-            columnWidth: "60%",
+            horizontal: false,
+            columnWidth: "40%",
             endingShape: "rounded",
           },
         },
@@ -493,22 +493,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             left: 0,
           },
         },
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 6,
-          fontSize: "12px",
-          markers: {
-            width: 10,
-            height: 10,
-            strokeWidth: 0,
-            radius: 2,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
         tooltip: {
           theme: "light",
           marker: {
@@ -525,6 +509,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         xaxis: {
           categories: xCategories,
+          crosshairs: {
+            show: true,
+          },
           labels: {
             offsetX: 0,
             offsetY: 0,
