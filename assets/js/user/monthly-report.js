@@ -168,24 +168,24 @@ const transformDataForChart = (reportData, chartType) => {
         "Branch Gresik",
       ];
 
-      // Inisialisasi counts untuk semua label
+      // Inisialisasi counts dengan 0
       locationLabels.forEach((label) => {
         locationCounts[label] = 0;
       });
 
+      // Hitung jumlah laporan untuk setiap lokasi
       reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
-        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+        locationCounts[locationName]++;
       });
 
+      // Dapatkan labels dan series sesuai urutan
       const labels = locationLabels.map((label) => label);
-      const series = locationLabels.map((label) => locationCounts[label]);
-
-      console.log("Final Location Counts:", locationCounts);
+      const series = labels.map((label) => locationCounts[label]);
 
       return {
         labels: labels,
-        series: [series], // Menggunakan array di sini
+        series: [series], // Jaga agar series tetap dalam bentuk array
       };
     case "areaChart":
       const areaCounts = {};
@@ -434,15 +434,17 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
       };
-
       case "locationChart":
         return {
           series: [{
-            data: data.series,
+            data: data.series[0],  // Sesuaikan dengan struktur data yang diharapkan
           }],
           chart: {
             type: "bar",
             height: 380,
+            toolbar: {
+              show: false,
+            },
           },
           plotOptions: {
             bar: {
@@ -514,7 +516,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
         };
-
+    
     case "areaChart":
       return {
         chart: {
