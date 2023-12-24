@@ -146,6 +146,7 @@ const transformDataForChart = (reportData, chartType) => {
         ],
         series: monthCounts,
       };
+
     case "locationChart":
       const locationCounts = {};
       const locationLabels = [
@@ -170,14 +171,11 @@ const transformDataForChart = (reportData, chartType) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
       });
-      const seriesData = Object.values(locationCounts).map((value) =>
-        parseInt(value)
-      );
-      
       return {
         labels: locationLabels,
-        series: seriesData,
+        series: Object.values(locationCounts),
       };
+
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -292,21 +290,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
           type: "area",
           animations: {
             enabled: true,
-            easing: "easeinout",
-            speed: 1000,
+            easing: 'easeinout',
+            speed: 1000
           },
           dropShadow: {
             enabled: true,
             opacity: 0.1,
             blur: 1,
             left: -5,
-            top: 5,
+            top: 5
           },
           zoom: {
-            enabled: false,
+            enabled: false
           },
           toolbar: {
-            show: false,
+            show: false
           },
         },
         colors: ["#02172C"],
@@ -322,43 +320,43 @@ const createChartConfig = (chartTitle, data, chartType) => {
             opacityFrom: 0.15,
             opacityTo: 0.05,
             stops: [40, 100],
-          },
+          }
         },
         grid: {
-          borderColor: "#dbeaea",
+          borderColor: '#dbeaea',
           strokeDashArray: 4,
           xaxis: {
             lines: {
-              show: true,
-            },
+              show: true
+            }
           },
           yaxis: {
             lines: {
               show: false,
-            },
+            }
           },
           padding: {
             top: 0,
             right: 0,
             bottom: 0,
-            left: 0,
+            left: 0
           },
         },
         legend: {
-          position: "top",
-          horizontalAlign: "right",
+          position: 'top',
+          horizontalAlign: 'right',
           offsetY: -60,
-          fontSize: "14px",
+          fontSize: '14px',
           markers: {
             width: 9,
             height: 9,
             strokeWidth: 0,
-            radius: 20,
+            radius: 20
           },
           itemMargin: {
             horizontal: 5,
-            vertical: 0,
-          },
+            vertical: 0
+          }
         },
         tooltip: {
           theme: "dark",
@@ -469,26 +467,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
             horizontal: true,
             columnWidth: "40%",
             endingShape: "rounded",
-            colors: [
-              "#FF5733",
-              "#33FF57",
-              "#5733FF",
-              "#FF5733",
-              "#33FF57",
-              "#5733FF",
-              "#FF5733",
-              "#33FF57",
-              "#5733FF",
-              "#FF5733",
-              "#33FF57",
-              "#5733FF",
-              "#FF5733",
-              "#33FF57",
-              "#5733FF",
-              "#FF5733", // Atur warna batang secara langsung
-            ],
           },
         },
+        colors: ["#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
+        "#FF5733", "#33FF57", "#5733FF", "#FF5733", "#33FF57", "#5733FF",
+        "#FF5733", "#33FF57", "#5733FF", "#FF5733"],
+
         dataLabels: {
           enabled: false,
         },
@@ -537,7 +521,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins",
+              fontFamily: "Poppins"
             },
           },
           tooltip: {
@@ -546,12 +530,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
+            formatter: function (val) {
+              return parseInt(val); // Format nilai sebagai integer
+            },
             offsetX: -10,
             offsetY: 0,
             style: {
               colors: "#8480ae",
               fontSize: "12px",
-              fontFamily: "Poppins",
+              fontFamily: "Poppins"
             },
           },
         },
@@ -565,7 +552,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
     case "areaChart":
       return {
         chart: {
-          height: 350,
+          height: 240,
           type: "bar",
           toolbar: {
             show: false,
