@@ -382,6 +382,11 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
+        stroke: {
+          show: true,
+          curve: "smooth",
+          width: 3,
+        },
         xaxis: {
           categories: xCategories,
           labels: {
