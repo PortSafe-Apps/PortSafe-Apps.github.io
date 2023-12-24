@@ -407,10 +407,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
-            formatter: function (val) {
-              // Format nilai sebagai integer
-              return val % 1 === 0 ? val : '';
-            },
             offsetX: -10,
             offsetY: 0,
             style: {
@@ -514,9 +510,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
         xaxis: {
           categories: xCategories,
           labels: {
-            formatter: function (val) {
-              return val; // Biarkan nilai aslinya tanpa perubahan
-            },
             offsetX: 0,
             offsetY: 0,
             style: {
@@ -532,7 +525,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         yaxis: {
           labels: {
             formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
+              // Format nilai sebagai integer
+              return val % 1 === 0 ? val : '';
             },
             offsetX: -10,
             offsetY: 0,
