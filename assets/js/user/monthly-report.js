@@ -524,9 +524,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
-            formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
-            },
             offsetX: -10,
             offsetY: 0,
             style: {
