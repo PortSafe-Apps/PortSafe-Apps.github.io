@@ -147,43 +147,46 @@ const transformDataForChart = (reportData, chartType) => {
         series: monthCounts,
       };
 
-      case "locationChart":
-        const locationCounts = {};
-        const locationLabels = [
-          "Kantor Pusat SPMT",
-          "Branch Dumai",
-          "Branch Belawan",
-          "Branch Tanjung Intan",
-          "Branch Bumiharjo - Bagendang",
-          "Branch Tanjung Wangi",
-          "Branch Makassar",
-          "Branch Balikpapan",
-          "Branch Trisakti - Mekar Putih",
-          "Branch Jamrud Nilam Mirah",
-          "Branch Lembar - Badas",
-          "Branch Tanjung Emas",
-          "Branch ParePare - Garongkong",
-          "Branch Lhokseumawe",
-          "Branch Malahayati",
-          "Branch Gresik",
-        ];
-      
-        reportData.forEach((report) => {
-          const locationName = report.location.locationName || "Unknown Location";
-          locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
-        });
-      
-        const labels = locationLabels.map((label) => {
-          return label;
-        });
-      
-        console.log("Final Location Counts:", locationCounts);
-      
-        return {
-          labels: labels,
-          series: Object.values(locationCounts),
-        };
+    case "locationChart":
+      const locationCounts = {};
+      const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ];
 
+      // Inisialisasi counts untuk semua label
+      locationLabels.forEach((label) => {
+        locationCounts[label] = 0;
+      });
+
+      reportData.forEach((report) => {
+        const locationName = report.location.locationName || "Unknown Location";
+        locationCounts[locationName] = (locationCounts[locationName] || 0) + 1;
+      });
+
+      const labels = locationLabels.map((label) => label);
+      const series = locationLabels.map((label) => locationCounts[label]);
+
+      console.log("Final Location Counts:", locationCounts);
+
+      return {
+        labels: labels,
+        series: [series], // Menggunakan array di sini
+      };
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -434,31 +437,48 @@ const createChartConfig = (chartTitle, data, chartType) => {
 
     case "locationChart":
       return {
-        series: [{
-          data: [], // Data akan diisi oleh fungsi drawChart
-        }],
+        series: [
+          {
+            data: [], // Data akan diisi oleh fungsi drawChart
+          },
+        ],
         chart: {
-          type: 'bar',
+          type: "bar",
           height: 380,
         },
         plotOptions: {
           bar: {
-            barHeight: '100%',
+            barHeight: "100%",
             distributed: true,
             horizontal: true,
             dataLabels: {
-              position: 'bottom',
+              position: "bottom",
             },
           },
         },
-        colors: ['#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f', '#f9a3a4', '#90ee7e',
-          '#f48024', '#69d2e7', '#33b2df', '#546E7A', '#d4526e', '#13d8aa', '#A5978B', '#2b908f'
+        colors: [
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
+          "#f9a3a4",
+          "#90ee7e",
+          "#f48024",
+          "#69d2e7",
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
         ],
         dataLabels: {
           enabled: true,
-          textAnchor: 'start',
+          textAnchor: "start",
           style: {
-            colors: ['#fff'],
+            colors: ["#fff"],
           },
           formatter: function (val, opt) {
             return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
@@ -470,7 +490,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         stroke: {
           width: 1,
-          colors: ['#fff'],
+          colors: ["#fff"],
         },
         xaxis: {
           categories: [], // Data akan diisi oleh fungsi drawChart
@@ -481,29 +501,29 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
         title: {
-          text: 'Jumlah Laporan Berdasarkan Lokasi',
-          align: 'center',
+          text: "Jumlah Laporan Berdasarkan Lokasi",
+          align: "center",
           floating: true,
         },
         subtitle: {
-          text: 'Data laporan berdasarkan lokasi',
-          align: 'center',
+          text: "Data laporan berdasarkan lokasi",
+          align: "center",
         },
         tooltip: {
-          theme: 'dark',
+          theme: "dark",
           x: {
             show: false,
           },
           y: {
             title: {
               formatter: function () {
-                return '';
+                return "";
               },
             },
           },
         },
       };
-      
+
     case "areaChart":
       return {
         chart: {
