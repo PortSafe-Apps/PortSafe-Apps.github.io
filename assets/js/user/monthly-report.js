@@ -146,7 +146,6 @@ const transformDataForChart = (reportData, chartType) => {
         ],
         series: monthCounts,
       };
-
     case "locationChart":
       const locationCounts = {};
       const locationLabels = [
@@ -185,8 +184,9 @@ const transformDataForChart = (reportData, chartType) => {
 
       return {
         labels: labels,
-        series: [series], // Ubah bentuk series menjadi array dari array
+        series: [series], // Jaga agar series tetap dalam bentuk array
       };
+
     case "areaChart":
       const areaCounts = {};
       const areaLabels = [
@@ -436,89 +436,89 @@ const createChartConfig = (chartTitle, data, chartType) => {
       };
 
       case "locationChart":
-      return {
-        series: [
-          {
-            data: seriesData, // Menggunakan data.series langsung
-          },
-        ],
-        chart: {
-          type: "bar",
-          height: 380,
-          toolbar: {
-            show: false,
-          },
-        },
-        plotOptions: {
-          bar: {
-            barHeight: "100%",
-            distributed: true,
-            horizontal: true,
-            dataLabels: {
-              position: "bottom",
+        return {
+          series: [
+            {
+              data: seriesData[0], // Menggunakan data.series langsung
+            },
+          ],
+          chart: {
+            type: "bar",
+            height: 380,
+            toolbar: {
+              show: false,
             },
           },
-        },
-        colors: [
-          "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
-          "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
-          "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
-        ],
-        dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          style: {
-            colors: ["#fff"],
-          },
-          formatter: function (val, opt) {
-            return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
-          },
-          offsetX: 0,
-          dropShadow: {
-            enabled: true,
-          },
-        },
-        stroke: {
-          width: 1,
-          colors: ["#fff"],
-        },
-        xaxis: {
-          categories: xCategories,
-        },
-        yaxis: {
-          labels: {
-            show: false,
-          },
-        },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        tooltip: {
-          theme: "dark",
-          x: {
-            show: false,
-          },
-          y: {
-            title: {
-              formatter: function () {
-                return "";
+          plotOptions: {
+            bar: {
+              barHeight: "100%",
+              distributed: true,
+              horizontal: true,
+              dataLabels: {
+                position: "bottom",
               },
             },
           },
-        },
-      };
+          colors: [
+            "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
+            "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
+            "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
+          ],
+          dataLabels: {
+            enabled: true,
+            textAnchor: "start",
+            style: {
+              colors: ["#fff"],
+            },
+            formatter: function (val, opt) {
+              return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
+            },
+            offsetX: 0,
+            dropShadow: {
+              enabled: true,
+            },
+          },
+          stroke: {
+            width: 1,
+            colors: ["#fff"],
+          },
+          xaxis: {
+            categories: xCategories,
+          },
+          yaxis: {
+            labels: {
+              show: false,
+            },
+          },
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
+          },
+          tooltip: {
+            theme: "dark",
+            x: {
+              show: false,
+            },
+            y: {
+              title: {
+                formatter: function () {
+                  return "";
+                },
+              },
+            },
+          },
+        };      
 
     case "areaChart":
       return {
