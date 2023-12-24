@@ -185,7 +185,7 @@ const transformDataForChart = (reportData, chartType) => {
 
       return {
         labels: labels,
-        series: [series], // Jaga agar series tetap dalam bentuk array
+        series: [series], // Ubah bentuk series menjadi array dari array
       };
     case "areaChart":
       const areaCounts = {};
@@ -434,14 +434,28 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
       };
+
       case "locationChart":
         return {
-          series: [{
-            data: data.series || [], // Gunakan data.series atau array kosong jika tidak ada
-          }],
+          series: seriesData, // Menggunakan data.series langsung
           chart: {
             type: "bar",
             height: 380,
+            animations: {
+              enabled: true,
+              easing: "easeinout",
+              speed: 1000,
+            },
+            dropShadow: {
+              enabled: true,
+              opacity: 0.1,
+              blur: 1,
+              left: -5,
+              top: 5,
+            },
+            zoom: {
+              enabled: false,
+            },
             toolbar: {
               show: false,
             },
@@ -468,7 +482,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
               colors: ["#fff"],
             },
             formatter: function (val, opt) {
-              return opt.w.globals.labels[opt.dataPointIndex] + ":  " + val;
+              return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
             },
             offsetX: 0,
             dropShadow: {
@@ -480,7 +494,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             colors: ["#fff"],
           },
           xaxis: {
-            categories: data.labels || [], // Gunakan data.labels atau array kosong jika tidak ada
+            categories: xCategories,
           },
           yaxis: {
             labels: {
@@ -516,7 +530,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
         };
-    
+
     case "areaChart":
       return {
         chart: {
