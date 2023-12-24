@@ -469,7 +469,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             endingShape: "rounded",
           },
         },
-        colors: ["#0134d4"],
+        colors: ["#02172C"],
         dataLabels: {
           enabled: false,
         },
@@ -524,9 +524,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         yaxis: {
           labels: {
-            formatter: function (val) {
-              return parseInt(val); // Format nilai sebagai integer
-            },
             offsetX: -10,
             offsetY: 0,
             style: {
