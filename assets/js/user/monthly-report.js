@@ -444,7 +444,22 @@ const createChartConfig = (chartTitle, data, chartType) => {
           ],
           chart: {
             type: "bar",
-            height: 380,
+            height: 500,
+            animations: {
+              enabled: true,
+              easing: "easeinout",
+              speed: 1000,
+            },
+            dropShadow: {
+              enabled: true,
+              opacity: 0.1,
+              blur: 1,
+              left: -5,
+              top: 5,
+            },
+            zoom: {
+              enabled: false,
+            },
             toolbar: {
               show: false,
             },
@@ -454,9 +469,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
               barHeight: "100%",
               distributed: true,
               horizontal: true,
-              dataLabels: {
-                position: "bottom",
-              },
             },
           },
           colors: [
@@ -468,7 +480,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
             enabled: true,
             textAnchor: "start",
             style: {
-              colors: ["#fff"],
+              color: "text-dark",
+              fontWeight: "normal",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
             },
             formatter: function (val, opt) {
               return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
@@ -515,6 +530,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
                 formatter: function () {
                   return "";
                 },
+              },
+              formatter: function (value) {
+                return Math.round(value); // Mengubah nilai menjadi bulat
               },
             },
           },
