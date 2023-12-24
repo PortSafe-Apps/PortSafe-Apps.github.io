@@ -434,109 +434,144 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
       };
-
-      case "locationChart":
-        return {
-          series: [
-            {
-              data: seriesData[0], // Menggunakan data.series langsung
-            },
-          ],
-          chart: {
-            type: "bar",
-            height: 500,
-            animations: {
-              enabled: true,
-              easing: "easeinout",
-              speed: 1000,
-            },
-            dropShadow: {
-              enabled: true,
-              opacity: 0.1,
-              blur: 1,
-              left: -5,
-              top: 5,
-            },
-            zoom: {
-              enabled: false,
-            },
-            toolbar: {
-              show: false,
-            },
+    case "locationChart":
+      return {
+        series: [
+          {
+            data: seriesData[0], // Menggunakan data.series langsung
           },
-          plotOptions: {
-            bar: {
-              barHeight: "100%",
-              distributed: true,
-              horizontal: true,
-            },
-          },
-          colors: [
-            "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
-            "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
-            "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
-          ],
-          dataLabels: {
+        ],
+        chart: {
+          type: "bar",
+          height: 500,
+          animations: {
             enabled: true,
-            textAnchor: "start",
-            style: {
-              colors: ["#02172C"],
-              fontWeight: "normal",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-            formatter: function (val, opt) {
-              return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
-            },
-            offsetX: 0,
-            dropShadow: {
-              enabled: true,
-            },
+            easing: "easeinout",
+            speed: 1000,
           },
-          stroke: {
-            width: 1,
-            colors: ["#fff"],
+          dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 1,
+            left: -5,
+            top: 5,
           },
+          zoom: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: true,
+            columnWidth: "40%",
+            endingShape: "rounded",
+          },
+        },
+        colors: [
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
+          "#f9a3a4",
+          "#90ee7e",
+          "#f48024",
+          "#69d2e7",
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
+        ],
+        dataLabels: {
+          enabled: true,
+          textAnchor: "start",
+          offsetX: 0,
+          offsetY: 0,
+          formatter: function (val, opt) {
+            return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
+          },
+          style: {
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
+          },
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
           xaxis: {
-            categories: xCategories,
+            lines: {
+              show: true,
+            },
           },
           yaxis: {
-            labels: {
+            lines: {
               show: false,
             },
           },
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
+          padding: {
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
+          },
+        },
+        stroke: {
+          show: true,
+          colors: ["transparent"],
+          width: 3,
+        },
+        xaxis: {
+          categories: xCategories,
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
             offsetY: 0,
-            floating: false,
             style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
+                colors: '#8380ae',
+                fontSize: '12px'
             },
+        }
+        },
+        tooltip: {
+          theme: "light",
+          x: {
+            show: false,
           },
-          tooltip: {
-            theme: "dark",
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function () {
-                  return "";
-                },
-              },
-              formatter: function (value) {
-                return Math.round(value); // Mengubah nilai menjadi bulat
+          y: {
+            title: {
+              formatter: function () {
+                return "";
               },
             },
+            formatter: function (value) {
+              return Math.round(value); // Mengubah nilai menjadi bulat
+            },
           },
-        };      
+        },
+      };
 
     case "areaChart":
       return {
