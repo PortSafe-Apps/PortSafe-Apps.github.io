@@ -470,6 +470,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
+            columnWidth: '40%',
             horizontal: true,
           },
         },
@@ -477,21 +478,13 @@ const createChartConfig = (chartTitle, data, chartType) => {
         dataLabels: {
           enabled: false,
         },
-        stroke: {
-          show: true,
-          colors: ["transparent"],
-          width: 3,
-        },
         xaxis: {
           categories: xCategories,
-          crosshairs: {
-            show: true,
-          },
           labels: {
             offsetX: 0,
             offsetY: 0,
             style: {
-              colors: "#8480ae",
+              colors: ["#8480ae"],
               fontSize: "12px",
               fontFamily: "Poppins",
             },
@@ -499,7 +492,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           tooltip: {
             enabled: false,
           },
-        },
+        },        
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
