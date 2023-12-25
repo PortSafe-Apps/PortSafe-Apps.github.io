@@ -620,14 +620,14 @@ const createChartConfig = (chartTitle, data, chartType) => {
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
           yaxis: {
             lines: {
-              show: false,
+              show: true, // Menampilkan garis grid sepanjang sumbu y
+            },
+          },
+          xaxis: {
+            lines: {
+              show: false, // Menyembunyikan garis grid sepanjang sumbu x
             },
           },
           padding: {
@@ -675,6 +675,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
               fontSize: "12px",
               fontFamily: "Poppins",
             },
+          },
+        },
+        tooltip: {
+          enabled: true,
+          x: {
+            show: true,
           },
         },
       };
