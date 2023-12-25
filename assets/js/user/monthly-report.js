@@ -469,12 +469,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             barHeight: "100%",
             distributed: true,
             horizontal: true,
-            dataLabels: {
-              position: "bottom",
-              enabled: false,
-            },
             endingShape: "rounded",
-            barWidth: 10, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
+            barWidth: 35, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
           },
         },
         colors: [
@@ -496,20 +492,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           "#2b908f",
         ],
         dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          style: {
-            colors: ["#8480ae"], // Warna tulisan di dalam bar
-            fontSize: "12px", // Ukuran font tulisan di dalam bar
-            fontFamily: "Poppins", // Font family tulisan di dalam bar
-          },
-          formatter: function (val, opt) {
-            return xCategories[opt.dataPointIndex] + ":  " + val;
-          },
-          offsetX: 0,
-          dropShadow: {
-            enabled: false,
-          },
+          enabled: false,
         },
         stroke: {
           show: true,
@@ -518,6 +501,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         xaxis: {
           categories: xCategories,
+          crosshairs: {
+            show: true,
+          },
+          labels: {
+            show: true, // Menampilkan labels pada sumbu X
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8380ae",
+              fontSize: "12px",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
         },
         yaxis: {
           labels: {
@@ -528,22 +526,22 @@ const createChartConfig = (chartTitle, data, chartType) => {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
           yaxis: {
-              lines: {
-                  show: true,  // Menampilkan garis grid sepanjang sumbu y
-              },
+            lines: {
+              show: true, // Menampilkan garis grid sepanjang sumbu y
+            },
           },
           xaxis: {
-              lines: {
-                  show: false,  // Menyembunyikan garis grid sepanjang sumbu x
-              },
+            lines: {
+              show: false, // Menyembunyikan garis grid sepanjang sumbu x
+            },
           },
           padding: {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0,
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
           },
-      },
+        },
 
         subtitle: {
           text: subtitleText,
