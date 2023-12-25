@@ -1,3 +1,30 @@
+// Color palette untuk chart combined
+const combinedChartColorPalette = [
+  "#4CAF50",
+  "#2196F3",
+  "#FFC107",
+  "#FF5722",
+  "#9C27B0",
+  "#673AB7",
+  "#795548",
+  "#607D8B",
+  "#FF9800",
+  "#00BCD4",
+  "#8BC34A",
+  "#03A9F4",
+  "#FFEB3B",
+  "#9E9E9E",
+  "#E91E63",
+  "#CDDC39",
+  "#009688",
+  "#FF5722",
+  "#9C27B0",
+  "#673AB7",
+  // Tambahkan warna sesuai kebutuhan
+];
+
+export default combinedChartColorPalette;
+
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -88,29 +115,13 @@ const drawChart = async () => {
     );
     renderChart("#areaChart", areaChartConfig);
 
-    // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(
-      reportData,
-      "typeChartCategory"
+    // Menggambar Combined Chart
+    const transformedCombinedData = transformDataForCombinedChart(reportData);
+    const combinedChartConfig = createCombinedChartConfig(
+      "Jumlah Laporan Berdasarkan jenis dan subjenis pelanggaran",
+      transformedCombinedData
     );
-    const typeChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
-      transformedTypeData,
-      "typeChartCategory"
-    );
-    renderChart("#typeChart", typeChartConfig);
-
-    // Menggambar Subtype Chart
-    const transformedSubtypeData = transformDataForChart(
-      reportData,
-      "subtypeChartCategory"
-    );
-    const subtypeChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Sub Jenis Pelanggaran",
-      transformedSubtypeData,
-      "subtypeChartCategory"
-    );
-    renderChart("#subtypeChart", subtypeChartConfig);
+    renderChart("#combinedChart", combinedChartConfig);
   }
 };
 
@@ -224,8 +235,7 @@ const transformDataForChart = (reportData, chartType) => {
         series: [sortedSeriesArea], // Tetap dalam bentuk array
       };
 
-    case "typeChartCategory":
-      const typeCounts = {};
+    case "combinedChart":
       const typeLabels = [
         "REAKSI ORANG",
         "ALAT PELINDUNG DIRI",
@@ -234,21 +244,6 @@ const transformDataForChart = (reportData, chartType) => {
         "PROSEDUR DAN CARA KERJA",
       ];
 
-      reportData.forEach((report) => {
-        const typeName =
-          report.typeDangerousActions.length > 0
-            ? report.typeDangerousActions[0].typeName
-            : "Unknown Type";
-        typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
-      });
-
-      return {
-        labels: typeLabels,
-        series: Object.values(typeCounts),
-      };
-
-    case "subtypeChartCategory":
-      const subtypeCounts = {};
       const subtypeLabels = [
         "Merubah Fungsi Alat Pelindung Diri",
         "Merubah Posisi",
@@ -282,21 +277,25 @@ const transformDataForChart = (reportData, chartType) => {
         "Tidak diikuti",
       ];
 
-      reportData.forEach((report) => {
-        const subTypes =
-          report.typeDangerousActions.length > 0
-            ? report.typeDangerousActions[0].subTypes
-            : [];
-        const subTypeName =
-          subTypes.length > 0 ? subTypes[0] : "Unknown Subtype";
-        subtypeCounts[subTypeName] = (subtypeCounts[subTypeName] || 0) + 1;
+      const combinedLabels = [];
+      typeLabels.forEach((typeLabel) => {
+        subtypeLabels.forEach((subtypeLabel) => {
+          combinedLabels.push(`${typeLabel} - ${subtypeLabel}`);
+        });
       });
 
-      return {
-        labels: subtypeLabels,
-        series: Object.values(subtypeCounts),
-      };
+      const combinedCounts = {};
+      combinedLabels.forEach((label) => {
+        combinedCounts[label] = (combinedCounts[label] || 0) + 1;
+      });
 
+      const labelsCombined = Object.keys(combinedCounts);
+      const seriesCombined = Object.values(combinedCounts);
+
+      return {
+        labels: labelsCombined,
+        series: [seriesCombined], // Tetap dalam bentuk array
+      };
     default:
       return {};
   }
@@ -684,120 +683,54 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         },
       };
-    case "typeChartCategory":
-      return {
-        chart: {
-          height: 240,
-          type: "pie",
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["#02172C"],
-        dataLabels: {
-          enabled: false,
-        },
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          theme: "dark",
-          marker: {
-            show: true,
-          },
-          x: {
-            show: false,
-          },
-        },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        series: seriesData,
-        labels: xCategories,
-      };
 
-    case "subtypeChartCategory":
+    case "combinedChart":
       return {
+        series: seriesData[0], // Menggunakan data.series langsung
         chart: {
-          height: 240,
           type: "donut",
-          toolbar: {
-            show: false,
-          },
+          width: "100%",
+          height: 400,
         },
-        colors: ["#02172C"],
         dataLabels: {
           enabled: false,
         },
+        plotOptions: {
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "75%",
+            },
+            offsetY: 20,
+          },
+          stroke: {
+            colors: undefined,
+          },
+        },
+        colors: combinedChartColorPalette.slice(0, seriesData[0].length),
+        title: {
+          text: "Laporan Keselamatan",
+          style: {
+            fontSize: "18px",
+          },
+        },
+        labels: xCategories,
         legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
+          position: "left",
+          offsetY: 80,
         },
         tooltip: {
           theme: "dark",
           marker: {
             show: true,
           },
-          x: {
-            show: false,
+          y: {
+            formatter: function (val) {
+              return val;
+            },
           },
         },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        series: seriesData,
-        labels: xCategories,
       };
-
     default:
       return {};
   }
