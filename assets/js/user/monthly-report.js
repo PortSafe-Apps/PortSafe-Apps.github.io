@@ -490,7 +490,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           bar: {
             borderRadius: 4,
             horizontal: true,
-            barWidth: "60%",
+            columnWidth: "60%",
           },
         },
         colors: ["#02172C"],
@@ -528,12 +528,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
           strokeDashArray: 4,
           yaxis: {
             lines: {
-              show: true, // Menampilkan garis grid sepanjang sumbu y
+              show: true, 
             },
           },
           xaxis: {
             lines: {
-              show: false, // Menyembunyikan garis grid sepanjang sumbu x
+              show: false, 
             },
           },
           padding: {
@@ -565,7 +565,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
           y: {
             formatter: function (value) {
-              return parseInt(value); // Mengonversi nilai ke integer
+              return parseInt(value); 
             },
           },
         },
@@ -576,7 +576,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         series: [
           {
             name: "jumlah laporan",
-            data: seriesData[0], // Menggunakan data.series langsung
+            data: seriesData[0],
           },
         ],
         chart: {
@@ -620,7 +620,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           bar: {
             horizontal: true,
             columnWidth: "40%",
-            endingShape: "rounded",
+            borderRadius: 4,
           },
         },
         colors: ["#02172C"],
@@ -632,12 +632,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
           strokeDashArray: 4,
           yaxis: {
             lines: {
-              show: true, // Menampilkan garis grid sepanjang sumbu y
+              show: true, 
             },
           },
           xaxis: {
             lines: {
-              show: false, // Menyembunyikan garis grid sepanjang sumbu x
+              show: false, 
             },
           },
           padding: {
@@ -655,11 +655,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
           x: {
             show: false,
           },
-        },
-        stroke: {
-          show: true,
-          colors: ["transparent"],
-          width: 3,
         },
         xaxis: {
           categories: xCategories,
@@ -699,23 +694,19 @@ const createChartConfig = (chartTitle, data, chartType) => {
       return {
         series: seriesData[0], // Menggunakan data.series langsung
         chart: {
-          type: "donut",
-          width: "100%",
-          height: 400,
+          type: 'donut',
         },
-        dataLabels: {
-          enabled: false,
-        },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "75%",
+        responsive: [{
+          breakpoint: 480,
+          options: {
+            chart: {
+              width: 200
             },
-            offsetY: 20,
-          },
-        },
-        colors: colorPalette.slice(0, seriesData[0].length),
+            legend: {
+              position: 'bottom'
+            }
+          }
+        }],
         subtitle: {
           text: subtitleText,
           align: "left",
@@ -729,22 +720,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontWeight: "bold",
             marginBottom: "10rem",
             fontFamily: "Poppins",
-          },
-        },
-        labels: xCategories,
-        legend: {
-          position: "left",
-          offsetY: 80,
-        },
-        tooltip: {
-          theme: "dark",
-          marker: {
-            show: true,
-          },
-          y: {
-            formatter: function (val) {
-              return val;
-            },
           },
         },
       };
