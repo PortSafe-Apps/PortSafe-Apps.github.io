@@ -435,93 +435,117 @@ const createChartConfig = (chartTitle, data, chartType) => {
         ],
       };
 
-      case "locationChart":
-        return {
-          series: [
-            {
-              data: seriesData[0], // Menggunakan data.series langsung
-            },
-          ],
-          chart: {
-            type: "bar",
-            height: 380,
-            toolbar: {
-              show: false,
-            },
+    case "locationChart":
+      return {
+        series: [
+          {
+            data: seriesData[0], // Menggunakan data.series langsung
           },
-          plotOptions: {
-            bar: {
+        ],
+        chart: {
+          type: "bar",
+          height: 380,
+          toolbar: {
+              show: false,
+          },
+      },
+      plotOptions: {
+          bar: {
               barHeight: "100%",
               distributed: true,
               horizontal: true,
               dataLabels: {
-                position: "bottom",
+                  position: "bottom",
               },
-            },
+              columnWidth: '40%', // Added from your provided code
+              endingShape: 'rounded', // Added from your provided code
           },
-          colors: [
-            "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
-            "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
-            "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
-          ],
-          dataLabels: {
-            enabled: true,
-            textAnchor: "start",
-            style: {
+      },
+      colors: [
+          "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
+          "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
+          "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
+      ],
+      dataLabels: {
+          enabled: true,
+          textAnchor: "start",
+          style: {
               colors: ["#fff"],
-            },
-            formatter: function (val, opt) {
-              return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
-            },
-            offsetX: 0,
-            dropShadow: {
+          },
+          formatter: function (val, opt) {
+              return xCategories[opt.dataPointIndex] + ":  " + val;
+          },
+          offsetX: 0,
+          dropShadow: {
               enabled: true,
-            },
           },
-          stroke: {
-            width: 1,
-            colors: ["#fff"],
+      },
+      stroke: {
+        show: true,
+        colors: ['transparent'],
+        width: 3
+      },
+      xaxis: {
+          categories: xCategories,
+      },
+      yaxis: {
+          labels: {
+              show: false,
           },
+      },
+      grid: {
+          borderColor: '#dbeaea',
+          strokeDashArray: 4,
           xaxis: {
-            categories: xCategories,
+              lines: {
+                  show: true
+              }
           },
           yaxis: {
-            labels: {
-              show: false,
-            },
+              lines: {
+                  show: false,
+              }
           },
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
+          padding: {
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0
+          },
+      },
+      subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
               fontSize: "15px",
               color: "text-dark",
               fontWeight: "bold",
               marginBottom: "10rem",
               fontFamily: "Poppins",
-            },
           },
-          tooltip: {
-            theme: "light",
-            x: {
+      },
+      tooltip: {
+          theme: "light",
+          x: {
               show: false,
-            },
-            y: {
+          },
+          y: {
               title: {
-                formatter: function () {
-                  return "";
-                },
+                  formatter: function () {
+                      return "";
+                  },
               },
               formatter: function (value) {
-                return Math.round(value); // Mengubah nilai menjadi bulat
+                  return Math.round(value);
               },
-            },
           },
-        };      
+      },
+      };
+      
 
     case "areaChart":
       return {
