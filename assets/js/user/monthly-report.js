@@ -435,146 +435,146 @@ const createChartConfig = (chartTitle, data, chartType) => {
         ],
       };
 
-    case "locationChart":
-      return {
-        series: [
-          {
-            data: seriesData[0], // Menggunakan data.series langsung
+      case "locationChart":
+        return {
+          series: [
+            {
+              data: seriesData[0], // Menggunakan data.series langsung
+            },
+          ],
+          chart: {
+            type: "bar",
+            height: 500,
+            animations: {
+              enabled: true,
+              easing: "easeinout",
+              speed: 1000,
+            },
+            dropShadow: {
+              enabled: true,
+              opacity: 0.1,
+              blur: 1,
+              left: -5,
+              top: 5,
+            },
+            zoom: {
+              enabled: false,
+            },
+            toolbar: {
+              show: false,
+            },
           },
-        ],
-        chart: {
-          type: "bar",
-          height: 500,
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
+          plotOptions: {
+            bar: {
+              barHeight: "100%",
+              distributed: true,
+              horizontal: true,
+              endingShape: "rounded",
+              barWidth: 35, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
+            },
           },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 5,
-          },
-          zoom: {
+          colors: [
+            "#33b2df",
+            "#546E7A",
+            "#d4526e",
+            "#13d8aa",
+            "#A5978B",
+            "#2b908f",
+            "#f9a3a4",
+            "#90ee7e",
+            "#f48024",
+            "#69d2e7",
+            "#33b2df",
+            "#546E7A",
+            "#d4526e",
+            "#13d8aa",
+            "#A5978B",
+            "#2b908f",
+          ],
+          dataLabels: {
             enabled: false,
           },
-          toolbar: {
-            show: false,
-          },
-        },
-        plotOptions: {
-          bar: {
-            barHeight: "100%",
-            distributed: true,
-            horizontal: true,
-            endingShape: "rounded",
-            barWidth: 35, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
-          },
-        },
-        colors: [
-          "#33b2df",
-          "#546E7A",
-          "#d4526e",
-          "#13d8aa",
-          "#A5978B",
-          "#2b908f",
-          "#f9a3a4",
-          "#90ee7e",
-          "#f48024",
-          "#69d2e7",
-          "#33b2df",
-          "#546E7A",
-          "#d4526e",
-          "#13d8aa",
-          "#A5978B",
-          "#2b908f",
-        ],
-        dataLabels: {
-          enabled: false,
-        },
-        stroke: {
-          show: true,
-          colors: ["transparent"],
-          width: 3,
-        },
-        xaxis: {
-          categories: xCategories,
-          crosshairs: {
+          stroke: {
             show: true,
+            colors: ["transparent"],
+            width: 3,
           },
-          labels: {
-            show: true, // Menampilkan labels pada sumbu X
+          xaxis: {
+            categories: xCategories,
+            crosshairs: {
+              show: true,
+            },
+            labels: {
+              show: true, // Menampilkan labels pada sumbu X
+              offsetY: 0,
+              style: {
+                colors: "#8380ae",
+                fontSize: "12px",
+              },
+            },
+            tooltip: {
+              enabled: false,
+            },
+          },
+          yaxis: {
+            labels: {
+              show: false,
+            },
+          },
+          grid: {
+            borderColor: "#dbeaea",
+            strokeDashArray: 4,
+            yaxis: {
+              lines: {
+                show: true, // Menampilkan garis grid sepanjang sumbu y
+              },
+            },
+            xaxis: {
+              lines: {
+                show: false, // Menyembunyikan garis grid sepanjang sumbu x
+              },
+            },
+            padding: {
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
+            },
+          },
+      
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
             offsetX: 0,
             offsetY: 0,
+            floating: false,
             style: {
-              colors: "#8380ae",
-              fontSize: "12px",
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
             },
           },
           tooltip: {
-            enabled: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            show: false,
-          },
-        },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          yaxis: {
-            lines: {
-              show: true, // Menampilkan garis grid sepanjang sumbu y
+            theme: "light",
+            x: {
+              show: false,
             },
-          },
-          xaxis: {
-            lines: {
-              show: false, // Menyembunyikan garis grid sepanjang sumbu x
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        tooltip: {
-          theme: "light",
-          x: {
-            show: false,
-          },
-          y: {
-            title: {
-              formatter: function () {
-                return "";
+            y: {
+              title: {
+                formatter: function () {
+                  return "";
+                },
+              },
+              formatter: function (value) {
+                return Math.round(value);
               },
             },
-            formatter: function (value) {
-              return Math.round(value);
-            },
           },
-        },
-      };
+        };
+      
 
     case "areaChart":
       return {
