@@ -466,13 +466,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         plotOptions: {
           bar: {
-            barHeight: "100%",
-            distributed: true,
             horizontal: true,
-            dataLabels: {
-              position: "bottom",
-            },
-            columnWidth: "30%", // Added from your provided code
+            columnWidth: "40%", // Added from your provided code
             endingShape: "rounded", // Added from your provided code
           },
         },
@@ -498,15 +493,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
           enabled: true,
           textAnchor: "start",
           style: {
-            colors: ["#fff"],
+            colors: "#8480ae",
+            fontSize: "12px",
+            fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
             return xCategories[opt.dataPointIndex] + ":  " + val;
           },
           offsetX: 0,
-          dropShadow: {
-            enabled: true,
-          },
+          offsetY: 0,
         },
         stroke: {
           show: true,
@@ -541,7 +536,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
               left: 0,
           },
       },
-
         subtitle: {
           text: subtitleText,
           align: "left",
