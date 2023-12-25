@@ -524,23 +524,23 @@ const createChartConfig = (chartTitle, data, chartType) => {
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
           yaxis: {
-            lines: {
-              show: false,
-            },
+              lines: {
+                  show: true,  // Menampilkan garis grid sepanjang sumbu y
+              },
+          },
+          xaxis: {
+              lines: {
+                  show: false,  // Menyembunyikan garis grid sepanjang sumbu x
+              },
           },
           padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
+              top: 0,
+              right: 0,
+              bottom: 0,
+              left: 0,
           },
-        },
+      },
 
         subtitle: {
           text: subtitleText,
