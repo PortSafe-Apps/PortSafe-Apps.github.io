@@ -444,22 +444,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           ],
           chart: {
             type: "bar",
-            height: 500,
-            animations: {
-              enabled: true,
-              easing: "easeinout",
-              speed: 1000,
-            },
-            dropShadow: {
-              enabled: true,
-              opacity: 0.1,
-              blur: 1,
-              left: -5,
-              top: 5,
-            },
-            zoom: {
-              enabled: false,
-            },
+            height: 380,
             toolbar: {
               show: false,
             },
@@ -469,6 +454,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
               barHeight: "100%",
               distributed: true,
               horizontal: true,
+              dataLabels: {
+                position: "bottom",
+              },
             },
           },
           colors: [
@@ -479,15 +467,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
           dataLabels: {
             enabled: true,
             textAnchor: "start",
-            offsetX: 0,
-            offsetY: 0,
+            style: {
+              colors: ["#fff"],
+            },
             formatter: function (val, opt) {
               return xCategories[opt.dataPointIndex] + ":  " + val; // Menggunakan label sebagai bagian dari formatter
             },
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
+            offsetX: 0,
+            dropShadow: {
+              enabled: true,
             },
           },
           stroke: {
