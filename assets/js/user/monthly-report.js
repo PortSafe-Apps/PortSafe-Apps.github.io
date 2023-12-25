@@ -528,12 +528,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
           strokeDashArray: 4,
           yaxis: {
             lines: {
-              show: true, 
+              show: true,
             },
           },
           xaxis: {
             lines: {
-              show: false, 
+              show: false,
             },
           },
           padding: {
@@ -565,7 +565,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
           y: {
             formatter: function (value) {
-              return parseInt(value); 
+              return parseInt(value);
             },
           },
         },
@@ -632,12 +632,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
           strokeDashArray: 4,
           yaxis: {
             lines: {
-              show: true, 
+              show: true,
             },
           },
           xaxis: {
             lines: {
-              show: false, 
+              show: false,
             },
           },
           padding: {
@@ -692,21 +692,27 @@ const createChartConfig = (chartTitle, data, chartType) => {
 
     case "combinedChart":
       return {
-        series: seriesData[0], // Menggunakan data.series langsung
         chart: {
-          type: 'donut',
+          type: "donut",
+          width: "100%",
+          height: 400,
         },
-        responsive: [{
-          breakpoint: 480,
-          options: {
-            chart: {
-              width: 200
+        dataLabels: {
+          enabled: false,
+        },
+        plotOptions: {
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "75%",
             },
-            legend: {
-              position: 'bottom'
-            }
-          }
-        }],
+            offsetY: 20,
+          },
+          stroke: {
+            colors: undefined,
+          },
+        },
+        colors: colorPalette,
         subtitle: {
           text: subtitleText,
           align: "left",
@@ -722,8 +728,15 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
+        series: seriesData[0], // Menggunakan data.series langsung
+        labels: xCategories,
+        legend: {
+          position: "left",
+          offsetY: 80,
+        },
       };
-    default:
+      
+      default:
       return {};
   }
 };
