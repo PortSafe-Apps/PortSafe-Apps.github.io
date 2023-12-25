@@ -1,30 +1,3 @@
-// Color palette untuk chart combined
-const combinedChartColorPalette = [
-  "#4CAF50",
-  "#2196F3",
-  "#FFC107",
-  "#FF5722",
-  "#9C27B0",
-  "#673AB7",
-  "#795548",
-  "#607D8B",
-  "#FF9800",
-  "#00BCD4",
-  "#8BC34A",
-  "#03A9F4",
-  "#FFEB3B",
-  "#9E9E9E",
-  "#E91E63",
-  "#CDDC39",
-  "#009688",
-  "#FF5722",
-  "#9C27B0",
-  "#673AB7",
-  // Tambahkan warna sesuai kebutuhan
-];
-
-export default combinedChartColorPalette;
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -300,6 +273,30 @@ const transformDataForChart = (reportData, chartType) => {
       return {};
   }
 };
+
+const colorPalette = [
+  "#4CAF50",
+  "#FFC107",
+  "#2196F3",
+  "#FF5722",
+  "#9C27B0",
+  "#00BCD4",
+  "#795548",
+  "#8BC34A",
+  "#607D8B",
+  "#FFEB3B",
+  "#673AB7",
+  "#FF9800",
+  "#03A9F4",
+  "#E91E63",
+  "#CDDC39",
+  "#9E9E9E",
+  "#F44336",
+  "#795548",
+  "#009688",
+  "#FF5722",
+  // Tambahkan warna sesuai kebutuhan
+];
 
 // Fungsi untuk membuat konfigurasi grafik
 const createChartConfig = (chartTitle, data, chartType) => {
@@ -707,7 +704,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             colors: undefined,
           },
         },
-        colors: combinedChartColorPalette.slice(0, seriesData[0].length),
+        colors: colorPalette.slice(0, seriesData[0].length),
         title: {
           text: "Laporan Keselamatan",
           style: {
