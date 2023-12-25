@@ -466,12 +466,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
           plotOptions: {
             bar: {
-              barHeight: "100%",
-              distributed: true,
+              borderRadius: 4,
               horizontal: true,
-              endingShape: "rounded",
-              barWidth: 35, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
-            },
+            }
           },
           colors: [
             "#33b2df",
@@ -492,7 +489,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             "#2b908f",
           ],
           dataLabels: {
-            enabled: false,
+            enabled: false
           },
           stroke: {
             show: true,
@@ -501,25 +498,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
           xaxis: {
             categories: xCategories,
-            crosshairs: {
-              show: true,
-            },
-            labels: {
-              show: true, // Menampilkan labels pada sumbu X
-              offsetY: 0,
-              style: {
-                colors: "#8380ae",
-                fontSize: "12px",
-              },
-            },
-            tooltip: {
-              enabled: false,
-            },
-          },
-          yaxis: {
-            labels: {
-              show: false,
-            },
           },
           grid: {
             borderColor: "#dbeaea",
@@ -541,7 +519,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
               left: 0,
             },
           },
-      
           subtitle: {
             text: subtitleText,
             align: "left",
@@ -555,22 +532,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
               fontWeight: "bold",
               marginBottom: "10rem",
               fontFamily: "Poppins",
-            },
-          },
-          tooltip: {
-            theme: "light",
-            x: {
-              show: false,
-            },
-            y: {
-              title: {
-                formatter: function () {
-                  return "";
-                },
-              },
-              formatter: function (value) {
-                return Math.round(value);
-              },
             },
           },
         };
