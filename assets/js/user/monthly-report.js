@@ -444,9 +444,24 @@ const createChartConfig = (chartTitle, data, chartType) => {
         ],
         chart: {
           type: "bar",
-          height: 380,
+          height: 500,
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 1000,
+          },
+          dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 1,
+            left: -5,
+            top: 5,
+          },
+          zoom: {
+            enabled: false,
+          },
           toolbar: {
-              show: false,
+            show: false,
           },
       },
       plotOptions: {
