@@ -89,7 +89,10 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Combined Chart
-    const transformedCombinedData = transformDataForChart(reportData, "combinedChart");
+    const transformedCombinedData = transformDataForChart(
+      reportData,
+      "combinedChart"
+    );
     const combinedChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan jenis dan subjenis pelanggaran",
       transformedCombinedData,
@@ -263,13 +266,24 @@ const transformDataForChart = (reportData, chartType) => {
         combinedCounts[label] = (combinedCounts[label] || 0) + 1;
       });
 
-      const labelsCombined = Object.keys(combinedCounts);
-      const seriesCombined = Object.values(combinedCounts);
+      // Mengurutkan labels berdasarkan jumlah laporan
+      const sortedLabelsCombined = Object.keys(combinedCounts).sort(
+        (a, b) => combinedCounts[b] - combinedCounts[a]
+      );
+
+      // Mengambil lima label terbanyak
+      const top5LabelsCombined = sortedLabelsCombined.slice(0, 5);
+
+      // Mengambil series sesuai dengan lima label terbanyak
+      const top5SeriesCombined = top5LabelsCombined.map(
+        (label) => combinedCounts[label]
+      );
 
       return {
-        labels: labelsCombined,
-        series: [seriesCombined], // Tetap dalam bentuk array
+        labels: top5LabelsCombined,
+        series: [top5SeriesCombined], // Tetap dalam bentuk array
       };
+
     default:
       return {};
   }
@@ -296,7 +310,6 @@ const colorPalette = [
   "#795548",
   "#009688",
   "#FF5722",
-  // Tambahkan warna sesuai kebutuhan
 ];
 
 // Fungsi untuk membuat konfigurasi grafik
