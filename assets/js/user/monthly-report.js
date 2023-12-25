@@ -281,7 +281,7 @@ const transformDataForChart = (reportData, chartType) => {
 
       return {
         labels: top5LabelsCombined,
-        series: [top5SeriesCombined], // Tetap dalam bentuk array
+        series: top5SeriesCombined, // Tanpa array ekstra
       };
 
     default:
@@ -728,25 +728,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
-        series: seriesData[0], // Menggunakan data.series langsung
-        labels: xCategories,
+        series: top5SeriesCombined, // Menggunakan data series yang telah diubah
+        labels: top5LabelsCombined, // Menggunakan data labels yang telah diubah
         legend: {
           position: "left",
           offsetY: 80,
         },
         tooltip: {
           y: {
-            formatter: function (
-              value,
-              { series, seriesIndex, dataPointIndex, w }
-            ) {
-              if (w && w.globals && w.globals.labels) {
-                const label = w.globals.labels[dataPointIndex];
-                const jumlahLaporan = series[seriesIndex][dataPointIndex];
-                return `${label}: ${jumlahLaporan} laporan`;
-              }
-              return "";
+            formatter: function (value, { seriesIndex, dataPointIndex, w }) {
+              // Menampilkan jumlah laporan dan label pada tooltip
+              return `${top5LabelsCombined[dataPointIndex]}: ${value} laporan`;
             },
+          },
+          x: {
+            show: false,
           },
         },
         dataLabels: {
