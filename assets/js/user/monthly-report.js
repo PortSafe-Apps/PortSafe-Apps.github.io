@@ -463,72 +463,86 @@ const createChartConfig = (chartTitle, data, chartType) => {
           toolbar: {
             show: false,
           },
-      },
-      plotOptions: {
+        },
+        plotOptions: {
           bar: {
-              barHeight: "100%",
-              distributed: true,
-              horizontal: true,
-              dataLabels: {
-                  position: "bottom",
-              },
-              columnWidth: '40%', // Added from your provided code
-              endingShape: 'rounded', // Added from your provided code
+            barHeight: "100%",
+            distributed: true,
+            horizontal: true,
+            dataLabels: {
+              position: "bottom",
+            },
+            columnWidth: "30%", // Added from your provided code
+            endingShape: "rounded", // Added from your provided code
           },
-      },
-      colors: [
-          "#33b2df", "#546E7A", "#d4526e", "#13d8aa", "#A5978B", "#2b908f",
-          "#f9a3a4", "#90ee7e", "#f48024", "#69d2e7", "#33b2df", "#546E7A",
-          "#d4526e", "#13d8aa", "#A5978B", "#2b908f"
-      ],
-      dataLabels: {
+        },
+        colors: [
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
+          "#f9a3a4",
+          "#90ee7e",
+          "#f48024",
+          "#69d2e7",
+          "#33b2df",
+          "#546E7A",
+          "#d4526e",
+          "#13d8aa",
+          "#A5978B",
+          "#2b908f",
+        ],
+        dataLabels: {
           enabled: true,
           textAnchor: "start",
           style: {
-              colors: ["#fff"],
+            colors: ["#fff"],
           },
           formatter: function (val, opt) {
-              return xCategories[opt.dataPointIndex] + ":  " + val;
+            return xCategories[opt.dataPointIndex] + ":  " + val;
           },
           offsetX: 0,
           dropShadow: {
-              enabled: true,
+            enabled: true,
           },
-      },
-      stroke: {
-        show: true,
-        colors: ['transparent'],
-        width: 3
-      },
-      xaxis: {
+        },
+        stroke: {
+          show: true,
+          colors: ["transparent"],
+          width: 3,
+        },
+        xaxis: {
           categories: xCategories,
-      },
-      yaxis: {
+        },
+        yaxis: {
           labels: {
-              show: false,
+            show: false,
           },
-      },
-      grid: {
-          borderColor: '#dbeaea',
+        },
+        grid: {
+          borderColor: "#dbeaea",
           strokeDashArray: 4,
           xaxis: {
-              lines: {
-                  show: true
-              }
+            lines: {
+              show: true,
+            },
           },
           yaxis: {
-              lines: {
-                  show: false,
-              }
+            lines: {
+              show: false,
+            },
           },
           padding: {
-              top: 0,
-              right: 0,
-              bottom: 0,
-              left: 0
+            top: 0,
+            right: 0,
+            bottom: 0,
+            left: 0,
           },
-      },
-      subtitle: {
+        },
+
+        subtitle: {
           text: subtitleText,
           align: "left",
           margin: 0,
@@ -536,31 +550,30 @@ const createChartConfig = (chartTitle, data, chartType) => {
           offsetY: 0,
           floating: false,
           style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
           },
-      },
-      tooltip: {
+        },
+        tooltip: {
           theme: "light",
           x: {
-              show: false,
+            show: false,
           },
           y: {
-              title: {
-                  formatter: function () {
-                      return "";
-                  },
+            title: {
+              formatter: function () {
+                return "";
               },
-              formatter: function (value) {
-                  return Math.round(value);
-              },
+            },
+            formatter: function (value) {
+              return Math.round(value);
+            },
           },
-      },
+        },
       };
-      
 
     case "areaChart":
       return {
