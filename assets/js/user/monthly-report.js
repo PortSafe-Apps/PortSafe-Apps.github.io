@@ -471,9 +471,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
             horizontal: true,
             dataLabels: {
               position: "bottom",
+              enabled: false,
             },
-            columnWidth: "30%", // Added from your provided code
-            endingShape: "rounded", // Added from your provided code
+            endingShape: "rounded",
+            barWidth: 10, // Sesuaikan nilai ini dengan lebar yang diinginkan antara setiap bar
           },
         },
         colors: [
@@ -498,14 +499,16 @@ const createChartConfig = (chartTitle, data, chartType) => {
           enabled: true,
           textAnchor: "start",
           style: {
-            colors: ["#fff"],
+            colors: ["#8480ae"], // Warna tulisan di dalam bar
+            fontSize: "12px", // Ukuran font tulisan di dalam bar
+            fontFamily: "Poppins", // Font family tulisan di dalam bar
           },
           formatter: function (val, opt) {
             return xCategories[opt.dataPointIndex] + ":  " + val;
           },
           offsetX: 0,
           dropShadow: {
-            enabled: true,
+            enabled: false,
           },
         },
         stroke: {
