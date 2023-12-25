@@ -690,51 +690,71 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-    case "combinedChart":
-      return {
-        chart: {
-          type: "donut",
-          width: "100%",
-          height: 400,
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "75%",
+      case "combinedChart":
+        return {
+          chart: {
+            type: "donut",
+            width: 280,
+            sparkline: {
+              enabled: true
             },
-            offsetY: 20,
+            dropShadow: {
+              enabled: false,
+            },
+            plotOptions: {
+              pie: {
+                customScale: 0.8,
+                donut: {
+                  size: "75%",
+                },
+                offsetY: 20,
+                dataLabels: {
+                  enabled: true,
+                  formatter: function (val, opts) {
+                    return opts.w.config.series[0].data[opts.seriesIndex] + "%";
+                  },
+                  style: {
+                    fontSize: "12px", // Sesuaikan ukuran font data label sesuai kebutuhan Anda
+                    fontWeight: "bold",
+                    colors: ["#000000"], // Warna teks data label
+                  },
+                },
+              },
+              stroke: {
+                colors: undefined,
+              },
+            },
+            colors: colorPalette,
+            subtitle: {
+              text: subtitleText,
+              align: "left",
+              margin: 0,
+              offsetX: 0,
+              offsetY: 0,
+              floating: false,
+              style: {
+                fontSize: "15px",
+                color: "text-dark",
+                fontWeight: "bold",
+                marginBottom: "10rem",
+                fontFamily: "Poppins",
+              },
+            },
+            series: seriesData[0], // Menggunakan data.series langsung
+            labels: xCategories,
+            legend: {
+              position: "left",
+              offsetY: 80,
+            },
+            tooltip: {
+              enabled: true,
+              style: {
+                fontSize: "14px", // Ubah ukuran font tooltip sesuai kebutuhan Anda
+              },
+            },
           },
-          stroke: {
-            colors: undefined,
-          },
-        },
-        colors: colorPalette,
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        series: seriesData[0], // Menggunakan data.series langsung
-        labels: xCategories,
-        legend: {
-          position: "left",
-          offsetY: 80,
-        },
-      };
+        };
+      
       
       default:
       return {};
