@@ -463,7 +463,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            columnWidth: '40%',
+            barWidth: 40,
             horizontal: true,
           },
         },
