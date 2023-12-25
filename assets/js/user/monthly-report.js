@@ -447,7 +447,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         ],
         chart: {
           type: "bar",
-          height: 450,
+          height: 480,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -470,7 +470,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            columnWidth: '40%',
             horizontal: true,
           },
         },
@@ -484,7 +483,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
             offsetX: 0,
             offsetY: 0,
             style: {
-              colors: ["#8480ae"],
+              colors: "#8480ae",
               fontSize: "12px",
               fontFamily: "Poppins",
             },
@@ -492,7 +491,18 @@ const createChartConfig = (chartTitle, data, chartType) => {
           tooltip: {
             enabled: false,
           },
-        },        
+        },
+        yaxis: {
+          labels: {
+            offsetX: -10,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
+            },
+          },
+        },  
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
