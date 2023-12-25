@@ -178,13 +178,15 @@ const transformDataForChart = (reportData, chartType) => {
         locationCounts[locationName]++;
       });
 
-      // Dapatkan labels dan series sesuai urutan
-      const labels = locationLabels.map((label) => label);
-      const series = labels.map((label) => locationCounts[label]);
+      // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
+      const sortedLabels = locationLabels.sort(
+        (a, b) => locationCounts[b] - locationCounts[a]
+      );
+      const sortedSeries = sortedLabels.map((label) => locationCounts[label]);
 
       return {
-        labels: labels,
-        series: [series], // Jaga agar series tetap dalam bentuk array
+        labels: sortedLabels,
+        series: [sortedSeries], // Tetap dalam bentuk array
       };
 
     case "areaChart":
@@ -544,8 +546,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
         },
-        
       };
+
     case "areaChart":
       return {
         chart: {
