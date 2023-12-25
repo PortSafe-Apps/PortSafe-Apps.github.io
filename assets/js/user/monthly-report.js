@@ -463,10 +463,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            barWidth: 40,
             horizontal: true,
           },
         },
+        columnWidth: 40,
         colors: ["#02172C"],
         dataLabels: {
           enabled: false,
@@ -496,7 +496,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
               fontFamily: "Poppins",
             },
           },
-        },  
+        },
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
