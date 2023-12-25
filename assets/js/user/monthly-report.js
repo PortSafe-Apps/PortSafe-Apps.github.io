@@ -199,13 +199,29 @@ const transformDataForChart = (reportData, chartType) => {
         "Lapangan Penumpukan",
         "Area kerja lainnya",
       ];
+
+      // Inisialisasi counts dengan 0
+      areaLabels.forEach((label) => {
+        areaCounts[label] = 0;
+      });
+
+      // Hitung jumlah laporan untuk setiap area
       reportData.forEach((report) => {
         const areaName = report.area.areaName || "Unknown Area";
-        areaCounts[areaName] = (areaCounts[areaName] || 0) + 1;
+        areaCounts[areaName]++;
       });
+
+      // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
+      const sortedLabelsArea = areaLabels.sort(
+        (a, b) => areaCounts[b] - areaCounts[a]
+      );
+      const sortedSeriesArea = sortedLabelsArea.map(
+        (label) => areaCounts[label]
+      );
+
       return {
-        labels: areaLabels,
-        series: Object.values(areaCounts),
+        labels: sortedLabelsArea,
+        series: [sortedSeriesArea], // Tetap dalam bentuk array
       };
 
     case "typeChartCategory":
@@ -464,9 +480,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
           bar: {
             borderRadius: 4,
             horizontal: true,
+            barWidth: "60%",
           },
         },
-        columnWidth: 40,
         colors: ["#02172C"],
         dataLabels: {
           enabled: false,
@@ -547,27 +563,59 @@ const createChartConfig = (chartTitle, data, chartType) => {
 
     case "areaChart":
       return {
+        series: [
+          {
+            name: "jumlah laporan",
+            data: seriesData[0], // Menggunakan data.series langsung
+          },
+        ],
         chart: {
           height: 240,
           type: "bar",
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 1000,
+          },
+          dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 2,
+            left: -1,
+            top: 5,
+          },
+          zoom: {
+            enabled: false,
+          },
           toolbar: {
             show: false,
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        plotOptions: {
+          bar: {
+            horizontal: false,
+            columnWidth: "40%",
+            endingShape: "rounded",
           },
         },
         colors: ["#02172C"],
         dataLabels: {
           enabled: false,
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            type: "vertical",
-            shadeIntensity: 1,
-            inverseColors: true,
-            opacityFrom: 0.15,
-            opacityTo: 0.02,
-            stops: [40, 100],
-          },
         },
         grid: {
           borderColor: "#dbeaea",
@@ -589,24 +637,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             left: 0,
           },
         },
-        legend: {
-          position: "bottom",
-          horizontalAlign: "center",
-          offsetY: 4,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
         tooltip: {
-          theme: "dark",
+          theme: "light",
           marker: {
             show: true,
           },
@@ -614,24 +646,9 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
         stroke: {
           show: true,
-          curve: "smooth",
+          colors: ["transparent"],
           width: 3,
         },
         xaxis: {
@@ -660,12 +677,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
           },
         },
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData,
-          },
-        ],
       };
     case "typeChartCategory":
       return {
