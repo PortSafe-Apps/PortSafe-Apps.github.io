@@ -89,10 +89,11 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Combined Chart
-    const transformedCombinedData = transformDataForCombinedChart(reportData);
-    const combinedChartConfig = createCombinedChartConfig(
+    const transformedCombinedData = transformDataForChart(reportData, "combinedChart");
+    const combinedChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan jenis dan subjenis pelanggaran",
-      transformedCombinedData
+      transformedCombinedData,
+      "combinedChart"
     );
     renderChart("#combinedChart", combinedChartConfig);
   }
@@ -700,15 +701,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
             },
             offsetY: 20,
           },
-          stroke: {
-            colors: undefined,
-          },
         },
         colors: colorPalette.slice(0, seriesData[0].length),
-        title: {
-          text: "Laporan Keselamatan",
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
           style: {
-            fontSize: "18px",
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
           },
         },
         labels: xCategories,
