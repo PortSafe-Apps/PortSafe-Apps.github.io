@@ -707,12 +707,38 @@ const createChartConfig = (chartTitle, data, chartType) => {
               size: "75%",
             },
             offsetY: 20,
+            dataLabels: {
+              name: {
+                show: true,
+                formatter: function (val, opts) {
+                  // Menampilkan label dengan jumlah laporan di dalam label
+                  return opts.seriesIndex === 0
+                    ? `${val} - ${
+                        opts.w.globals.series[0][opts.dataPointIndex]
+                      }`
+                    : val;
+                },
+              },
+            },
           },
           stroke: {
             colors: undefined,
           },
         },
         colors: colorPalette,
+        tooltip: {
+          y: {
+            formatter: function (
+              value,
+              { series, seriesIndex, dataPointIndex, w }
+            ) {
+              // Menampilkan jumlah laporan dan label di dalam tooltip
+              const label = w.globals.labels[dataPointIndex];
+              const jumlahLaporan = series[seriesIndex][dataPointIndex];
+              return `${label}: ${jumlahLaporan} laporan`;
+            },
+          },
+        },
         subtitle: {
           text: subtitleText,
           align: "left",
@@ -735,8 +761,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
           offsetY: 80,
         },
       };
-      
-      default:
+
+    default:
       return {};
   }
 };
