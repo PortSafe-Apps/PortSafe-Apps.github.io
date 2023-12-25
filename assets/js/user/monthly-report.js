@@ -453,13 +453,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             easing: "easeinout",
             speed: 1000,
           },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 5,
-          },
           zoom: {
             enabled: false,
           },
@@ -470,6 +463,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
+            columnWidth: '40%',
             horizontal: true,
           },
         },
