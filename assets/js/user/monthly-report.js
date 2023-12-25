@@ -690,77 +690,64 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-    case "combinedChart":
-      return {
-        chart: {
-          type: "donut",
-          width: "100%",
-          height: 400,
-        },
-        dataLabels: {
-          enabled: false,
-        },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "75%",
+      case "combinedChart":
+        return {
+          chart: {
+            type: "donut",
+            width: "100%",
+            height: 400,
+          },
+          dataLabels: {
+            enabled: true,
+            formatter: function (val, opts) {
+              const percentage = opts.series[0][opts.dataPointIndex];
+              const label = opts.w.globals.labels[opts.dataPointIndex];
+              return `${label}: ${percentage}%`;
             },
-            offsetY: 20,
-            dataLabels: {
-              name: {
-                show: true,
-                formatter: function (val, opts) {
-                  // Menampilkan label dengan jumlah laporan di dalam label
-                  return opts.seriesIndex === 0
-                    ? `${val} - ${
-                        opts.w.globals.series[0][opts.dataPointIndex]
-                      }`
-                    : val;
-                },
+            offsetY: -20,
+          },
+          plotOptions: {
+            pie: {
+              customScale: 0.8,
+              donut: {
+                size: "75%",
+              },
+              offsetY: 20,
+            },
+          },
+          colors: colorPalette,
+          tooltip: {
+            y: {
+              formatter: function (value, { series, seriesIndex, dataPointIndex, w }) {
+                const label = w.globals.labels[dataPointIndex];
+                const jumlahLaporan = series[seriesIndex][dataPointIndex];
+                return `${label}: ${jumlahLaporan} laporan`;
               },
             },
           },
-          stroke: {
-            colors: undefined,
-          },
-        },
-        colors: colorPalette,
-        tooltip: {
-          y: {
-            formatter: function (
-              value,
-              { series, seriesIndex, dataPointIndex, w }
-            ) {
-              // Menampilkan jumlah laporan dan label di dalam tooltip
-              const label = w.globals.labels[dataPointIndex];
-              const jumlahLaporan = series[seriesIndex][dataPointIndex];
-              return `${label}: ${jumlahLaporan} laporan`;
+          subtitle: {
+            text: subtitleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
             },
           },
-        },
-        subtitle: {
-          text: subtitleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
+          series: seriesData[0], // Menggunakan data.series langsung
+          labels: xCategories,
+          legend: {
+            position: "left",
+            offsetY: 80,
           },
-        },
-        series: seriesData[0], // Menggunakan data.series langsung
-        labels: xCategories,
-        legend: {
-          position: "left",
-          offsetY: 80,
-        },
-      };
+        };
+      
 
     default:
       return {};
