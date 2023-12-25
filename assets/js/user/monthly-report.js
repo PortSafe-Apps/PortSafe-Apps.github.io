@@ -466,8 +466,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
         plotOptions: {
           bar: {
+            barHeight: "100%",
+            distributed: true,
             horizontal: true,
-            columnWidth: "40%", // Added from your provided code
+            columnWidth: "30%", // Added from your provided code
             endingShape: "rounded", // Added from your provided code
           },
         },
@@ -501,7 +503,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
             return xCategories[opt.dataPointIndex] + ":  " + val;
           },
           offsetX: 0,
-          offsetY: 0,
         },
         stroke: {
           show: true,
