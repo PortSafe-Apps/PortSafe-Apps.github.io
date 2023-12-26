@@ -717,8 +717,10 @@ const createChartConfig = (chartTitle, data, chartType) => {
                 dataLabels: {
                   enabled: true,
                   formatter: function (val, opts) {
-                    return opts.w.config.series[0].data[opts.seriesIndex] + "%";
+                    const percentage = opts.series[opts.seriesIndex].data / opts.w.globals.seriesTotals[opts.seriesIndex] * 100;
+                    return percentage.toFixed(2) + "%";
                   },
+                  
                   style: {
                     fontSize: "12px", // Sesuaikan ukuran font data label sesuai kebutuhan Anda
                     fontWeight: "bold",
