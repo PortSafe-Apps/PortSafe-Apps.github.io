@@ -90,38 +90,23 @@ const drawChart = async () => {
 
     // Menggambar Type Chart
     const transformedTypeData = transformDataForChart(reportData, "typeChart");
-    const initialSelectedTypeName = transformedTypeData.labels[0];
-    
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
       "typeChart",
-      initialSelectedTypeName
     );
-    
+
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
         const selectedTypeName = config.w.config.labels[config.dataPointIndex];
         updateSubtypeChart(reportData, selectedTypeName);
-        updateTypeChartSubtitle(selectedTypeName);
       },
     };
-    
-    renderChart("#typeChart", typeChartConfig);
-    
-    // Memastikan subtitle pada typeChart terisi saat awal render
-    updateTypeChartSubtitle(initialSelectedTypeName);    
-  }
-};
 
-const updateTypeChartSubtitle = (selectedTypeName) => {
-  const typeChart = document.querySelector("#typeChart");
-  if (typeChart) {
-    const chartConfig = typeChart.ApexCharts.getConfig();
-    if (chartConfig) {
-      chartConfig.subtitle.text = selectedTypeName ? `Jenis Pelanggaran: ${selectedTypeName}` : "";
-      typeChart.ApexCharts.updateOptions(chartConfig, true, true);
-    }
+    renderChart("#typeChart", typeChartConfig);
+
+    // Menggambar Subtype Chart awal
+    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
   }
 };
 
@@ -130,14 +115,13 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   const transformedSubtypeData = transformDataForChart(
     reportData,
     "subtypeChart",
-    selectedTypeName
+    selectedTypeName,
   );
 
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
-    "subtypeChart",
-    selectedTypeName // Pastikan nilai ini sesuai
+    "subtypeChart"
   );
 
   renderChart("#subtypeChart", subtypeChartConfig);
@@ -348,8 +332,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
 
   // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
   const subtitleText = selectedTypeName ? `Jenis Pelanggaran: ${selectedTypeName}` : "";
-  console.log("Selected Type Name:", selectedTypeName);
-  console.log("Subtitle Text:", subtitleText);
 
   switch (chartType) {
     case "monthChart":
@@ -749,18 +731,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             color: "text-dark",
             fontWeight: "bold",
             marginBottom: "5rem",
-            fontFamily: "Poppins",
-          },
-        },
-        subtitle: {
-          text: subtitleText || "", // Tambahkan penanganan jika subtitleText undefined
-          align: "left",
-          margin: 5,
-          offsetY: 40,
-          style: {
-            fontSize: "14px",
-            color: "text-dark",
-            fontWeight: "bold",
             fontFamily: "Poppins",
           },
         },
