@@ -691,6 +691,14 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
         },
+        tooltip: {
+          enabled: true,
+          y: {
+            formatter: function (value) {
+              return value + " %";
+            },
+          },
+        },
         labels: xCategories,
         colors: colorPalette,
         title: {
@@ -748,6 +756,14 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           parentHeightOffset: 0,
           toolbar: {
             show: false,
+          },
+        },
+        tooltip: {
+          enabled: true,
+          y: {
+            formatter: function (value) {
+              return value + " %";
+            },
           },
         },
         labels: xCategories,
