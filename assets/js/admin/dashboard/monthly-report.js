@@ -330,7 +330,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
       return {
         chart: {
           height: 400,
-          width: 250,
+          width: 400,
           type: "area",
           animations: {
             enabled: true,
@@ -463,7 +463,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 300,
+          height: 450,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -689,7 +689,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         series: seriesData[0],
         chart: {
           type: "donut",
-          height: 350,
+          height: 300,
           toolbar: {
             show: false,
           },
@@ -699,10 +699,12 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         subtitle: {
           text: subtitleText || "", 
           align: "left",
-          margin: 5,
-          offsetY: 40,
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
           style: {
-            fontSize: "14px",
+            fontSize: "12px",
             color: "text-dark",
             fontWeight: "bold",
             marginBottom: "5rem",
