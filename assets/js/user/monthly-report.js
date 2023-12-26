@@ -510,19 +510,16 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         dataLabels: {
           enabled: false,
         },
-        xaxis: {
-          categories: xCategories,
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
+        dataLabels: {
+          enabled: true,
+          offsetY: -20, // Sesuaikan offset sesuai kebutuhan
+          style: {
+            fontSize: "12px",
+            colors: ["#8480ae"],
+            fontFamily: "Poppins",
           },
-          tooltip: {
-            enabled: false,
+          formatter: function (val) {
+            return parseInt(val);
           },
         },
         yaxis: {
@@ -583,7 +580,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
       };
-
     case "areaChart":
       return {
         series: [
@@ -669,19 +665,16 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
         },
-        xaxis: {
-          categories: xCategories,
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
+        dataLabels: {
+          enabled: true,
+          offsetY: -20, // Sesuaikan offset sesuai kebutuhan
+          style: {
+            fontSize: "12px",
+            colors: ["#8480ae"],
+            fontFamily: "Poppins",
           },
-          tooltip: {
-            enabled: false,
+          formatter: function (val) {
+            return parseInt(val);
           },
         },
         yaxis: {
@@ -702,8 +695,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
       };
-
-    // Bagian chart tipe
     case "typeChart":
       return {
         series: seriesData[0],
