@@ -507,6 +507,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             columnWidth: "60%",
             distributed: true,
             horizontal: true,
+            dataLabels: {
+              position: 'inBar' // Mengatur posisi label di dalam bar
+            },
           },
         },
         colors: ["#02172C"],
@@ -635,6 +638,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             columnWidth: "60%",
             distributed: true,
             horizontal: true,
+            dataLabels: {
+              position: 'inBar' // Mengatur posisi label di dalam bar
+            },
           },
         },
         colors: ["#02172C"],
