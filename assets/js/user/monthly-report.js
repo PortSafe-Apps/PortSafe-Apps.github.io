@@ -513,9 +513,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         dataLabels: {
           enabled: true,
           textAnchor: "start",
-          offsetY: 0,
+          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
-            colors: "#8480ae",
+            colors: ["#02172C"],
             fontSize: "12px",
             fontFamily: "Poppins",
           },
@@ -693,9 +693,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         labels: xCategories,
         colors: colorPalette,
-        tooltip: {
-          enabled: true,
-        },
         title: {
           text: titleText,
           align: "left",
@@ -755,9 +752,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         labels: xCategories,
         colors: colorPalette,
-        tooltip: {
-          enabled: true,
-        },
         plotOptions: {
           pie: {
             customScale: 0.8,
