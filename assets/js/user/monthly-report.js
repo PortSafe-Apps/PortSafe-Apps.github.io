@@ -96,12 +96,15 @@ const drawChart = async () => {
       "typeChart"
     );
 
-    // Tambahkan listener untuk acara pemilihan data pada chart jenis
-    typeChartConfig.chart.events = {
-      dataPointSelection: function (event, chartContext, config) {
-        const selectedTypeName = config.w.globals.labels[config.dataPointIndex];
-        // Memperbarui Subtype Chart berdasarkan jenis yang terpilih
-        updateSubtypeChart(reportData, selectedTypeName);
+    // Tambahkan subtitle berdasarkan tipe yang terpilih
+    typeChartConfig.subtitle = {
+      text: `Tipe Terpilih: ${transformedTypeData.labels[0]}`,
+      align: "center",
+      margin: 5,
+      offsetY: 40,
+      style: {
+        fontSize: "14px",
+        color: "#888",
       },
     };
 
@@ -114,15 +117,11 @@ const drawChart = async () => {
 
 // Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
 const updateSubtypeChart = (reportData, selectedTypeName) => {
-  console.log("updateSubtypeChart - selectedTypeName:", selectedTypeName);
-  // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
     reportData,
     "subtypeChart",
     selectedTypeName
   );
-
-  console.log("transformedSubtypeData:", transformedSubtypeData);
 
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
@@ -130,7 +129,17 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     "subtypeChart"
   );
 
-  console.log("subtypeChartConfig:", subtypeChartConfig);
+  // Tambahkan subtitle berdasarkan tipe dan sub-tipe yang terpilih
+  subtypeChartConfig.subtitle = {
+    text: `Tipe Terpilih: ${selectedTypeName}`,
+    align: "center",
+    margin: 5,
+    offsetY: 40,
+    style: {
+      fontSize: "14px",
+      color: "#888",
+    },
+  };
 
   renderChart("#subtypeChart", subtypeChartConfig);
 };
@@ -336,7 +345,7 @@ const createChartConfig = (chartTitle, data, chartType) => {
   const seriesData = data.series ? data.series : [];
 
   // Pengecekan keberadaan chartTitle
-  const subtitleText = chartTitle || "";
+  const titleText = chartTitle || "";
 
   switch (chartType) {
     case "monthChart":
@@ -423,8 +432,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        subtitle: {
-          text: subtitleText,
+        title: {
+          text: titleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -560,8 +569,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             left: 0,
           },
         },
-        subtitle: {
-          text: subtitleText,
+        title: {
+          text: titleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -618,8 +627,8 @@ const createChartConfig = (chartTitle, data, chartType) => {
             show: false,
           },
         },
-        subtitle: {
-          text: subtitleText,
+        title: {
+          text: titleText,
           align: "left",
           margin: 0,
           offsetX: 0,
@@ -724,6 +733,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
         tooltip: {
           enabled: true,
         },
+        title: {
+          text: titleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
         plotOptions: {
           pie: {
             customScale: 0.8,
@@ -779,6 +803,21 @@ const createChartConfig = (chartTitle, data, chartType) => {
             donut: {
               size: "65%",
             },
+          },
+        },
+        title: {
+          text: titleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
           },
         },
         responsive: [
