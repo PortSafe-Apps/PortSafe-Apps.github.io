@@ -645,39 +645,43 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-    case "combinedChart":
-      return {
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData[0], // Menggunakan data.series langsung
+      case "combinedChart":
+        return {
+          series: [
+            {
+              name: "jumlah laporan",
+              data: seriesData[0], // Menggunakan data.series langsung
+            },
+          ],
+          chart: {
+            type: "sunburst",
+            height: 350,
           },
-        ],
-        chart: {
-          type: "sunburst",
-          height: 350,
-        },
-        tooltip: {
-          enabled: true,
-        },
-        plotOptions: {
-          radialBar: {
-            dataLabels: {
-              total: {
-                show: true,
-                label: "Total",
-                formatter: function (w) {
-                  // Menampilkan total jumlah laporan untuk setiap typeName
-                  const typeName = xCategories[w.config.seriesIndex];
-                  return combinedCounts[typeName] || 0;
+          tooltip: {
+            enabled: true,
+          },
+          plotOptions: {
+            radialBar: {
+              dataLabels: {
+                total: {
+                  show: true,
+                  label: "Total",
+                  formatter: function (w) {
+                    // Menampilkan total jumlah laporan untuk setiap typeName
+                    const typeNameIndex = w.config?.seriesIndex;
+                    if (typeNameIndex !== undefined) {
+                      const typeName = xCategories[typeNameIndex];
+                      return combinedCounts[typeName] || 0;
+                    }
+                    return 0;
+                  },
                 },
               },
             },
           },
-        },
-        labels: xCategories,
-        colors: colorPalette,
-      };
+          labels: xCategories,
+          colors: colorPalette,
+        };
 
     default:
       return {};
