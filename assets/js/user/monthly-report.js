@@ -114,7 +114,7 @@ const drawChart = async () => {
 
 // Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
 const updateSubtypeChart = (reportData, selectedTypeName) => {
-  // Mendapatkan data subjenis pelanggaran berdasarkan jenis pelanggaran yang terpilih
+  // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
     reportData,
     "subtypeChart",
@@ -127,7 +127,6 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   );
   renderChart("#subtypeChart", subtypeChartConfig);
 };
-
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
@@ -692,50 +691,103 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-    case "typeChart":
-      return {
-        series: seriesData[0],
-        chart: {
-          type: "pie",
-          height: 350,
+   // Bagian chart tipe
+case "typeChart":
+  return {
+    series: seriesData[0],
+    chart: {
+      type: "pie",
+      height: 350,
+      parentHeightOffset: 0,
+      toolbar: {
+        show: false,
+      },
+    },
+    labels: xCategories,
+    colors: colorPalette,
+    tooltip: {
+      enabled: true,
+    },
+    plotOptions: {
+      pie: {
+        customScale: 0.8,
+        donut: {
+          size: "75%",
         },
-        labels: xCategories,
-        colors: colorPalette,
-        tooltip: {
-          enabled: true,
-        },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "75%",
+      },
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 300,
+          },
+          legend: {
+            show: true,
+            position: 'bottom',
+            horizontalAlign: 'center',
+            fontSize: '12px',
+            markers: {
+              width: 9,
+              height: 9,
+              strokeWidth: 0,
+              radius: 20,
             },
           },
         },
-      };
+      },
+    ],
+  };
 
-    case "subtypeChart":
-      return {
-        series: seriesData[0],
-        chart: {
-          type: "donut",
-          height: 350,
+// Bagian chart sub-tipe
+case "subtypeChart":
+  return {
+    series: seriesData[0],
+    chart: {
+      type: "donut",
+      height: 350,
+      parentHeightOffset: 0,
+      toolbar: {
+        show: false,
+      },
+    },
+    labels: xCategories,
+    colors: colorPalette,
+    tooltip: {
+      enabled: true,
+    },
+    plotOptions: {
+      pie: {
+        customScale: 0.8,
+        donut: {
+          size: "65%",
         },
-        labels: xCategories,
-        colors: colorPalette,
-        tooltip: {
-          enabled: true,
-        },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "65%",
+      },
+    },
+    responsive: [
+      {
+        breakpoint: 480,
+        options: {
+          chart: {
+            height: 300,
+          },
+          legend: {
+            show: true,
+            position: 'bottom',
+            horizontalAlign: 'center',
+            fontSize: '12px',
+            markers: {
+              width: 9,
+              height: 9,
+              strokeWidth: 0,
+              radius: 20,
             },
           },
         },
-      };
-
+      },
+    ],
+  };
     default:
       return {};
   }
