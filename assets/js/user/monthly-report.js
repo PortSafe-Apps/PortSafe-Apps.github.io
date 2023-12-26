@@ -98,13 +98,7 @@ const drawChart = async () => {
 
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
-        console.log("config object:", config);
-    
-        // Akses nama jenis yang dipilih menggunakan config.w.config.labels
         const selectedTypeName = config.w.config.labels[config.dataPointIndex];
-        console.log("selectedTypeName:", selectedTypeName);
-    
-        // Perbarui Grafik Subjenis
         updateSubtypeChart(reportData, selectedTypeName);
       },
     };
@@ -338,11 +332,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   // Pengecekan keberadaan chartTitle
   const titleText = chartTitle || "";
 
-  // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
-  const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
+ // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
+ const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
 
-  console.log("selectedTypeName:", selectedTypeName);
-  console.log("subtitleText:", subtitleText);
 
 
   switch (chartType) {
@@ -746,8 +738,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins",
           },
         },
-        subtitle: {
-          text: subtitleText,
+         subtitle: {
+          text: subtitleText || "", // Tambahkan penanganan jika subtitleText undefined
           align: "left",
           margin: 5,
           offsetY: 40,
@@ -831,7 +823,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         subtitle: {
-          text: subtitleText,
+          text: subtitleText || "", // Tambahkan penanganan jika subtitleText undefined
           align: "left",
           margin: 5,
           offsetY: 40,
