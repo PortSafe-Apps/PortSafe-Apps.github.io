@@ -99,10 +99,10 @@ const drawChart = async () => {
     // Tambahkan listener untuk acara pemilihan data pada chart jenis
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
+        console.log("config object:", config);
         const selectedTypeName = config.w.globals.labels[config.dataPointIndex];
-        // Memperbarui Subtype Chart berdasarkan jenis yang terpilih
         updateSubtypeChart(reportData, selectedTypeName);
-      },
+      },      
     };
 
     renderChart("#typeChart", typeChartConfig);
