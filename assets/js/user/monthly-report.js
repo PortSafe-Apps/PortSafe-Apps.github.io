@@ -120,6 +120,7 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     "subtypeChart",
     selectedTypeName
   );
+  
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
@@ -130,6 +131,8 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
+  let selectedTypeName;
+
   if (!reportData || reportData.length === 0) {
     return { labels: [], series: [] };
   }
@@ -262,11 +265,14 @@ const transformDataForChart = (reportData, chartType) => {
 
     case "subtypeChart":
       const subtypeCounts = {};
+
       reportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           if (action.typeName === selectedTypeName) {
             action.subTypes.forEach((subType) => {
-              subtypeCounts[subType] = (subtypeCounts[subType] || 0) + 1;
+              const subtypeLabel = subType; // Menggunakan hanya subtype sebagai label
+              subtypeCounts[subtypeLabel] =
+                (subtypeCounts[subtypeLabel] || 0) + 1;
             });
           }
         });
@@ -691,103 +697,103 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-   // Bagian chart tipe
-case "typeChart":
-  return {
-    series: seriesData[0],
-    chart: {
-      type: "pie",
-      height: 350,
-      parentHeightOffset: 0,
-      toolbar: {
-        show: false,
-      },
-    },
-    labels: xCategories,
-    colors: colorPalette,
-    tooltip: {
-      enabled: true,
-    },
-    plotOptions: {
-      pie: {
-        customScale: 0.8,
-        donut: {
-          size: "75%",
-        },
-      },
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300,
+    // Bagian chart tipe
+    case "typeChart":
+      return {
+        series: seriesData[0],
+        chart: {
+          type: "pie",
+          height: 350,
+          parentHeightOffset: 0,
+          toolbar: {
+            show: false,
           },
-          legend: {
-            show: true,
-            position: 'bottom',
-            horizontalAlign: 'center',
-            fontSize: '12px',
-            markers: {
-              width: 9,
-              height: 9,
-              strokeWidth: 0,
-              radius: 20,
+        },
+        labels: xCategories,
+        colors: colorPalette,
+        tooltip: {
+          enabled: true,
+        },
+        plotOptions: {
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "75%",
             },
           },
         },
-      },
-    ],
-  };
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                height: 300,
+              },
+              legend: {
+                show: true,
+                position: "bottom",
+                horizontalAlign: "center",
+                fontSize: "12px",
+                markers: {
+                  width: 9,
+                  height: 9,
+                  strokeWidth: 0,
+                  radius: 20,
+                },
+              },
+            },
+          },
+        ],
+      };
 
-// Bagian chart sub-tipe
-case "subtypeChart":
-  return {
-    series: seriesData[0],
-    chart: {
-      type: "donut",
-      height: 350,
-      parentHeightOffset: 0,
-      toolbar: {
-        show: false,
-      },
-    },
-    labels: xCategories,
-    colors: colorPalette,
-    tooltip: {
-      enabled: true,
-    },
-    plotOptions: {
-      pie: {
-        customScale: 0.8,
-        donut: {
-          size: "65%",
-        },
-      },
-    },
-    responsive: [
-      {
-        breakpoint: 480,
-        options: {
-          chart: {
-            height: 300,
+    // Bagian chart sub-tipe
+    case "subtypeChart":
+      return {
+        series: seriesData[0],
+        chart: {
+          type: "donut",
+          height: 350,
+          parentHeightOffset: 0,
+          toolbar: {
+            show: false,
           },
-          legend: {
-            show: true,
-            position: 'bottom',
-            horizontalAlign: 'center',
-            fontSize: '12px',
-            markers: {
-              width: 9,
-              height: 9,
-              strokeWidth: 0,
-              radius: 20,
+        },
+        labels: xCategories,
+        colors: colorPalette,
+        tooltip: {
+          enabled: true,
+        },
+        plotOptions: {
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "65%",
             },
           },
         },
-      },
-    ],
-  };
+        responsive: [
+          {
+            breakpoint: 480,
+            options: {
+              chart: {
+                height: 300,
+              },
+              legend: {
+                show: true,
+                position: "bottom",
+                horizontalAlign: "center",
+                fontSize: "12px",
+                markers: {
+                  width: 9,
+                  height: 9,
+                  strokeWidth: 0,
+                  radius: 20,
+                },
+              },
+            },
+          },
+        ],
+      };
     default:
       return {};
   }
