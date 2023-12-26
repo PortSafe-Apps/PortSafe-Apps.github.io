@@ -504,7 +504,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            barHeight: '100%',
+            columnWidth: "40%",
             distributed: true,
             horizontal: true,
           },
@@ -631,9 +631,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         plotOptions: {
           bar: {
-            horizontal: true,
-            columnWidth: "40%",
             borderRadius: 4,
+            columnWidth: "40%",
+            distributed: true,
+            horizontal: true,
           },
         },
         colors: ["#02172C"],
@@ -668,6 +669,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             right: 0,
             bottom: 0,
             left: 0,
+          },
+        },
+        xaxis: {
+          categories: xCategories,
+          labels: {
+            show: false,
+          },
+          tooltip: {
+            enabled: false,
           },
         },
         yaxis: {
