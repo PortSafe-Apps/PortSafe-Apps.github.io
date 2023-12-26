@@ -131,12 +131,12 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   );
 
   console.log("subtypeChartConfig:", subtypeChartConfig);
-  
+
   renderChart("#subtypeChart", subtypeChartConfig);
 };
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-const transformDataForChart = (reportData, chartType) => {
+const transformDataForChart = (reportData, chartType, selectedTypeName) => {
   let selectedTypeName;
 
   if (!reportData || reportData.length === 0) {
@@ -269,39 +269,40 @@ const transformDataForChart = (reportData, chartType) => {
         series: [sortedSeriesType],
       };
 
-      case "subtypeChart":
-        const subtypeCounts = {};
-      
-        reportData.forEach((report) => {
-          report.typeDangerousActions.forEach((action) => {
-            if (action.typeName === selectedTypeName && action.subTypes) {
-              action.subTypes.forEach((subType) => {
-                const subtypeLabel = subType;
-                subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
-              });
-            }
-          });
+    case "subtypeChart":
+      const subtypeCounts = {};
+
+      reportData.forEach((report) => {
+        report.typeDangerousActions.forEach((action) => {
+          if (action.typeName === selectedTypeName && action.subTypes) {
+            action.subTypes.forEach((subType) => {
+              const subtypeLabel = subType;
+              subtypeCounts[subtypeLabel] =
+                (subtypeCounts[subtypeLabel] || 0) + 1;
+            });
+          }
         });
-      
-        const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
-          (a, b) => subtypeCounts[b] - subtypeCounts[a]
-        );
-      
-        const sortedSeriesSubtype = sortedLabelsSubtype.map(
-          (label) => subtypeCounts[label]
-        );
-      
-        // Jika tidak ada subjenis ditemukan, kembalikan data default
-        if (sortedLabelsSubtype.length === 0) {
-          return { labels: [], series: [[]] };
-        }
-      
-        return {
-          labels: sortedLabelsSubtype,
-          series: [sortedSeriesSubtype],
-        };
-      
-    
+      });
+
+      // Modifikasi bagian ini untuk menangani kasus ketika tidak ada subjenis yang ditemukan
+      const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
+        (a, b) => subtypeCounts[b] - subtypeCounts[a]
+      );
+
+      const sortedSeriesSubtype = sortedLabelsSubtype.map(
+        (label) => subtypeCounts[label]
+      );
+
+      // Jika tidak ada subjenis ditemukan, kembalikan data default
+      if (sortedLabelsSubtype.length === 0) {
+        return { labels: [], series: [[]] };
+      }
+
+      return {
+        labels: sortedLabelsSubtype,
+        series: [sortedSeriesSubtype],
+      };
+
     default:
       return {};
   }
