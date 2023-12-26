@@ -515,8 +515,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           textAnchor: "start",
           offsetY: 0,
           style: {
+            colors: "#8480ae",
             fontSize: "12px",
-            colors: ["#fff"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
@@ -528,8 +528,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: false
-          }
+            show: false,
+          },
         },
         grid: {
           borderColor: "#dbeaea",
@@ -637,8 +637,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           textAnchor: "start",
           offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
+            colors: "#8480ae",
             fontSize: "12px",
-            colors: ["#fff"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
@@ -670,8 +670,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: false
-          }
+            show: false,
+          },
         },
         tooltip: {
           enabled: true,
