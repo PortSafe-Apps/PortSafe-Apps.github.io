@@ -96,15 +96,12 @@ const drawChart = async () => {
       "typeChart"
     );
 
-    // Tambahkan subtitle berdasarkan tipe yang terpilih
-    typeChartConfig.subtitle = {
-      text: `Tipe Terpilih: ${transformedTypeData.labels[0]}`,
-      align: "center",
-      margin: 5,
-      offsetY: 40,
-      style: {
-        fontSize: "14px",
-        color: "#888",
+    // Tambahkan listener untuk acara pemilihan data pada chart jenis
+    typeChartConfig.chart.events = {
+      dataPointSelection: function (event, chartContext, config) {
+        const selectedTypeName = config.w.globals.labels[config.dataPointIndex];
+        // Memperbarui Subtype Chart berdasarkan jenis yang terpilih
+        updateSubtypeChart(reportData, selectedTypeName);
       },
     };
 
@@ -117,6 +114,7 @@ const drawChart = async () => {
 
 // Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
 const updateSubtypeChart = (reportData, selectedTypeName) => {
+  // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
     reportData,
     "subtypeChart",
@@ -128,18 +126,6 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     transformedSubtypeData,
     "subtypeChart"
   );
-
-  // Tambahkan subtitle berdasarkan tipe dan sub-tipe yang terpilih
-  subtypeChartConfig.subtitle = {
-    text: `Tipe Terpilih: ${selectedTypeName}`,
-    align: "center",
-    margin: 5,
-    offsetY: 40,
-    style: {
-      fontSize: "14px",
-      color: "#888",
-    },
-  };
 
   renderChart("#subtypeChart", subtypeChartConfig);
 };
@@ -339,13 +325,16 @@ const colorPalette = [
 ];
 
 // Fungsi untuk membuat konfigurasi grafik
-const createChartConfig = (chartTitle, data, chartType) => {
+const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   // Pengecekan keberadaan data.labels dan data.series
   const xCategories = data.labels ? data.labels : [];
   const seriesData = data.series ? data.series : [];
 
   // Pengecekan keberadaan chartTitle
   const titleText = chartTitle || "";
+
+  // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
+  const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
 
   switch (chartType) {
     case "monthChart":
@@ -748,6 +737,18 @@ const createChartConfig = (chartTitle, data, chartType) => {
             fontFamily: "Poppins",
           },
         },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 5,
+          offsetY: 40,
+          style: {
+            fontSize: '14px',
+            color: "text-dark",
+            fontWeight: "bold",
+            fontFamily: "Poppins",
+          },
+        },
         plotOptions: {
           pie: {
             customScale: 0.8,
@@ -817,6 +818,18 @@ const createChartConfig = (chartTitle, data, chartType) => {
             color: "text-dark",
             fontWeight: "bold",
             marginBottom: "10rem",
+            fontFamily: "Poppins",
+          },
+        },
+        subtitle: {
+          text: subtitleText,
+          align: "left",
+          margin: 5,
+          offsetY: 40,
+          style: {
+            fontSize: '14px',
+            color: "text-dark",
+            fontWeight: "bold",
             fontFamily: "Poppins",
           },
         },
