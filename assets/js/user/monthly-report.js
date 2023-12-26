@@ -51,9 +51,6 @@ async function fetchDataFromServer() {
 const drawChart = async () => {
   const reportData = await fetchDataFromServer();
 
-  // Log reportData untuk memeriksa strukturnya
-  console.log(reportData);
-
   if (reportData) {
     // Menggambar Monthly Chart
     const transformedMonthlyData = transformDataForChart(
@@ -686,17 +683,16 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "pie",
           height: 350,
-          parentHeightOffset: 0,
           toolbar: {
             show: false,
           },
         },
-        tooltip: {
-          enabled: true,
-          style: {
-              whiteSpace: 'normal',
-          },
-      },
+      //   tooltip: {
+      //     enabled: true,
+      //     style: {
+      //         whiteSpace: 'normal',
+      //     },
+      // },
         labels: xCategories,
         colors: colorPalette,
         title: {
@@ -714,14 +710,14 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins",
           },
         },
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "85%",
-            },
-          },
-        },
+        // plotOptions: {
+        //   pie: {
+        //     customScale: 0.8,
+        //     donut: {
+        //       size: "85%",
+        //     },
+        //   },
+        // },
         responsive: [
           {
             breakpoint: 480,
@@ -751,27 +747,26 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "donut",
           height: 350,
-          parentHeightOffset: 0,
           toolbar: {
             show: false,
           },
         },
-        tooltip: {
-          enabled: true,
-          style: {
-            whiteSpace: "normal",
-          },
-        },
+        // tooltip: {
+        //   enabled: true,
+        //   style: {
+        //     whiteSpace: "normal",
+        //   },
+        // },
         labels: xCategories,
         colors: colorPalette,
-        plotOptions: {
-          pie: {
-            customScale: 0.8,
-            donut: {
-              size: "75%",
-            },
-          },
-        },
+        // plotOptions: {
+        //   pie: {
+        //     customScale: 0.8,
+        //     donut: {
+        //       size: "65%",
+        //     },
+        //   },
+        // },
         title: {
           text: titleText,
           align: "left",
