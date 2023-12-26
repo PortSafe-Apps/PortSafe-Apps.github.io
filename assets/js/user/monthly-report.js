@@ -504,8 +504,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
+            barHeight: '100%',
+            distributed: true,
             horizontal: true,
-            columnWidth: "60%",
           },
         },
         colors: ["#02172C"],
@@ -520,6 +521,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
           formatter: function (val, opt) {
             return opt.w.globals.labels[opt.dataPointIndex];
+          },
+        },
+        xaxis: {
+          categories: xCategories,
+          labels: {
+            show: false,
+          },
+          tooltip: {
+            enabled: false,
           },
         },
         yaxis: {
