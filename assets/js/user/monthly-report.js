@@ -687,12 +687,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
         },
-      //   tooltip: {
-      //     enabled: true,
-      //     style: {
-      //         whiteSpace: 'normal',
-      //     },
-      // },
         labels: xCategories,
         colors: colorPalette,
         title: {
@@ -710,14 +704,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins",
           },
         },
-        // plotOptions: {
-        //   pie: {
-        //     customScale: 0.8,
-        //     donut: {
-        //       size: "85%",
-        //     },
-        //   },
-        // },
         responsive: [
           {
             breakpoint: 480,
@@ -740,6 +726,30 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             },
           },
         ],
+        tooltip: {
+          enabled: true,
+          y: {
+            formatter: function (val) {
+              // Format nilai tooltip di sini jika perlu
+              return val;
+            },
+          },
+          style: {
+            fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
+            fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
+          },
+          marker: {
+            show: true,
+          },
+          item: {
+            fontSize: "12px",
+          },
+          fixed: {
+            enabled: true,
+            position: "topRight", // Sesuaikan posisi tooltip jika perlu
+          },
+        },
+        
       };
     case "subtypeChart":
       return {
@@ -751,22 +761,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
         },
-        // tooltip: {
-        //   enabled: true,
-        //   style: {
-        //     whiteSpace: "normal",
-        //   },
-        // },
         labels: xCategories,
         colors: colorPalette,
-        // plotOptions: {
-        //   pie: {
-        //     customScale: 0.8,
-        //     donut: {
-        //       size: "65%",
-        //     },
-        //   },
-        // },
         title: {
           text: titleText,
           align: "left",
@@ -783,7 +779,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         subtitle: {
-          text: subtitleText || "", // Tambahkan penanganan jika subtitleText undefined
+          text: subtitleText || "", 
           align: "left",
           margin: 5,
           offsetY: 40,
@@ -791,6 +787,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontSize: "14px",
             color: "text-dark",
             fontWeight: "bold",
+            marginBottom: "5rem",
             fontFamily: "Poppins",
           },
         },
@@ -816,6 +813,30 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             },
           },
         ],
+        tooltip: {
+          enabled: true,
+          y: {
+            formatter: function (val) {
+              // Format nilai tooltip di sini jika perlu
+              return val;
+            },
+          },
+          style: {
+            fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
+            fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
+          },
+          marker: {
+            show: true,
+          },
+          item: {
+            fontSize: "12px",
+          },
+          fixed: {
+            enabled: true,
+            position: "topRight", // Sesuaikan posisi tooltip jika perlu
+          },
+        },
+        
       };
     default:
       return {};
