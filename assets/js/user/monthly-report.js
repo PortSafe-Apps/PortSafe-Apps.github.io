@@ -120,7 +120,7 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     "subtypeChart",
     selectedTypeName
   );
-  
+
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
@@ -270,9 +270,8 @@ const transformDataForChart = (reportData, chartType) => {
         report.typeDangerousActions.forEach((action) => {
           if (action.typeName === selectedTypeName) {
             action.subTypes.forEach((subType) => {
-              const subtypeLabel = subType; // Menggunakan hanya subtype sebagai label
-              subtypeCounts[subtypeLabel] =
-                (subtypeCounts[subtypeLabel] || 0) + 1;
+              const subtypeLabel = subType;
+              subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
             });
           }
         });
