@@ -523,7 +523,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             return opt.w.globals.labels[opt.dataPointIndex];
           },
         },
-        
+        xaxis: {
+          categories: [], 
+        },
         yaxis: {
           labels: {
             offsetX: -10,
@@ -679,6 +681,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           formatter: function (val, opt) {
             return opt.w.globals.labels[opt.dataPointIndex];
           },
+        },
+        xaxis: {
+          categories: [], 
         },
         yaxis: {
           labels: {
