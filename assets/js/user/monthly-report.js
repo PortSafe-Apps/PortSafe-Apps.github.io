@@ -114,6 +114,7 @@ const drawChart = async () => {
 
 // Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
 const updateSubtypeChart = (reportData, selectedTypeName) => {
+  console.log("updateSubtypeChart - selectedTypeName:", selectedTypeName);
   // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
     reportData,
@@ -121,11 +122,16 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     selectedTypeName
   );
 
+  console.log("transformedSubtypeData:", transformedSubtypeData);
+
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
     "subtypeChart"
   );
+
+  console.log("subtypeChartConfig:", subtypeChartConfig);
+  
   renderChart("#subtypeChart", subtypeChartConfig);
 };
 
@@ -263,33 +269,32 @@ const transformDataForChart = (reportData, chartType) => {
         series: [sortedSeriesType],
       };
 
-    case "subtypeChart":
-      const subtypeCounts = {};
-
-      reportData.forEach((report) => {
-        report.typeDangerousActions.forEach((action) => {
-          if (action.typeName === selectedTypeName) {
-            action.subTypes.forEach((subType) => {
-              const subtypeLabel = subType;
-              subtypeCounts[subtypeLabel] =
-                (subtypeCounts[subtypeLabel] || 0) + 1;
-            });
-          }
+      case "subtypeChart":
+        const subtypeCounts = {};
+  
+        reportData.forEach((report) => {
+          report.typeDangerousActions.forEach((action) => {
+            if (action.typeName === selectedTypeName) {
+              action.subTypes.forEach((subType) => {
+                const subtypeLabel = subType;
+                subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
+              });
+            }
+          });
         });
-      });
-
-      const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
-        (a, b) => subtypeCounts[b] - subtypeCounts[a]
-      );
-
-      const sortedSeriesSubtype = sortedLabelsSubtype.map(
-        (label) => subtypeCounts[label]
-      );
-
-      return {
-        labels: sortedLabelsSubtype,
-        series: [sortedSeriesSubtype],
-      };
+  
+        const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
+          (a, b) => subtypeCounts[b] - subtypeCounts[a]
+        );
+  
+        const sortedSeriesSubtype = sortedLabelsSubtype.map(
+          (label) => subtypeCounts[label]
+        );
+  
+        return {
+          labels: sortedLabelsSubtype,
+          series: [sortedSeriesSubtype],
+        };
 
     default:
       return {};
