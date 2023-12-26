@@ -739,10 +739,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
           },
           marker: {
-            show: true,
+            show: false,
           },
           item: {
-            fontSize: "12px",
+            fontSize: "10px",
           },
           fixed: {
             enabled: true,
@@ -826,10 +826,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
           },
           marker: {
-            show: true,
+            show: false,
           },
           item: {
-            fontSize: "12px",
+            fontSize: "10px",
           },
           fixed: {
             enabled: true,
