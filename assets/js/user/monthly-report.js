@@ -95,21 +95,39 @@ const drawChart = async () => {
       transformedTypeData,
       "typeChart"
     );
+
+    // Tambahkan listener untuk acara pemilihan data pada chart jenis
+    typeChartConfig.chart.events = {
+      dataPointSelection: function (event, chartContext, config) {
+        const selectedTypeName = config.w.globals.labels[config.dataPointIndex];
+        // Memperbarui Subtype Chart berdasarkan jenis yang terpilih
+        updateSubtypeChart(reportData, selectedTypeName);
+      },
+    };
+
     renderChart("#typeChart", typeChartConfig);
 
-    // Menggambar Subtype Chart
-    const transformedSubtypeData = transformDataForChart(
-      reportData,
-      "subtypeChart"
-    );
-    const subtypeChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
-      transformedSubtypeData,
-      "subtypeChart"
-    );
-    renderChart("#subtypeChart", subtypeChartConfig);
+    // Menggambar Subtype Chart awal
+    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
   }
 };
+
+// Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
+const updateSubtypeChart = (reportData, selectedTypeName) => {
+  // Mendapatkan data subjenis pelanggaran berdasarkan jenis pelanggaran yang terpilih
+  const transformedSubtypeData = transformDataForChart(
+    reportData,
+    "subtypeChart",
+    selectedTypeName
+  );
+  const subtypeChartConfig = createChartConfig(
+    "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
+    transformedSubtypeData,
+    "subtypeChart"
+  );
+  renderChart("#subtypeChart", subtypeChartConfig);
+};
+
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType) => {
@@ -234,7 +252,9 @@ const transformDataForChart = (reportData, chartType) => {
         (a, b) => typeCounts[b] - typeCounts[a]
       );
 
-      const sortedSeriesType = sortedLabelsType.map((label) => typeCounts[label]);
+      const sortedSeriesType = sortedLabelsType.map(
+        (label) => typeCounts[label]
+      );
 
       return {
         labels: sortedLabelsType,
@@ -245,10 +265,11 @@ const transformDataForChart = (reportData, chartType) => {
       const subtypeCounts = {};
       reportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
-          action.subTypes.forEach((subType) => {
-            const subtypeLabel = `${action.typeName} - ${subType}`;
-            subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
-          });
+          if (action.typeName === selectedTypeName) {
+            action.subTypes.forEach((subType) => {
+              subtypeCounts[subType] = (subtypeCounts[subType] || 0) + 1;
+            });
+          }
         });
       });
 
