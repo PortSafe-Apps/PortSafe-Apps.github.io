@@ -126,8 +126,9 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
     transformedSubtypeData,
     "subtypeChart"
   );
-
+  
   renderChart("#subtypeChart", subtypeChartConfig);
+  
 };
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
@@ -335,6 +336,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
 
   // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
   const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
+
+  console.log("selectedTypeName:", selectedTypeName);
+  console.log("subtitleText:", subtitleText);
+
 
   switch (chartType) {
     case "monthChart":
