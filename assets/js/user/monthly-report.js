@@ -137,8 +137,6 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType, selectedTypeName) => {
-  let selectedTypeName;
-
   if (!reportData || reportData.length === 0) {
     return { labels: [], series: [] };
   }
