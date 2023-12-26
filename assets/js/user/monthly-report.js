@@ -488,7 +488,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 480,
+          height: 495,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -504,7 +504,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            columnWidth: "40%",
+            columnWidth: "60%",
             distributed: true,
             horizontal: true,
           },
@@ -534,7 +534,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: false
+            show: true
           }
         },
         grid: {
@@ -593,7 +593,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         ],
         chart: {
-          height: 240,
+          height: 300,
           type: "bar",
           animations: {
             enabled: true,
@@ -632,7 +632,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            columnWidth: "40%",
+            columnWidth: "60%",
             distributed: true,
             horizontal: true,
           },
@@ -682,7 +682,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: false
+            show: true
           }
         },
         tooltip: {
