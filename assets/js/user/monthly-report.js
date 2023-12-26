@@ -524,7 +524,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         xaxis: {
-          categories: [], 
+          categories: xCategories, 
         },
         yaxis: {
           labels: {
@@ -683,7 +683,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         xaxis: {
-          categories: [], 
+          categories: xCategories, 
         },
         yaxis: {
           labels: {
