@@ -524,8 +524,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         xaxis: {
-          categories: xCategories, 
+          categories: xCategories,
+          labels: {
+            show: false, // Menyembunyikan label pada sumbu x
+          },
+          tooltip: {
+            enabled: false, // Menonaktifkan tooltip pada sumbu x
+          },
         },
+        
         yaxis: {
           labels: {
             offsetX: -10,
@@ -683,8 +690,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
         xaxis: {
-          categories: xCategories, 
+          categories: xCategories,
+          labels: {
+            show: false, // Menyembunyikan label pada sumbu x
+          },
+          tooltip: {
+            enabled: false, // Menonaktifkan tooltip pada sumbu x
+          },
         },
+        
         yaxis: {
           labels: {
             offsetX: -10,
