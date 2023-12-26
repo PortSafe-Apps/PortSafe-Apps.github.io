@@ -693,12 +693,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         tooltip: {
           enabled: true,
-          y: {
-            formatter: function (value) {
-              return value + " %";
-            },
+          style: {
+              whiteSpace: 'normal',
           },
-        },
+      },
         labels: xCategories,
         colors: colorPalette,
         title: {
@@ -720,7 +718,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           pie: {
             customScale: 0.8,
             donut: {
-              size: "75%",
+              size: "85%",
             },
           },
         },
@@ -760,10 +758,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         tooltip: {
           enabled: true,
-          y: {
-            formatter: function (value) {
-              return value + " %";
-            },
+          style: {
+            whiteSpace: "normal",
           },
         },
         labels: xCategories,
@@ -772,7 +768,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           pie: {
             customScale: 0.8,
             donut: {
-              size: "65%",
+              size: "75%",
             },
           },
         },
