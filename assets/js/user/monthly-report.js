@@ -94,7 +94,7 @@ const drawChart = async () => {
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
       "typeChart",
-      selectedTypeName // Pastikan nilai ini sesuai
+      transformedTypeData.labels[0] // Misalnya, gunakan label pertama sebagai selectedTypeName
     );
 
     typeChartConfig.chart.events = {
@@ -107,7 +107,8 @@ const drawChart = async () => {
     renderChart("#typeChart", typeChartConfig);
 
     // Menggambar Subtype Chart awal
-    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
+    const initialSelectedTypeName = transformedTypeData.labels[0]; // Misalnya, gunakan label pertama sebagai selectedTypeName
+    updateSubtypeChart(reportData, initialSelectedTypeName);
   }
 };
 
