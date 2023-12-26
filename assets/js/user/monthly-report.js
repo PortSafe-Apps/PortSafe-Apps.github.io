@@ -509,7 +509,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             horizontal: true,
           },
         },
-        colors: colorPalette,colors: ["#02172C"],
+        colors: colorPalette,
         dataLabels: {
           enabled: true,
           textAnchor: "start",
