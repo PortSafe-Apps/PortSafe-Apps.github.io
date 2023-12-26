@@ -212,77 +212,59 @@ const transformDataForChart = (reportData, chartType) => {
         series: [sortedSeriesArea], // Tetap dalam bentuk array
       };
 
-    case "combinedChart":
-      const typeLabels = [
-        "REAKSI ORANG",
-        "ALAT PELINDUNG DIRI",
-        "POSISI ORANG",
-        "ALAT DAN PERLENGKAPAN",
-        "PROSEDUR DAN CARA KERJA",
-      ];
-
-      const subtypeLabels = [
-        "Merubah Fungsi Alat Pelindung Diri",
-        "Merubah Posisi",
-        "Merubah Cara Kerja",
-        "Menghentikan Pekerjaan",
-        "Jatuh ke Lantai",
-        "Terkunci",
-        "Kepala",
-        "Mata dan Wajah",
-        "Telinga",
-        "Sistem Pernafasan",
-        "Tangan dan Lengan",
-        "Dagu",
-        "Badan",
-        "Kaki dan Betis",
-        "Terbentur Pada",
-        "Tertabrak oleh",
-        "Terjepit didalam, pada atau diantara",
-        "Terjatuh",
-        "Terkena Temperatur Tinggi",
-        "Tersengat Arus Listrik",
-        "Terhirup",
-        "Terisap, Terserap",
-        "Tertelan Benda Berbahaya",
-        "Memaksakan Pekerjaan yang Terlalu Berat",
-        "Tidak Sesuai Dengan Jenis Pekerjaan",
-        "Digunakan Secara Tidak Benar",
-        "Dalam Kondisi yang Tidak Aman",
-        "Tidak Memenuhi",
-        "Tidak diketahui/dimengerti",
-        "Tidak diikuti",
-      ];
-
-      const combinedLabels = [];
-      typeLabels.forEach((typeLabel) => {
-        subtypeLabels.forEach((subtypeLabel) => {
-          combinedLabels.push(`${typeLabel} - ${subtypeLabel}`);
+      case "combinedChart":
+        const typeLabels = [
+          "REAKSI ORANG",
+          "ALAT PELINDUNG DIRI",
+          "POSISI ORANG",
+          "ALAT DAN PERLENGKAPAN",
+          "PROSEDUR DAN CARA KERJA",
+        ];
+      
+        const subtypeLabels = [
+          // ... (kode subtypeLabels)
+        ];
+      
+        const combinedLabels = [];
+        const combinedCounts = {};
+      
+        typeLabels.forEach((typeLabel) => {
+          subtypeLabels.forEach((subtypeLabel) => {
+            const combinedLabel = `${typeLabel} - ${subtypeLabel}`;
+            combinedLabels.push(combinedLabel);
+      
+            // Jika Anda memiliki data sebenarnya, gantilah 0 dengan jumlah laporan yang sebenarnya
+            combinedCounts[combinedLabel] = combinedCounts[combinedLabel] || 0;
+          });
         });
-      });
-
-      const combinedCounts = {};
-      combinedLabels.forEach((label) => {
-        combinedCounts[label] = (combinedCounts[label] || 0) + 1;
-      });
-
-      // Mengurutkan labels berdasarkan jumlah laporan
-      const sortedLabelsCombined = Object.keys(combinedCounts).sort(
-        (a, b) => combinedCounts[b] - combinedCounts[a]
-      );
-
-      // Mengambil lima label terbanyak
-      const top5LabelsCombined = sortedLabelsCombined.slice(0, 5);
-
-      // Mengambil series sesuai dengan lima label terbanyak
-      const top5SeriesCombined = top5LabelsCombined.map(
-        (label) => combinedCounts[label]
-      );
-
-      return {
-        labels: top5LabelsCombined,
-        series: [top5SeriesCombined], // Tetap dalam bentuk array
-      };
+      
+        // Menampilkan hasilnya dengan console.log
+        console.log("Combined Labels and Counts:", combinedCounts);
+      
+        // Mengurutkan labels berdasarkan jumlah laporan
+        const sortedLabelsCombined = Object.keys(combinedCounts).sort(
+          (a, b) => combinedCounts[b] - combinedCounts[a]
+        );
+      
+        // Mengambil lima label terbanyak
+        const top5LabelsCombined = sortedLabelsCombined.slice(0, 5);
+      
+        // Menampilkan hasilnya dengan console.log
+        console.log("Top 5 Labels:", top5LabelsCombined);
+      
+        // Mengambil series sesuai dengan lima label terbanyak
+        const top5SeriesCombined = top5LabelsCombined.map(
+          (label) => combinedCounts[label]
+        );
+      
+        // Menampilkan hasilnya dengan console.log
+        console.log("Top 5 Series:", top5SeriesCombined);
+      
+        return {
+          labels: top5LabelsCombined,
+          series: [top5SeriesCombined], // Tetap dalam bentuk array
+        };
+      
 
     default:
       return {};
@@ -714,9 +696,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
                   size: "75%",
                 },
                 offsetY: 20,
-                dataLabels: {
-                  enabled: true,
-                },
               },
               stroke: {
                 colors: undefined,
