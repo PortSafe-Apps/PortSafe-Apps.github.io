@@ -645,39 +645,38 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-      case "combinedChart":
-        return {
-          series: seriesData[0], // Menggunakan data.series langsung
-          chart: {
-            type: "sunburst",
-            height: 350,
-          },
-          tooltip: {
-            enabled: true,
-          },
-          plotOptions: {
-            radialBar: {
-              dataLabels: {
-                total: {
-                  show: true,
-                  label: "Total",
-                  formatter: function () {
-                    // Menampilkan total jumlah laporan untuk setiap typeName
-                    const typeNameIndex = arguments[2].dataPointIndex;
-                    if (typeNameIndex !== undefined) {
-                      const typeName = xCategories[typeNameIndex];
-                      return combinedCounts[typeName] || 0;
-                    }
-                    return 0;
-                  },
+    case "combinedChart":
+      return {
+        series: seriesData[0], // Menggunakan data.series langsung
+        chart: {
+          type: "sunburst",
+          height: 350,
+        },
+        tooltip: {
+          enabled: true,
+        },
+        plotOptions: {
+          radialBar: {
+            dataLabels: {
+              total: {
+                show: true,
+                label: "Total",
+                formatter: function (val, opts) {
+                  // Menampilkan total jumlah laporan untuk setiap typeName
+                  const typeNameIndex = opts.dataPointIndex;
+                  if (typeNameIndex !== undefined) {
+                    const typeName = xCategories[typeNameIndex];
+                    return combinedCounts[typeName] || 0;
+                  }
+                  return 0;
                 },
               },
             },
           },
-          labels: xCategories,
-          colors: colorPalette,
-        };
-
+        },
+        labels: xCategories,
+        colors: colorPalette,
+      };
     default:
       return {};
   }
