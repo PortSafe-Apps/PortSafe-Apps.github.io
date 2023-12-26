@@ -494,33 +494,11 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             easing: "easeinout",
             speed: 1000,
           },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 2,
-            left: -1,
-            top: 5,
-          },
           zoom: {
             enabled: false,
           },
           toolbar: {
             show: false,
-          },
-        },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
           },
         },
         plotOptions: {
@@ -531,18 +509,26 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             horizontal: true,
           },
         },
-        colors: colorPalette,
+        colors: ["#02172C"],
         dataLabels: {
           enabled: true,
           textAnchor: "start",
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
+          offsetY: 0,
           style: {
-            colors: "#8480ae",
             fontSize: "12px",
+            colors: ["#8480ae"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
             return opt.w.globals.labels[opt.dataPointIndex];
+          },
+        },
+        xaxis: {
+          categories: [],
+        },
+        yaxis: {
+          labels: {
+            show: false,
           },
         },
         grid: {
@@ -565,18 +551,30 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             left: 0,
           },
         },
-        xaxis: {
-          categories: xCategories,
-        },
-        yaxis: {
-          labels: {
-            show: false,
+        title: {
+          text: titleText,
+          align: "left",
+          margin: 0,
+          offsetX: 0,
+          offsetY: 0,
+          floating: false,
+          style: {
+            fontSize: "15px",
+            color: "text-dark",
+            fontWeight: "bold",
+            marginBottom: "10rem",
+            fontFamily: "Poppins",
           },
         },
         tooltip: {
           enabled: true,
           x: {
             show: true,
+          },
+          y: {
+            formatter: function (value) {
+              return parseInt(value);
+            },
           },
         },
       };
