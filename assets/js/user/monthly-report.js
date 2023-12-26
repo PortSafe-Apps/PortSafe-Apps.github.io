@@ -271,7 +271,8 @@ const transformDataForChart = (reportData, chartType) => {
           if (action.typeName === selectedTypeName) {
             action.subTypes.forEach((subType) => {
               const subtypeLabel = subType;
-              subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
+              subtypeCounts[subtypeLabel] =
+                (subtypeCounts[subtypeLabel] || 0) + 1;
             });
           }
         });
