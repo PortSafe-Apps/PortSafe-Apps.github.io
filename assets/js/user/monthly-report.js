@@ -222,8 +222,37 @@ const transformDataForChart = (reportData, chartType) => {
         ];
       
         const subtypeLabels = [
-          // ... (kode subtypeLabels)
-        ];
+          "Merubah Fungsi Alat Pelindung Diri",
+          "Merubah Posisi",
+          "Merubah Cara Kerja",
+          "Menghentikan Pekerjaan",
+          "Jatuh ke Lantai",
+          "Terkunci",
+          "Kepala",
+          "Mata dan Wajah",
+          "Telinga",
+          "Sistem Pernafasan",
+          "Tangan dan Lengan",
+          "Dagu",
+          "Badan",
+          "Kaki dan Betis",
+          "Terbentur Pada",
+          "Tertabrak oleh",
+          "Terjepit didalam, pada atau diantara",
+          "Terjatuh",
+          "Terkena Temperatur Tinggi",
+          "Tersengat Arus Listrik",
+          "Terhirup",
+          "Terisap, Terserap",
+          "Tertelan Benda Berbahaya",
+          "Memaksakan Pekerjaan yang Terlalu Berat",
+          "Tidak Sesuai Dengan Jenis Pekerjaan",
+          "Digunakan Secara Tidak Benar",
+          "Dalam Kondisi yang Tidak Aman",
+          "Tidak Memenuhi",
+          "Tidak diketahui/dimengerti",
+          "Tidak diikuti",
+        ];  
       
         const combinedLabels = [];
         const combinedCounts = {};

@@ -48,8 +48,6 @@ export function PostLogin() {
 }
 
 function ResponsePostLogin(response) {
-  console.log('API Response:', response);
-
   if (response && response.token) {
     handleLoginSuccess(response.token, response.role);
   } else {
