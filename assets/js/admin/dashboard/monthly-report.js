@@ -315,7 +315,7 @@ const colorPalette = [
 ];
 
 // Fungsi untuk membuat konfigurasi grafik
-const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
+const createChartConfig = (data, chartType, selectedTypeName) => {
   // Pengecekan keberadaan data.labels dan data.series
   const xCategories = data.labels ? data.labels : [];
   const seriesData = data.series ? data.series : [];
@@ -329,8 +329,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
     case "monthChart":
       return {
         chart: {
-          height: 200,
-          width: 400,
+          height: 240,
           type: "area",
           animations: {
             enabled: true,
@@ -463,8 +462,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          width: 240,
-          height: 300,
+          height: 240,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -548,8 +546,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         ],
         chart: {
-          height: 300,
-          width: 240,
+          height: 240,
           type: "bar",
           animations: {
             enabled: true,
@@ -633,7 +630,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "pie",
           height: 350,
-          width: 150,
           toolbar: {
             show: false,
           },
@@ -693,7 +689,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "donut",
           height: 350,
-          width: 150,
           toolbar: {
             show: false,
           },
