@@ -271,31 +271,35 @@ const transformDataForChart = (reportData, chartType) => {
 
       case "subtypeChart":
         const subtypeCounts = {};
-  
+      
         reportData.forEach((report) => {
           report.typeDangerousActions.forEach((action) => {
             if (action.typeName === selectedTypeName) {
-              action.subTypes.forEach((subType) => {
-                const subtypeLabel = subType;
-                subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
-              });
+              if (action.subTypes && action.subTypes.length > 0) {
+                action.subTypes.forEach((subType) => {
+                  const subtypeLabel = subType;
+                  subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
+                });
+              } else {
+                return { labels: [], series: [[]] };
+              }
             }
           });
         });
-  
+      
         const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
           (a, b) => subtypeCounts[b] - subtypeCounts[a]
         );
-  
+      
         const sortedSeriesSubtype = sortedLabelsSubtype.map(
           (label) => subtypeCounts[label]
         );
-  
+      
         return {
           labels: sortedLabelsSubtype,
           series: [sortedSeriesSubtype],
         };
-
+      
     default:
       return {};
   }
