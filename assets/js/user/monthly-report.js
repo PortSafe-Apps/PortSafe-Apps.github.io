@@ -522,25 +522,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             return opt.w.globals.labels[opt.dataPointIndex];
           },
         },
-        xaxis: {
-          categories: xCategories,
-          labels: {
-            show: false,
-          },
-          tooltip: {
-            enabled: false,
-          },
-        },
         yaxis: {
           labels: {
-            offsetX: -10,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
+            show: false
+          }
         },
         grid: {
           borderColor: "#dbeaea",
@@ -675,25 +660,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             left: 0,
           },
         },
-        xaxis: {
-          categories: xCategories,
-          labels: {
-            show: false, // Menyembunyikan label pada sumbu x
-          },
-          tooltip: {
-            enabled: false, // Menonaktifkan tooltip pada sumbu x
-          },
-        },
         yaxis: {
           labels: {
-            offsetX: -10,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
+            show: false
+          }
         },
         tooltip: {
           enabled: true,
