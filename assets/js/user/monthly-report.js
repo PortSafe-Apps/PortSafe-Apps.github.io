@@ -94,7 +94,7 @@ const drawChart = async () => {
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
       "typeChart",
-      transformedTypeData.labels[0] // Misalnya, gunakan label pertama sebagai selectedTypeName
+      transformedTypeData.labels[0]
     );
 
     typeChartConfig.chart.events = {
@@ -107,8 +107,20 @@ const drawChart = async () => {
     renderChart("#typeChart", typeChartConfig);
 
     // Menggambar Subtype Chart awal
-    const initialSelectedTypeName = transformedTypeData.labels[0]; // Misalnya, gunakan label pertama sebagai selectedTypeName
-    updateSubtypeChart(reportData, initialSelectedTypeName);
+    updateTypeChartSubtitle(transformedTypeData.labels[0]);
+  }
+};
+
+const updateTypeChartSubtitle = (selectedTypeName) => {
+  const typeChart = document.querySelector("#typeChart");
+  if (typeChart) {
+    const chartConfig = typeChart.ApexCharts.getConfig();
+    if (chartConfig) {
+      chartConfig.subtitle.text = selectedTypeName
+        ? `Jenis Pelanggaran: ${selectedTypeName}`
+        : "";
+      typeChart.ApexCharts.updateOptions(chartConfig, true, true);
+    }
   }
 };
 
@@ -123,11 +135,13 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
-    "subtypeChart",
-    selectedTypeName // Pastikan nilai ini sesuai
+    "subtypeChart"
   );
 
   renderChart("#subtypeChart", subtypeChartConfig);
+
+  // Update subtitle pada typeChart
+  updateTypeChartSubtitle(selectedTypeName);
 };
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
@@ -334,7 +348,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   const titleText = chartTitle || "";
 
   // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
-  const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
+  const subtitleText = selectedTypeName
+    ? `Jenis Pelanggaran: ${selectedTypeName}`
+    : "";
   console.log("Selected Type Name:", selectedTypeName);
   console.log("Subtitle Text:", subtitleText);
 
