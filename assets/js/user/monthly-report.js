@@ -93,7 +93,7 @@ const drawChart = async () => {
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
-      "typeChart",
+      "typeChart"
     );
 
     typeChartConfig.chart.events = {
@@ -115,7 +115,7 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   const transformedSubtypeData = transformDataForChart(
     reportData,
     "subtypeChart",
-    selectedTypeName,
+    selectedTypeName
   );
 
   const subtypeChartConfig = createChartConfig(
@@ -332,7 +332,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   const titleText = chartTitle || "";
 
   // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
-  const subtitleText = selectedTypeName ? `Jenis Pelanggaran: ${selectedTypeName}` : "";
+  const subtitleText = selectedTypeName
+    ? `Jenis Pelanggaran: ${selectedTypeName}`
+    : "";
 
   switch (chartType) {
     case "monthChart":
@@ -481,7 +483,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         series: [
           {
             name: "jumlah laporan",
-            data: seriesData[0], // Menggunakan data.series langsung
+            data: seriesData[0],
           },
         ],
         chart: {
@@ -508,12 +510,9 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         colors: ["#02172C"],
         dataLabels: {
-          enabled: false,
-        },
-        dataLabels: {
           enabled: true,
-          textAnchor: 'start',
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
+          textAnchor: "start",
+          offsetY: 0,
           style: {
             fontSize: "12px",
             colors: ["#8480ae"],
@@ -526,13 +525,12 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         xaxis: {
           categories: xCategories,
           labels: {
-            show: false, // Menyembunyikan label pada sumbu x
+            show: false,
           },
           tooltip: {
-            enabled: false, // Menonaktifkan tooltip pada sumbu x
+            enabled: false,
           },
         },
-        
         yaxis: {
           labels: {
             offsetX: -10,
@@ -591,6 +589,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
       };
+
     case "areaChart":
       return {
         series: [
@@ -678,7 +677,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         dataLabels: {
           enabled: true,
-          textAnchor: 'start',
+          textAnchor: "start",
           offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
             fontSize: "12px",
@@ -698,7 +697,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             enabled: false, // Menonaktifkan tooltip pada sumbu x
           },
         },
-        
+
         yaxis: {
           labels: {
             offsetX: -10,
@@ -779,8 +778,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         ],
       };
-
-    // Bagian chart sub-tipe
     case "subtypeChart":
       return {
         series: seriesData[0],
