@@ -692,6 +692,12 @@ const createChartConfig = (chartTitle, data, chartType) => {
 
       case "combinedChart":
         return {
+          series: [
+            {
+              name: "jumlah laporan",
+              data: seriesData[0], // Menggunakan data.series langsung
+            },
+          ],
           chart: {
             type: "donut",
             width: 280,
@@ -740,7 +746,6 @@ const createChartConfig = (chartTitle, data, chartType) => {
                 fontFamily: "Poppins",
               },
             },
-            series: seriesData[0], // Menggunakan data.series langsung
             labels: xCategories,
             legend: {
               position: "left",
