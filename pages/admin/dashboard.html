@@ -191,6 +191,7 @@
                                                 Pengguna Aktif
                                             </div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="total-users"></span></div>
+                                        </div>  
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
                                         </div>
@@ -205,8 +206,9 @@
 
                         <!-- Area Chart -->
                         <div class="col-xl-7 col-lg-6">
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
+
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
                                     <h6 class="m-0 font-weight-bold text-primary">Tren Jumlah Pelanggaran Setiap Bulan
@@ -215,7 +217,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-wrapper">
-                                        <div id="monthlyChart"></div>
+                                       <canvas class="apexcharts-canvas" id="monthlyChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -224,42 +226,42 @@
                         <!-- Content Column -->
                         <div class="col-xl-5 col-lg-6">
                             <!-- Project Card Example -->
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Aktivitas Pengawas dalam Pelaporan
                                     </h6>
                                 </div>
-                                <div id="userActive"></div>
+                            
                             </div>
                         </div>
                     </div>
 
                     <!-- Content Row -->
                     <div class="row">
-                        <div class="col-xl-6 col-lg-6 ">
+                        <div class="col-xl-6 col-lg-5 ">
                             <!-- Bar Chart -->
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Jumlah Laporan Berdasarkan Unit
                                         Kerja</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="charts-wrapper">
-                                        <div id="locationChart"></div>
+                                    <div class="chart-wrapper pt-4">
+                                        <canvas class="apexcharts-canvas" id="locationChart"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="col-xl-6 col-lg-6">
+                        <div class="col-xl-6 col-lg-5">
                             <!-- Bar Chart -->
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <div class="card-header py-3">
                                     <h6 class="m-0 font-weight-bold text-primary">Jumlah Laporan Berdasarkan Area
                                         Kerja</h6>
                                 </div>
                                 <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="areaChart"></div>
+                                    <div class="chart-wrapper pt-4">
+                                        <canvas class="apexcharts-canvas" id="areaChart"></canvas>
                                     </div>
                                 </div>
                             </div>
@@ -270,7 +272,7 @@
                     <div class="row">
                         <!-- Pie Chart -->
                         <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -280,7 +282,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-wrapper">
-                                        <div id="typeChart"></div>
+                                        <canvas class="apexcharts-canvas" id="typeChart"></canvas>
                                     </div>
 
                                 </div>
@@ -289,7 +291,7 @@
 
                         <!-- Pie Chart -->
                         <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4 h-100 py-2">
+                            <div class="card shadow mb-4">
                                 <!-- Card Header - Dropdown -->
                                 <div
                                     class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
@@ -298,8 +300,8 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="subtypeChart"></div>
+                                    <div class="chart-wrapper ">
+                                       <canvas class="apexcharts-canvas" id="subtypeChart"></canvas>
                                     </div>
                                 </div>
                             </div>

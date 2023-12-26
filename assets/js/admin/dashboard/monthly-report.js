@@ -329,7 +329,8 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
     case "monthChart":
       return {
         chart: {
-          height: 240,
+          height: 365,
+          width: 250,
           type: "area",
           animations: {
             enabled: true,
@@ -462,7 +463,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 240,
+          height: 300,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -546,7 +547,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
           },
         ],
         chart: {
-          height: 240,
+          height: 300,
           type: "bar",
           animations: {
             enabled: true,
