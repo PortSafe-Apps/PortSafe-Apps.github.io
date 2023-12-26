@@ -516,7 +516,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           offsetY: 0,
           style: {
             fontSize: "12px",
-            colors: ["#8480ae"],
+            colors: ["#fff"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
@@ -638,7 +638,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
             fontSize: "12px",
-            colors: ["#8480ae"],
+            colors: ["#fff"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
