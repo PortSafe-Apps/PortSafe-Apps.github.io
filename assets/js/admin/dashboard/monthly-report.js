@@ -329,7 +329,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
     case "monthChart":
       return {
         chart: {
-          height: 365,
+          height: 400,
           width: 250,
           type: "area",
           animations: {

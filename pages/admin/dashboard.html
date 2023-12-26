@@ -153,7 +153,8 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
                                                 Jumlah Laporan (Bulanan)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="monthly-reports"></span></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span
+                                                    id="monthly-reports"></span></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-check fa-2x text-gray-300"></i>
@@ -171,7 +172,8 @@
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
                                                 Jumlah Laporan (Harian)</div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="daily-reports"></span></div>
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span
+                                                    id="daily-reports"></span></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -190,8 +192,9 @@
                                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Jumlah
                                                 Pengguna Aktif
                                             </div>
-                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span id="total-users"></span></div>
-                                        </div>  
+                                            <div class="h5 mb-0 font-weight-bold text-gray-800"><span
+                                                    id="total-users"></span></div>
+                                        </div>
                                         <div class="col-auto">
                                             <i class="fas fa-users fa-2x text-gray-300"></i>
                                         </div>
@@ -217,7 +220,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-wrapper">
-                                       <canvas class="apexcharts-canvas" id="monthlyChart"></canvas>
+                                        <div id="monthlyChart"></div>
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +234,7 @@
                                     <h6 class="m-0 font-weight-bold text-primary">Aktivitas Pengawas dalam Pelaporan
                                     </h6>
                                 </div>
-                            
+                                <div id="userActive"></div>
                             </div>
                         </div>
                     </div>
@@ -247,7 +250,7 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="chart-wrapper pt-4">
-                                        <canvas class="apexcharts-canvas" id="locationChart"></canvas>
+                                        <div id="locationChart"></div>
                                     </div>
                                 </div>
                             </div>
@@ -261,7 +264,9 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="chart-wrapper pt-4">
-                                        <canvas class="apexcharts-canvas" id="areaChart"></canvas>
+
+                                        <div id="areaChart"></div>
+
                                     </div>
                                 </div>
                             </div>
@@ -282,7 +287,7 @@
                                 <!-- Card Body -->
                                 <div class="card-body">
                                     <div class="chart-wrapper">
-                                        <canvas class="apexcharts-canvas" id="typeChart"></canvas>
+                                        <div id="typeChart"></div>
                                     </div>
 
                                 </div>
@@ -300,8 +305,8 @@
                                 </div>
                                 <!-- Card Body -->
                                 <div class="card-body">
-                                    <div class="chart-wrapper ">
-                                       <canvas class="apexcharts-canvas" id="subtypeChart"></canvas>
+                                    <div class="chart-wrapper">
+                                        <div id="subtypeChart"></div>
                                     </div>
                                 </div>
                             </div>
@@ -379,11 +384,11 @@
     <!-- Logout Configuration -->
     <script src="/assets/js/authorization/logout.js" type="module"></script>
 
-     <!-- Sweet Alert -->
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
 
-     <!-- Modal -->
-     <script src="/assets/js/config/modal.js" type="module"></script>
+    <!-- Modal -->
+    <script src="/assets/js/config/modal.js" type="module"></script>
 
 </body>
 
