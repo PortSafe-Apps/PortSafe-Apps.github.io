@@ -213,49 +213,6 @@ const transformDataForChart = (reportData, chartType) => {
       };
 
     case "combinedChart":
-      const typeLabels = [
-        "REAKSI ORANG",
-        "ALAT PELINDUNG DIRI",
-        "POSISI ORANG",
-        "ALAT DAN PERLENGKAPAN",
-        "PROSEDUR DAN CARA KERJA",
-      ];
-
-      const subtypeLabels = [
-        "Merubah Fungsi Alat Pelindung Diri",
-        "Merubah Posisi",
-        "Merubah Cara Kerja",
-        "Menghentikan Pekerjaan",
-        "Jatuh ke Lantai",
-        "Terkunci",
-        "Kepala",
-        "Mata dan Wajah",
-        "Telinga",
-        "Sistem Pernafasan",
-        "Tangan dan Lengan",
-        "Dagu",
-        "Badan",
-        "Kaki dan Betis",
-        "Terbentur Pada",
-        "Tertabrak oleh",
-        "Terjepit didalam, pada atau diantara",
-        "Terjatuh",
-        "Terkena Temperatur Tinggi",
-        "Tersengat Arus Listrik",
-        "Terhirup",
-        "Terisap, Terserap",
-        "Tertelan Benda Berbahaya",
-        "Memaksakan Pekerjaan yang Terlalu Berat",
-        "Tidak Sesuai Dengan Jenis Pekerjaan",
-        "Digunakan Secara Tidak Benar",
-        "Dalam Kondisi yang Tidak Aman",
-        "Tidak Memenuhi",
-        "Tidak diketahui/dimengerti",
-        "Tidak diikuti",
-      ];
-
-    case "combinedChart":
-      const combinedLabels = [];
       const combinedCounts = {};
 
       reportData.forEach((report) => {
@@ -263,7 +220,6 @@ const transformDataForChart = (reportData, chartType) => {
           const typeName = action.typeName;
           action.subTypes.forEach((subType) => {
             const combinedLabel = `${typeName} - ${subType}`;
-            combinedLabels.push(combinedLabel);
             combinedCounts[combinedLabel] =
               (combinedCounts[combinedLabel] || 0) + 1;
           });
@@ -282,7 +238,7 @@ const transformDataForChart = (reportData, chartType) => {
         labels: sortedLabelsCombined,
         series: [sortedLabelsCombined.map((label) => combinedCounts[label])], // Tetap dalam bentuk array
       };
-      
+
     default:
       return {};
   }
@@ -698,54 +654,29 @@ const createChartConfig = (chartTitle, data, chartType) => {
           },
         ],
         chart: {
-          type: "donut",
-          width: 280,
-          sparkline: {
-            enabled: true,
-          },
-          dropShadow: {
-            enabled: false,
-          },
-          plotOptions: {
-            pie: {
-              customScale: 0.8,
-              donut: {
-                size: "75%",
+          type: "sunburst",
+          height: 350,
+        },
+        tooltip: {
+          enabled: true,
+        },
+        plotOptions: {
+          radialBar: {
+            dataLabels: {
+              total: {
+                show: true,
+                label: "Total",
+                formatter: function (w) {
+                  // Menampilkan total jumlah laporan untuk setiap typeName
+                  const typeName = xCategories[w.config.seriesIndex];
+                  return combinedCounts[typeName] || 0;
+                },
               },
-              offsetY: 20,
-            },
-            stroke: {
-              colors: undefined,
-            },
-          },
-          colors: colorPalette,
-          subtitle: {
-            text: subtitleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "15px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-          },
-          labels: xCategories,
-          legend: {
-            position: "left",
-            offsetY: 80,
-          },
-          tooltip: {
-            enabled: true,
-            style: {
-              fontSize: "14px", // Ubah ukuran font tooltip sesuai kebutuhan Anda
             },
           },
         },
+        labels: xCategories,
+        colors: colorPalette,
       };
 
     default:
