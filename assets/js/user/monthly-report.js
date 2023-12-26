@@ -515,8 +515,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           textAnchor: "start",
           offsetY: 0,
           style: {
+            colors: "#8480ae",
             fontSize: "12px",
-            colors: ["#8480ae"],
             fontFamily: "Poppins",
           },
           formatter: function (val, opt) {
