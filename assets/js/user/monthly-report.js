@@ -589,7 +589,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
       };
-
     case "areaChart":
       return {
         series: [
@@ -644,7 +643,17 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         colors: ["#02172C"],
         dataLabels: {
-          enabled: false,
+          enabled: true,
+          textAnchor: "start",
+          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
+          style: {
+            fontSize: "12px",
+            colors: ["#8480ae"],
+            fontFamily: "Poppins",
+          },
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex];
+          },
         },
         grid: {
           borderColor: "#dbeaea",
@@ -666,28 +675,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             left: 0,
           },
         },
-        tooltip: {
-          theme: "light",
-          marker: {
-            show: true,
-          },
-          x: {
-            show: false,
-          },
-        },
-        dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
-          style: {
-            fontSize: "12px",
-            colors: ["#8480ae"],
-            fontFamily: "Poppins",
-          },
-          formatter: function (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex];
-          },
-        },
         xaxis: {
           categories: xCategories,
           labels: {
@@ -697,7 +684,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             enabled: false, // Menonaktifkan tooltip pada sumbu x
           },
         },
-
         yaxis: {
           labels: {
             offsetX: -10,
