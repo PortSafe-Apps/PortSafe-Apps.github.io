@@ -93,7 +93,8 @@ const drawChart = async () => {
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
-      "typeChart"
+      "typeChart",
+      selectedTypeName // Pastikan nilai ini sesuai
     );
 
     typeChartConfig.chart.events = {
@@ -102,7 +103,6 @@ const drawChart = async () => {
         updateSubtypeChart(reportData, selectedTypeName);
       },
     };
-    
 
     renderChart("#typeChart", typeChartConfig);
 
@@ -122,12 +122,12 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
-    "subtypeChart"
+    "subtypeChart",
+    selectedTypeName // Pastikan nilai ini sesuai
   );
-  
+
   renderChart("#subtypeChart", subtypeChartConfig);
 };
-
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType, selectedTypeName) => {
@@ -332,10 +332,10 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   // Pengecekan keberadaan chartTitle
   const titleText = chartTitle || "";
 
- // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
- const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
-
-
+  // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
+  const subtitleText = selectedTypeName ? `Terpilih: ${selectedTypeName}` : "";
+  console.log("Selected Type Name:", selectedTypeName);
+  console.log("Subtitle Text:", subtitleText);
 
   switch (chartType) {
     case "monthChart":
@@ -738,13 +738,13 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             fontFamily: "Poppins",
           },
         },
-         subtitle: {
+        subtitle: {
           text: subtitleText || "", // Tambahkan penanganan jika subtitleText undefined
           align: "left",
           margin: 5,
           offsetY: 40,
           style: {
-            fontSize: '14px',
+            fontSize: "14px",
             color: "text-dark",
             fontWeight: "bold",
             fontFamily: "Poppins",
@@ -828,7 +828,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           margin: 5,
           offsetY: 40,
           style: {
-            fontSize: '14px',
+            fontSize: "14px",
             color: "text-dark",
             fontWeight: "bold",
             fontFamily: "Poppins",
