@@ -254,6 +254,7 @@ const transformDataForChart = (reportData, chartType) => {
         "Tidak diikuti",
       ];
 
+    case "combinedChart":
       const combinedLabels = [];
       const combinedCounts = {};
 
@@ -270,27 +271,18 @@ const transformDataForChart = (reportData, chartType) => {
       });
 
       // Mengurutkan labels berdasarkan jumlah laporan
-      const sortedLabelsCombined = combinedLabels.sort(
+      const sortedLabelsCombined = Object.keys(combinedCounts).sort(
         (a, b) => combinedCounts[b] - combinedCounts[a]
       );
 
-      // Mengambil lima label terbanyak
-      const top5LabelsCombined = sortedLabelsCombined.slice(0, 5);
-
-      // Mengambil series sesuai dengan lima label terbanyak
-      const top5SeriesCombined = top5LabelsCombined.map(
-        (label) => combinedCounts[label]
-      );
-
       // Menampilkan hasilnya dengan console.log
-      console.log("Top 5 Labels:", top5LabelsCombined);
-      console.log("Top 5 Series:", top5SeriesCombined);
+      console.log("Sorted Labels:", sortedLabelsCombined);
 
       return {
-        labels: top5LabelsCombined,
-        series: [top5SeriesCombined], // Tetap dalam bentuk array
+        labels: sortedLabelsCombined,
+        series: [sortedLabelsCombined.map((label) => combinedCounts[label])], // Tetap dalam bentuk array
       };
-
+      
     default:
       return {};
   }
