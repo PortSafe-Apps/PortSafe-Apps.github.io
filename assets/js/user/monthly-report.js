@@ -88,17 +88,26 @@ const drawChart = async () => {
     );
     renderChart("#areaChart", areaChartConfig);
 
-    // Menggambar Combined Chart
-    const transformedCombinedData = transformDataForChart(
+    // Menggambar Type Chart
+    const transformedTypeData = transformDataForChart(reportData, "typeChart");
+    const typeChartConfig = createChartConfig(
+      "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
+      transformedTypeData,
+      "typeChart"
+    );
+    renderChart("#typeChart", typeChartConfig);
+
+    // Menggambar Subtype Chart
+    const transformedSubtypeData = transformDataForChart(
       reportData,
-      "combinedChart"
+      "subtypeChart"
     );
-    const combinedChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan jenis dan subjenis pelanggaran",
-      transformedCombinedData,
-      "combinedChart"
+    const subtypeChartConfig = createChartConfig(
+      "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
+      transformedSubtypeData,
+      "subtypeChart"
     );
-    renderChart("#combinedChart", combinedChartConfig);
+    renderChart("#subtypeChart", subtypeChartConfig);
   }
 };
 
@@ -212,31 +221,48 @@ const transformDataForChart = (reportData, chartType) => {
         series: [sortedSeriesArea], // Tetap dalam bentuk array
       };
 
-    case "combinedChart":
-      combinedCounts = {}; // Reset counts sebelum mengisi ulang
-
+    case "typeChart":
+      const typeCounts = {};
       reportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           const typeName = action.typeName;
+          typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
+        });
+      });
+
+      const sortedLabelsType = Object.keys(typeCounts).sort(
+        (a, b) => typeCounts[b] - typeCounts[a]
+      );
+
+      const sortedSeriesType = sortedLabelsType.map((label) => typeCounts[label]);
+
+      return {
+        labels: sortedLabelsType,
+        series: [sortedSeriesType],
+      };
+
+    case "subtypeChart":
+      const subtypeCounts = {};
+      reportData.forEach((report) => {
+        report.typeDangerousActions.forEach((action) => {
           action.subTypes.forEach((subType) => {
-            const combinedLabel = `${typeName} - ${subType}`;
-            combinedCounts[combinedLabel] =
-              (combinedCounts[combinedLabel] || 0) + 1;
+            const subtypeLabel = `${action.typeName} - ${subType}`;
+            subtypeCounts[subtypeLabel] = (subtypeCounts[subtypeLabel] || 0) + 1;
           });
         });
       });
 
-      // Mengurutkan labels berdasarkan jumlah laporan
-      const sortedLabelsCombined = Object.keys(combinedCounts).sort(
-        (a, b) => combinedCounts[b] - combinedCounts[a]
+      const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
+        (a, b) => subtypeCounts[b] - subtypeCounts[a]
       );
 
-      // Menampilkan hasilnya dengan console.log
-      console.log("Sorted Labels:", sortedLabelsCombined);
+      const sortedSeriesSubtype = sortedLabelsSubtype.map(
+        (label) => subtypeCounts[label]
+      );
 
       return {
-        labels: sortedLabelsCombined,
-        series: [sortedLabelsCombined.map((label) => combinedCounts[label])], // Tetap dalam bentuk array
+        labels: sortedLabelsSubtype,
+        series: [sortedSeriesSubtype],
       };
 
     default:
@@ -645,37 +671,48 @@ const createChartConfig = (chartTitle, data, chartType) => {
         },
       };
 
-    case "combinedChart":
+    case "typeChart":
       return {
-        series: seriesData[0], // Menggunakan data.series langsung
+        series: seriesData[0],
         chart: {
-          type: "sunburst",
+          type: "pie",
           height: 350,
         },
+        labels: xCategories,
+        colors: colorPalette,
         tooltip: {
           enabled: true,
         },
         plotOptions: {
-          radialBar: {
-            dataLabels: {
-              total: {
-                show: true,
-                label: "Total",
-                formatter: function (val, opts) {
-                  // Menampilkan total jumlah laporan untuk setiap typeName
-                  const typeNameIndex = opts?.dataPointIndex;
-                  if (typeNameIndex !== undefined && xCategories) {
-                    const typeName = xCategories[typeNameIndex];
-                    return combinedCounts[typeName] || 0;
-                  }
-                  return 0;
-                },
-              },
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "75%",
             },
           },
         },
+      };
+
+    case "subtypeChart":
+      return {
+        series: seriesData[0],
+        chart: {
+          type: "donut",
+          height: 350,
+        },
         labels: xCategories,
         colors: colorPalette,
+        tooltip: {
+          enabled: true,
+        },
+        plotOptions: {
+          pie: {
+            customScale: 0.8,
+            donut: {
+              size: "65%",
+            },
+          },
+        },
       };
 
     default:
