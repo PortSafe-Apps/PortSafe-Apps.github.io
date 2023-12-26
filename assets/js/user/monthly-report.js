@@ -96,14 +96,19 @@ const drawChart = async () => {
       "typeChart"
     );
 
-    // Tambahkan listener untuk acara pemilihan data pada chart jenis
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
         console.log("config object:", config);
-        const selectedTypeName = config.w.globals.labels[config.dataPointIndex];
+    
+        // Akses nama jenis yang dipilih menggunakan config.w.config.labels
+        const selectedTypeName = config.w.config.labels[config.dataPointIndex];
+        console.log("selectedTypeName:", selectedTypeName);
+    
+        // Perbarui Grafik Subjenis
         updateSubtypeChart(reportData, selectedTypeName);
-      },      
+      },
     };
+    
 
     renderChart("#typeChart", typeChartConfig);
 
@@ -112,7 +117,6 @@ const drawChart = async () => {
   }
 };
 
-// Fungsi untuk memperbarui Subtype Chart berdasarkan jenis yang terpilih
 const updateSubtypeChart = (reportData, selectedTypeName) => {
   // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
@@ -128,8 +132,8 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   );
   
   renderChart("#subtypeChart", subtypeChartConfig);
-  
 };
+
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
 const transformDataForChart = (reportData, chartType, selectedTypeName) => {
