@@ -58,7 +58,6 @@ const drawChart = async () => {
       "monthChart"
     );
     const monthlyChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Bulan",
       transformedMonthlyData,
       "monthChart"
     );
@@ -70,7 +69,6 @@ const drawChart = async () => {
       "locationChart"
     );
     const locationChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Lokasi",
       transformedLocationData,
       "locationChart"
     );
@@ -79,7 +77,6 @@ const drawChart = async () => {
     // Menggambar Area Chart
     const transformedAreaData = transformDataForChart(reportData, "areaChart");
     const areaChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Area",
       transformedAreaData,
       "areaChart"
     );
@@ -88,7 +85,6 @@ const drawChart = async () => {
     // Menggambar Type Chart
     const transformedTypeData = transformDataForChart(reportData, "typeChart");
     const typeChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
       "typeChart"
     );
@@ -116,7 +112,6 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   );
 
   const subtypeChartConfig = createChartConfig(
-    "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
     "subtypeChart",
     selectedTypeName
@@ -325,9 +320,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
   const xCategories = data.labels ? data.labels : [];
   const seriesData = data.series ? data.series : [];
 
-  // Pengecekan keberadaan chartTitle
-  const titleText = chartTitle || "";
-
   // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
   const subtitleText = selectedTypeName
     ? `Jenis Pelanggaran: ${selectedTypeName}`
@@ -337,7 +329,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
     case "monthChart":
       return {
         chart: {
-          height: 240,
+          height: 200,
+          width: 400,
           type: "area",
           animations: {
             enabled: true,
@@ -418,21 +411,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
         },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
         stroke: {
           show: true,
           curve: "smooth",
@@ -485,7 +463,8 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 495,
+          width: 240,
+          height: 300,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -548,21 +527,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             left: 0,
           },
         },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
         tooltip: {
           enabled: true,
           x: {
@@ -585,6 +549,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         ],
         chart: {
           height: 300,
+          width: 240,
           type: "bar",
           animations: {
             enabled: true,
@@ -603,21 +568,6 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
           toolbar: {
             show: false,
-          },
-        },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
           },
         },
         plotOptions: {
@@ -683,27 +633,13 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "pie",
           height: 350,
+          width: 150,
           toolbar: {
             show: false,
           },
         },
         labels: xCategories,
         colors: colorPalette,
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "5rem",
-            fontFamily: "Poppins",
-          },
-        },
         responsive: [
           {
             breakpoint: 480,
@@ -757,27 +693,13 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         chart: {
           type: "donut",
           height: 350,
+          width: 150,
           toolbar: {
             show: false,
           },
         },
         labels: xCategories,
         colors: colorPalette,
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "5rem",
-            fontFamily: "Poppins",
-          },
-        },
         subtitle: {
           text: subtitleText || "", 
           align: "left",
