@@ -1,3 +1,15 @@
+// Fungsi untuk mendapatkan token dari cookie
+function getTokenFromCookies(cookieName) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split('=');
+        if (name === cookieName) {
+            return value;
+        }
+    }
+    return null;
+}
+
 // Fungsi untuk menampilkan jumlah total data report dengan progress bar
 const displayUserReports = (data, containerId) => {
   // Mendapatkan elemen dengan ID containerId
