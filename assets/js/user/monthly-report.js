@@ -121,7 +121,8 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
   const subtypeChartConfig = createChartConfig(
     "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
     transformedSubtypeData,
-    "subtypeChart"
+    "subtypeChart",
+    selectedTypeName
   );
 
   renderChart("#subtypeChart", subtypeChartConfig);
