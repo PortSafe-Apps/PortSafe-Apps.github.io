@@ -330,7 +330,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
       return {
         chart: {
           height: 400,
-          width: 400,
+          width: 500,
           type: "area",
           animations: {
             enabled: true,
@@ -436,7 +436,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            offsetX: -10,
+            offsetX: 0,
             offsetY: 0,
             style: {
               colors: "#8480ae",
@@ -547,7 +547,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
           },
         ],
         chart: {
-          height: 300,
+          height: 280,
           type: "bar",
           animations: {
             enabled: true,
@@ -630,7 +630,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         series: seriesData[0],
         chart: {
           type: "pie",
-          height: 350,
+          height: 280,
           toolbar: {
             show: false,
           },
