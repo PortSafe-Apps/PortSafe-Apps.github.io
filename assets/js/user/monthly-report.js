@@ -512,16 +512,18 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         dataLabels: {
           enabled: true,
-          offsetY: -20, // Sesuaikan offset sesuai kebutuhan
+          textAnchor: 'start',
+          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
             fontSize: "12px",
             colors: ["#8480ae"],
             fontFamily: "Poppins",
           },
-          formatter: function (val) {
-            return parseInt(val);
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex];
           },
         },
+        
         yaxis: {
           labels: {
             offsetX: -10,
@@ -667,14 +669,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         },
         dataLabels: {
           enabled: true,
-          offsetY: -20, // Sesuaikan offset sesuai kebutuhan
+          textAnchor: 'start',
+          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
           style: {
             fontSize: "12px",
             colors: ["#8480ae"],
             fontFamily: "Poppins",
           },
-          formatter: function (val) {
-            return parseInt(val);
+          formatter: function (val, opt) {
+            return opt.w.globals.labels[opt.dataPointIndex];
           },
         },
         yaxis: {
