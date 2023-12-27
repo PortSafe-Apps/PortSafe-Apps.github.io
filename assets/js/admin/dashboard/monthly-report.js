@@ -330,7 +330,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
       return {
         chart: {
           height: 400,
-          width: 650,
+          width: 600,
           type: "area",
           animations: {
             enabled: true,
@@ -389,7 +389,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         legend: {
           position: "top",
           horizontalAlign: "right",
-          offsetY: -60,
+          offsetY: -70,
           fontSize: "14px",
           markers: {
             width: 9,
@@ -463,7 +463,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 450,
+          height: 480,
           animations: {
             enabled: true,
             easing: "easeinout",
