@@ -76,18 +76,12 @@ const drawChart = async () => {
 
     // Menggambar Area Chart
     const transformedAreaData = transformDataForChart(reportData, "areaChart");
-    const areaChartConfig = createChartConfig(
-      transformedAreaData,
-      "areaChart"
-    );
+    const areaChartConfig = createChartConfig(transformedAreaData, "areaChart");
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Type Chart
     const transformedTypeData = transformDataForChart(reportData, "typeChart");
-    const typeChartConfig = createChartConfig(
-      transformedTypeData,
-      "typeChart"
-    );
+    const typeChartConfig = createChartConfig(transformedTypeData, "typeChart");
 
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
@@ -327,131 +321,131 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
 
   switch (chartType) {
     case "monthChart":
-  return {
-    series: [
-      {
-        name: "jumlah laporan",
-        data: seriesData,
-      },
-    ],
-    chart: {
-      height: 400,
-      width: 580,
-      type: "area",
-      animations: {
-        enabled: true,
-        easing: "easeinout",
-        speed: 1000,
-      },
-      dropShadow: {
-        enabled: true,
-        opacity: 0.1,
-        blur: 1,
-        left: -5,
-        top: 5,
-      },
-      zoom: {
-        enabled: false,
-      },
-      toolbar: {
-        show: false,
-      },
-    },
-    colors: ["#02172C"],
-    dataLabels: {
-      enabled: false,
-    },
-    fill: {
-      type: "gradient",
-      gradient: {
-        type: "vertical",
-        shadeIntensity: 1,
-        inverseColors: true,
-        opacityFrom: 0.15,
-        opacityTo: 0.05,
-        stops: [40, 100],
-      },
-    },
-    grid: {
-      borderColor: "#dbeaea",
-      strokeDashArray: 4,
-      xaxis: {
-        lines: {
+      return {
+        series: [
+          {
+            name: "jumlah laporan",
+            data: seriesData,
+          },
+        ],
+        chart: {
+          height: 400,
+          width: 610,
+          type: "area",
+          animations: {
+            enabled: true,
+            easing: "easeinout",
+            speed: 1000,
+          },
+          dropShadow: {
+            enabled: true,
+            opacity: 0.1,
+            blur: 1,
+            left: -5,
+            top: 5,
+          },
+          zoom: {
+            enabled: false,
+          },
+          toolbar: {
+            show: false,
+          },
+        },
+        colors: ["#02172C"],
+        dataLabels: {
+          enabled: false,
+        },
+        fill: {
+          type: "gradient",
+          gradient: {
+            type: "vertical",
+            shadeIntensity: 1,
+            inverseColors: true,
+            opacityFrom: 0.15,
+            opacityTo: 0.05,
+            stops: [40, 100],
+          },
+        },
+        grid: {
+          borderColor: "#dbeaea",
+          strokeDashArray: 4,
+          xaxis: {
+            lines: {
+              show: true,
+            },
+          },
+          yaxis: {
+            lines: {
+              show: false,
+            },
+          },
+          padding: {
+            top: 20,
+            right: 0,
+            bottom: 10,
+            left: 20,
+          },
+        },
+        legend: {
+          position: "top",
+          horizontalAlign: "right",
+          offsetY: -70,
+          fontSize: "14px",
+          markers: {
+            width: 9,
+            height: 9,
+            strokeWidth: 0,
+            radius: 20,
+          },
+          itemMargin: {
+            horizontal: 5,
+            vertical: 0,
+          },
+        },
+        tooltip: {
+          theme: "light",
+          x: {
+            show: true,
+          },
+          y: {
+            show: true,
+          },
+        },
+        stroke: {
           show: true,
+          curve: "smooth",
+          width: 3,
         },
-      },
-      yaxis: {
-        lines: {
-          show: false,
+        xaxis: {
+          categories: xCategories,
+          crosshairs: {
+            show: true,
+          },
+          labels: {
+            offsetX: 0,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
+            },
+          },
+          tooltip: {
+            enabled: false,
+          },
         },
-      },
-      padding: {
-        top: 20,
-        right: 0,
-        bottom: 10,
-        left: 20,
-      },
-    },
-    legend: {
-      position: "top",
-      horizontalAlign: "right",
-      offsetY: -70,
-      fontSize: "14px",
-      markers: {
-        width: 9,
-        height: 9,
-        strokeWidth: 0,
-        radius: 20,
-      },
-      itemMargin: {
-        horizontal: 5,
-        vertical: 0,
-      },
-    },
-    tooltip: {
-      theme: "dark",
-      marker: {
-        show: true,
-      },
-      x: {
-        show: false,
-      },
-    },
-    stroke: {
-      show: true,
-      curve: "smooth",
-      width: 3,
-    },
-    xaxis: {
-      categories: xCategories,
-      crosshairs: {
-        show: true,
-      },
-      labels: {
-        offsetX: 0,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
+        yaxis: {
+          labels: {
+            offsetX: -1,
+            offsetY: 0,
+            style: {
+              colors: "#8480ae",
+              fontSize: "12px",
+              fontFamily: "Poppins",
+            },
+          },
         },
-      },
-      tooltip: {
-        enabled: false,
-      },
-    },
-    yaxis: {
-      labels: {
-        offsetX: -1,
-        offsetY: 0,
-        style: {
-          colors: "#8480ae",
-          fontSize: "12px",
-          fontFamily: "Poppins",
-        },
-      },
-    },
-  };
+      };
 
     case "locationChart":
       return {
@@ -464,7 +458,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         chart: {
           type: "bar",
           height: 480,
-          marginTop: 5, // Sesuaikan nilai margin top sesuai kebutuhan
+          marginTop: 10,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -489,7 +483,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         dataLabels: {
           enabled: true,
           textAnchor: "start",
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
+          offsetY: 0,
           style: {
             colors: ["#02172C"],
             fontSize: "12px",
@@ -504,7 +498,11 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: false,
+            show: true,
+            formatter: function (value) {
+              // Menggunakan parseInt untuk menghapus desimal
+              return parseInt(value);
+            },
           },
         },
         grid: {
@@ -550,7 +548,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         chart: {
           height: 280,
           type: "bar",
-          marginTop: 5, // Sesuaikan nilai margin top sesuai kebutuhan
+          marginTop: 10, // Sesuaikan nilai margin top sesuai kebutuhan
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -684,7 +682,6 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
             position: "topRight", // Sesuaikan posisi tooltip jika perlu
           },
         },
-        
       };
     case "subtypeChart":
       return {
@@ -699,7 +696,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         labels: xCategories,
         colors: colorPalette,
         subtitle: {
-          text: subtitleText || "", 
+          text: subtitleText || "",
           align: "left",
           margin: 0,
           offsetX: 0,

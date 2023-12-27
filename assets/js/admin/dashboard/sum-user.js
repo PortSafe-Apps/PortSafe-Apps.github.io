@@ -27,15 +27,16 @@ const getAllRegisteredUsers = async () => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
+        // Tangani kesalahan autentikasi jika tidak ada token
         Swal.fire({
-            icon: 'warning',
-            title: 'Authentication Error',
-            text: 'Kamu Belum Login!',
+          icon: "warning",
+          title: "Authentication Error",
+          text: "Kamu Belum Login!",
         }).then(() => {
-            window.location.href = 'https://portsafe-apps.github.io/';
+          window.location.href = "https://portsafe-apps.github.io/";
         });
-        return;
-    }
+        return [];
+      }
 
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
 
@@ -50,7 +51,10 @@ const getAllRegisteredUsers = async () => {
 
     try {
         const response = await fetch(targetURL, requestOptions);
+        console.log('Server Response:', response.status, response.statusText);
+
         const data = await response.json();
+        console.log('Data from Server:', data);
 
         if (response.ok) {
             if (data.status === 200) {
@@ -67,3 +71,4 @@ const getAllRegisteredUsers = async () => {
 };
 
 getAllRegisteredUsers();
+

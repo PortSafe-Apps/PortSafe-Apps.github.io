@@ -50,17 +50,8 @@ const displayUserReports = (data, containerId) => {
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
 
-    // Membuat elemen cardBody
-    const cardBody = document.createElement("div");
-    cardBody.classList.add("card-body");
-
     // Mencari data user berdasarkan nipp
     const userData = data.find((report) => report.user.nipp === nipp)?.user;
-
-    // Membuat elemen heading
-    const heading = document.createElement("h4");
-    heading.classList.add("small", "font-weight-bold");
-    heading.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
 
     // Membuat elemen progressBarContainer
     const progressBarContainer = document.createElement("div");
@@ -68,26 +59,42 @@ const displayUserReports = (data, containerId) => {
 
     // Membuat elemen progressBar
     const progressBar = document.createElement("div");
-    progressBar.classList.add("progress-bar", "bg-info");
+    progressBar.classList.add("progress-bar", "bg-dark");
     progressBar.setAttribute("role", "progressbar");
     progressBar.setAttribute("style", `width: ${reportsCount}%`);
     progressBar.setAttribute("aria-valuenow", reportsCount);
     progressBar.setAttribute("aria-valuemin", "0");
     progressBar.setAttribute("aria-valuemax", "100");
 
-    // Mengganti teks di dalam progressBar dengan jumlah laporan
-    progressBar.innerText = `${reportsCount} Laporan`;
+    // Membuat elemen untuk menampilkan persentase di sebelah kanan
+    const progressBarText = document.createElement("span");
+    progressBarText.classList.add("float-right");
+    progressBarText.innerText = `${reportsCount} Laporan`;
 
-    // Menyesuaikan nilai aria-valuemax sesuai kebutuhan
-    const maxVal = Math.max(100, reportsCount);
-    progressBar.setAttribute("aria-valuemax", maxVal);
+    // Membuat elemen h4 untuk judul
+    const heading = document.createElement("h4");
+    heading.classList.add("small", "font-weight-bold");
+
+    // Menambahkan judul dan progressBarText ke dalam heading
+    heading.appendChild(
+      document.createTextNode(
+        `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`
+      )
+    );
+    heading.appendChild(progressBarText);
 
     // Menambahkan progressBar ke progressBarContainer
     progressBarContainer.appendChild(progressBar);
 
-    // Menambahkan cardBody, heading, dan progressBarContainer ke userActiveElement
+    // Membuat elemen cardBody
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
+
+    // Menambahkan heading dan progressBarContainer ke cardBody
     cardBody.appendChild(heading);
     cardBody.appendChild(progressBarContainer);
+
+    // Menambahkan cardBody ke userActiveElement
     userActiveElement.appendChild(cardBody);
   });
 };
