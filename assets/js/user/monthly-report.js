@@ -570,7 +570,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         tooltip: {
           enabled: true,
           x: {
-            show: true,
+            show: false,
           },
           y: {
             formatter: function (value) {
