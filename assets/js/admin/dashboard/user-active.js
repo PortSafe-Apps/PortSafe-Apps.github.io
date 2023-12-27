@@ -55,7 +55,7 @@ const displayUserReports = (data, containerId) => {
 
     // Membuat elemen progressBarContainer
     const progressBarContainer = document.createElement("div");
-    progressBarContainer.classList.add("progress", "mb-2");
+    progressBarContainer.classList.add("progress", "mb-0");
 
     // Membuat elemen progressBar
     const progressBar = document.createElement("div");

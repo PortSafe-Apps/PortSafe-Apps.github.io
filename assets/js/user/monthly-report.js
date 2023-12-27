@@ -526,8 +526,12 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
         yaxis: {
           labels: {
             show: false,
+            formatter: function (value) {
+              // Menggunakan parseInt untuk menghapus desimal
+              return parseInt(value);
+            },
           },
-        },
+        },  
         grid: {
           borderColor: "#dbeaea",
           strokeDashArray: 4,
@@ -781,18 +785,15 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           subtitle: {
             text: subtitleText || "",
             align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
+            margin: 5,
+            offsetY: 30,
             style: {
-              fontSize: "12px",
+              fontSize: '12px',
               color: "text-dark",
               fontWeight: "bold",
-              marginBottom: "5rem",
               fontFamily: "Poppins",
             },
-          },          
+          },
           responsive: [
             {
               breakpoint: 480,
