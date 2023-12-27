@@ -330,7 +330,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
       return {
         chart: {
           height: 400,
-          width: 500,
+          width: 650,
           type: "area",
           animations: {
             enabled: true,
@@ -463,7 +463,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 350,
+          height: 450,
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -479,7 +479,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         plotOptions: {
           bar: {
             borderRadius: 4,
-            columnWidth: "60%",
+            columnWidth: "70%",
             distributed: true,
             horizontal: true,
           },
