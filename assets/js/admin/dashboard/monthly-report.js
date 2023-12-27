@@ -330,7 +330,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           height: 400,
-          width: 610,
+          width: 600,
           type: "area",
           animations: {
             enabled: true,
@@ -498,7 +498,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         },
         yaxis: {
           labels: {
-            show: true,
+            show: false,
             formatter: function (value) {
               // Menggunakan parseInt untuk menghapus desimal
               return parseInt(value);
