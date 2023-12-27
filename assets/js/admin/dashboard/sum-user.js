@@ -1,16 +1,14 @@
-// Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
         const [name, value] = cookie.trim().split('=');
-        if (name === cookieName) {
+        if (decodeURIComponent(name) === cookieName) {
             return value;
         }
     }
     return null;
 }
 
-// Fungsi untuk menampilkan jumlah total user (mengabaikan role admin)
 const displaySumUsers = (data, containerId) => {
     const totalUsersElement = document.getElementById(containerId);
 
@@ -19,16 +17,12 @@ const displaySumUsers = (data, containerId) => {
         return;
     }
 
-    // Filter data untuk mengabaikan role admin
     const filteredData = data.filter(user => user.role !== 'admin');
-
     const totalUsers = filteredData.length;
 
-    // Tampilkan jumlah total user
     totalUsersElement.innerText = totalUsers;
 };
 
-// Fungsi untuk mengambil data dari API dan jumlah data user yang telah mendaftar (mengabaikan role admin)
 const getAllRegisteredUsers = async () => {
     const token = getTokenFromCookies('Login');
 
@@ -37,10 +31,10 @@ const getAllRegisteredUsers = async () => {
             icon: 'warning',
             title: 'Authentication Error',
             text: 'Kamu Belum Login!',
-          }).then(() => {
-            window.location.href = 'https://portsafe-apps.github.io/'; 
-          });
-          return;
+        }).then(() => {
+            window.location.href = 'https://portsafe-apps.github.io/';
+        });
+        return;
     }
 
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
@@ -60,7 +54,6 @@ const getAllRegisteredUsers = async () => {
 
         if (response.ok) {
             if (data.status === 200) {
-                // Panggil fungsi untuk menampilkan jumlah total user (mengabaikan role admin) di dalam elemen dengan ID 'total-users'
                 displaySumUsers(data.data, 'total-users');
             } else {
                 console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
@@ -69,9 +62,8 @@ const getAllRegisteredUsers = async () => {
             console.error('Server response not ok:', response.status, response.statusText);
         }
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error:', error.message || error);
     }
 };
 
-// Panggil fungsi untuk mengambil data dari API dan menampilkan jumlah user yang telah mendaftar (mengabaikan role admin)
 getAllRegisteredUsers();

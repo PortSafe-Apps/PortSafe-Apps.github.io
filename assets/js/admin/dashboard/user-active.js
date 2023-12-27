@@ -27,8 +27,11 @@ const displayUserReports = (data, containerId) => {
   // Membuat objek untuk menyimpan jumlah laporan setiap user
   const userReportsCount = {};
 
+  // Pastikan data selalu dalam bentuk array
+  const dataArray = Array.isArray(data) ? data : [data];
+
   // Menghitung jumlah laporan setiap user
-  data.forEach((report) => {
+  dataArray.forEach((report) => {
     const userId = report.user.nipp;
 
     if (!userReportsCount[userId]) {
@@ -102,7 +105,7 @@ const getActiveUser = async () => {
   myHeaders.append("Login", token);
 
   const requestOptions = {
-    method: "GET",
+    method: "POST",
     headers: myHeaders,
     redirect: "follow",
   };
