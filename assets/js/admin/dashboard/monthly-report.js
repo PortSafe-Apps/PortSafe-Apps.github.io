@@ -327,131 +327,131 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
 
   switch (chartType) {
     case "monthChart":
-      return {
-        chart: {
-          height: 400,
-          width: 600,
-          type: "area",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 5,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["#02172C"],
-        dataLabels: {
-          enabled: false,
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            type: "vertical",
-            shadeIntensity: 1,
-            inverseColors: true,
-            opacityFrom: 0.15,
-            opacityTo: 0.05,
-            stops: [40, 100],
-          },
-        },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          yaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-        legend: {
-          position: "top",
-          horizontalAlign: "right",
-          offsetY: -70,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          theme: "dark",
-          marker: {
-            show: true,
-          },
-          x: {
-            show: false,
-          },
-        },
-        stroke: {
+  return {
+    series: [
+      {
+        name: "jumlah laporan",
+        data: seriesData,
+      },
+    ],
+    chart: {
+      height: 400,
+      width: 580,
+      type: "area",
+      animations: {
+        enabled: true,
+        easing: "easeinout",
+        speed: 1000,
+      },
+      dropShadow: {
+        enabled: true,
+        opacity: 0.1,
+        blur: 1,
+        left: -5,
+        top: 5,
+      },
+      zoom: {
+        enabled: false,
+      },
+      toolbar: {
+        show: false,
+      },
+    },
+    colors: ["#02172C"],
+    dataLabels: {
+      enabled: false,
+    },
+    fill: {
+      type: "gradient",
+      gradient: {
+        type: "vertical",
+        shadeIntensity: 1,
+        inverseColors: true,
+        opacityFrom: 0.15,
+        opacityTo: 0.05,
+        stops: [40, 100],
+      },
+    },
+    grid: {
+      borderColor: "#dbeaea",
+      strokeDashArray: 4,
+      xaxis: {
+        lines: {
           show: true,
-          curve: "smooth",
-          width: 3,
         },
-        xaxis: {
-          categories: xCategories,
-          crosshairs: {
-            show: true,
-          },
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-          tooltip: {
-            enabled: false,
-          },
+      },
+      yaxis: {
+        lines: {
+          show: false,
         },
-        yaxis: {
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
+      },
+      padding: {
+        top: 20,
+        right: 0,
+        bottom: 10,
+        left: 20,
+      },
+    },
+    legend: {
+      position: "top",
+      horizontalAlign: "right",
+      offsetY: -70,
+      fontSize: "14px",
+      markers: {
+        width: 9,
+        height: 9,
+        strokeWidth: 0,
+        radius: 20,
+      },
+      itemMargin: {
+        horizontal: 5,
+        vertical: 0,
+      },
+    },
+    tooltip: {
+      theme: "dark",
+      marker: {
+        show: true,
+      },
+      x: {
+        show: false,
+      },
+    },
+    stroke: {
+      show: true,
+      curve: "smooth",
+      width: 3,
+    },
+    xaxis: {
+      categories: xCategories,
+      crosshairs: {
+        show: true,
+      },
+      labels: {
+        offsetX: 0,
+        offsetY: 0,
+        style: {
+          colors: "#8480ae",
+          fontSize: "12px",
+          fontFamily: "Poppins",
         },
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData,
-          },
-        ],
-      };
+      },
+      tooltip: {
+        enabled: false,
+      },
+    },
+    yaxis: {
+      labels: {
+        offsetX: -15,
+        offsetY: 0,
+        style: {
+          colors: "#8480ae",
+          fontSize: "12px",
+          fontFamily: "Poppins",
+        },
+      },
+    },
+  };
 
     case "locationChart":
       return {
@@ -464,6 +464,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         chart: {
           type: "bar",
           height: 480,
+          marginTop: 5, // Sesuaikan nilai margin top sesuai kebutuhan
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -549,6 +550,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         chart: {
           height: 280,
           type: "bar",
+          marginTop: 5, // Sesuaikan nilai margin top sesuai kebutuhan
           animations: {
             enabled: true,
             easing: "easeinout",
@@ -756,7 +758,6 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
             position: "topRight", // Sesuaikan posisi tooltip jika perlu
           },
         },
-        
       };
     default:
       return {};

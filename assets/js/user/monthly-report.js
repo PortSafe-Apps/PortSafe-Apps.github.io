@@ -677,167 +677,169 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
           },
         },
       };
-    case "typeChart":
-      return {
-        series: seriesData[0],
-        chart: {
-          type: "pie",
-          height: 350,
-          toolbar: {
-            show: false,
+      case "typeChart":
+        return {
+          series: seriesData[0],
+          chart: {
+            type: "pie",
+            height: 280,
+            toolbar: {
+              show: false,
+            },
           },
-        },
-        labels: xCategories,
-        colors: colorPalette,
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "5rem",
-            fontFamily: "Poppins",
+          labels: xCategories,
+          colors: colorPalette,
+          title: {
+            text: titleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
           },
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                height: 300,
-              },
-              legend: {
-                show: true,
-                position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "12px",
-                markers: {
-                  width: 9,
-                  height: 9,
-                  strokeWidth: 0,
-                  radius: 20,
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  height: 300,
+                },
+                legend: {
+                  show: true,
+                  position: "bottom",
+                  horizontalAlign: "center",
+                  fontSize: "12px",
+                  markers: {
+                    width: 9,
+                    height: 9,
+                    strokeWidth: 0,
+                    radius: 20,
+                  },
                 },
               },
             },
-          },
-        ],
-        tooltip: {
-          enabled: true,
-          y: {
-            formatter: function (val) {
-              // Format nilai tooltip di sini jika perlu
-              return val;
+          ],
+          tooltip: {
+            enabled: true,
+            y: {
+              formatter: function (val) {
+                // Format nilai tooltip di sini jika perlu
+                return val;
+              },
+            },
+            style: {
+              fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
+              fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
+            },
+            marker: {
+              show: true,
+            },
+            item: {
+              fontSize: "12px",
+            },
+            fixed: {
+              enabled: true,
+              position: "topRight", // Sesuaikan posisi tooltip jika perlu
             },
           },
-          style: {
-            fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
-            fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
+          
+        };
+      case "subtypeChart":
+        return {
+          series: seriesData[0],
+          chart: {
+            type: "donut",
+            height: 300,
+            toolbar: {
+              show: false,
+            },
           },
-          marker: {
-            show: false,
+          labels: xCategories,
+          colors: colorPalette,
+          title: {
+            text: titleText,
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "15px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "10rem",
+              fontFamily: "Poppins",
+            },
           },
-          item: {
-            fontSize: "10px",
+          subtitle: {
+            text: subtitleText || "", 
+            align: "left",
+            margin: 0,
+            offsetX: 0,
+            offsetY: 0,
+            floating: false,
+            style: {
+              fontSize: "12px",
+              color: "text-dark",
+              fontWeight: "bold",
+              marginBottom: "5rem",
+              fontFamily: "Poppins",
+            },
           },
-          fixed: {
-            enabled: true,
-            position: "topRight", // Sesuaikan posisi tooltip jika perlu
-          },
-        },
-        
-      };
-    case "subtypeChart":
-      return {
-        series: seriesData[0],
-        chart: {
-          type: "donut",
-          height: 350,
-          toolbar: {
-            show: false,
-          },
-        },
-        labels: xCategories,
-        colors: colorPalette,
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "5rem",
-            fontFamily: "Poppins",
-          },
-        },
-        subtitle: {
-          text: subtitleText || "", 
-          align: "left",
-          margin: 5,
-          offsetY: 40,
-          style: {
-            fontSize: "14px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "5rem",
-            fontFamily: "Poppins",
-          },
-        },
-        responsive: [
-          {
-            breakpoint: 480,
-            options: {
-              chart: {
-                height: 300,
-              },
-              legend: {
-                show: true,
-                position: "bottom",
-                horizontalAlign: "center",
-                fontSize: "12px",
-                markers: {
-                  width: 9,
-                  height: 9,
-                  strokeWidth: 0,
-                  radius: 20,
+          responsive: [
+            {
+              breakpoint: 480,
+              options: {
+                chart: {
+                  height: 300,
+                },
+                legend: {
+                  show: true,
+                  position: "bottom",
+                  horizontalAlign: "center",
+                  fontSize: "12px",
+                  markers: {
+                    width: 9,
+                    height: 9,
+                    strokeWidth: 0,
+                    radius: 20,
+                  },
                 },
               },
             },
-          },
-        ],
-        tooltip: {
-          enabled: true,
-          y: {
-            formatter: function (val) {
-              // Format nilai tooltip di sini jika perlu
-              return val;
+          ],
+          tooltip: {
+            enabled: true,
+            y: {
+              formatter: function (val) {
+                // Format nilai tooltip di sini jika perlu
+                return val;
+              },
+            },
+            style: {
+              fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
+              fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
+            },
+            marker: {
+              show: true,
+            },
+            item: {
+              fontSize: "12px",
+            },
+            fixed: {
+              enabled: true,
+              position: "topRight", // Sesuaikan posisi tooltip jika perlu
             },
           },
-          style: {
-            fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
-            fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
-          },
-          marker: {
-            show: false,
-          },
-          item: {
-            fontSize: "12px",
-          },
-          fixed: {
-            enabled: true,
-            position: "topRight", // Sesuaikan posisi tooltip jika perlu
-          },
-        },
-        
-      };
+          
+        };
     default:
       return {};
   }
