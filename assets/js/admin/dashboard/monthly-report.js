@@ -463,7 +463,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
         ],
         chart: {
           type: "bar",
-          height: 450,
+          height: 350,
           animations: {
             enabled: true,
             easing: "easeinout",

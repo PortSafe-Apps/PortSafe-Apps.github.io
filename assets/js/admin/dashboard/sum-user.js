@@ -58,11 +58,15 @@ const getAllRegisteredUsers = async () => {
         const response = await fetch(targetURL, requestOptions);
         const data = await response.json();
 
-        if (data.status === 200) {
-            // Panggil fungsi untuk menampilkan jumlah total user (mengabaikan role admin) di dalam elemen dengan ID 'total-users'
-            displaySumUsers(data.data, 'total-users');
+        if (response.ok) {
+            if (data.status === 200) {
+                // Panggil fungsi untuk menampilkan jumlah total user (mengabaikan role admin) di dalam elemen dengan ID 'total-users'
+                displaySumUsers(data.data, 'total-users');
+            } else {
+                console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+            }
         } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+            console.error('Server response not ok:', response.status, response.statusText);
         }
     } catch (error) {
         console.error('Error:', error);

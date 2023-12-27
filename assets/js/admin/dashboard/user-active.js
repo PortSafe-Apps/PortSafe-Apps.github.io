@@ -106,10 +106,13 @@ const getActiveUser = async () => {
     headers: myHeaders,
     redirect: "follow",
   };
-
   try {
     const response = await fetch(targetURL, requestOptions);
     const result = await response.json();
+
+    // Periksa struktur objek result
+    console.log(result);
+
     displayUserReports(result, "userActive");
   } catch (error) {
     console.error("Error fetching data:", error);
