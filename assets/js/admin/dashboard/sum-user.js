@@ -37,7 +37,7 @@ const getAllRegisteredUsers = async () => {
         return;
     }
 
-    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
 
     const myHeaders = new Headers();
     myHeaders.append('Login', token);

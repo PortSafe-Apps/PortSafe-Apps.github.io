@@ -60,19 +60,27 @@ const displayUserReports = (data, containerId) => {
     // Membuat elemen heading
     const heading = document.createElement("h4");
     heading.classList.add("small", "font-weight-bold");
-    heading.innerText = `${nipp} - ${
-      userData?.nama || "Nama Tidak Ditemukan"
-    }`;
+    heading.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
 
     // Membuat elemen progressBarContainer
     const progressBarContainer = document.createElement("div");
-    progressBarContainer.classList.add("progress", "mb-4");
+    progressBarContainer.classList.add("progress", "mb-2");
 
     // Membuat elemen progressBar
     const progressBar = document.createElement("div");
     progressBar.classList.add("progress-bar", "bg-info");
     progressBar.setAttribute("role", "progressbar");
     progressBar.setAttribute("style", `width: ${reportsCount}%`);
+    progressBar.setAttribute("aria-valuenow", reportsCount);
+    progressBar.setAttribute("aria-valuemin", "0");
+    progressBar.setAttribute("aria-valuemax", "100");
+
+    // Mengganti teks di dalam progressBar dengan jumlah laporan
+    progressBar.innerText = `${reportsCount} Laporan`;
+
+    // Menyesuaikan nilai aria-valuemax sesuai kebutuhan
+    const maxVal = Math.max(100, reportsCount);
+    progressBar.setAttribute("aria-valuemax", maxVal);
 
     // Menambahkan progressBar ke progressBarContainer
     progressBarContainer.appendChild(progressBar);
