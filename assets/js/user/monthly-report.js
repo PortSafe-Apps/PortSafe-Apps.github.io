@@ -779,7 +779,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             },
           },
           subtitle: {
-            text: subtitleText || "", 
+            text: subtitleText || "",
             align: "left",
             margin: 0,
             offsetX: 0,
@@ -792,7 +792,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
               marginBottom: "5rem",
               fontFamily: "Poppins",
             },
-          },
+          },          
           responsive: [
             {
               breakpoint: 480,

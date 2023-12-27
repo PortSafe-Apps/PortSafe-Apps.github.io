@@ -442,7 +442,7 @@ const createChartConfig = (data, chartType, selectedTypeName) => {
     },
     yaxis: {
       labels: {
-        offsetX: -15,
+        offsetX: -1,
         offsetY: 0,
         style: {
           colors: "#8480ae",

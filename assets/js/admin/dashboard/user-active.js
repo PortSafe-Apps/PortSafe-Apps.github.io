@@ -60,7 +60,7 @@ const displayUserReports = (data, containerId) => {
     // Membuat elemen heading
     const heading = document.createElement("h4");
     heading.classList.add("small", "font-weight-bold");
-    heading.innerText = `NIPP: ${nipp} - Nama: ${
+    heading.innerText = `${nipp} - ${
       userData?.nama || "Nama Tidak Ditemukan"
     }`;
 

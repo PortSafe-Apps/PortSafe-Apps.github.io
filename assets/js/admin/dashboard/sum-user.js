@@ -43,7 +43,7 @@ const getAllRegisteredUsers = async () => {
     myHeaders.append('Login', token);
 
     const requestOptions = {
-        method: 'GET',
+        method: 'POST',
         headers: myHeaders,
         redirect: 'follow',
     };
