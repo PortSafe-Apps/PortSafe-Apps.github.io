@@ -829,7 +829,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             show: false,
           },
           item: {
-            fontSize: "10px",
+            fontSize: "12px",
           },
           fixed: {
             enabled: true,
