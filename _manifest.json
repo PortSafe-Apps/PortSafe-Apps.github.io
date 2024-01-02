@@ -4,7 +4,7 @@
 "name" : "Portsafe+",
 "scope" : "/",
 "display" : "fullscreen",
-"start_url" : "/index.html",
+"start_url" : "index.html",
 "short_name" : "Portsafe+",
 "categories": ["mobile", "K3", "Observation", "Reporting", "pwa"],
 "orientation": "portrait",
