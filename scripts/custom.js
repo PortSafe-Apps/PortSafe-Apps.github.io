@@ -17,13 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
   var pwaNoCache = false; //Requires server and HTTPS/SSL. Will clear cache with each visit
 
   //Setting Service Worker Locations scope = folder | location = service worker js location
-  var pwaScope = "/";
-  var pwaLocation = "/_service-worker.js";
+  var pwaScope = "https://portsafe-apps.github.io/";
+  var pwaLocation = "https://portsafe-apps.github.io/_service-worker.js";
 
   //Place all your custom Javascript functions and plugin calls below this line
   function init_template() {
     //Caching Global Variables
-    var i, e, el; //https://www.w3schools.com/js/js_performance.asp
+    var i, e, el; 
 
     //Greetig Heading
     var pageTitle = document.querySelectorAll(
