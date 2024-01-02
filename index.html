@@ -1,96 +1,91 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML>
 <html lang="en">
 
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="description" content="PortSafe+ - PWA Mobile K3 observation reporting application">
-  <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <meta name="theme-color" content="#0134d4">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <!-- The above 4 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-  <!-- Title -->
-  <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link
-    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&amp;display=swap"
-    rel="stylesheet">
-  <!-- Favicon -->
-  <link rel="icon" href="assets/img/core-img/favicon.ico">
-  <link rel="apple-touch-icon" href="assets/img/icons/icon-96x96.png">
-  <link rel="apple-touch-icon" sizes="152x152" href="assets/img/icons/icon-152x152.png">
-  <link rel="apple-touch-icon" sizes="167x167" href="assets/img/icons/icon-167x167.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/img/icons/icon-180x180.png">
-  <!-- CSS Libraries -->
-  <link rel="stylesheet" href="assets/css/bootstrap.min.css">
-  <link rel="stylesheet" href="assets/css/bootstrap-icons.css">
-  <link rel="stylesheet" href="assets/css/tiny-slider.css">
-  <link rel="stylesheet" href="assets/css/baguetteBox.min.css">
-  <link rel="stylesheet" href="assets/css/rangeslider.css">
-  <link rel="stylesheet" href="assets/css/vanilla-dataTables.min.css">
-  <link rel="stylesheet" href="assets/css/apexcharts.css">
-  <!-- Core Stylesheet -->
-  <link rel="stylesheet" href="style.css">
-  <!-- Web App Manifest -->
-  <link rel="manifest" href="manifest.json">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="fonts/css/fontawesome-all.min.css">
+    <link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
+    <link rel="icon" href="app/icons/favicon.ico">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
 </head>
-<body>
-  <div id="preloader">
-    <div class="spinner-grow text-primary" role="status"><span class="visually-hidden">Loading...</span></div>
-  </div>
-  <!-- Internet Connection Status -->
-  <!-- # This code for showing internet connection status -->
-  <div class="internet-connection-status" id="internetStatus"></div>
-  <!-- Login Wrapper Area -->
-  <div class="login-wrapper d-flex align-items-center justify-content-center">
-    <div class="custom-container">
-      <div class="text-center px-4"><img class="login-intro-img" src="assets/img/bg-img/login.png" alt=""></div>
-      <!-- Register Form -->
-      <div class="register-form mt-4">
-        <h6 class="mb-3 text-center">Log in to continue to PortSafe+.</h6>
-        <form id="loginForm" action="/login" class="box">
-          <div class="form-group">
-            <input class="form-control" type="text" id="nipp" name="nipp" placeholder="NIPP">
-          </div>
-          <div class="form-group position-relative">
-            <input class="form-control" id="psw-input" name="password" type="password" placeholder="Enter Password">
-            <div class="position-absolute" id="password-visibility"><i class="bi bi-eye"></i><i
-                class="bi bi-eye-slash"></i></div>
-          </div>
-          <button class="btn btn-primary w-100" type="submit" id="submit">Sign In</button>
-        </form>
-      </div>
-      <!-- Login Meta -->
-      <div class="login-meta-data text-center"><a class="stretched-link forgot-password d-block mt-3 mb-1"
-          href="page-forget-password.html">Forgot Password?</a>
-        <p class="mb-0">Didn't have an account? <a class="stretched-link" href="/pages/registrasi.html">Register Now</a>
-        </p>
-      </div>
-    </div>
-  </div>
-  <!-- All JavaScript Files -->
-  <script src="assets/js/authorization/login.js" type="module"></script>
-  <script src="assets/js/user/bootstrap.bundle.min.js"></script>
-  <script src="assets/js/user/slideToggle.min.js"></script>
-  <script src="assets/js/user/internet-status.js"></script>
-  <script src="assets/js/user/tiny-slider.js"></script>
-  <script src="assets/js/user/baguetteBox.min.js"></script>
-  <script src="assets/js/user/countdown.js"></script>
-  <script src="assets/js/user/rangeslider.min.js"></script>
-  <script src="assets/js/user/vanilla-dataTables.min.js"></script>
-  <script src="assets/js/user/index.js"></script>
-  <script src="assets/js/user/imagesloaded.pkgd.min.js"></script>
-  <script src="assets/js/user/isotope.pkgd.min.js"></script>
-  <script src="assets/js/user/dark-rtl.js"></script>
-  <script src="assets/js/user/active.js"></script>
-  <!-- PWA -->
-  <script src="assets/js/user/pwa.js"></script>
-   <!-- Sweet Alert -->
-   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-   <!-- Modal -->
-   <script src="assets/js/config/modal.js" type="module"></script>
-</body>
 
-</html>
+<body class="theme-light">
+
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
+    </div>
+
+    <div id="page">
+        <div class="page-content pb-0">
+            <div class="card preload-img" data-src="images/pictures/9.jpg" data-card-height="cover">
+                <div class="card-center text-center">
+                    <h1 class="fa-4x color-theme font-900">AZURES</h1>
+                    <h4 class="font-300 color-highlight">Beautfiful Mobile Intefaces</h4>
+                    <p class="boxed-text-xl pt-4">
+                        Welcome to Azures. A beautifully crafted Mobile PWA & Site Template made to run incredibly fast
+                        and be extremely easy to edit and customize.
+                    </p>
+                </div>
+                <div class="card-bottom mb-5">
+                    <a href="login.html"
+                        class="back-button btn btn-center-m btn-m bg-highlight rounded-sm font-900 text-uppercase scale-box">Get
+                        Started</a>
+                </div>
+                <div class="card-overlay bg-theme opacity-95"></div>
+            </div>
+        </div>
+        <!-- end of page content-->
+        <!-- Be sure this is on your main visiting page, for example, the index.html page-->
+        <!-- Install Prompt for Android -->
+        <div id="menu-install-pwa-android" class="menu menu-box-bottom menu-box-detached rounded-l"
+            data-menu-height="350" data-menu-effect="menu-parallax">
+            <div class="boxed-text-l mt-4">
+                <img class="rounded-l mb-3" src="app/icons/icon-128x128.png" alt="img" width="90">
+                <h4 class="mt-3">Azures on your Home Screen</h4>
+                <p>
+                    Install Azures on your home screen, and access it just like a regular app. It really is that simple!
+                </p>
+                <a href="#"
+                    class="pwa-install btn btn-s rounded-s shadow-l text-uppercase font-900 bg-highlight mb-2">Add to
+                    Home Screen</a><br>
+                <a href="#"
+                    class="pwa-dismiss close-menu color-gray2-light text-uppercase font-900 opacity-60 font-10">Maybe
+                    later</a>
+                <div class="clear"></div>
+            </div>
+        </div>
+
+        <!-- Install instructions for iOS -->
+        <div id="menu-install-pwa-ios" class="menu menu-box-bottom menu-box-detached rounded-l" data-menu-height="320"
+            data-menu-effect="menu-parallax">
+            <div class="boxed-text-xl mt-4">
+                <img class="rounded-l mb-3" src="app/icons/icon-128x128.png" alt="img" width="90">
+                <h4 class="mt-3">Azures on your Home Screen</h4>
+                <p class="mb-0 pb-3">
+                    Install Azures on your home screen, and access it just like a regular app. Open your Safari menu and
+                    tap "Add to Home Screen".
+                </p>
+                <div class="clear"></div>
+                <a href="#"
+                    class="pwa-dismiss close-menu color-highlight font-800 opacity-80 text-center text-uppercase">Maybe
+                    later</a><br>
+                <i class="fa-ios-arrow fa fa-caret-down font-40"></i>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="scripts/custom.js"></script>
+</body>

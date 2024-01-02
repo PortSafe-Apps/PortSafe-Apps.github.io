@@ -1,0 +1,252 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
+    <link rel="stylesheet" type="text/css" href="styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="app/icons/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="fonts/css/fontawesome-all.min.css">
+    <link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
+    <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+</head>
+
+<body class="theme-light" data-highlight="blue2">
+
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
+    </div>
+
+    <div id="page">
+
+        <!-- header and footer bar go here-->
+        <div class="header header-fixed header-auto-show header-logo-app">
+            <a href="index.html" class="header-title">Portsafe<sup>+</sup></a>
+            <a href="#" data-menu="menu-main" class="header-icon header-icon-1"><i class="fas fa-bars"></i></a>
+            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
+                    class="fas fa-sun"></i></a>
+            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
+                    class="fas fa-moon"></i></a>
+            <a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
+        </div>
+        <div id="footer-bar" class="footer-bar-5">
+            <a href="beranda.html" class="active-nav"><i data-feather="home" data-feather-line="1"
+                    data-feather-size="21" data-feather-color="blue-dark"
+                    data-feather-bg="blue-fade-light"></i><span>Home</span></a>
+            <a href="addreport.html"><i data-feather="clipboard" data-feather-line="1" data-feather-size="21"
+                    data-feather-color="blue-dark" data-feather-bg="blue-fade-light"></i><span>Observasi</span></a>
+            <a href="index-settings.html"><i data-feather="settings" data-feather-line="1" data-feather-size="21"
+                    data-feather-color="dark-dark" data-feather-bg="gray-fade-light"></i><span>Settings</span></a>
+        </div>
+
+        <div class="page-content">
+            <div class="page-title page-title-small">
+                <h2>Portsafe<sup>+</sup></h2>
+                <a href="#" data-menu="menu-main" class="bg-fade-highlight-light shadow-xl preload-img"
+                    data-src="images/avatars/5s.png"></a>
+            </div>
+            <div class="card header-card shape-rounded" data-card-height="300">
+                <div class="card-overlay bg-highlight opacity-95"></div>
+                <div class="card-overlay dark-mode-tint"></div>
+                <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+            </div>
+
+            <div class="splide single-slider slider-no-arrows slider-no-dots" id="single-slider-6">
+                <div class="splide__track">
+                    <div class="splide__list">
+                        <div class="splide__slide">
+                            <div data-card-height="150" class="card mx-3 bg-18 rounded-m shadow-l">
+                                <div class="card-bottom text-center mb-3">
+                                    <h2 class="color-white text-uppercase font-900 mb-0">Splendid Simplicity</h2>
+                                    <p class="under-heading color-white">A new generation of Mobile Kits.</p>
+                                </div>
+                                <div class="card-overlay bg-gradient"></div>
+                            </div>
+                        </div>
+                        <div class="splide__slide">
+                            <div data-card-height="150" class="card mx-3 bg-14 rounded-m shadow-l">
+                                <div class="card-bottom text-center mb-3">
+                                    <h2 class="color-white text-uppercase font-900 mb-0">Top Notch Quality</h2>
+                                    <p class="under-heading color-white">Flexibility, Speed, Ease of Use.</p>
+                                </div>
+                                <div class="card-overlay bg-gradient"></div>
+                            </div>
+                        </div>
+                        <div class="splide__slide">
+                            <div data-card-height="150" class="card mx-3 bg-14 rounded-m shadow-l">
+                                <div class="card-bottom text-center mb-3">
+                                    <h2 class="color-white text-uppercase font-900 mb-0">Perfectly Organized</h2>
+                                    <p class="under-heading color-white">Mobile Website, or App or PWA Ready.</p>
+                                </div>
+                                <div class="card-overlay bg-gradient"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="content mt-n2">
+                <div class="row card card-style mb-4 mx-0" data-card-height="100">
+                    <div class="col-4">
+                        <a href="addreport.html" data-menu="form">
+                            <div class="text-center">
+                                <i class="fa fa-edit pt-3 font-20 color-blue-dark"></i>
+                                <h6 class="font-400 pt-1">Observasi Baru</h6>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="#">
+                            <div class="text-center">
+                                <i class="fa fa-list-alt font-20 pt-3 color-blue-dark"></i>
+                                <h5 class="font-400 pt-1">Daftar Observasi</h5>
+                            </div>
+                        </a>
+                    </div>
+                    <div class="col-4">
+                        <a href="#">
+                            <div class="text-center">
+                                <i class="fa fa-area-chart font-20 pt-3 color-dark-dark"></i>
+                                <h5 class="font-400 pt-1">Laporan Bulanan</h5>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <h1 class="color-blue-dark font-700 font-30 mb-2 ms-3">Statistik K3</h1>
+            <div class="card card-style mb-3 d-flex" data-card-height="100">
+                <div class="d-flex justify-content-between">
+                    <div class="ps-3 ms-1 align-self-center">
+                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18">Jumlah Laporan Terkini</p>
+                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50">110</h1>
+                    </div>
+                    <div class="pe-3 align-self-center">
+                        <i data-feather="arrow-up" data-feather-line="1" data-feather-size="45"
+                            data-feather-color="red-dark">
+                        </i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card preload-img" data-src="images/pictures/20s.jpg">
+                <div class="card-body pt-4 mt-3 ">
+                    <h2 class="font-24 color-white line-height-3 mb-3">Top 3 Jenis Pelanggaran Terbanyak</h2>
+
+                    <a href="#" class="card card-style mb-3 mx-0">
+                        <div class="d-flex pt-3 pb-3">
+                            <div class="ps-3 ms-2 align-self-center">
+                                <h1 class="center-text mb-0 pt-2">
+                                    01
+                                </h1>
+                            </div>
+                            <div class="align-self-center mt-1 ps-4">
+                                <h4 class="color-theme font-600">Posisi Orang</h4>
+                                <p class="mt-n2 font-11 color-highlight mb-0">
+                                    Terjatuh
+                                </p>
+                            </div>
+                            <div class="ms-auto align-self-center me-3">
+                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
+                                    Laporan</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="card card-style mb-3 mx-0">
+                        <div class="d-flex pt-3 pb-3">
+                            <div class="ps-3 ms-2 align-self-center">
+                                <h1 class="center-text mb-0 pt-2">
+                                    02
+                                </h1>
+                            </div>
+                            <div class="align-self-center mt-1 ps-4">
+                                <h4 class="color-theme font-600">Alat Pelindung Diri</h4>
+                                <p class="mt-n2 font-11 color-highlight mb-0">
+                                    Badan
+                                </p>
+                            </div>
+                            <div class="ms-auto align-self-center me-3">
+                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
+                                    Laporan</span>
+                            </div>
+                        </div>
+                    </a>
+                    <a href="#" class="card card-style mb-3 mx-0">
+                        <div class="d-flex pt-3 pb-3">
+                            <div class="ps-3 ms-2 align-self-center">
+                                <h1 class="center-text mb-0 pt-2">
+                                    03
+                                </h1>
+                            </div>
+                            <div class="align-self-center mt-1 ps-4">
+                                <h4 class="color-theme font-600">Reaksi Orang</h4>
+                                <p class="mt-n2 font-11 color-highlight mb-0">
+                                    Merubah Cara Kerja
+                                </p>
+                            </div>
+                            <div class="ms-auto align-self-center me-3">
+                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
+                                    Laporan</span>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="card-overlay bg-highlight opacity-90"></div>
+                <div class="card-overlay dark-mode-tint"></div>
+            </div>
+            <div class="content mb-2 mt-4">
+                <h1 class="float-start color-highlight font-700 font-30">Laporan Terkini</h1>
+                <a class="float-end font-16 color-highlight mt-n1" href="listreport.html">View All</a>
+                <div class="clearfix"></div>
+            </div>
+            <div class="card card-style">
+                <div class="content">
+                    <div class="d-flex">
+                        <div>
+                            <h4>2023-K3-001</h4>
+                            <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> Branch Gresik
+                            </p>
+                        </div>
+                        <div class="ms-auto align-self-center">
+                            <span class="badge bg-red-dark color-white font-10 mb-1 d-block rounded-s"><i
+                                    class="fa fa-exclamation-triangle"></i> Unsafe Action</span>
+                        </div>
+                    </div>
+                    <div class="divider bg-highlight mt-0 mb-2"></div>
+                    <p class="mb-0 color-highlight">
+                        Jenis Ketidaksesuaian
+                    </p>
+                    <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">Reaksi Orang</span>
+                    <div class="row mb-n2 color-theme">
+                        <div class="col-6 font-11">
+                            <p class="color-highlight font-11"><i class="fa fa-user"></i> Observator : Fahira</p>
+                        </div>
+                        <div class="col-6 font-11">
+                            <p class="color-highlight font-11"><i class="far fa-calendar"></i> August 28 <i
+                                    class="ms-4 far fa-clock"></i> 09:00 PM</p>
+                        </div>
+                        <!-- <div class="">
+                        
+                    </div> -->
+                    </div>
+                </div>
+            </div>
+            <!-- end of page content-->
+            <div id="menu-highlights" class="menu menu-box-bottom menu-box-detached rounded-m"
+                data-menu-load="menu-colors.html" data-menu-height="510" data-menu-effect="menu-over">
+            </div>
+
+            <div id="menu-main" class="menu menu-box-right menu-box-detached rounded-m" data-menu-width="260"
+                data-menu-load="menu-main.html" data-menu-active="nav-beranda" data-menu-effect="menu-over">
+            </div>
+        </div>
+
+        <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+        <script type="text/javascript" src="scripts/custom.js"></script>
+</body>

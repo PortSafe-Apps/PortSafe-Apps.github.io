@@ -1,0 +1,543 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<meta name="viewport"
+		content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+	<title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
+	<link rel="stylesheet" type="text/css" href="styles/bootstrap.css">
+	<link rel="stylesheet" type="text/css" href="styles/style.css">
+	<link
+		href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
+		rel="stylesheet">
+	<link rel="icon" href="app/icons/favicon.ico">
+	<link rel="stylesheet" type="text/css" href="fonts/css/fontawesome-all.min.css">
+	<link rel="manifest" href="_manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
+	<link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+</head>
+
+<body class="theme-light">
+
+	<div id="preloader">
+		<div class="spinner-border color-highlight" role="status"></div>
+	</div>
+
+	<div id="page">
+
+		<!-- header and footer bar go here-->
+		<div class="header header-fixed header-auto-show header-logo-app">
+			<a href="#" data-back-button class="header-title header-subtitle">Portsafe<sup>+</sup></a>
+			<a href="#" data-back-button class="header-icon header-icon-1"><i class="fas fa-arrow-left"></i></a>
+			<a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
+					class="fas fa-sun"></i></a>
+			<a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
+					class="fas fa-moon"></i></a>
+			<a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
+			<a href="#" data-menu="menu-main" class="header-icon header-icon-4"><i class="fas fa-bars"></i></a>
+		</div>
+		<div class="page-content">
+			<div class="card" data-card-height="190" style="margin-bottom:-70px">
+				<div class="card-center text-center">
+					<h1 class="color-white font-600 mb-n1 mt-n4 font-32">Pelaporan Observasi</h1>
+					<p class="color-white opacity-70 mt-1">Putuskan - Langkah 1 dari 5</p>
+				</div>
+				<div class="card-overlay bg-highlight opacity-95"></div>
+				<div class="card-overlay dark-mode-tint"></div>
+				<div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+			</div>
+			<div class="card card-style">
+				<div class="mt-2 mx-3 px-3">
+					<div class="d-flex mx-3 mt-4">
+						<div class="me-auto">
+							<i class="fa fa-check-circle color-green-dark font-28"></i>
+						</div>
+						<div class="m-auto">
+							<i class="fa fa-circle color-gray-dark font-28"></i>
+						</div>
+						<div class="m-auto">
+							<i class="fa fa-circle color-gray-dark font-28"></i>
+						</div>
+						<div class="m-auto">
+							<i class="fa fa-circle color-gray-dark font-28"></i>
+						</div>
+						<div class="ms-auto">
+							<i class="fa fa-circle color-gray-dark font-28"></i>
+						</div>
+					</div>
+					<div class="divider mx-4" style="margin-top:-18px"></div>
+				</div>
+				<div class="content pb-3">
+					<div class="d-flex">
+						<div class="me-auto">
+							<h4 class="font-500">Keputusan Untuk Melakukan Pengamatan</h4>
+							<p class="font-11 mt-n2 mb-2">Langkah ini berisi informasi terkait observasi</p>
+						</div>
+						<div class="ms-auto">
+							<i data-feather="user" data-feather-line="1" data-feather-size="40"
+								data-feather-color="blue-dark" data-feather-bg="blue-fade-light">
+							</i>
+						</div>
+					</div>
+					<div class="divider"></div>
+					<div class="row mt-0 mb-0">
+						<div class="col-6">
+							<p class="font-15 font-700 color-theme">Nomor Pelaporan</p>
+						</div>
+						<div class="col-5">
+							<p class="font-13 color-theme" id="nomorPelaporanElement"></p>
+						</div>
+						<div class="divider divider-margins w-100 mt-2 mb-2"></div>
+						<div class="col-6">
+							<p class="font-15 font-700 color-theme">Tanggal Pelaporan</p>
+						</div>
+						<div class="col-5">
+							<p class="font-13 color-theme" id="tanggalPelaporanElement"></p>
+						</div>
+						<div class="divider divider-margins w-100 mt-2 mb-2"></div>
+						<div class="col-6">
+							<p class="font-15 font-700 color-theme">Waktu Pelaporan</p>
+						</div>
+						<div class="col-5">
+							<p class="font-13 color-theme" id="waktuPelaporanElement"></p>
+						</div>
+						<div class="divider divider-margins w-100 mt-2 mb-2"></div>
+						<div class="col-6">
+							<p class="font-15 font-700 color-theme">Nama Pengawas</p>
+						</div>
+						<div class="col-5">
+							<p class="font-13 color-theme" id="namaPengawasElement"></p>
+						</div>
+						<div class="divider divider-margins w-100 mt-2 mb-2"></div>
+						<div class="col-6">
+							<p class="font-15 font-700 color-theme">Jabatan Pengawas</p>
+						</div>
+						<div class="col-5">
+							<p class="font-13 color-theme" id="jabatanPengawasElement"></p>
+						</div>
+						<div class="divider divider-margins w-100 mt-2 mb-2"></div>
+					</div>
+				</div>
+			</div>
+			<a href="#" data-menu="menu-wizard-2"
+				class="btn btn-full rounded-sm btn-m btn-margins bg-highlight font-700 text-uppercase">Next Step</a>
+			<!-- Menu Wizard 2 -->
+			<div id="menu-wizard-2" class="menu menu-box-right" data-menu-width="cover" data-menu-effect="menu-over">
+				<div class="card" data-card-height="190" style="margin-bottom:-70px">
+					<div class="card-center text-center">
+						<h1 class="color-white font-600 mb-n1 mt-n4 font-32">Pelaporan Observasi</h1>
+						<p class="color-white opacity-70 mt-1">Berhenti - Langkah 2 dari 5</p>
+					</div>
+					<div class="card-overlay bg-highlight opacity-95"></div>
+					<div class="card-overlay dark-mode-tint"></div>
+					<div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+				</div>
+				<div class="card card-style">
+					<div class="mt-2 mx-3 px-3">
+						<div class="d-flex mx-3 mt-4">
+							<div class="me-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+							<div class="ms-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+						</div>
+						<div class="divider mx-4" style="margin-top:-18px"></div>
+					</div>
+					<div class="content pb-3">
+						<div class="d-flex">
+							<div class="me-auto">
+								<h4 class="font-500">Berhenti dan Melihat Dengan <br> Jelas</h4>
+								<p class="font-11 mt-n2 mb-2">Langkah ini diharapkan mengisi beberapa informasi</p>
+							</div>
+							<div class="ms-auto">
+								<i data-feather="stop-circle" data-feather-line="1" data-feather-size="38"
+									data-feather-color="red-dark" data-feather-bg="red-fade-light">
+								</i>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<div class="input-style input-style-always-active has-borders no-icon validate-field my-4">
+							<input type="name" class="form-control validate-name" id="autoCompleteLocation" type="text"
+								name="myLocation" placeholder="Cari Unit Kerja">
+							<label for="autoCompleteLocation" class="color-highlight">Unit Kerja</label>
+							<i class="fa fa-times disabled invalid color-red-dark"></i>
+							<i class="fa fa-check disabled valid color-green-dark"></i>
+							<em>(required)</em>
+						</div>
+						<div class="input-style input-style-always-active has-borders no-icon my-4">
+							<label for="newAreaName" class="color-highlight">Area</label>
+							<select id="newAreaName" name="newAreaName">
+								<option value="" disabled selected>Pilih Area Observasi</option>
+								<option value="Kantor">Kantor</option>
+								<option value="Workshop">Workshop</option>
+								<option value="Gudang">Gudang</option>
+								<option value="Dermaga">Dermaga</option>
+								<option value="Lapangan Penumpukan">Lapangan Penumpukan</option>
+								<option value="Area kerja lainnya">Area kerja lainnya</option>
+							</select>
+							<span><i class="fa fa-chevron-down"></i></span>
+							<i class="fa fa-check disabled valid color-green-dark"></i>
+							<i class="fa fa-check disabled invalid color-red-dark"></i>
+							<em></em>
+						</div>
+						<div class="input-style input-style-always-active has-borders no-icon validate-field my-4">
+							<textarea id="form5b" placeholder="Ceritakan apa yang telah diamati"></textarea>
+							<label for="form5b" class="color-highlight">Deskripsi Pengamatan</label>
+							<i class="fa fa-times disabled invalid color-red-dark"></i>
+							<i class="fa fa-check disabled valid color-green-dark"></i>
+							<em>(required)</em>
+						</div>
+						<div class="file-data pb-5">
+							<input type="file" id="fotoObservasi" class="upload-file bg-red-dark shadow-s rounded-s"
+								accept="image/*" data-jenis="observasi">
+							<p class="upload-file-text color-white">Ambil Foto Observasi</p>
+						</div>
+						<div class="list-group list-custom-large upload-file-data disabled">
+							<img id="hasilFotoObservasi" src="images/empty.png" class="img-fluid"
+								style="width:100%; display:block; height:300px">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-1"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Prev
+							Step</a>
+					</div>
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-3"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Next
+							Step</a>
+					</div>
+				</div>
+			</div>
+			<!-- Menu Wizard 3 -->
+			<div id="menu-wizard-3" class="menu menu-box-top" data-menu-width="cover" data-menu-effect="menu-over">
+				<div class="card" data-card-height="190" style="margin-bottom:-70px">
+					<div class="card-center text-center">
+						<h1 class="color-white font-600 mb-n1 mt-n4 font-32">Pelaporan Observasi</h1>
+						<p class="color-white opacity-70 mt-1">Amati - Langkah 3 dari 5</p>
+					</div>
+					<div class="card-overlay bg-highlight opacity-95"></div>
+					<div class="card-overlay dark-mode-tint"></div>
+					<div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+				</div>
+				<div class="card card-style">
+					<div class="mt-2 mx-3 px-3">
+						<div class="d-flex mx-3 mt-4">
+							<div class="me-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+							<div class="ms-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+						</div>
+						<div class="divider mx-4" style="margin-top:-18px"></div>
+					</div>
+					<div class="content pb-3">
+						<div class="d-flex">
+							<div class="me-auto">
+								<h4 class="font-500">Pengamatan Perilaku Tidak Standar</h4>
+								<p class="font-11 mt-n2 mb-2">Langkah ini diharapkan mengamati perilaku tidak
+									standar
+									sesuai kategori dibawah</p>
+							</div>
+							<div class="ms-auto">
+								<i data-feather="search" data-feather-line="1" data-feather-size="38"
+									data-feather-color="yellow-dark" data-feather-bg="yellow-fade-light">
+								</i>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<div class="content mt-0 mb-0">
+							<h6 class="font-500">Jenis Tindakan Berbahaya</h6>
+							<div class="mt-0" id="checkboxContainer"></div>
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-2"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Prev
+							Step</a>
+					</div>
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-4"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Next
+							Step</a>
+					</div>
+				</div>
+			</div>
+			<!-- Menu Wizard 4 -->
+			<div id="menu-wizard-4" class="menu menu-box-bottom" data-menu-width="cover" data-menu-effect="menu-over">
+				<div class="card" data-card-height="190" style="margin-bottom:-70px">
+					<div class="card-center text-center">
+						<h1 class="color-white font-600 mb-n1 mt-n4 font-32">Pelaporan Observasi</h1>
+						<p class="color-white opacity-70 mt-1">Lakukan - Langkah 4 dari 5</p>
+					</div>
+					<div class="card-overlay bg-highlight opacity-95"></div>
+					<div class="card-overlay dark-mode-tint"></div>
+					<div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+				</div>
+				<div class="card card-style">
+					<div class="mt-2 mx-3 px-3">
+						<div class="d-flex mx-3 mt-4">
+							<div class="me-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="ms-auto">
+								<i class="fa fa-circle color-gray-dark font-28"></i>
+							</div>
+						</div>
+						<div class="divider mx-4" style="margin-top:-18px"></div>
+					</div>
+					<div class="content pb-3">
+						<div class="d-flex">
+							<div class="me-auto">
+								<h4 class="font-500">Bertindak Untuk Memperbaiki</h4>
+								<p class="font-11 mt-n2 mb-2">Langkah ini diharapkan pengawas melalukan tindakan
+									perbaikan segera</p>
+							</div>
+							<div class="ms-auto">
+								<i data-feather="tool" data-feather-line="1" data-feather-size="40"
+									data-feather-color="orange-dark" data-feather-bg="orange-fade-light"></i>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<div class="input-style input-style-always-active has-borders no-icon validate-field my-4">
+							<textarea id="form5b"
+								placeholder="Jelaskan tindakan perbaikan yang telah dilakukan"></textarea>
+							<label for="form5b" class="color-highlight">Tindakan Segera / Immediate Action</label>
+							<i class="fa fa-times disabled invalid color-red-dark"></i>
+							<i class="fa fa-check disabled valid color-green-dark"></i>
+							<em></em>
+						</div>
+						<div class="file-data pb-5">
+							<input type="file" id="fotoPerbaikan" class="upload-file bg-red-dark shadow-s rounded-s"
+								accept="image/*" data-jenis="perbaikan">
+							<p class="upload-file-text color-white">Ambil Foto Perbaikan</p>
+						</div>
+						<div class="list-group list-custom-large upload-file-data disabled">
+							<img id="hasilFotoPerbaikan" src="images/empty.png" class="img-fluid"
+								style="width:100%; display:block; height:300px">
+						</div>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-3"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Prev
+							Step</a>
+					</div>
+					<div class="col-6">
+						<a href="#" data-menu="menu-wizard-5"
+							class="btn btn-m btn-margins btn-full mb-3 rounded-xs text-uppercase font-900 shadow-s  bg-highlight">Next
+							Step</a>
+					</div>
+				</div>
+			</div>
+			<!-- Menu Wizard 5 -->
+			<div id="menu-wizard-5" class="menu menu-box-bottom" data-menu-width="cover" data-menu-effect="menu-over">
+				<div class="card" data-card-height="190" style="margin-bottom:-70px">
+					<div class="card-center text-center">
+						<h1 class="color-white font-600 mb-n1 mt-n4 font-32">Pelaporan Observasi</h1>
+						<p class="color-white opacity-70 mt-1">Laporkan - Langkah 5 dari 5</p>
+					</div>
+					<div class="card-overlay bg-highlight opacity-95"></div>
+					<div class="card-overlay dark-mode-tint"></div>
+					<div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+				</div>
+				<div class="card card-style">
+					<div class="mt-2 mx-3 px-3">
+						<div class="d-flex mx-3 mt-4">
+							<div class="me-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="m-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+							<div class="ms-auto">
+								<i class="fa fa-check-circle color-green-dark font-28"></i>
+							</div>
+						</div>
+						<div class="divider mx-4" style="margin-top:-18px"></div>
+					</div>
+					<div class="content pb-3">
+						<div class="d-flex">
+							<div class="me-auto">
+								<h4 class="font-500">Tindakan Pencegahan Terulang Kembali / Corrective Action</h4>
+								<p class="font-11 mt-n2 mb-1">Langkah ini telah melakukan pencegehan terulang
+									kembali
+								</p>
+							</div>
+							<div class="ms-auto">
+								<i data-feather="check-circle" data-feather-line="1" data-feather-size="40"
+									data-feather-color="green-dark"></i>
+							</div>
+						</div>
+						<div class="divider"></div>
+						<h6 class="font-13 ps-1 font-500 mb-1">Pilih Aksi Ketidaksesuaian yang dilakukan</h6>
+						<div class="content">
+							<div class="row">
+								<div class="col-6">
+									<div data-card-height="125" class="card card-style radio-card mb-0 mx-0">
+										<div class="card-center text-center">
+											<input class="form-check-input" type="radio" name="inlineRadioOptions"
+												id="unsafe" onchange="showForm()">
+											<label class="form-check-label" for="unsafeForm"><span><i
+														class="fa fa-exclamation-triangle font-30 pt-3 color-yellow-dark"></i>
+													<h5 class="pt-2">Unsafe</h5>
+												</span></label>
+										</div>
+									</div>
+								</div>
+								<div class="col-6">
+									<div data-card-height="125" class="card card-style radio-card mb-0 mx-0">
+										<div class="card-center text-center">
+											<input class="form-check-input" type="radio" name="inlineRadioOptions"
+												id="compromised" onchange="showForm()">
+											<label class="form-check-label" for="compromisedForm"><span><i
+														class="fa fa-child font-30 pt-3 color-red-dark"></i>
+													<h5 class="pt-2">Compromised</h5>
+												</span></label>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<!-- Form for Unsafe Action -->
+						<form id="unsafeForm" style="display: none;">
+							<h6 class="font-12 ps-1 mt-3 font-500 mb-1"><span class="text-danger">*</span>Pastikan
+								langkah pencegahan
+								dilakukan secara berurut</h6>
+							<div class="form-check icon-check">
+								<input class="form-check-input" type="checkbox" value="" id="check1">
+								<label class="form-check-label" for="check1">Berbicara dengan yang bersangkutan
+									hingga
+									dia mengerti mengapa tindakannya berbahaya</label>
+								<i class="icon-check-1 far fa-square color-gray-dark font-16"></i>
+								<i class="icon-check-2 far fa-check-square font-16 color-highlight"></i>
+							</div>
+							<div class="form-check icon-check">
+								<input class="form-check-input" type="checkbox" value="" id="check2">
+								<label class="form-check-label" for="check2"> Jelaskan apa yang bisa terjadi jika
+									yang
+									bersangkutan tetap berprilaku yang sama di masa yang akan
+									datang</label>
+								<i class="icon-check-1 far fa-square color-gray-dark font-16"></i>
+								<i class="icon-check-2 far fa-check-square font-16 color-highlight"></i>
+							</div>
+							<div class="form-check icon-check">
+								<input class="form-check-input" type="checkbox" value="" id="check3">
+								<label class="form-check-label" for="check3">Yang bersangkutan berjanji dan
+									berkomitmen
+									untuk berperilaku aman selama bekerja</label>
+								<i class="icon-check-1 far fa-square color-gray-dark font-16"></i>
+								<i class="icon-check-2 far fa-check-square font-16 color-highlight"></i>
+							</div>
+						</form>
+
+						<!-- Form for Compromised Action -->
+						<form id="compromisedForm" style="display: none;">
+							<div class="input-style input-style-always-active has-borders no-icon validate-field my-3">
+								<textarea id="form5b"
+									placeholder="Berikan rekomendasi yang harus dilakukan manajemen"></textarea>
+								<label for="form5b" class="color-highlight">Rekomendasi</label>
+								<i class="fa fa-times disabled invalid color-red-dark"></i>
+								<i class="fa fa-check disabled valid color-green-dark"></i>
+								<em></em>
+							</div>
+						</form>
+
+					</div>
+
+
+					<script>
+						function showForm() {
+							var unsafeForm = document.getElementById("unsafeForm");
+							var compromisedForm = document.getElementById("compromisedForm");
+							var unsafeRadio = document.getElementById("unsafe");
+							var compromisedRadio = document.getElementById("compromised");
+
+							if (unsafeRadio.checked) {
+								unsafeForm.style.display = "block";
+								compromisedForm.style.display = "none";
+							} else if (compromisedRadio.checked) {
+								unsafeForm.style.display = "none";
+								compromisedForm.style.display = "block";
+							}
+						}
+					</script>
+				</div>
+				<a href="#" data-menu="menu-wizard-6"
+					class="btn btn-full rounded-sm btn-m btn-margins bg-highlight font-700 text-uppercase">Submit
+					Laporan</a>
+			</div>
+
+			<!-- Menu Wizard 5 -->
+			<div id="menu-wizard-6" class="menu menu-box-modal" data-menu-width="cover" data-menu-effect="menu-over">
+				<div class="card" data-card-height="cover">
+					<div class="card-center text-center">
+						<i class="fa fa-check-circle color-green-dark fa-5x"></i>
+						<h1 class="pt-4 font-26 mb-0">Terima Kasih</h1>
+						<p class="boxed-text-l">
+							We really appreciate your time! If you'd like to give actual feedback please visit.
+						</p>
+						<a href="listreport.html"
+							class="close-menu btn btn-center-m bg-green-dark btn-m rounded-sm font-700 text-uppercase">Complete</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- end of page content-->
+
+
+		<div id="menu-main" class="menu menu-box-right menu-box-detached rounded-m" data-menu-width="260"
+			data-menu-load="menu-main.html" data-menu-active="nav-features" data-menu-effect="menu-over">
+		</div>
+	</div>
+
+	<script type="text/javascript" src="scripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="scripts/custom.js"></script>
+	<script type="text/javascript" src="scripts/form-autocomplete.js"></script>
+	<script type="text/javascript" src="scripts/form-checkbox.js"></script>
+	<script type="text/javascript" src="scripts/file-upload.js"></script>
+	<script type="text/javascript" src="scripts/form-report.js"></script>
+
+</body>
