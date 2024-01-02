@@ -1,7 +1,7 @@
 // To clear cache on devices, always increase APP_VER number after making changes.
 // The app will serve fresh content right away or after 2-3 refreshes (open / close)
 var APP_NAME = 'Portsafe+';
-var APP_VER = '3.4.1L';
+var APP_VER = '3.5.1L';
 var CACHE_NAME = APP_NAME + '-' + APP_VER;
 
 // Files required to make this app work offline.
@@ -48,7 +48,7 @@ self.addEventListener('install', function(event) {
 			return cache.addAll(REQUIRED_FILES);
 		}).catch(function(error) {
 			//Output error if file locations are incorrect
-			if(APP_DIAG){console.log('Service Worker Cache: Error Check REQUIRED_FILES array in _service-worker.js - files are missing or path to files is incorrectly written -  ' + error);}
+			if(APP_DIAG){console.log('Service Worker Cache: Error Check REQUIRED_FILES array in service-worker.js - files are missing or path to files is incorrectly written -  ' + error);}
 		})
 		.then(function() {
 			//Install SW if everything is ok
