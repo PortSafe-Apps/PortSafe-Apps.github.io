@@ -125,7 +125,7 @@
                 <div class="d-flex justify-content-between">
                     <div class="ps-3 ms-1 align-self-center">
                         <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18">Jumlah Laporan Terkini</p>
-                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50">110</h1>
+                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50" id="combined-total-reports"></h1>
                     </div>
                     <div class="pe-3 align-self-center">
                         <i data-feather="arrow-up" data-feather-line="1" data-feather-size="45"
@@ -136,73 +136,15 @@
             </div>
 
             <div class="card preload-img" data-src="images/pictures/20s.jpg">
-                <div class="card-body pt-4 mt-3 ">
-                    <h2 class="font-24 color-white line-height-3 mb-3">Top 3 Jenis Pelanggaran Terbanyak</h2>
-
-                    <a href="#" class="card card-style mb-3 mx-0">
-                        <div class="d-flex pt-3 pb-3">
-                            <div class="ps-3 ms-2 align-self-center">
-                                <h1 class="center-text mb-0 pt-2">
-                                    01
-                                </h1>
-                            </div>
-                            <div class="align-self-center mt-1 ps-4">
-                                <h4 class="color-theme font-600">Posisi Orang</h4>
-                                <p class="mt-n2 font-11 color-highlight mb-0">
-                                    Terjatuh
-                                </p>
-                            </div>
-                            <div class="ms-auto align-self-center me-3">
-                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
-                                    Laporan</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="card card-style mb-3 mx-0">
-                        <div class="d-flex pt-3 pb-3">
-                            <div class="ps-3 ms-2 align-self-center">
-                                <h1 class="center-text mb-0 pt-2">
-                                    02
-                                </h1>
-                            </div>
-                            <div class="align-self-center mt-1 ps-4">
-                                <h4 class="color-theme font-600">Alat Pelindung Diri</h4>
-                                <p class="mt-n2 font-11 color-highlight mb-0">
-                                    Badan
-                                </p>
-                            </div>
-                            <div class="ms-auto align-self-center me-3">
-                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
-                                    Laporan</span>
-                            </div>
-                        </div>
-                    </a>
-                    <a href="#" class="card card-style mb-3 mx-0">
-                        <div class="d-flex pt-3 pb-3">
-                            <div class="ps-3 ms-2 align-self-center">
-                                <h1 class="center-text mb-0 pt-2">
-                                    03
-                                </h1>
-                            </div>
-                            <div class="align-self-center mt-1 ps-4">
-                                <h4 class="color-theme font-600">Reaksi Orang</h4>
-                                <p class="mt-n2 font-11 color-highlight mb-0">
-                                    Merubah Cara Kerja
-                                </p>
-                            </div>
-                            <div class="ms-auto align-self-center me-3">
-                                <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2">27
-                                    Laporan</span>
-                            </div>
-                        </div>
-                    </a>
-                </div>
+                <div id="dangerous-action-list">
+                    <!-- Konten akan ditambahkan oleh JavaScript -->
+                  </div>
                 <div class="card-overlay bg-highlight opacity-90"></div>
                 <div class="card-overlay dark-mode-tint"></div>
             </div>
             <div class="content mb-2 mt-4">
                 <h1 class="float-start color-highlight font-700 font-30">Laporan Terkini</h1>
-                <a class="float-end font-16 color-highlight mt-n1" href="listreport.html">View All</a>
+                <a class="float-end font-14 color-highlight mt-n1" href="listreport.html">View All</a>
                 <div class="clearfix"></div>
             </div>
             <div class="card card-style">
@@ -238,9 +180,6 @@
                 </div>
             </div>
             <!-- end of page content-->
-            <div id="menu-highlights" class="menu menu-box-bottom menu-box-detached rounded-m"
-                data-menu-load="menu-colors.html" data-menu-height="510" data-menu-effect="menu-over">
-            </div>
 
             <div id="menu-main" class="menu menu-box-right menu-box-detached rounded-m" data-menu-width="260"
                 data-menu-load="menu-main.html" data-menu-active="nav-beranda" data-menu-effect="menu-over">
@@ -250,11 +189,14 @@
         <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
         <script type="text/javascript" src="scripts/custom.js"></script>
         <script type="module" src="scripts/userprofile.js"></script>
+        <script type="module" src="scripts/sumreport.js"></script>
+        <script type="module" src="scripts/displayType.js"></script>
+        <script type="module" src="scripts/latestcard.js"></script>
         <script type="module" src="scripts/authorization/logout.js"></script>
 
-        <!-- Sweet Alert -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
-        <!-- Modal -->
-        <script src="scripts/config/modal.js" type="module"></script>
+         <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <!-- Modal -->
+    <script src="scripts/config/modal.js" type="module"></script>
 
 </body>
