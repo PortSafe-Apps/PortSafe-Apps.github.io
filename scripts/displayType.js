@@ -69,9 +69,7 @@ const fetchDataAndDisplayTopActions = async () => {
         // Create the header for the top dangerous actions
         const header = document.createElement('div');
         header.className = 'card-body pt-4 mt-3';
-        header.innerHTML = `
-            <h2 class="font-24 color-white line-height-3 mb-3">Top 3 Jenis Pelanggaran Terbanyak</h2>
-        `;
+    
         container.appendChild(header);
 
         // Hitung jumlah tindakan berbahaya untuk setiap jenis
