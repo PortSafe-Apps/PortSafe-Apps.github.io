@@ -77,7 +77,7 @@ function getRedirectURL(userRole) {
     case 'user':
       return 'https://portsafe-apps.github.io/beranda.html';
     case 'admin':
-      return 'https://portsafe-apps.github.io/pages/admin/dashboard.html';
+      return 'https://portsafe-apps.github.io/admin/dashboard.html';
     default:
       return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
   }
@@ -97,7 +97,7 @@ export function AlertPost() {
     title: 'Registration Successful',
     text: 'You have successfully registered!',
   }).then(() => {
-    window.location.href = "https://portsafe-apps.github.io/";
+    window.location.href = "https://portsafe-apps.github.io/login.html";
   });
 }
 
