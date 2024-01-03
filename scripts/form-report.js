@@ -10,6 +10,12 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+// Function untuk menampilkan alert
+function showAlert(title, message) {
+  // Implement showAlert function as needed
+  console.log(`${title}: ${message}`);
+}
+
 // Function untuk mengambil nama dan jabatan pengawas dari server
 async function getPengawas() {
   const token = getTokenFromCookies("Login");
@@ -37,11 +43,14 @@ async function getPengawas() {
     const data = await response.json();
 
     if (data.status === true) {
-      return {
+      const pengawasData = {
         nama: data.data[0].nama,
         jabatan: data.data[0].jabatan,
         location: data.data[0].location,
       };
+
+      // Call displayReportData with the retrieved data
+      addReportData(pengawasData);
     } else {
       showAlert("Error", data.message || "Unknown error");
     }
@@ -78,7 +87,7 @@ function generateWaktuSaatIni() {
   return new Date().toLocaleTimeString("id-ID", options);
 }
 
-async function displayReportData() {
+async function addReportData(pengawasData) {
   try {
     const nomorPelaporanElement = document.querySelector(
       "#nomorPelaporanElement"
@@ -110,7 +119,6 @@ async function displayReportData() {
       throw new Error("One or more elements not found");
     }
 
-    const pengawasData = await getPengawas();
     const { nama, jabatan, location } = pengawasData || {};
 
     const nomorPelaporan = generateNomorPelaporan();
@@ -135,8 +143,14 @@ async function displayReportData() {
       autoCompleteLocationElement.disabled = false;
     }
   } catch (error) {
-    console.error("Error in displayReportData:", error);
+    console.error("Error in addReportData:", error);
   }
+}
+
+// Function untuk menampilkan data laporan
+async function displayReportData() {
+  // Call the getPengawas function
+  await getPengawas();
 }
 
 // Call the display function
