@@ -52,14 +52,16 @@ const getDangerousActionsCount = (actions) => {
     const actionCounts = {};
 
     actions.forEach((action) => {
-        action.TypeDangerousActions.forEach((type) => {
-            const typeId = type.TypeId;
-            if (actionCounts[typeId]) {
-                actionCounts[typeId]++;
-            } else {
-                actionCounts[typeId] = 1;
-            }
-        });
+        if (action.TypeDangerousActions) {
+            action.TypeDangerousActions.forEach((type) => {
+                const typeId = type.TypeId;
+                if (actionCounts[typeId]) {
+                    actionCounts[typeId]++;
+                } else {
+                    actionCounts[typeId] = 1;
+                }
+            });
+        }
     });
 
     return actionCounts;
@@ -83,13 +85,13 @@ const getTop3DangerousActions = async (token, url1, url2) => {
 
     return top3Actions.map(([typeId, count]) => {
         const actionInfo = allActions.find((action) =>
-            action.TypeDangerousActions.some((type) => type.TypeId === typeId)
+            action.TypeDangerousActions && action.TypeDangerousActions.some((type) => type.TypeId === typeId)
         );
 
         return {
             typeId,
-            typeName: actionInfo.TypeDangerousActions.find((type) => type.TypeId === typeId).TypeName,
-            subType: actionInfo.TypeDangerousActions.find((type) => type.TypeId === typeId).SubTypes[0],
+            typeName: actionInfo?.TypeDangerousActions.find((type) => type.TypeId === typeId)?.TypeName || 'Unknown',
+            subType: actionInfo?.TypeDangerousActions.find((type) => type.TypeId === typeId)?.SubTypes[0] || 'Unknown',
             count,
         };
     });

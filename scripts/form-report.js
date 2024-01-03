@@ -43,7 +43,6 @@ async function getPengawas() {
         location: data.data[0].location,
       };
     } else {
-      // Handle jika ada masalah mendapatkan data dari server
       showAlert("Error", data.message || "Unknown error");
     }
   } catch (error) {
@@ -55,7 +54,7 @@ async function getPengawas() {
 // Function untuk generate nomor pelaporan
 const generateNomorPelaporan = () => {
   const tahunSekarang = new Date().getFullYear();
-  const nomorUrut = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
+  const nomorUrut = Math.floor(Math.random() * 1000);
   const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut
     .toString()
     .padStart(3, "0")}`;
@@ -73,8 +72,8 @@ function generateWaktuSaatIni() {
   const options = {
     hour: "numeric",
     minute: "numeric",
-    hour12: true, // Menggunakan format 12 jam (PM/AM)
-    timeZone: "Asia/Jakarta", // Zona waktu Indonesia
+    hour12: true,
+    timeZone: "Asia/Jakarta",
   };
   return new Date().toLocaleTimeString("id-ID", options);
 }
@@ -112,23 +111,19 @@ async function addReportData() {
       throw new Error("One or more elements not found");
     }
 
-    // Mengambil nama, jabatan, dan lokasi pengawas dari server
     const pengawasData = await getPengawas();
     const { nama, jabatan, location } = pengawasData || {};
 
-    // Mengisi data yang di-generate
     const nomorPelaporan = generateNomorPelaporan();
     const tanggalPelaporan = generateTanggalSaatIni();
     const waktuPelaporan = generateWaktuSaatIni();
 
-    // Menyusun data ke dalam HTML elements
     nomorPelaporanElement.textContent = nomorPelaporan;
     tanggalPelaporanElement.textContent = tanggalPelaporan;
     waktuPelaporanElement.textContent = waktuPelaporan;
     namaPengawasElement.textContent = nama;
     jabatanPengawasElement.textContent = jabatan;
 
-    // Mengisi dan menonaktifkan input lokasi jika location mengandung kata 'Branch'
     if (
       location &&
       location.locationName &&
@@ -149,20 +144,23 @@ async function addReportData() {
 document.addEventListener("DOMContentLoaded", async () => {
   await addReportData();
 
-  // Ambil elemen tombol dengan ID tertentu (gantilah dengan ID yang sesuai)
   const buttonElement = document.getElementById("tambahLaporanBaru");
 
-  // Tambahkan event listener untuk menanggapi klik pada elemen <a>
   if (buttonElement) {
     buttonElement.addEventListener("click", async (event) => {
-      // Menghentikan tindakan default dari elemen <a> untuk mencegah pindah halaman
       event.preventDefault();
-
-      // Panggil kembali fungsi addReportData saat tombol diklik
       await addReportData();
-
-      // Redirect ke halaman addreport.html setelah data diperbarui
+      localStorage.setItem("reportData", JSON.stringify(getReportData()));
       window.location.href = buttonElement.href;
     });
+  }
+});
+
+// Halaman addreport.html
+document.addEventListener("DOMContentLoaded", () => {
+  const storedData = localStorage.getItem("reportData");
+  if (storedData) {
+    const reportData = JSON.parse(storedData);
+    // Gunakan reportData untuk mengisi elemen HTML di halaman ini
   }
 });
