@@ -78,8 +78,7 @@ function generateWaktuSaatIni() {
   return new Date().toLocaleTimeString("id-ID", options);
 }
 
-// Function untuk update HTML elements dengan data yang diambil dan di-generate
-async function addReportData() {
+async function displayReportData() {
   try {
     const nomorPelaporanElement = document.querySelector(
       "#nomorPelaporanElement"
@@ -118,11 +117,11 @@ async function addReportData() {
     const tanggalPelaporan = generateTanggalSaatIni();
     const waktuPelaporan = generateWaktuSaatIni();
 
-    nomorPelaporanElement.textContent = nomorPelaporan;
-    tanggalPelaporanElement.textContent = tanggalPelaporan;
-    waktuPelaporanElement.textContent = waktuPelaporan;
-    namaPengawasElement.textContent = nama;
-    jabatanPengawasElement.textContent = jabatan;
+    nomorPelaporanElement.innerText = nomorPelaporan;
+    tanggalPelaporanElement.innerText = tanggalPelaporan;
+    waktuPelaporanElement.innerText = waktuPelaporan;
+    namaPengawasElement.innerText = nama;
+    jabatanPengawasElement.innerText = jabatan;
 
     if (
       location &&
@@ -136,31 +135,9 @@ async function addReportData() {
       autoCompleteLocationElement.disabled = false;
     }
   } catch (error) {
-    console.error("Error in addReportData:", error);
+    console.error("Error in displayReportData:", error);
   }
 }
 
-// Panggil fungsi addReportData saat halaman dimuat
-document.addEventListener("DOMContentLoaded", async () => {
-  await addReportData();
-
-  const buttonElement = document.getElementById("tambahLaporanBaru");
-
-  if (buttonElement) {
-    buttonElement.addEventListener("click", async (event) => {
-      event.preventDefault();
-      await addReportData();
-      localStorage.setItem("reportData", JSON.stringify(getReportData()));
-      window.location.href = buttonElement.href;
-    });
-  }
-});
-
-// Halaman addreport.html
-document.addEventListener("DOMContentLoaded", () => {
-  const storedData = localStorage.getItem("reportData");
-  if (storedData) {
-    const reportData = JSON.parse(storedData);
-    // Gunakan reportData untuk mengisi elemen HTML di halaman ini
-  }
-});
+// Call the display function
+displayReportData();
