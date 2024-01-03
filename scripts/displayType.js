@@ -102,7 +102,13 @@ const displayTop3DangerousActions = async () => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
-        showError('Kamu Belum Login!');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Authentication Error',
+            text: 'Kamu Belum Login!',
+        }).then(() => {
+            window.location.href = 'https://portsafe-apps.github.io/';
+        });
         return;
     }
 
