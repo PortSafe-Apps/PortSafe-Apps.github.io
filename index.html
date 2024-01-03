@@ -13,9 +13,9 @@
     <link
         href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
         rel="stylesheet">
+    <link rel="icon" href="app/icons/favicon.ico">
     <link rel="stylesheet" type="text/css" href="fonts/css/fontawesome-all.min.css">
     <link rel="manifest" href="manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
-    <link rel="icon" href="app/icons/favicon.ico">
     <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
 </head>
 
@@ -26,22 +26,50 @@
     </div>
 
     <div id="page">
-        <div class="page-content pb-0">
-            <div class="card preload-img" data-src="images/pictures/9.jpg" data-card-height="cover">
-                <div class="card-center text-center">
-                    <h1 class="fa-4x color-theme font-900">AZURES</h1>
-                    <h4 class="font-300 color-highlight">Beautfiful Mobile Intefaces</h4>
-                    <p class="boxed-text-xl pt-4">
-                        Welcome to Azures. A beautifully crafted Mobile PWA & Site Template made to run incredibly fast
-                        and be extremely easy to edit and customize.
-                    </p>
+        <div class="page-content">
+            <div class="page-title page-title-small">
+                <h2><a href="index.html" data-back-button><i class="fa fa-arrow-left"></i></a>Sign In</h2>
+            </div>
+            <div class="card header-card shape-rounded" data-card-height="150">
+                <div class="card-overlay bg-highlight opacity-95"></div>
+                <div class="card-overlay dark-mode-tint"></div>
+            </div>
+            <div class="card card-style" data-card-height="cover-card">
+                <div class="card-center">
+                    <div class="ms-4 me-4 mb-0 mt-1">
+                        <center><img class="mt-1 mb-3" src="app/icons/icon-128x128.png" alt="img" width="190"></center>
+                        <form action="/login" id="loginForm">
+                            <div class="input-style no-borders has-icon validate-field">
+                                <i class="fa fa-user"></i>
+                                <input type="nipp" class="form-control validate-name" id="nipp" placeholder="NIPP">
+                                <label for="nipp" class="color-blue-dark font-10 mt-1">NIPP</label>
+                                <i class="fa fa-times disabled invalid color-red-dark"></i>
+                                <i class="fa fa-check disabled valid color-green-dark"></i>
+                                <em>(required)</em>
+                            </div>
+                            <div class="input-style no-borders has-icon validate-field mt-2">
+                                <i class="fa fa-lock"></i>
+                                <input type="password" class="form-control validate-text" id="password"
+                                    placeholder="Password">
+                                <label for="password" class="color-blue-dark font-10 mt-1">Password</label>
+                                <i class="fa fa-times disabled invalid color-red-dark"></i>
+                                <i class="fa fa-check disabled valid color-green-dark"></i>
+                                <em>(required)</em>
+                            </div>
+                            <button
+                                class="btn  btn-m btn-full rounded-sm shadow-l bg-blue-dark text-uppercase font-900 w-100"
+                                type="submit" id="submit">Sign In</button>
+                        </form>
+
+
+                        <div class="divider mb-2"></div>
+
+                        <p class="text-center">
+                            <a href="register.html" class="color-highlight opacity-80 font-12">don't have an account
+                                yet? register here!</a>
+                        </p>
+                    </div>
                 </div>
-                <div class="card-bottom mb-5">
-                    <a href="login.html"
-                        class="back-button btn btn-center-m btn-m bg-highlight rounded-sm font-900 text-uppercase scale-box">Get
-                        Started</a>
-                </div>
-                <div class="card-overlay bg-theme opacity-95"></div>
             </div>
         </div>
         <!-- end of page content-->
@@ -82,10 +110,14 @@
                 <i class="fa-ios-arrow fa fa-caret-down font-40"></i>
             </div>
         </div>
-
     </div>
-
 
     <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
     <script type="text/javascript" src="scripts/custom.js"></script>
+    <script type="module" src="scripts/authorization/login.js"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+    <!-- Modal -->
+    <script src="scripts/config/modal.js" type="module"></script>
 </body>

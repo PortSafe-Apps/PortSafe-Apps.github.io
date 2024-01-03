@@ -97,7 +97,7 @@ export function AlertPost() {
     title: 'Registration Successful',
     text: 'You have successfully registered!',
   }).then(() => {
-    window.location.href = "https://portsafe-apps.github.io/login.html";
+    window.location.href = "https://portsafe-apps.github.io/";
   });
 }
 
