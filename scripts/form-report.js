@@ -37,7 +37,11 @@ async function getPengawas() {
     const data = await response.json();
 
     if (data.status === true) {
-      return { nama: data.data[0].nama, jabatan: data.data[0].jabatan, location: data.data[0].location };
+      return {
+        nama: data.data[0].nama,
+        jabatan: data.data[0].jabatan,
+        location: data.data[0].location,
+      };
     } else {
       // Handle jika ada masalah mendapatkan data dari server
       showAlert("Error", data.message || "Unknown error");
@@ -125,7 +129,11 @@ async function addReportData() {
     jabatanPengawasElement.textContent = jabatan;
 
     // Mengisi dan menonaktifkan input lokasi jika location mengandung kata 'Branch'
-    if (location && location.locationName && location.locationName.toLowerCase().includes("branch")) {
+    if (
+      location &&
+      location.locationName &&
+      location.locationName.toLowerCase().includes("branch")
+    ) {
       autoCompleteLocationElement.value = location.locationName;
       autoCompleteLocationElement.disabled = true;
     } else {
@@ -140,4 +148,21 @@ async function addReportData() {
 // Panggil fungsi addReportData saat halaman dimuat
 document.addEventListener("DOMContentLoaded", async () => {
   await addReportData();
+
+  // Ambil elemen tombol dengan ID tertentu (gantilah dengan ID yang sesuai)
+  const buttonElement = document.getElementById("tambahLaporanBaru");
+
+  // Tambahkan event listener untuk menanggapi klik pada elemen <a>
+  if (buttonElement) {
+    buttonElement.addEventListener("click", async (event) => {
+      // Menghentikan tindakan default dari elemen <a> untuk mencegah pindah halaman
+      event.preventDefault();
+
+      // Panggil kembali fungsi addReportData saat tombol diklik
+      await addReportData();
+
+      // Redirect ke halaman addreport.html setelah data diperbarui
+      window.location.href = buttonElement.href;
+    });
+  }
 });
