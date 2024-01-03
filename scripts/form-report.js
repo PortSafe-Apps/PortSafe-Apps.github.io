@@ -15,13 +15,8 @@ async function getPengawas() {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
+    showAlert("Authentication Error", "Kamu Belum Login!");
+    window.location.href = "https://portsafe-apps.github.io/";
     return;
   }
 
@@ -42,14 +37,14 @@ async function getPengawas() {
     const data = await response.json();
 
     if (data.status === true) {
-      return { nama: data.data[0].nama, jabatan: data.data[0].jabatan };
+      return { nama: data.data[0].nama, jabatan: data.data[0].jabatan, location: data.data[0].location };
     } else {
       // Handle jika ada masalah mendapatkan data dari server
-      showAlert(data.message, 'error');
+      showAlert("Error", data.message || "Unknown error");
     }
   } catch (error) {
-    console.error("Error:", error);
-    showAlert(data.message, 'error');
+    console.error("Error in getPengawas:", error);
+    showAlert("Error", "Error fetching user data");
   }
 }
 
@@ -92,7 +87,9 @@ async function addReportData() {
     const waktuPelaporanElement = document.querySelector(
       "#waktuPelaporanElement"
     );
-    const namaPengawasElement = document.querySelector("#namaPengawasElement");
+    const namaPengawasElement = document.querySelector(
+      "#namaPengawasElement"
+    );
     const jabatanPengawasElement = document.querySelector(
       "#jabatanPengawasElement"
     );
@@ -111,8 +108,9 @@ async function addReportData() {
       throw new Error("One or more elements not found");
     }
 
-    // Mengambil nama dan jabatan pengawas dari server
-    const { nama, jabatan, location } = await getPengawas();
+    // Mengambil nama, jabatan, dan lokasi pengawas dari server
+    const pengawasData = await getPengawas();
+    const { nama, jabatan, location } = pengawasData || {};
 
     // Mengisi data yang di-generate
     const nomorPelaporan = generateNomorPelaporan();
@@ -127,11 +125,11 @@ async function addReportData() {
     jabatanPengawasElement.textContent = jabatan;
 
     // Mengisi dan menonaktifkan input lokasi jika location mengandung kata 'Branch'
-    if (location && location.locationName.toLowerCase().includes("branch")) {
+    if (location && location.locationName && location.locationName.toLowerCase().includes("branch")) {
       autoCompleteLocationElement.value = location.locationName;
       autoCompleteLocationElement.disabled = true;
     } else {
-      autoCompleteLocationElement.value = location ? location.locationName : "";
+      autoCompleteLocationElement.value = location && location.locationName ? location.locationName : "";
       autoCompleteLocationElement.disabled = false;
     }
   } catch (error) {
@@ -140,4 +138,6 @@ async function addReportData() {
 }
 
 // Panggil fungsi addReportData saat halaman dimuat
-document.addEventListener("DOMContentLoaded", addReportData);
+document.addEventListener("DOMContentLoaded", async () => {
+  await addReportData();
+});
