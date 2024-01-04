@@ -60,11 +60,22 @@ const generateNomorPelaporan = () => {
   return nomorPelaporan;
 };
 
+document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+
+const resetNomorPelaporan = () => {
+  document.getElementById('nomorPelaporan').value = generateNomorPelaporan();
+};
+
 // Function untuk generate tanggal saat ini
 function generateTanggalSaatIni() {
   const options = { year: "numeric", month: "long", day: "numeric" };
   return new Date().toLocaleDateString("id-ID", options);
 }
+document.getElementById('tanggalPelaporan').value = generateTanggalSaatIni();
+
+const resetTanggalPelaporan = () => {
+  document.getElementById('tanggalPelaporan').value = generateTanggalSaatIni();
+};
 
 // Function untuk generate waktu saat ini dengan zona waktu Indonesia
 function generateWaktuSaatIni() {
@@ -77,6 +88,13 @@ function generateWaktuSaatIni() {
   return new Date().toLocaleTimeString("id-ID", options);
 }
 
+document.getElementById('waktuPelaporan').value = generateWaktuSaatIni();
+
+const resetWaktuPelaporan = () => {
+  document.getElementById('waktuPelaporan').value = generateWaktuSaatIni();
+};
+
+
 // Function to display user data in the wizard
 function displayUserData(userData) {
   const namaPengawasElement = document.getElementById("namaPengawas");
@@ -85,11 +103,11 @@ function displayUserData(userData) {
 
   // Display user data
   if (userData) {
-    namaPengawasElement.innerText = userData.nama;
-    jabatanPengawasElement.innerText = userData.jabatan;
+    namaPengawasElement.textContent = userData.nama;
+    jabatanPengawasElement.textContent = userData.jabatan;
   } else {
-    namaPengawasElement.innerText = "No user data found";
-    jabatanPengawasElement.innerText = "";
+    namaPengawasElement.textContent = "No user data found";
+    jabatanPengawasElement.textContent = "";
   }
 
   // Display location data
@@ -106,14 +124,6 @@ function displayUserData(userData) {
     autoCompleteLocationElement.disabled = false;
   }
 
-  // Generate and display report information
-  const nomorPelaporanElement = document.getElementById("nomorPelaporan");
-  const tanggalPelaporanElement = document.getElementById("tanggalPelaporan");
-  const waktuPelaporanElement = document.getElementById("waktuPelaporan");
-
-  nomorPelaporanElement.innerText = generateNomorPelaporan();
-  tanggalPelaporanElement.innerText = generateTanggalSaatIni();
-  waktuPelaporanElement.innerText = generateWaktuSaatIni();
 }
 
 // Call the function to get user data and display it
