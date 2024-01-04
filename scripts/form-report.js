@@ -1,4 +1,4 @@
-// Function untuk extract token dari cookies
+// Function to extract the token from cookies
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
@@ -10,19 +10,17 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Function untuk menampilkan alert
-function showAlert(title, message) {
-  // Implement showAlert function as needed
-  console.log(`${title}: ${message}`);
-}
-
-// Function untuk mengambil nama dan jabatan pengawas dari server
-async function getPengawas() {
+async function getUserWithToken() {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    showAlert("Authentication Error", "Kamu Belum Login!");
-    window.location.href = "https://portsafe-apps.github.io/";
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
     return;
   }
 
@@ -43,115 +41,54 @@ async function getPengawas() {
     const data = await response.json();
 
     if (data.status === true) {
-      const pengawasData = {
-        nama: data.data[0].nama,
-        jabatan: data.data[0].jabatan,
-        location: data.data[0].location,
-      };
-
-      // Call displayReportData with the retrieved data
-      addReportData(pengawasData);
+      displayUserData(data.data);
     } else {
-      showAlert("Error", data.message || "Unknown error");
+      alert(data.message);
     }
   } catch (error) {
-    console.error("Error in getPengawas:", error);
-    showAlert("Error", "Error fetching user data");
+    console.error("Error:", error);
   }
 }
 
-// Function untuk generate nomor pelaporan
-const generateNomorPelaporan = () => {
-  const tahunSekarang = new Date().getFullYear();
-  const nomorUrut = Math.floor(Math.random() * 1000);
-  const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut
-    .toString()
-    .padStart(3, "0")}`;
-  return nomorPelaporan;
-};
+// Function to display user data in the wizard
+function displayUserData(userData) {
+  const namaPengawasElement = document.getElementById("namaPengawas");
+  const jabatanPengawasElement = document.getElementById("jabatanPengawas");
+  const autoCompleteLocationElement = document.getElementById("autoCompleteLocation");
 
-// Function untuk generate tanggal saat ini
-function generateTanggalSaatIni() {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date().toLocaleDateString("id-ID", options);
-}
-
-// Function untuk generate waktu saat ini dengan zona waktu Indonesia
-function generateWaktuSaatIni() {
-  const options = {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-    timeZone: "Asia/Jakarta",
-  };
-  return new Date().toLocaleTimeString("id-ID", options);
-}
-
-async function addReportData(pengawasData) {
-  try {
-    const nomorPelaporanElement = document.querySelector(
-      "#nomorPelaporanElement"
-    );
-    const tanggalPelaporanElement = document.querySelector(
-      "#tanggalPelaporanElement"
-    );
-    const waktuPelaporanElement = document.querySelector(
-      "#waktuPelaporanElement"
-    );
-    const namaPengawasElement = document.querySelector(
-      "#namaPengawasElement"
-    );
-    const jabatanPengawasElement = document.querySelector(
-      "#jabatanPengawasElement"
-    );
-    const autoCompleteLocationElement = document.querySelector(
-      "#autoCompleteLocation"
-    );
-
-    if (
-      !nomorPelaporanElement ||
-      !tanggalPelaporanElement ||
-      !waktuPelaporanElement ||
-      !namaPengawasElement ||
-      !jabatanPengawasElement ||
-      !autoCompleteLocationElement
-    ) {
-      throw new Error("One or more elements not found");
-    }
-
-    const { nama, jabatan, location } = pengawasData || {};
-
-    const nomorPelaporan = generateNomorPelaporan();
-    const tanggalPelaporan = generateTanggalSaatIni();
-    const waktuPelaporan = generateWaktuSaatIni();
-
-    nomorPelaporanElement.innerText = nomorPelaporan;
-    tanggalPelaporanElement.innerText = tanggalPelaporan;
-    waktuPelaporanElement.innerText = waktuPelaporan;
-    namaPengawasElement.innerText = nama;
-    jabatanPengawasElement.innerText = jabatan;
-
-    if (
-      location &&
-      location.locationName &&
-      location.locationName.toLowerCase().includes("branch")
-    ) {
-      autoCompleteLocationElement.value = location.locationName;
-      autoCompleteLocationElement.disabled = true;
-    } else {
-      autoCompleteLocationElement.value = location && location.locationName ? location.locationName : "";
-      autoCompleteLocationElement.disabled = false;
-    }
-  } catch (error) {
-    console.error("Error in addReportData:", error);
+  // Display user data
+  if (userData) {
+    namaPengawasElement.innerText = userData.nama;
+    jabatanPengawasElement.innerText = userData.jabatan;
+  } else {
+    namaPengawasElement.innerText = "No user data found";
+    jabatanPengawasElement.innerText = "";
   }
+
+  // Display location data
+  if (
+    userData &&
+    userData.location &&
+    userData.location.locationName &&
+    userData.location.locationName.toLowerCase().includes("branch")
+  ) {
+    autoCompleteLocationElement.value = userData.location.locationName;
+    autoCompleteLocationElement.disabled = true;
+  } else {
+    autoCompleteLocationElement.value = userData && userData.location ? userData.location.locationName : "";
+    autoCompleteLocationElement.disabled = false;
+  }
+
+  // Generate and display report information
+  const nomorPelaporanElement = document.getElementById("nomorPelaporan");
+  const tanggalPelaporanElement = document.getElementById("tanggalPelaporan");
+  const waktuPelaporanElement = document.getElementById("waktuPelaporan");
+
+  nomorPelaporanElement.innerText = generateNomorPelaporan();
+  tanggalPelaporanElement.innerText = generateTanggalSaatIni();
+  waktuPelaporanElement.innerText = generateWaktuSaatIni();
 }
 
-// Function untuk menampilkan data laporan
-async function displayReportData() {
-  // Call the getPengawas function
-  await getPengawas();
-}
+// Call the function to get user data and display it
+getUserWithToken();
 
-// Call the display function
-displayReportData();
