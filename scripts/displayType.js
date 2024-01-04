@@ -1,4 +1,4 @@
-// Function untuk mengekstrak token dari cookies
+// Function to extract the token from cookies
 function getTokenFromCookies(cookieName) {
     const cookies = document.cookie.split(';');
     for (const cookie of cookies) {
@@ -10,7 +10,7 @@ function getTokenFromCookies(cookieName) {
     return null;
 }
 
-// Function untuk menampilkan pesan kesalahan
+// Function to display an error message
 function showError(message) {
     console.error('Error:', message);
     Swal.fire({
@@ -20,7 +20,7 @@ function showError(message) {
     });
 }
 
-// Function untuk mendapatkan semua laporan pengguna dari API
+// Function to get all user reports from the API
 const getAllUserReports = async (token, targetURL) => {
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
@@ -36,25 +36,25 @@ const getAllUserReports = async (token, targetURL) => {
         const data = await response.json();
 
         if (data.status === 200) {
-            return data.data; // Mengembalikan data dari API
+            return data.data; // Return the data from the API
         } else {
             console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-            return []; // Mengembalikan array kosong jika terjadi kesalahan
+            return []; // Return an empty array if there is an error
         }
     } catch (error) {
         console.error('Error:', error);
-        return []; // Mengembalikan array kosong jika terjadi kesalahan
+        return []; // Return an empty array if there is an error
     }
 };
 
-// Function untuk mendapatkan jumlah setiap jenis tindakan berbahaya
+// Function to get the count of each type of dangerous action
 const getDangerousActionsCount = (actions) => {
     const actionCounts = {};
 
     actions.forEach((action) => {
-        if (action.typeDangerousActions && Array.isArray(action.typeDangerousActions)) {
-            action.typeDangerousActions.forEach((type) => {
-                const typeId = type.typeId;
+        if (action.TypeDangerousActions) {
+            action.TypeDangerousActions.forEach((type) => {
+                const typeId = type.TypeId;
                 if (actionCounts[typeId]) {
                     actionCounts[typeId]++;
                 } else {
@@ -67,43 +67,41 @@ const getDangerousActionsCount = (actions) => {
     return actionCounts;
 };
 
-// Function untuk mendapatkan 3 tindakan berbahaya teratas
-const getTop3DangerousActions = async (token, allUserReports) => {
-    // Mengurutkan laporan berdasarkan tanggal (jika diperlukan)
-    const sortedReports = allUserReports.sort((a, b) => new Date(b.date) - new Date(a.date));
+// Function to get the top 3 dangerous actions
+const getTop3DangerousActions = async (token, url1, url2) => {
+    const actionsUrl1 = await getAllUserReports(token, url1);
+    const actionsUrl2 = await getAllUserReports(token, url2);
 
-    // Menggabungkan semua tindakan berbahaya dari laporan pengguna
-    const allActions = sortedReports.reduce((actions, report) => {
-        if (report.typeDangerousActions && Array.isArray(report.typeDangerousActions)) {
-            actions.push(...report.typeDangerousActions);
-        }
-        return actions;
-    }, []);
+    const allActions = [...actionsUrl1, ...actionsUrl2];
 
-    // Mendapatkan jumlah setiap jenis tindakan berbahaya
+    // Get the count of each type of dangerous action
     const actionCounts = getDangerousActionsCount(allActions);
 
-    // Mengurutkan tindakan berbahaya berdasarkan jumlah
+    // Sort dangerous actions based on count
     const sortedActions = Object.entries(actionCounts).sort((a, b) => b[1] - a[1]);
 
-    // Mendapatkan 3 tindakan berbahaya teratas
+    // Get the top 3 dangerous actions
     const top3Actions = sortedActions.slice(0, 3);
 
     return top3Actions.map(([typeId, count]) => {
         const actionInfo = allActions.find((action) =>
-            action.typeId === typeId
+            action.TypeDangerousActions && action.TypeDangerousActions.some((type) => type.TypeId === typeId)
         );
+
+        const typeName = actionInfo?.TypeDangerousActions[0]?.typeName || 'Unknown';
+        const subType = actionInfo?.TypeDangerousActions[0]?.subTypes[0] || 'Unknown';
 
         return {
             typeId,
-            typeName: actionInfo?.typeName || 'Unknown',
-            subType: actionInfo?.subTypes[0] || 'Unknown',
+            typeName,
+            subType,
             count,
         };
     });
 };
 
-// Function untuk menampilkan 3 tindakan berbahaya teratas dalam kartu-kartu
+
+// Function to display the top 3 dangerous actions in cards
 const displayTop3DangerousActions = async () => {
     const token = getTokenFromCookies('Login');
 
@@ -122,18 +120,12 @@ const displayTop3DangerousActions = async () => {
     const url2 = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
 
     try {
-        console.log('Mengambil semua laporan pengguna...');
-        const allUserReports = await getAllUserReports(token, url1, url2);
-        console.log('Semua Laporan Pengguna:', allUserReports);
+        // Get the top 3 dangerous actions
+        const top3DangerousActions = await getTop3DangerousActions(token, url1, url2);
 
-        // Dapatkan 3 tindakan berbahaya teratas
-        const top3DangerousActions = await getTop3DangerousActions(token, allUserReports);
-
-        console.log('Top 3 Tindakan Berbahaya:', top3DangerousActions);
-
-        // Tampilkan hasilnya dalam kartu-kartu
+        // Display the results in cards
         const cardContainer = document.getElementById('dangerous-actions-container');
-        
+
         if (!cardContainer) {
             showError('Elemen dengan ID "dangerous-actions-container" tidak ditemukan.');
             return;
@@ -164,5 +156,5 @@ const displayTop3DangerousActions = async () => {
     }
 };
 
-// Panggil fungsi untuk menampilkan 3 tindakan berbahaya teratas
+// Call the function to display the top 3 dangerous actions
 displayTop3DangerousActions();
