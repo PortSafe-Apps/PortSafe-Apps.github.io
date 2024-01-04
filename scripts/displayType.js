@@ -52,9 +52,9 @@ const getDangerousActionsCount = (actions) => {
     const actionCounts = {};
 
     actions.forEach((action) => {
-        if (action.TypeDangerousActions) {
-            action.TypeDangerousActions.forEach((type) => {
-                const typeId = type.TypeId;
+        if (action.typeDangerousActions && Array.isArray(action.typeDangerousActions)) {
+            action.typeDangerousActions.forEach((type) => {
+                const typeId = type.typeId;
                 if (actionCounts[typeId]) {
                     actionCounts[typeId]++;
                 } else {
@@ -68,11 +68,17 @@ const getDangerousActionsCount = (actions) => {
 };
 
 // Function untuk mendapatkan 3 tindakan berbahaya teratas
-const getTop3DangerousActions = async (token, url1, url2) => {
-    const actionsUrl1 = await getAllUserReports(token, url1);
-    const actionsUrl2 = await getAllUserReports(token, url2);
+const getTop3DangerousActions = async (token, allUserReports) => {
+    // Mengurutkan laporan berdasarkan tanggal (jika diperlukan)
+    const sortedReports = allUserReports.sort((a, b) => new Date(b.date) - new Date(a.date));
 
-    const allActions = [...actionsUrl1, ...actionsUrl2];
+    // Menggabungkan semua tindakan berbahaya dari laporan pengguna
+    const allActions = sortedReports.reduce((actions, report) => {
+        if (report.typeDangerousActions && Array.isArray(report.typeDangerousActions)) {
+            actions.push(...report.typeDangerousActions);
+        }
+        return actions;
+    }, []);
 
     // Mendapatkan jumlah setiap jenis tindakan berbahaya
     const actionCounts = getDangerousActionsCount(allActions);
@@ -80,22 +86,18 @@ const getTop3DangerousActions = async (token, url1, url2) => {
     // Mengurutkan tindakan berbahaya berdasarkan jumlah
     const sortedActions = Object.entries(actionCounts).sort((a, b) => b[1] - a[1]);
 
-    console.log('Semua Tindakan Berbahaya:', allActions);
-    console.log('Jumlah Setiap Jenis Tindakan Berbahaya:', actionCounts);
-    console.log('Tindakan Berbahaya Terurut:', sortedActions);
-
     // Mendapatkan 3 tindakan berbahaya teratas
     const top3Actions = sortedActions.slice(0, 3);
 
     return top3Actions.map(([typeId, count]) => {
         const actionInfo = allActions.find((action) =>
-            action.TypeDangerousActions && action.TypeDangerousActions.some((type) => type.TypeId === typeId)
+            action.typeId === typeId
         );
 
         return {
             typeId,
-            typeName: actionInfo?.TypeDangerousActions.find((type) => type.TypeId === typeId)?.TypeName || 'Unknown',
-            subType: actionInfo?.TypeDangerousActions.find((type) => type.TypeId === typeId)?.SubTypes[0] || 'Unknown',
+            typeName: actionInfo?.typeName || 'Unknown',
+            subType: actionInfo?.subTypes[0] || 'Unknown',
             count,
         };
     });
@@ -120,14 +122,18 @@ const displayTop3DangerousActions = async () => {
     const url2 = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
 
     try {
+        console.log('Mengambil semua laporan pengguna...');
+        const allUserReports = await getAllUserReports(token, url1, url2);
+        console.log('Semua Laporan Pengguna:', allUserReports);
+
         // Dapatkan 3 tindakan berbahaya teratas
-        const top3DangerousActions = await getTop3DangerousActions(token, url1, url2);
+        const top3DangerousActions = await getTop3DangerousActions(token, allUserReports);
 
         console.log('Top 3 Tindakan Berbahaya:', top3DangerousActions);
 
         // Tampilkan hasilnya dalam kartu-kartu
         const cardContainer = document.getElementById('dangerous-actions-container');
-
+        
         if (!cardContainer) {
             showError('Elemen dengan ID "dangerous-actions-container" tidak ditemukan.');
             return;
