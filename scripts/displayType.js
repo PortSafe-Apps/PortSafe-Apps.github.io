@@ -132,6 +132,7 @@ const displayTop3DangerousActions = async () => {
         }
 
         top3DangerousActions.forEach((action, index) => {
+            console.log('Action:', action); // Tambahkan ini untuk melihat data action di konsol
             const cardElement = document.createElement('div');
             cardElement.className = 'card card-style mb-3 mx-0';
             cardElement.innerHTML = `
