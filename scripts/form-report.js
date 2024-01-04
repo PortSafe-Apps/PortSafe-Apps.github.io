@@ -39,7 +39,8 @@ async function getUserWithToken() {
   try {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
-
+    console.log("API Response:", data);
+  
     if (data.status === true) {
       displayUserData(data.data);
     } else {
@@ -50,69 +51,36 @@ async function getUserWithToken() {
   }
 }
 
-// Function untuk generate nomor pelaporan
-const generateNomorPelaporan = () => {
-  const tahunSekarang = new Date().getFullYear();
-  const nomorUrut = Math.floor(Math.random() * 1000);
-  const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut
-    .toString()
-    .padStart(3, "0")}`;
-  return nomorPelaporan;
-};
-
-// Function untuk generate tanggal saat ini
-function generateTanggalSaatIni() {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date().toLocaleDateString("id-ID", options);
-}
-
-// Function untuk generate waktu saat ini dengan zona waktu Indonesia
-function generateWaktuSaatIni() {
-  const options = {
-    hour: "numeric",
-    minute: "numeric",
-    hour12: true,
-    timeZone: "Asia/Jakarta",
-  };
-  return new Date().toLocaleTimeString("id-ID", options);
-}
-
 // Function to display user data in the wizard
 function displayUserData(userData) {
   const namaPengawasElement = document.getElementById("namaPengawas");
   const jabatanPengawasElement = document.getElementById("jabatanPengawas");
   const autoCompleteLocationElement = document.getElementById("autoCompleteLocation");
-  const nomorPelaporanElement = document.getElementById("nomorPelaporan");
-  const tanggalPelaporanElement = document.getElementById("tanggalPelaporan");
-  const waktuPelaporanElement = document.getElementById("waktuPelaporan");
 
-  // Display user data
-  if (userData) {
-    namaPengawasElement.textContent = userData.nama;
-    jabatanPengawasElement.textContent = userData.jabatan;
-    nomorPelaporanElement.textContent = generateNomorPelaporan();
-    tanggalPelaporanElement.textContent = generateTanggalSaatIni();
-    waktuPelaporanElement.textContent = generateWaktuSaatIni();
+  // Check if userData is an array and has at least one element
+  if (userData && Array.isArray(userData) && userData.length > 0) {
+    const user = userData[0]; // Assuming you want the first user in the array
+
+    // Display user data
+    namaPengawasElement.textContent = user.nama;
+    jabatanPengawasElement.textContent = user.jabatan;
+
+    // Display location data
+    if (
+      user.location &&
+      user.location.locationName &&
+      user.location.locationName.toLowerCase().includes("branch")
+    ) {
+      autoCompleteLocationElement.value = user.location.locationName;
+      autoCompleteLocationElement.disabled = true;
+    } else {
+      autoCompleteLocationElement.value = user.location ? user.location.locationName : "";
+      autoCompleteLocationElement.disabled = false;
+    }
   } else {
+    // If userData is not an array or has no elements
     namaPengawasElement.textContent = "No user data found";
     jabatanPengawasElement.textContent = "No user data found";
-    nomorPelaporanElement.textContent = "";
-    tanggalPelaporanElement.textContent = "";
-    waktuPelaporanElement.textContent = "";
-  }
-
-  // Display location data
-  if (
-    userData &&
-    userData.location &&
-    userData.location.locationName &&
-    userData.location.locationName.toLowerCase().includes("branch")
-  ) {
-    autoCompleteLocationElement.value = userData.location.locationName;
-    autoCompleteLocationElement.disabled = true;
-  } else {
-    autoCompleteLocationElement.value = userData && userData.location ? userData.location.locationName : "";
-    autoCompleteLocationElement.disabled = false;
   }
 }
 
