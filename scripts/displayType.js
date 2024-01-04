@@ -10,18 +10,66 @@ function getTokenFromCookies(cookieName) {
     return null;
 }
 
-// Function to display an error message
-function showError(message) {
-    console.error('Error:', message);
-    Swal.fire({
-        icon: 'error',
-        title: 'Error',
-        text: message,
-    });
-}
+const displayTopDangerousActions = (data, containerId) => {
+    const dangerousActionList = document.getElementById(containerId);
 
-// Function to get all user reports from the API
-const getAllUserReports = async (token, targetURL) => {
+    // Hitung jumlah tindakan berbahaya untuk setiap jenis
+    const countByType = {};
+    data.forEach(report => {
+        if (report.typeDangerousActions && report.typeDangerousActions.length > 0) {
+            report.typeDangerousActions.forEach(type => {
+                const typeName = type.typeName;
+                const subType = type.subType; // Add subType
+                countByType[typeName] = countByType[typeName] || { count: 0, subTypes: new Set() };
+                countByType[typeName].count += 1;
+                if (subType) {
+                    countByType[typeName].subTypes.add(subType);
+                }
+            });
+        }
+    });
+
+    // Ubah data menjadi bentuk yang dapat diurutkan
+    const sortableData = [];
+    for (const typeName in countByType) {
+        sortableData.push({
+            typeName,
+            count: countByType[typeName].count,
+            subTypes: [...countByType[typeName].subTypes]
+        });
+    }
+
+    // Urutkan data berdasarkan jumlah yang tercatat
+    const sortedData = sortableData.sort((a, b) => b.count - a.count);
+
+    // Hanya ambil lima data teratas
+    const topData = sortedData.slice(0, 3);
+
+    // Tampilkan data dalam elemen HTML
+    topData.forEach((item, index) => {
+        const dangerousActionItem = document.createElement('div');
+        dangerousActionItem.className = 'card card-style mb-3 mx-0';
+        dangerousActionItem.innerHTML = `
+            <div class="d-flex pt-3 pb-3">
+                <div class="ps-3 ms-2 align-self-center">
+                    <h1 class="center-text mb-0 pt-2">${index + 1}</h1>
+                </div>
+                <div class="align-self-center mt-1 ps-4">
+                    <h4 class="color-theme font-600">${item.typeName}</h4>
+                    <p class="mt-n2 font-11 color-highlight mb-0">${item.subTypes.join(', ')}</p>
+                </div>
+                <div class="ms-auto align-self-center me-3">
+                    <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2 rounded-s">${item.count} Laporan</span>
+                </div>
+            </div>
+        `;
+
+        dangerousActionList.appendChild(dangerousActionItem);
+    });
+};
+
+// Function to fetch data from the API endpoints
+const fetchData = async (url, token) => {
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
 
@@ -31,78 +79,13 @@ const getAllUserReports = async (token, targetURL) => {
         redirect: 'follow',
     };
 
-    try {
-        const response = await fetch(targetURL, requestOptions);
-        const data = await response.json();
-
-        if (data.status === 200) {
-            return data.data; // Return the data from the API
-        } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
-            return []; // Return an empty array if there is an error
-        }
-    } catch (error) {
-        console.error('Error:', error);
-        return []; // Return an empty array if there is an error
-    }
+    const response = await fetch(url, requestOptions);
+    const data = await response.json();
+    return data.data || [];
 };
 
-// Function to get the count of each type of dangerous action
-const getDangerousActionsCount = (actions) => {
-    const actionCounts = {};
-
-    actions.forEach((action) => {
-        if (action.TypeDangerousActions) {
-            action.TypeDangerousActions.forEach((type) => {
-                const typeId = type.TypeId;
-                if (actionCounts[typeId]) {
-                    actionCounts[typeId]++;
-                } else {
-                    actionCounts[typeId] = 1;
-                }
-            });
-        }
-    });
-
-    return actionCounts;
-};
-
-// Function to get the top 3 dangerous actions
-const getTop3DangerousActions = async (token, url1, url2) => {
-    const actionsUrl1 = await getAllUserReports(token, url1);
-    const actionsUrl2 = await getAllUserReports(token, url2);
-
-    const allActions = [...actionsUrl1, ...actionsUrl2];
-
-    // Get the count of each type of dangerous action
-    const actionCounts = getDangerousActionsCount(allActions);
-
-    // Sort dangerous actions based on count
-    const sortedActions = Object.entries(actionCounts).sort((a, b) => b[1] - a[1]);
-
-    // Get the top 3 dangerous actions
-    const top3Actions = sortedActions.slice(0, 3);
-
-    return top3Actions.map(([typeId, count]) => {
-        const actionInfo = allActions.find((action) =>
-            action.TypeDangerousActions && action.TypeDangerousActions.some((type) => type.TypeId === typeId)
-        );
-
-        const typeName = actionInfo?.TypeDangerousActions[0]?.typeName || 'Unknown';
-        const subType = actionInfo?.TypeDangerousActions[0]?.subTypes[0] || 'Unknown';
-
-        return {
-            typeId,
-            typeName,
-            subType,
-            count,
-        };
-    });
-};
-
-
-// Function to display the top 3 dangerous actions in cards
-const displayTop3DangerousActions = async () => {
+// Function to get data from both endpoints and display results
+const getallUserReportsWithToken = async () => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
@@ -120,42 +103,16 @@ const displayTop3DangerousActions = async () => {
     const url2 = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
 
     try {
-        // Get the top 3 dangerous actions
-        const top3DangerousActions = await getTop3DangerousActions(token, url1, url2);
+        const [data1, data2] = await Promise.all([fetchData(url1, token), fetchData(url2, token)]);
 
-        // Display the results in cards
-        const cardContainer = document.getElementById('dangerous-actions-container');
+        // Combine data from both URLs
+        const combinedData = [...data1, ...data2];
 
-        if (!cardContainer) {
-            showError('Elemen dengan ID "dangerous-actions-container" tidak ditemukan.');
-            return;
-        }
-
-        top3DangerousActions.forEach((action, index) => {
-            console.log('Action:', action); // Tambahkan ini untuk melihat data action di konsol
-            const cardElement = document.createElement('div');
-            cardElement.className = 'card card-style mb-3 mx-0';
-            cardElement.innerHTML = `
-                <div class="d-flex pt-3 pb-3">
-                    <div class="ps-3 ms-2 align-self-center">
-                        <h1 class="center-text mb-0 pt-2">${index + 1}</h1>
-                    </div>
-                    <div class="align-self-center mt-1 ps-4">
-                        <h4 class="color-theme font-600">${action.typeName}</h4>
-                        <p class="mt-n2 font-11 color-highlight mb-0">${action.subType}</p>
-                    </div>
-                    <div class="ms-auto align-self-center me-3">
-                        <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2 rounded-s">${action.count} Laporan</span>
-                    </div>
-                </div>
-            `;
-            cardContainer.appendChild(cardElement);
-        });
+        displayTopDangerousActions(combinedData, 'dangerous-action-list');
     } catch (error) {
-        showError('Terjadi kesalahan saat memproses data.');
         console.error('Error:', error);
     }
 };
 
-// Call the function to display the top 3 dangerous actions
-displayTop3DangerousActions();
+// Call the function to get data from both endpoints and display results
+getallUserReportsWithToken();
