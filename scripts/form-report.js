@@ -50,6 +50,33 @@ async function getUserWithToken() {
   }
 }
 
+// Function untuk generate nomor pelaporan
+const generateNomorPelaporan = () => {
+  const tahunSekarang = new Date().getFullYear();
+  const nomorUrut = Math.floor(Math.random() * 1000);
+  const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut
+    .toString()
+    .padStart(3, "0")}`;
+  return nomorPelaporan;
+};
+
+// Function untuk generate tanggal saat ini
+function generateTanggalSaatIni() {
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  return new Date().toLocaleDateString("id-ID", options);
+}
+
+// Function untuk generate waktu saat ini dengan zona waktu Indonesia
+function generateWaktuSaatIni() {
+  const options = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+    timeZone: "Asia/Jakarta",
+  };
+  return new Date().toLocaleTimeString("id-ID", options);
+}
+
 // Function to display user data in the wizard
 function displayUserData(userData) {
   const namaPengawasElement = document.getElementById("namaPengawas");
