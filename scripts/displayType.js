@@ -80,6 +80,10 @@ const getTop3DangerousActions = async (token, url1, url2) => {
     // Mengurutkan tindakan berbahaya berdasarkan jumlah
     const sortedActions = Object.entries(actionCounts).sort((a, b) => b[1] - a[1]);
 
+    console.log('Semua Tindakan Berbahaya:', allActions);
+    console.log('Jumlah Setiap Jenis Tindakan Berbahaya:', actionCounts);
+    console.log('Tindakan Berbahaya Terurut:', sortedActions);
+
     // Mendapatkan 3 tindakan berbahaya teratas
     const top3Actions = sortedActions.slice(0, 3);
 

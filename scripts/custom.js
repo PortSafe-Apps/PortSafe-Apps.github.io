@@ -11,7 +11,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
   //Global Variables
   let isPWA = false; // Enables or disables the service worker and PWA
-  let isAJAX = true; // AJAX transitions. Requires local server or server
   var pwaName = "Portsafe+"; //Local Storage Names for PWA
   var pwaRemind = 1; //Days to re-remind to add to home
   var pwaNoCache = false; //Requires server and HTTPS/SSL. Will clear cache with each visit
@@ -1194,18 +1193,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
       );
     }
-
-    //Tooltips
-    /*Deprecated feature for Mobiles. Requires popper.min.js v2 to work
-        var tooltips = document.querySelectorAll('[data-bs-tooltip]');
-        if(tooltips.length){
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-              return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-        }
-        */
-
     //Dropdown
     var dropdownElementList = [].slice.call(
       document.querySelectorAll('[data-bs-toggle="dropdown"]')
@@ -1214,164 +1201,6 @@ document.addEventListener("DOMContentLoaded", () => {
       var dropdownList = dropdownElementList.map(function (dropdownToggleEl) {
         return new bootstrap.Dropdown(dropdownToggleEl);
       });
-    }
-
-    var workingHours = document.querySelectorAll(
-      ".show-business-opened, .show-business-closed, .working-hours"
-    );
-    if (workingHours.length) {
-      //Working Hours
-      var d = new Date();
-      var n = d.getDay();
-      var now = d.getHours() + "." + d.getMinutes();
-      var weekdays = [
-        ["Sunday"],
-        ["Monday", 9.0, 17.0],
-        ["Tuesday", 9.0, 17.0],
-        ["Wednesday", 9.0, 17.0],
-        ["Thursday", 9.0, 17.0],
-        ["Friday", 9.0, 17.0],
-        ["Saturday", 9.0, 13.0], // we are closed, sorry!
-      ];
-      var day = weekdays[n];
-      var openClass = document.querySelectorAll(".show-business-opened");
-      var closeClass = document.querySelectorAll(".show-business-closed");
-
-      if ((now > day[1] && now < day[2]) || (now > day[3] && now < day[4])) {
-        openClass.forEach(function (e) {
-          e.classList.remove("disabled");
-        });
-        closeClass.forEach(function (e) {
-          e.classList.add("disabled");
-        });
-      } else {
-        openClass.forEach(function (e) {
-          e.classList.add("disabled");
-        });
-        closeClass.forEach(function (e) {
-          e.classList.remove("disabled");
-        });
-      }
-
-      var workingHours = document.querySelectorAll(".working-hours[data-day]");
-      workingHours.forEach(function (entry) {
-        var matchDay = entry.getAttribute("data-day");
-        if (matchDay === day[0]) {
-          var matchData = '[data-day="' + day[0] + '"]';
-          if (
-            (now > day[1] && now < day[2]) ||
-            (now > day[3] && now < day[4])
-          ) {
-            document
-              .querySelectorAll(matchData)[0]
-              .classList.add("bg-green-dark");
-            document
-              .querySelectorAll(matchData + " p")
-              .forEach(function (whiteText) {
-                whiteText.classList.add("color-white");
-              });
-          } else {
-            document
-              .querySelectorAll(matchData)[0]
-              .classList.add("bg-red-dark");
-            document
-              .querySelectorAll(matchData + " p")
-              .forEach(function (whiteText) {
-                whiteText.classList.add("color-white");
-              });
-          }
-        }
-      });
-    }
-
-    //Vibrate API
-    var vibrateButton = document.querySelectorAll("[data-vibrate]");
-    if (vibrateButton.length) {
-      var startVibrating =
-        document.getElementsByClassName("start-vibrating")[0];
-      var stopVibrating = document.getElementsByClassName("stop-vibrating")[0];
-
-      startVibrating.addEventListener("click", function () {
-        var vibrateTime =
-          document.getElementsByClassName("vibrate-demo")[0].value;
-        window.navigator.vibrate(vibrateTime);
-      });
-      stopVibrating.addEventListener("click", function () {
-        window.navigator.vibrate(0);
-      });
-      vibrateButton.forEach((el) =>
-        el.addEventListener("click", (e) => {
-          var vibrateTime = el.getAttribute("data-vibrate");
-          window.navigator.vibrate(vibrateTime);
-        })
-      );
-    }
-
-    //Time Ads
-    var timedAd = document.querySelectorAll("[data-timed-ad]");
-    if (timedAd.length) {
-      timedAd.forEach((el) =>
-        el.addEventListener("click", (e) => {
-          var timedAdTime = el.getAttribute("data-timed-ad");
-          var timedAdData = el.getAttribute("data-menu");
-          var timedAdTimer = timedAdTime;
-          var timerAdFunction = setInterval(function () {
-            if (timedAdTimer <= 1) {
-              clearInterval(timerAdFunction);
-              document
-                .getElementById(timedAdData)
-                .querySelectorAll(".fa-times")[0]
-                .classList.remove("disabled");
-              document
-                .getElementById(timedAdData)
-                .querySelectorAll(".close-menu")[0]
-                .classList.remove("no-click");
-              document
-                .getElementById(timedAdData)
-                .querySelectorAll("span")[0].style.display = "none";
-            } else {
-              //console.log(timedAdTimer);
-            }
-            document
-              .getElementById(timedAdData)
-              .querySelectorAll("span")[0].innerHTML = timedAdTimer -= 1;
-          }, 1000);
-        })
-      );
-    }
-
-    //Auto Show Ads
-    var autoAd = document.querySelectorAll("[data-auto-show-ad]");
-    if (autoAd.length) {
-      var autoAdTime = autoAd[0].getAttribute("data-auto-show-ad");
-      var timerAdFunction = setInterval(function () {
-        if (autoAdTime <= 1) {
-          clearInterval(timerAdFunction);
-          var autoAdId = autoAd[0].getAttribute("data-menu");
-          document.getElementById(autoAdId).classList.add("menu-active");
-          var autoAdCloseTime = autoAd[0].getAttribute("data-timed-ad");
-          var downloadTimer = setInterval(function () {
-            if (autoAdCloseTime <= 0) {
-              clearInterval(downloadTimer);
-              document
-                .getElementById(autoAdId)
-                .querySelectorAll(".fa-times")[0]
-                .classList.remove("disabled");
-              document
-                .getElementById(autoAdId)
-                .querySelectorAll(".close-menu")[0]
-                .classList.remove("no-click");
-              document
-                .getElementById(autoAdId)
-                .querySelectorAll("span")[0].style.display = "none";
-            }
-            document
-              .getElementById(autoAdId)
-              .querySelectorAll("span")[0].innerHTML = autoAdCloseTime -= 1;
-          }, 1000);
-        }
-        autoAdTime -= 1;
-      }, 1000);
     }
 
     //Visit Detection
@@ -1401,352 +1230,6 @@ document.addEventListener("DOMContentLoaded", () => {
           "Your last visit was " + strDate + " at " + strTime
         );
       }
-    }
-
-    //Reading Time
-    var readingTextDiv = document.querySelectorAll("#reading-progress-text");
-    if (readingTextDiv.length) {
-      var readingWords = readingTextDiv[0].innerHTML.split(" ").length;
-      var readingMinutes = Math.floor(readingWords / 250);
-      var readingSeconds = readingWords % 60;
-      document.getElementsByClassName("reading-progress-words")[0].innerHTML =
-        readingWords;
-      document.getElementsByClassName("reading-progress-time")[0].innerHTML =
-        readingMinutes + ":" + readingSeconds;
-    }
-
-    //Text Resizer
-    var textSizeChanger = document.querySelectorAll(".text-size-changer");
-    if (textSizeChanger.length) {
-      var textSizeIncrease = document.querySelectorAll(".text-size-increase");
-      var textSizeDecrease = document.querySelectorAll(".text-size-decrease");
-      var textSizeDefault = document.querySelectorAll(".text-size-default");
-      textSizeIncrease[0].addEventListener("click", function () {
-        textSizeChanger[0].querySelectorAll("*").forEach(function (element) {
-          const getFontSize = window
-            .getComputedStyle(element)
-            .fontSize.split("px", 2)[0];
-          element.style.fontSize = +getFontSize + 1 + "px";
-        });
-      });
-      textSizeDecrease[0].addEventListener("click", function () {
-        textSizeChanger[0].querySelectorAll("*").forEach(function (element) {
-          const getFontSize = window
-            .getComputedStyle(element)
-            .fontSize.split("px", 2)[0];
-          element.style.fontSize = +getFontSize - 1 + "px";
-        });
-      });
-      textSizeDefault[0].addEventListener("click", function () {
-        textSizeChanger[0].querySelectorAll("*").forEach(function (element) {
-          const getFontSize = window
-            .getComputedStyle(element)
-            .fontSize.split("px", 2)[0];
-          element.style.fontSize = "";
-        });
-      });
-    }
-
-    //QR Generator
-    var qr_image = document.querySelectorAll(".qr-image");
-    if (qr_image.length) {
-      var qr_this = window.location.href;
-      var qr_auto = document.getElementsByClassName("generate-qr-auto")[0];
-      var qr_api_address =
-        "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=";
-      if (qr_auto) {
-        qr_auto.setAttribute("src", qr_api_address + qr_this);
-      }
-      var qr_btn = document.getElementsByClassName("generate-qr-button")[0];
-      if (qr_btn) {
-        qr_btn.addEventListener("click", function () {
-          var get_qr_url = document.getElementsByClassName("qr-url")[0].value;
-          var qr_api_address =
-            "https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=";
-          var qr_img =
-            '<img class="mx-auto polaroid-effect shadow-l mt-4 delete-qr" width="200" src="' +
-            qr_api_address +
-            get_qr_url +
-            '" alt="img"><p class="font-11 text-center mb-0">' +
-            get_qr_url +
-            "</p>";
-          document.getElementsByClassName("generate-qr-result")[0].innerHTML =
-            qr_img;
-          qr_btn.innerHTML = "Generate New Button";
-        });
-      }
-    }
-
-    if (window.location.protocol === "file:") {
-      var linksLocal = document.querySelectorAll("a");
-      linksLocal.forEach((el) =>
-        el.addEventListener("mouseover", (event) => {
-          // console.log("You are seeing these errors because your file is on your local computer. For real life simulations please use a Live Server or a Local Server such as AMPPS or WAMPP or simulate a  Live Preview using a Code Editor like http://brackets.io (it's 100% free) - PWA functions and AJAX Page Transitions will only work in these scenarios.");
-        })
-      );
-    }
-
-    //Search Page
-    var searchField = document.querySelectorAll("[data-search]");
-    if (searchField.length) {
-      var searchResults = document.querySelectorAll(".search-results");
-      var searchNoResults = document.querySelectorAll(".search-no-results");
-      var searchTotal = document.querySelectorAll(".search-results div")[0]
-        .childElementCount;
-      var searchTrending = document.querySelectorAll(".search-trending");
-      function searchFunction() {
-        var searchStr = searchField[0].value;
-        var searchVal = searchStr.toLowerCase();
-        if (searchVal != "") {
-          searchResults[0].classList.remove("disabled-search-list");
-          var searchFilterItem =
-            document.querySelectorAll("[data-filter-item]");
-          for (let i = 0; i < searchFilterItem.length; i++) {
-            var searchData =
-              searchFilterItem[i].getAttribute("data-filter-name");
-            if (searchData.includes(searchVal)) {
-              searchFilterItem[i].classList.remove("disabled");
-              if (searchTrending.length) {
-                searchTrending[0].classList.add("disabled");
-              }
-            } else {
-              searchFilterItem[i].classList.add("disabled");
-              if (searchTrending.length) {
-                searchTrending[0].classList.remove("disabled");
-              }
-            }
-            var disabledResults = document
-              .querySelectorAll(".search-results div")[0]
-              .getElementsByClassName("disabled").length;
-            if (disabledResults === searchTotal) {
-              searchNoResults[0].classList.remove("disabled");
-              if (searchTrending.length) {
-                searchTrending[0].classList.add("disabled");
-              }
-            } else {
-              searchNoResults[0].classList.add("disabled");
-              if (searchTrending.length) {
-                searchTrending[0].classList.add("disabled");
-              }
-            }
-          }
-        }
-        if (searchVal === "") {
-          searchResults[0].classList.add("disabled-search-list");
-          searchNoResults[0].classList.add("disabled");
-          if (searchTrending.length) {
-            searchTrending[0].classList.remove("disabled");
-          }
-        }
-      }
-
-      searchField[0].addEventListener("keyup", function () {
-        searchFunction();
-      });
-      searchField[0].addEventListener("click", function () {
-        searchFunction();
-      });
-
-      var searchClick = document.querySelectorAll(".search-trending a");
-      searchClick.forEach((el) =>
-        el.addEventListener("click", (event) => {
-          var trendingResult = el
-            .querySelectorAll("span")[0]
-            .textContent.toLowerCase();
-          searchField[0].value = trendingResult;
-          searchField[0].click();
-        })
-      );
-    }
-
-    //Sharing
-    function shareLinks() {
-      var shareTitle = document.title;
-      var shareText = document.title;
-      var shareLink = window.location.href;
-      if (
-        document.querySelectorAll(
-          ".shareToFacebook, .shareToTwitter, .shareToLinkedIn"
-        )[0]
-      ) {
-        document
-          .querySelectorAll(
-            ".shareToFacebook, .shareToTwitter, .shareToLinkedIn, .shareToWhatsApp, .shareToMail"
-          )
-          .forEach((x) => {
-            x.setAttribute("target", "_blank");
-          });
-        document
-          .querySelectorAll(".shareToFacebook")
-          .forEach((x) =>
-            x.setAttribute(
-              "href",
-              "https://www.facebook.com/sharer/sharer.php?u=" + shareLink
-            )
-          );
-        document
-          .querySelectorAll(".shareToTwitter")
-          .forEach((x) =>
-            x.setAttribute(
-              "href",
-              "http://twitter.com/share?text=" + shareTitle + "%20" + shareLink
-            )
-          );
-        document
-          .querySelectorAll(".shareToPinterest")
-          .forEach((x) =>
-            x.setAttribute(
-              "href",
-              "https://pinterest.com/pin/create/button/?url=" + shareLink
-            )
-          );
-        document
-          .querySelectorAll(".shareToWhatsApp")
-          .forEach((x) =>
-            x.setAttribute("href", "whatsapp://send?text=" + shareLink)
-          );
-        document
-          .querySelectorAll(".shareToMail")
-          .forEach((x) => x.setAttribute("href", "mailto:?body=" + shareLink));
-        document
-          .querySelectorAll(".shareToLinkedIn")
-          .forEach((x) =>
-            x.setAttribute(
-              "href",
-              "https://www.linkedin.com/shareArticle?mini=true&url=" +
-                shareLink +
-                "&title=" +
-                shareTitle +
-                "&summary=&source="
-            )
-          );
-
-        //Menu Share Web API
-        if (navigator.canShare) {
-          const shareData = {
-            title: shareTitle,
-            text: shareText,
-            url: shareLink,
-          };
-          var shareMenu = document.querySelectorAll(
-            '[data-menu="menu-share"], [data-show-share]'
-          );
-          if (shareMenu) {
-            shareMenu.forEach((el) => {
-              el.addEventListener("click", async () => {
-                menu("menu-share", "hide", 0);
-                try {
-                  await navigator.share(shareData);
-                } catch (err) {}
-              });
-            });
-          }
-        }
-
-        var copyLink = document.querySelectorAll(".shareToCopyLink")[0];
-        copyLink.addEventListener("click", function (e) {
-          navigator.clipboard.writeText(shareLink);
-          copyLink.querySelector(".not-copied").classList.add("disabled");
-          copyLink.querySelector(".copied").classList.remove("disabled");
-          setTimeout(function () {
-            copyLink.querySelector(".not-copied").classList.remove("disabled");
-            copyLink.querySelector(".copied").classList.add("disabled");
-          }, 1000);
-        });
-      }
-    }
-
-    //Contact Form
-    var contactForm = document.querySelectorAll(".contact-form");
-    if (contactForm.length) {
-      var form = document.getElementById("contactForm");
-      form.onsubmit = function (e) {
-        // Stop the regular form submission
-        e.preventDefault();
-
-        //Validate Fields
-        var nameField = document.getElementById("contactNameField");
-        var mailField = document.getElementById("contactEmailField");
-        var textField = document.getElementById("contactMessageTextarea");
-        var validateMail = /^([\w-\.]+@([\w-]+\.)+[\w-]{2,4})?$/;
-        if (nameField.value === "") {
-          form.setAttribute("data-form", "invalid");
-          nameField.classList.add("border-red-dark");
-          document
-            .getElementById("validator-name")
-            .classList.remove("disabled");
-        } else {
-          form.setAttribute("data-form", "valid");
-          document.getElementById("validator-name").classList.add("disabled");
-          nameField.classList.remove("border-red-dark");
-        }
-        if (mailField.value === "") {
-          form.setAttribute("data-form", "invalid");
-          mailField.classList.add("border-red-dark");
-          document
-            .getElementById("validator-mail1")
-            .classList.remove("disabled");
-        } else {
-          document.getElementById("validator-mail1").classList.add("disabled");
-          if (!validateMail.test(mailField.value)) {
-            form.setAttribute("data-form", "invalid");
-            mailField.classList.add("border-red-dark");
-            document
-              .getElementById("validator-mail2")
-              .classList.remove("disabled");
-          } else {
-            form.setAttribute("data-form", "valid");
-            document
-              .getElementById("validator-mail2")
-              .classList.add("disabled");
-            mailField.classList.remove("border-red-dark");
-          }
-        }
-        if (textField.value === "") {
-          form.setAttribute("data-form", "invalid");
-          textField.classList.add("border-red-dark");
-          document
-            .getElementById("validator-text")
-            .classList.remove("disabled");
-        } else {
-          form.setAttribute("data-form", "valid");
-          document.getElementById("validator-text").classList.add("disabled");
-          textField.classList.remove("border-red-dark");
-        }
-
-        if (form.getAttribute("data-form") === "valid") {
-          document
-            .querySelectorAll(".form-sent")[0]
-            .classList.remove("disabled");
-          document
-            .querySelectorAll(".contact-form")[0]
-            .classList.add("disabled");
-          // Collect the form data while iterating over the inputs
-          var data = {};
-          for (let i = 0, ii = form.length; i < ii; ++i) {
-            let input = form[i];
-            if (input.name) {
-              data[input.name] = input.value;
-            }
-          }
-          // Construct an HTTP request
-          var xhr = new XMLHttpRequest();
-          xhr.open(form.method, form.action, true);
-          xhr.setRequestHeader("Accept", "application/json; charset=utf-8");
-          xhr.setRequestHeader(
-            "Content-Type",
-            "application/json; charset=UTF-8"
-          );
-          // Send the collected data as JSON
-          xhr.send(JSON.stringify(data));
-          // Callback function
-          xhr.onloadend = function (response) {
-            if (response.target.status === 200) {
-              console.log("Form Submitted");
-            }
-          };
-        }
-      };
     }
 
     //Collapse Flip Icon
@@ -1828,47 +1311,6 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     }
 
-    //Check Age
-    var checkAge = document.querySelectorAll(".check-age");
-    if (checkAge.length) {
-      checkAge[0].addEventListener("click", function () {
-        var dateBirthday =
-          document.querySelectorAll("#date-birth-day")[0].value;
-        var dateBirthMonth =
-          document.querySelectorAll("#date-birth-month")[0].value;
-        var dateBirthYear =
-          document.querySelectorAll("#date-birth-year")[0].value;
-        var age = 18;
-        var mydate = new Date();
-        mydate.setFullYear(dateBirthYear, dateBirthMonth - 1, dateBirthday);
-
-        var currdate = new Date();
-        var setDate = new Date();
-        setDate.setFullYear(
-          mydate.getFullYear() + age,
-          dateBirthMonth - 1,
-          dateBirthday
-        );
-
-        var menuAge = document.querySelectorAll("#menu-age");
-        var menuAgeFail = document.querySelectorAll("#menu-age-fail");
-        var menuAgeOkay = document.querySelectorAll("#menu-age-okay");
-
-        console.log(currdate);
-        console.log(setDate);
-        console.log(dateBirthMonth);
-        if (currdate - setDate > 0) {
-          console.log("above 18");
-          menuAge[0].classList.remove("menu-active");
-          menuAgeOkay[0].classList.add("menu-active");
-        } else {
-          menuAge[0].classList.remove("menu-active");
-          menuAgeFail[0].classList.add("menu-active");
-        }
-        return true;
-      });
-    }
-
     feather.replace();
     function featherIcons() {
       var featherIcon = document.querySelectorAll(".feather");
@@ -1932,9 +1374,7 @@ document.addEventListener("DOMContentLoaded", () => {
           setTimeout(function () {
             if (dataMenuLoad[dataMenuLoad.length - 1] === e) {
               menuFunction();
-              checkDarkMode();
               activateMenus();
-              shareLinks();
               highlightColors();
               selectHighlight();
               card_extender();
@@ -1947,7 +1387,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 500);
         });
     });
-
+    
     //Detecting Mobile OS
     let isMobile = {
       Android: function () {
@@ -2267,6 +1707,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    
     //Lazy Loading
     var lazyLoad = new LazyLoad();
 
@@ -2398,23 +1839,6 @@ document.addEventListener("DOMContentLoaded", () => {
   if ("scrollRestoration" in window.history)
     window.history.scrollRestoration = "manual";
 
-  //End of Init Template
-  if (isAJAX === true) {
-    if (window.location.protocol !== "file:") {
-      const options = {
-        containers: ["#page"],
-        cache: false,
-        animateHistoryBrowsing: false,
-        plugins: [new SwupPreloadPlugin()],
-        linkSelector:
-          'a:not(.external-link):not(.default-link):not([href^="https"]):not([href^="http"]):not([data-gallery])',
-      };
-      const swup = new Swup(options);
-      document.addEventListener("swup:pageView", (e) => {
-        init_template();
-      });
-    }
-  }
 
   init_template();
 });
