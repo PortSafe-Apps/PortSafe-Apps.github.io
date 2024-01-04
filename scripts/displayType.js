@@ -13,6 +13,12 @@ function getTokenFromCookies(cookieName) {
 const displayTopDangerousActions = (data, containerId) => {
     const dangerousActionList = document.getElementById(containerId);
 
+    // Check if the container element exists
+    if (!dangerousActionList) {
+        console.error(`Container element with ID '${containerId}' not found.`);
+        return;
+    }
+
     // Hitung jumlah tindakan berbahaya untuk setiap jenis
     const countByType = {};
     data.forEach(report => {
@@ -89,13 +95,7 @@ const getallUserReportsWithToken = async () => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
-        Swal.fire({
-            icon: 'warning',
-            title: 'Authentication Error',
-            text: 'Kamu Belum Login!',
-        }).then(() => {
-            window.location.href = 'https://portsafe-apps.github.io/';
-        });
+        console.error('Authentication Error: You are not logged in!');
         return;
     }
 
@@ -110,7 +110,7 @@ const getallUserReportsWithToken = async () => {
 
         displayTopDangerousActions(combinedData, 'dangerous-action-list');
     } catch (error) {
-        console.error('Error:', error);
+        console.error('Error fetching or displaying data:', error);
     }
 };
 
