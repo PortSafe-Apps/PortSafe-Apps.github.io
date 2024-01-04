@@ -8,11 +8,22 @@ setTimeout(function () {
 
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
-  
+
+  //Global Variables
+  let isPWA = false; // Enables or disables the service worker and PWA
+  let isAJAX = true; // AJAX transitions. Requires local server or server
+  var pwaName = "Portsafe+"; //Local Storage Names for PWA
+  var pwaRemind = 1; //Days to re-remind to add to home
+  var pwaNoCache = false; //Requires server and HTTPS/SSL. Will clear cache with each visit
+
+  //Setting Service Worker Locations scope = folder | location = service worker js location
+  var pwaScope = "/";
+  var pwaLocation = "/service-worker.js";
+
   //Place all your custom Javascript functions and plugin calls below this line
   function init_template() {
     //Caching Global Variables
-    var i, e, el; 
+    var i, e, el;
 
     //Greetig Heading
     var pageTitle = document.querySelectorAll(
@@ -1194,6 +1205,42 @@ document.addEventListener("DOMContentLoaded", () => {
             })
         }
         */
+
+    const generateNomorPelaporan = () => {
+      const tahunSekarang = new Date().getFullYear();
+      const nomorUrut = Math.floor(Math.random() * 1000); // Generate a random number between 0 and 999
+      const nomorPelaporan = `${tahunSekarang}-K3-${nomorUrut
+        .toString()
+        .padStart(3, "0")}`;
+      return nomorPelaporan;
+    };
+
+    document.getElementById("nomorPelaporan").textContent =
+      generateNomorPelaporan();
+
+    // Function untuk generate tanggal saat ini
+    function generateTanggalSaatIni() {
+      const options = { year: "numeric", month: "long", day: "numeric" };
+      return new Date().toLocaleDateString("id-ID", options);
+    }
+
+    document.getElementById("tanggalPelaporan").textContent =
+      generateTanggalSaatIni();
+
+
+    // Function untuk generate waktu saat ini dengan zona waktu Indonesia
+    function generateWaktuSaatIni() {
+      const options = {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+        timeZone: "Asia/Jakarta",
+      };
+      return new Date().toLocaleTimeString("id-ID", options);
+    }
+
+    document.getElementById("waktuPelaporan").textContent =
+      generateWaktuSaatIni();
 
     //Dropdown
     var dropdownElementList = [].slice.call(
