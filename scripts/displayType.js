@@ -24,14 +24,13 @@ const displayTopDangerousActions = (data, containerId) => {
     data.forEach(report => {
         if (report.typeDangerousActions && report.typeDangerousActions.length > 0) {
             report.typeDangerousActions.forEach(type => {
-                const typeName = type.TypeName; 
-                const subTypes = type.SubTypes || []; 
+                const typeName = type.typeName;
+                const subType = type.subType; // Add subType
                 countByType[typeName] = countByType[typeName] || { count: 0, subTypes: new Set() };
                 countByType[typeName].count += 1;
-    
-                subTypes.forEach(subType => {
+                if (subType) {
                     countByType[typeName].subTypes.add(subType);
-                });
+                }
             });
         }
     });
