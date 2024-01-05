@@ -25,12 +25,8 @@ const displayTopDangerousActions = (data, containerId) => {
         if (report.typeDangerousActions && report.typeDangerousActions.length > 0) {
             report.typeDangerousActions.forEach(type => {
                 const typeName = type.typeName;
-                const subType = type.subType; // Add subType
                 countByType[typeName] = countByType[typeName] || { count: 0, subTypes: new Set() };
                 countByType[typeName].count += 1;
-                if (subType) {
-                    countByType[typeName].subTypes.add(subType);
-                }
             });
         }
     });
@@ -41,7 +37,6 @@ const displayTopDangerousActions = (data, containerId) => {
         sortableData.push({
             typeName,
             count: countByType[typeName].count,
-            subTypes: [...countByType[typeName].subTypes]
         });
     }
 
@@ -62,7 +57,6 @@ const displayTopDangerousActions = (data, containerId) => {
                 </div>
                 <div class="align-self-center mt-1 ps-4">
                     <h4 class="color-theme font-600">${item.typeName}</h4>
-                    <p class="mt-n2 font-11 color-highlight mb-0">${item.subTypes.join(', ')}</p>
                 </div>
                 <div class="ms-auto align-self-center me-3">
                     <span class="badge bg-highlight color-white font-12 font-500 py-2 px-2 rounded-s">${item.count} Laporan</span>

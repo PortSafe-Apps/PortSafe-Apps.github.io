@@ -4709,15 +4709,28 @@ button {
 }
 
 /* Styles for radio-card class */
+.radio-card {
+  border: none;
+}
+
 .radio-card input {
   position: absolute !important;
   cursor: pointer;
+  display: none;
 }
 
 .radio-card label {
   cursor: pointer;
-  padding: -10px -15px 0 0;
+  display: block; 
+  overflow: hidden;
+  border-radius: 20px;
+  box-shadow: 0 4px 15px 0 rgba(0, 0, 0, 0.1);
 }
+
+.radio-card input:checked + label {
+  box-shadow: 0 0 1px 1px #02172C;
+}
+
 
 /*Font Awesome Default*/
 .fac {

@@ -22,14 +22,26 @@ document.getElementById("tanggalPelaporan").textContent =
 // Function untuk generate waktu saat ini dengan zona waktu Indonesia
 function generateWaktuSaatIni() {
   const currentTime = new Date();
-  const options = {
-    hour: "2-digit",
-    minute: "numeric",
-    hour12: true,
-    timeZone: "Asia/Jakarta",
-  };
+  let currentHour = currentTime.getHours();
+  const currentMinutes = currentTime.getMinutes();
 
-  return currentTime.toLocaleTimeString("id-ID", options);
+  // Perbaikan: Tentukan apakah jam harus AM atau PM sebelum mengurangi 12 jam
+  const ampm = currentHour >= 12 ? 'PM' : 'AM';
+
+  // Konversi ke format 12 jam jika jam lebih dari 12
+  if (currentHour > 12) {
+    currentHour -= 12;
+  }
+
+  // Tambahkan 0 di depan jika menit kurang dari 10
+  const formattedMinutes = currentMinutes < 10 ? `0${currentMinutes}` : currentMinutes;
+
+  // Menerapkan format waktu dan mengembalikannya
+  const formattedTime = `${currentHour}:${formattedMinutes} ${ampm}`;
+
+  return formattedTime;
 }
 
 document.getElementById("waktuPelaporan").textContent = generateWaktuSaatIni();
+
+

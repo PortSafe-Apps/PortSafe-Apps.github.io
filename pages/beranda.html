@@ -8,15 +8,15 @@
     <meta name="viewport"
         content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
     <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
-    <link rel="stylesheet" type="text/css" href="styles/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="styles/style.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css">
     <link
         href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
         rel="stylesheet">
-    <link rel="icon" href="app/icons/favicon.ico">
-    <link rel="stylesheet" type="text/css" href="fonts/css/fontawesome-all.min.css">
-    <link rel="manifest" href="manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
-    <link rel="apple-touch-icon" sizes="180x180" href="app/icons/icon-192x192.png">
+    <link rel="icon" href="/assets/app/icons/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/assets/fonts/css/fontawesome-all.min.css">
+    <link rel="manifest" href="/manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/app/icons/icon-192x192.png">
 </head>
 
 <body class="theme-light" data-highlight="blue2">
@@ -29,13 +29,9 @@
 
         <!-- header and footer bar go here-->
         <div class="header header-fixed header-auto-show header-logo-app">
-            <a href="index.html" class="header-title">Portsafe<sup>+</sup></a>
+            <a href="beranda.html" class="header-title">Portsafe<sup>+</sup></a>
             <a href="#" data-menu="menu-main" class="header-icon header-icon-1"><i class="fas fa-bars"></i></a>
-            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-dark"><i
-                    class="fas fa-sun"></i></a>
-            <a href="#" data-toggle-theme class="header-icon header-icon-2 show-on-theme-light"><i
-                    class="fas fa-moon"></i></a>
-            <a href="#" data-menu="menu-highlights" class="header-icon header-icon-3"><i class="fas fa-brush"></i></a>
+            <a href="#" class="header-icon header-icon-2" id="logoutButton" onclick="logout()"><i class="fas fa-sign-out"></i></a>
         </div>
         <div id="footer-bar" class="footer-bar-5">
             <a href="beranda.html" class="active-nav"><i data-feather="home" data-feather-line="1"
@@ -43,20 +39,20 @@
                     data-feather-bg="blue-fade-light"></i><span>Home</span></a>
             <a href="addreport.html"  id="tambahLaporanBaru"> <i data-feather="clipboard" data-feather-line="1" data-feather-size="21"
                     data-feather-color="blue-dark" data-feather-bg="blue-fade-light"></i><span>Observasi</span></a>
-            <a href="index-settings.html"><i data-feather="settings" data-feather-line="1" data-feather-size="21"
-                    data-feather-color="dark-dark" data-feather-bg="gray-fade-light"></i><span>Settings</span></a>
+            <a href="monthlyreport.html"><i data-feather="pie-chart" data-feather-line="1" data-feather-size="21"
+                    data-feather-color="blue-dark" data-feather-bg="blue-fade-light"></i><span>Laporan</span></a>
         </div>
 
         <div class="page-content">
             <div class="page-title page-title-small">
                 <h2>Portsafe<sup>+</sup></h2>
                 <a href="#" data-menu="menu-main" class="bg-fade-highlight-light shadow-xl preload-img"
-                    data-src="images/avatars/5s.png"></a>
+                    data-src="/assets/images/avatars/5s.png"></a>
             </div>
             <div class="card header-card shape-rounded" data-card-height="300">
                 <div class="card-overlay bg-highlight opacity-95"></div>
                 <div class="card-overlay dark-mode-tint"></div>
-                <div class="card-bg preload-img" data-src="images/pictures/20s.jpg"></div>
+                <div class="card-bg preload-img" data-src="/assets/images/pictures/20s.jpg"></div>
             </div>
 
             <div class="splide single-slider slider-no-arrows slider-no-dots" id="single-slider-6">
@@ -103,7 +99,7 @@
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="#">
+                        <a href="listreport.html">
                             <div class="text-center">
                                 <i class="fa fa-list-alt font-20 pt-3 color-blue-dark"></i>
                                 <h5 class="font-400 pt-1">Daftar Observasi</h5>
@@ -111,7 +107,7 @@
                         </a>
                     </div>
                     <div class="col-4">
-                        <a href="#">
+                        <a href="monthlyreport.html">
                             <div class="text-center">
                                 <i class="fa fa-area-chart font-20 pt-3 color-dark-dark"></i>
                                 <h5 class="font-400 pt-1">Laporan Bulanan</h5>
@@ -124,7 +120,7 @@
             <div class="card card-style mb-3 d-flex" data-card-height="100">
                 <div class="d-flex justify-content-between">
                     <div class="ps-3 ms-1 align-self-center">
-                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18">Jumlah Laporan Terkini</p>
+                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18 font-700">Jumlah Laporan Terkini</p>
                         <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50" id="combined-total-reports"></h1>
                     </div>
                     <div class="pe-3 align-self-center">
@@ -134,9 +130,9 @@
                     </div>
                 </div>
             </div>
-            <div class="card preload-img" data-src="images/pictures/20s.jpg">
+            <div class="card preload-img" data-src="/assets/images/pictures/20s.jpg">
                 <div class="card-body pt-4 mt-3">
-                    <h2 class="font-24 color-white line-height-3 mb-3">Top 3 Jenis Pelanggaran Terbanyak</h2>
+                    <h2 class="font-24 color-white line-height-3 mb-3">Top 3 Jenis Pelanggaran</h2>
                     <div id="dangerous-action-list"></div>
                 </div>
                 <div class="card-overlay bg-highlight opacity-90"></div>
@@ -173,9 +169,6 @@
                             <p class="color-highlight font-11"><i class="far fa-calendar"></i> August 28 <i
                                     class="ms-4 far fa-clock"></i> 09:00 PM</p>
                         </div>
-                        <!-- <div class="">
-                        
-                    </div> -->
                     </div>
                 </div>
             </div>
@@ -186,18 +179,18 @@
             </div>
 
         </div>
-
-        <script type="text/javascript" src="scripts/bootstrap.min.js"></script>
-        <script type="text/javascript" src="scripts/custom.js"></script>
-        <script type="module" src="scripts/userprofile.js"></script>
-        <script type="module" src="scripts/sumreport.js"></script>
-        <script type="module" src="scripts/displayType.js"></script>
-        <script type="module" src="scripts/latestcard.js"></script>
-        <script type="module" src="scripts/authorization/logout.js"></script>
-
+        
+        <script type="module" src="/assets/scripts/authorization/logout.js"></script>
+        <script type="text/javascript" src="/assets/scripts/bootstrap.min.js"></script>
+        <script type="text/javascript" src="/assets/scripts/custom.js"></script>
+        <script type="module" src="/assets/scripts/userprofile.js"></script>
+        <script  src="/assets/scripts/sumreport.js"></script>
+        <script  src="/assets/scripts/displayType.js"></script>
+        <script  src="/assets/scripts/latestcard.js"></script>
+        
         <!-- Sweet Alert -->
-        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+        <!-- <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script> -->
         <!-- Modal -->
-        <script src="scripts/config/modal.js" type="module"></script>
+        <!-- <script src="scripts/config/modal.js" type="module"></script> -->
 
 </body>

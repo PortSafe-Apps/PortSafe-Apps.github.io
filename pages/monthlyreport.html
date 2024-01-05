@@ -1,0 +1,122 @@
+<!DOCTYPE HTML>
+<html lang="en">
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=1, viewport-fit=cover" />
+    <title>PortSafe+ - PWA Mobile K3 observation reporting application</title>
+    <link rel="stylesheet" type="text/css" href="/assets/styles/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/assets/styles/style.css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900|Roboto:300,300i,400,400i,500,500i,700,700i,900,900i&amp;display=swap"
+        rel="stylesheet">
+    <link rel="icon" href="/assets/app/icons/favicon.ico">
+    <link rel="stylesheet" type="text/css" href="/assets/fonts/css/fontawesome-all.min.css">
+    <link rel="manifest" href="/manifest.json" data-pwa-version="set_in_manifest_and_pwa_js">
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/app/icons/icon-192x192.png">
+</head>
+
+<body class="theme-light">
+
+    <div id="preloader">
+        <div class="spinner-border color-highlight" role="status"></div>
+    </div>
+    <div id="page">
+        <!-- header and footer bar go here-->
+        <div class="header header-fixed header-auto-show header-logo-app">
+            <a href="beranda.html" class="header-title">Portsafe<sup>+</sup></a>
+            <a href="#" data-menu="menu-main" class="header-icon header-icon-1"><i class="fas fa-bars"></i></a>
+            <a href="#" class="header-icon header-icon-2" id="logoutButton" onclick="logout()"><i class="fas fa-sign-out"></i></a>
+        </div>
+        <div class="page-content">
+            <div class="page-title page-title-small">
+                <h2><a href="beranda.html" data-back-button><i class="fa fa-arrow-left"></i></a>Laporan Observasi</h2>
+                <a href="#" data-menu="menu-main" class="bg-fade-highlight-light shadow-xl preload-img"
+                    data-src="/assets/images/avatars/5s.png"></a>
+            </div>
+            <div class="card header-card shape-rounded" data-card-height="120">
+                <div class="card-overlay bg-highlight opacity-95"></div>
+                <div class="card-overlay dark-mode-tint"></div>
+                <div class="card-bg preload-img" data-src="/assets/images/pictures/20s.jpg"></div>
+            </div>
+            <div class="card card-style mb-3 d-flex" data-card-height="100">
+                <div class="d-flex justify-content-between">
+                    <div class="ps-3 ms-1 align-self-center">
+                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18 font-700 text-dark">Jumlah Keseluruhan</p>
+                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50" id="combined-total-reports"></h1>
+                    </div>
+                    <div class="pe-3 align-self-center">
+                        <i data-feather="activity" data-feather-line="1" data-feather-size="45"
+                            data-feather-color="green-dark">
+                        </i>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-style mb-3 d-flex" data-card-height="100">
+                <div class="d-flex justify-content-between">
+                    <div class="ps-3 ms-1 align-self-center">
+                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18 font-700 text-dark">Jumlah Laporan unsafe</p>
+                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50" id="combined-total-reports"></h1>
+                    </div>
+                    <div class="pe-3 align-self-center">
+                        <i data-feather="alert-triangle" data-feather-line="1" data-feather-size="45"
+                            data-feather-color="yellow-dark">
+                        </i>
+                    </div>
+                </div>
+            </div>
+            <div class="card card-style mb-3 d-flex" data-card-height="100">
+                <div class="d-flex justify-content-between">
+                    <div class="ps-3 ms-1 align-self-center">
+                        <p class="color-highlight pt-3 mt-0 mb-3 ms-2 font-18 font-700 text-dark">Jumlah Laporan Compromised</p>
+                        <h1 class="color-highlight mt-n1 ms-2 mb-2 font-50" id="combined-total-reports"></h1>
+                    </div>
+                    <div class="pe-3 align-self-center">
+                        <i data-feather="arrow-up" data-feather-line="1" data-feather-size="45"
+                            data-feather-color="red-dark">
+                        </i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-style">
+                <div class="content">
+                    <div id="monthlyChart"></div>
+                </div>
+            </div>
+            <div class="card card-style">
+                <div class="content">
+                    <div id="locationChart"></div>
+                </div>
+            </div>
+            <div class="card card-style">
+                <div class="content">
+                    <div id="areaChart"></div>
+                </div>
+            </div>
+            <div class="card card-style">
+                <div class="content">
+                    <div id="typeChart"></div>
+                </div>
+            </div>
+            <div class="card card-style">
+                <div class="content">
+                    <div id="subtypeChart"></div>
+                </div>
+            </div>
+        <!-- end of page content-->
+    </div>
+    <div id="menu-main" class="menu menu-box-right menu-box-detached rounded-m" data-menu-width="260"
+        data-menu-load="menu-main.html" data-menu-active="nav-monthly" data-menu-effect="menu-over">
+    </div>
+    <script type="text/javascript" src="/assets/scripts/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/assets/scripts/custom.js"></script>
+    <script src="/assets/scripts/sumreport.js"></script>
+    <script type="module" src="/assets/scripts/authorization/logout.js"></script>
+     <!-- Apex Chart -->
+    <script src="/assets/plugins/apexchart.js/apexcharts.min.js"></script>
+    <script src="/assets/scripts/monthly-report.js"></script>
+</body>
