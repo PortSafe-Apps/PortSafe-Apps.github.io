@@ -126,7 +126,7 @@ function getTokenFromCookies(cookieName) {
         showAlert(data.message, 'error');
       } else {
         showAlert("Data Pelaporan Berhasil di Input!", 'success');
-        window.location.href = 'https://portsafe-apps.github.io/listreport';
+        window.location.href = 'https://portsafe-apps.github.io/user/listreport';
       }
     } catch (error) {
       console.error('Error:', error);

@@ -12,8 +12,13 @@ document.getElementById("nomorPelaporan").textContent =
 
 // Function untuk generate tanggal saat ini
 function generateTanggalSaatIni() {
-  const options = { year: "numeric", month: "long", day: "numeric" };
-  return new Date().toLocaleDateString("id-ID", options);
+  const date = new Date();
+  const year = date.getFullYear();
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Menambahkan leading zero jika bulan < 10
+  const day = date.getDate().toString().padStart(2, '0'); // Menambahkan leading zero jika tanggal < 10
+
+  // Menggunakan template string untuk memformat tanggal
+  return `${year}-${month}-${day}`;
 }
 
 document.getElementById("tanggalPelaporan").textContent =
