@@ -26,6 +26,18 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   }
   
+  // Fungsi untuk mendapatkan token dari cookie
+function getTokenFromCookies(cookieName) {
+  const cookies = document.cookie.split(";");
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split("=");
+    if (name === cookieName) {
+      return value;
+    }
+  }
+  return null;
+}
+
   const insertObservationReport = async (event) => {
     event.preventDefault();
   
