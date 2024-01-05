@@ -75,7 +75,7 @@ function handleLoginSuccess(token, userRole) {
 function getRedirectURL(userRole) {
   switch (userRole) {
     case 'user':
-      return 'https://portsafe-apps.github.io/beranda.html';
+      return 'https://portsafe-apps.github.io/user/beranda.html';
     case 'admin':
       return 'https://portsafe-apps.github.io/admin/dashboard.html';
     default:
