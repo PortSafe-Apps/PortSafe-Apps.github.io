@@ -16,7 +16,9 @@ const createReportCard = (report, category, index) => {
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'danger' : 'success'} text-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+  const categoryBadge = `<span class="badge bg-${
+    category.toLowerCase() === "unsafe" ? "danger" : "success"
+  } text-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
@@ -33,9 +35,11 @@ const createReportCard = (report, category, index) => {
   const typeName =
     (report.typeDangerousActions &&
       report.typeDangerousActions.length > 0 &&
-      report.typeDangerousActions[0].typeName) || "Jenis Tidak Diketahui";
+      report.typeDangerousActions[0].typeName) ||
+    "Jenis Tidak Diketahui";
 
-  const userName = (report.user && report.user.nama) || "Pengguna Tidak Diketahui";
+  const userName =
+    (report.user && report.user.nama) || "Pengguna Tidak Diketahui";
 
   // Sesuaikan struktur kartu dengan data yang Anda miliki
   newCard.innerHTML = `
@@ -69,7 +73,12 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
+const createTabAndDisplayReports = async (
+  data,
+  category,
+  tabContainerId,
+  activeTab
+) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -84,10 +93,10 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   // Create separate containers for Unsafe Action and Compromised Action
   const unsafeContainer = document.createElement("div");
   unsafeContainer.className = "collapse";
-  unsafeContainer.id = `tab-unsafe`;
+  unsafeContainer.id = `tab-unsafe`; // Ensure consistent IDs
   const compromisedContainer = document.createElement("div");
   compromisedContainer.className = "collapse";
-  compromisedContainer.id = `tab-compromised`;
+  compromisedContainer.id = `tab-compromised`; // Ensure consistent IDs
 
   // Iterate over each report
   data.forEach((report, index) => {
@@ -149,8 +158,14 @@ const createTabControls = () => {
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+      category: "Unsafe Action",
+    },
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+      category: "Compromised Action",
+    },
     // Add more URLs and categories as needed
   ];
 
@@ -188,7 +203,12 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(data, reportUrl.category, "tab-container", reportUrl.tabId);
+          createTabAndDisplayReports(
+            data,
+            reportUrl.category,
+            "tab-container",
+            reportUrl.tabId
+          );
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
@@ -196,7 +216,10 @@ const getUserReportsByCategoryAndGroup = async () => {
           );
         }
       } else {
-        console.error(`Kesalahan HTTP (${reportUrl.category}):`, response.status);
+        console.error(
+          `Kesalahan HTTP (${reportUrl.category}):`,
+          response.status
+        );
       }
     }
   } catch (error) {
