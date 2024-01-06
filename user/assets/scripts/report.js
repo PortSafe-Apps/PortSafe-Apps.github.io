@@ -22,7 +22,9 @@ const createReportCard = (report, category) => {
       : "";
 
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+  const categoryBadge = `<span class="badge bg-${
+    category.toLowerCase() === "unsafe" ? "red" : "green"
+  }-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
@@ -70,7 +72,7 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
-// Fungsi untuk membuat kontrol tab dan menampilkan laporan
+// Fungsi untuk membuat tab controls dan menampilkan laporan
 const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -86,7 +88,9 @@ const createTabControlsAndDisplayReports = async () => {
 
   // Menambahkan tautan tab berdasarkan kategori
   const categories = ["Unsafe Action", "Compromised Action"];
-  categories.forEach(async (category, index) => {
+  for (let index = 0; index < categories.length; index++) {
+    const category = categories[index];
+
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
@@ -101,15 +105,19 @@ const createTabControlsAndDisplayReports = async () => {
     const tabContentContainer = document.createElement("div");
 
     // Menambahkan konten tab berdasarkan kategori dan URL
-    const filteredReports = reportUrls.filter(report => report.category === category);
-    for (const [urlIndex, reportUrl] of filteredReports.entries()) {
+    const filteredReports = reportUrls.filter(
+      (report) => report.category === category
+    );
+    for (let urlIndex = 0; urlIndex < filteredReports.length; urlIndex++) {
+      const reportUrl = filteredReports[urlIndex];
+
       const tabContent = document.createElement("div");
       tabContent.className = "collapse";
       tabContent.id = `tab-${index + 1}-url-${urlIndex + 1}`;
 
       // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
-      data.forEach(report => {
+      data.forEach((report) => {
         const newCard = createReportCard(report, category);
         tabContent.appendChild(newCard);
       });
@@ -119,7 +127,7 @@ const createTabControlsAndDisplayReports = async () => {
 
     // Menambahkan container konten tab ke dalam tabContainer
     tabContainer.appendChild(tabContentContainer);
-  });
+  }
 
   // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
@@ -159,13 +167,19 @@ const fetchReports = async (url) => {
       if (responseData.status === 200) {
         return responseData.data;
       } else {
-        console.error(`Respon server (${url}):`, responseData.message || "Data tidak ditemukan");
+        console.error(
+          `Respon server (${url}):`,
+          responseData.message || "Data tidak ditemukan"
+        );
       }
     } else {
       console.error(`Kesalahan HTTP (${url}):`, response.status);
     }
   } catch (error) {
-    console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 
   return [];
@@ -173,8 +187,14 @@ const fetchReports = async (url) => {
 
 // Report URLs berisi endpoint dan kategori laporan
 const reportUrls = [
-  { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
-  { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" },
+  {
+    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+    category: "Unsafe Action",
+  },
+  {
+    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+    category: "Compromised Action",
+  },
   // Tambahkan URL dan kategori sesuai kebutuhan
 ];
 
