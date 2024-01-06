@@ -90,7 +90,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 // Fungsi untuk memproses dan menampilkan data laporan dalam tab
 const processReportData = (data, category) => {
   // Menyesuaikan struktur HTML sesuai dengan kebutuhan
-  const tabContainerId = "tab-container";
+  const tabContainerId = "tab-group-1";
 
   // Membuat tab baru dan menampilkan laporan
   createTabAndDisplayReports(data, category, tabContainerId);
@@ -108,7 +108,7 @@ const createReportCard = (report, category) => {
       : "";
 
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'yellow' : 'red'}-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa ${category.toLowerCase() === 'unsafe' ? 'fa-exclamation-triangle' : 'fa-child'}"></i> ${category}</span>`;
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
@@ -133,8 +133,8 @@ const createReportCard = (report, category) => {
                     <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
                 </div>
                 <div class="ms-auto align-self-center">
-                    ${categoryBadge}
-                    ${statusBadge}
+                ${categoryBadge}   
+                ${statusBadge}      
                 </div>
             </div>
             <div class="divider bg-highlight mt-0 mb-2"></div>
@@ -212,35 +212,5 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   });
 };
 
-// Function to create tab controls
-const createTabControls = () => {
-  const tabContainerId = "tab-container";
-  const tabControlsContainer = document.getElementById(tabContainerId);
-
-  // Remove existing tab controls
-  tabControlsContainer.innerHTML = "";
-
-  // Add tab controls based on categories
-  const categories = ["Unsafe Action", "Compromised Action"];
-  const tabGroup = document.createElement("div");
-  tabGroup.id = "tab-group-1";
-  tabGroup.className = "card bg-transparent mb-0";
-  categories.forEach((category, index) => {
-    const tabLink = document.createElement("a");
-    tabLink.href = "#";
-    tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
-    tabLink.innerHTML = category;
-    if (index === 0) {
-      tabLink.dataset.active = true;
-    }
-    tabGroup.appendChild(tabLink);
-  });
-  tabControlsContainer.appendChild(tabGroup);
-};
-
 // Call the function to create tab controls and display reports
-createTabControls();
-
-// Call the function to get and display reports
 getUserReportsByCategoryAndGroup();
