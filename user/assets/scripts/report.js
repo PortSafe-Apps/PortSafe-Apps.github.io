@@ -22,7 +22,7 @@ const createReportCard = (report, category) => {
       : "";
 
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'yellow' : 'red'}-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa ${category.toLowerCase() === 'unsafe' ? 'fa-exclamation-triangle' : 'fa-child'}"></i> ${category}</span>`;
+  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
@@ -71,65 +71,66 @@ const createReportCard = (report, category) => {
 };
 
 // Fungsi untuk membuat tab dan menampilkan laporan
-const createTabAndDisplayReports = async (data, category, tabIndex) => {
-  // Container untuk tab
-  const tabContainer = document.getElementById("tab-container");
+const createTabAndDisplayReports = async (data, category, tabContainerId) => {
+  const tabContainer = document.getElementById(tabContainerId);
 
-  // Create tab controls
-  const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
+  // Create tab content container
+  const tabContentContainer = document.createElement("div");
 
-  const tabControls = document.createElement("div");
-  tabControls.className = "tab-controls tabs-large tabs-rounded";
-  tabControls.dataset.highlight = "bg-dark-dark";
+  // Add tab contents based on categories
+  data.forEach((report, index) => {
+    const tabContent = document.createElement("div");
+    tabContent.className = "collapse";
+    tabContent.id = `tab-${index + 1}`;
 
-  // Create tab links
-  const tabLink = document.createElement("a");
-  tabLink.href = "#";
-  tabLink.dataset.bsToggle = "collapse";
-  tabLink.dataset.bsTarget = `#tab-${tabIndex}`;
-  tabLink.innerHTML = category;
-  tabLink.dataset.active = tabIndex === 1; // Tandai sebagai aktif jika ini tab pertama
-  tabControls.appendChild(tabLink);
-
-  // Create tab content
-  const tabContent = document.createElement("div");
-  tabContent.className = `collapse ${tabIndex === 1 ? 'show' : ''}`;
-  tabContent.id = `tab-${tabIndex}`;
-
-  // Display reports in card container
-  const cardContainer = document.createElement("div");
-  cardContainer.className = "mt-3";
-
-  // Loop through data and create report cards
-  data.forEach(report => {
+    // Create card for each report
     const newCard = createReportCard(report, category);
-    cardContainer.appendChild(newCard);
+    tabContent.appendChild(newCard);
+    
+    tabContentContainer.appendChild(tabContent);
   });
 
-  // Append tab controls and tab content to tab container
-  tabControlsContainer.appendChild(tabControls);
-  tabContainer.appendChild(tabControlsContainer);
-
-  tabContent.appendChild(cardContainer);
-  tabContainer.appendChild(tabContent);
+  tabContainer.appendChild(tabContentContainer);
 };
 
 // Function to create tab controls
 const createTabControls = () => {
   const tabContainerId = "tab-container";
-  const tabControlsContainer = document.getElementById(tabContainerId);
+  const tabContainer = document.getElementById(tabContainerId);
 
-  // Remove existing tab controls
-  tabControlsContainer.innerHTML = "";
+  // Create container for tab controls
+  const tabControlsContainer = document.createElement("div");
+  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
+
+  // Create tab controls
+  const tabControls = document.createElement("div");
+  tabControls.className = "tab-controls tabs-large tabs-rounded";
+  tabControls.dataset.highlight = "bg-dark-dark";
+
+  // Add tab links based on categories
+  const categories = ["Unsafe Action", "Compromised Action"];
+  categories.forEach((category, index) => {
+    const tabLink = document.createElement("a");
+    tabLink.href = "#";
+    tabLink.dataset.bsToggle = "collapse";
+    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+    tabLink.innerHTML = category;
+    if (index === 0) {
+      tabLink.dataset.active = true;
+    }
+    tabControls.appendChild(tabLink);
+  });
+
+  tabControlsContainer.appendChild(tabControls);
+  tabContainer.appendChild(tabControlsContainer);
 };
 
-// Function to get and display reports
+// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
+    { url: "https://your-api-url-for-unsafe-action-reports", category: "Unsafe Action" },
+    { url: "https://your-api-url-for-compromised-action-reports", category: "Compromised Action" }
     // Add more URLs and categories as needed
   ];
 
@@ -158,7 +159,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
   try {
     // Iterate over each URL and fetch reports
-    for (const [index, reportUrl] of reportUrls.entries()) {
+    for (const reportUrl of reportUrls) {
       const response = await fetch(reportUrl.url, requestOptions);
 
       if (response.ok) {
@@ -167,7 +168,7 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(data, reportUrl.category, index + 1);
+          createTabAndDisplayReports(data, reportUrl.category, "tab-container");
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
