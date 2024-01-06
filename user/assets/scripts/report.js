@@ -71,16 +71,17 @@ const createReportCard = (report, category) => {
 };
 
 // Fungsi untuk membuat tab dan menampilkan laporan
-const createTabAndDisplayReports = async (data, category, tabContainerId) => {
+const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
   const tabContentContainer = document.createElement("div");
+  tabContentContainer.className = "tab-content"; // Tambahkan class "tab-content" di sini
 
   // Add tab contents based on categories
   data.forEach((report, index) => {
     const tabContent = document.createElement("div");
-    tabContent.className = "collapse";
+    tabContent.className = `collapse ${activeTab === index ? 'show' : ''}`; // Tambahkan class "show" untuk tab yang aktif
     tabContent.id = `tab-${index + 1}`;
 
     // Create card for each report
@@ -100,7 +101,7 @@ const createTabControls = () => {
 
   // Create container for tab controls
   const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
+  tabControlsContainer.className = "rounded-m overflow-hidden mx-3 mt-3"; // Tambahkan margin top di sini
 
   // Create tab controls
   const tabControls = document.createElement("div");
@@ -168,7 +169,7 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(data, reportUrl.category, "tab-container");
+          createTabAndDisplayReports(data, reportUrl.category, "tab-container", 0); // Set tab pertama sebagai tab aktif
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
