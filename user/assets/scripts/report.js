@@ -70,6 +70,7 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
+// Fungsi untuk membuat kontrol tab dan menampilkan laporan
 const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -85,9 +86,8 @@ const createTabControlsAndDisplayReports = async () => {
 
   // Menambahkan tautan tab berdasarkan kategori
   const categories = ["Unsafe Action", "Compromised Action"];
-  const tabContentContainer = document.createElement("div");
-
-  await Promise.all(categories.map(async (category, index) => {
+  for (let index = 0; index < categories.length; index++) {
+    const category = categories[index];
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
@@ -97,6 +97,9 @@ const createTabControlsAndDisplayReports = async () => {
       tabLink.dataset.active = true;
     }
     tabControls.appendChild(tabLink);
+
+    // Membuat container konten tab
+    const tabContentContainer = document.createElement("div");
 
     // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(report => report.category === category);
@@ -114,17 +117,14 @@ const createTabControlsAndDisplayReports = async () => {
 
       tabContentContainer.appendChild(tabContent);
     }
-  }));
 
-  // Menambahkan container konten tab ke dalam tabContainer
-  tabContainer.appendChild(tabContentContainer);
+    // Menambahkan container konten tab ke dalam tabContainer
+    tabContainer.appendChild(tabContentContainer);
+  }
 
   // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
-
-  // Inisialisasi tab setelah tabControlsContainer ditambahkan ke tabContainer
-  initializeTabs();
 };
 
 // Fungsi untuk mengambil laporan dari URL tertentu
@@ -178,19 +178,6 @@ const reportUrls = [
   { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" },
   // Tambahkan URL dan kategori sesuai kebutuhan
 ];
-
-// Fungsi untuk menginisialisasi tab dengan menambahkan event listener
-const initializeTabs = () => {
-  const tabs = document.querySelectorAll('.tab-controls a');
-  tabs.forEach(tab => {
-    tab.addEventListener('click', (event) => {
-      event.preventDefault();
-      const targetId = event.currentTarget.dataset.bsTarget;
-      const targetTab = document.querySelector(targetId);
-      targetTab.classList.toggle('show');
-    });
-  });
-};
 
 // Memanggil fungsi untuk membuat kontrol tab dan menampilkan laporan
 createTabControlsAndDisplayReports();
