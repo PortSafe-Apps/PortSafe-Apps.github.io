@@ -1,92 +1,78 @@
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === cookieName) {
-      return value;
+    const cookies = document.cookie.split(";");
+    for (const cookie of cookies) {
+        const [name, value] = cookie.trim().split("=");
+        if (name === cookieName) {
+            return value;
+        }
     }
-  }
-  return null;
+    return null;
 }
 
 // Fungsi untuk mendapatkan laporan berdasarkan kategori
 const getUserReportsByCategory = async (url, category) => {
-  const token = getTokenFromCookies("Login");
+    const token = getTokenFromCookies("Login");
 
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Error Autentikasi",
-      text: "Anda belum login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
-
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
-  try {
-    const response = await fetch(url, requestOptions);
-
-    if (response.ok) {
-      const data = await response.json();
-
-      if (data.status === 200) {
-        // Memproses dan menampilkan data laporan dalam tab
-        processReportData(data.data, category);
-      } else {
-        console.error(
-          "Respon server:",
-          data.message || "Data tidak dapat ditemukan"
-        );
-      }
-    } else {
-      console.error("Kesalahan HTTP:", response.status);
+    if (!token) {
+        Swal.fire({
+            icon: "warning",
+            title: "Error Autentikasi",
+            text: "Anda belum login!",
+        }).then(() => {
+            window.location.href = "https://portsafe-apps.github.io/";
+        });
+        return;
     }
-  } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
-  }
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        redirect: "follow",
+    };
+
+    try {
+        const response = await fetch(url, requestOptions);
+
+        if (response.ok) {
+            const data = await response.json();
+
+            if (data.status === 200) {
+                // Memproses dan menampilkan data laporan dalam tab
+                processReportData(data.data, category);
+            } else {
+                console.error("Respon server:", data.message || "Data tidak dapat ditemukan");
+            }
+        } else {
+            console.error("Kesalahan HTTP:", response.status);
+        }
+    } catch (error) {
+        console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
+    }
 };
 
 // Fungsi untuk membuat kartu laporan
 const createReportCard = (report, category) => {
-  const newCard = document.createElement("div");
-  newCard.className = "card card-style";
+    const newCard = document.createElement("div");
+    newCard.className = "card card-style";
 
-  // Menambahkan badge status untuk kategori "Compromised Action"
-  const statusBadge =
-    category === "Compromised Action"
-      ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
-      : "";
+    // Menambahkan badge status untuk kategori "Compromised Action"
+    const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
 
-  // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
-  const locationName = report.location
-    ? report.location.locationName
-    : "Unknown Location";
-  const typeName =
-    report.typeDangerousActions &&
-    report.typeDangerousActions.length > 0 &&
-    report.typeDangerousActions[0].subTypes &&
-    report.typeDangerousActions[0].subTypes.length > 0 &&
-    report.typeDangerousActions[0].subTypes[0].typeName
-      ? report.typeDangerousActions[0].subTypes[0].typeName
-      : "Unknown Type";
-  const userName = report.user ? report.user.nama : "Unknown User";
+    // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
+    const locationName = report.location ? report.location.locationName : "Unknown Location";
+    const typeName = report.typeDangerousActions && report.typeDangerousActions.length > 0 &&
+        report.typeDangerousActions[0].subTypes && report.typeDangerousActions[0].subTypes.length > 0 &&
+        report.typeDangerousActions[0].subTypes[0].typeName
+        ? report.typeDangerousActions[0].subTypes[0].typeName
+        : "Unknown Type";
+    const userName = report.user ? report.user.nama : "Unknown User";
 
-  // Sesuaikan struktur kartu dengan data yang Anda miliki
-  newCard.innerHTML = `
+    // Sesuaikan struktur kartu dengan data yang Anda miliki
+    newCard.innerHTML = `
         <div class="content">
             <div class="d-flex">
                 <div>
@@ -113,91 +99,67 @@ const createReportCard = (report, category) => {
         </div>
     `;
 
-  return newCard;
+    return newCard;
 };
 
 // Fungsi untuk membuat tab dan menampilkan laporan
-const createTabAndDisplayReports = async (
-  category,
-  tabContainerId,
-  cardContainerId
-) => {
-  let targetURL;
-  if (category === "Unsafe Action") {
-    targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
-  } else if (category === "Compromised Action") {
-    targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
-  } else {
-    console.error("Kategori tidak valid:", category);
-    return;
-  }
-
-  try {
-    const response = await fetch(targetURL);
-    const data = await response.json();
-
-    const tabContainer = document.getElementById(tabContainerId);
-    const cardContainer = document.getElementById(cardContainerId);
-
-    // Membuat tab secara manual
-    const tabControls = document.createElement("div");
-    tabControls.className = "tab-controls tabs-large tabs-rounded";
-    tabControls.setAttribute("data-highlight", "bg-dark-dark");
-
-    const tab1 = document.createElement("a");
-    tab1.href = "#";
-    tab1.dataset.active = true;
-    tab1.dataset.bsToggle = "collapse";
-    tab1.dataset.bsTarget = "#tab-1";
-    tab1.innerHTML = "Unsafe Action";
-
-    const tab2 = document.createElement("a");
-    tab2.href = "#";
-    tab2.dataset.bsToggle = "collapse";
-    tab2.dataset.bsTarget = "#tab-2";
-    tab2.innerHTML = "Compromised Action";
-
-    tabControls.appendChild(tab1);
-    tabControls.appendChild(tab2);
-
-    tabContainer.appendChild(tabControls);
-
-    // Membuat card container
-    const cardCollapse = document.createElement("div");
-    cardCollapse.className = "collapse";
-    cardCollapse.id = `tab-${category.replace(/\s+/g, "-").toLowerCase()}`;
-    cardContainer.appendChild(cardCollapse);
-
-    // Menambahkan kelas "show" ke tab pertama untuk menampilkannya secara otomatis
-    if (tabContainer.children.length === 1) {
-      tab1.classList.add("show");
-      cardCollapse.classList.add("show");
-    }
-
-    // Menampilkan laporan dalam card container
-    if (Array.isArray(data)) {
-      data.forEach((report) => {
-        const newCard = createReportCard(report, category);
-        cardCollapse.appendChild(newCard);
-      });
-    } else if (data && typeof data === "object") {
-      // Jika data adalah objek, membuat satu card
-      const newCard = createReportCard(data, category);
-      cardCollapse.appendChild(newCard);
+const createTabAndDisplayReports = async (category, tabContainerId, cardContainerId) => {
+    let targetURL;
+    if (category === "Unsafe Action") {
+        targetURL =
+            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
+    } else if (category === "Compromised Action") {
+        targetURL =
+            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
     } else {
-      console.error("Format data tidak didukung:", data);
+        console.error("Kategori tidak valid:", category);
+        return;
     }
-  } catch (error) {
-    console.error("Error fetching or processing data:", error);
-  }
+
+    try {
+        const response = await fetch(targetURL);
+        const data = await response.json();
+
+        const tabContainer = document.getElementById(tabContainerId);
+        const cardContainer = document.getElementById(cardContainerId);
+
+        // Cek apakah tab dengan kategori yang sama sudah ada
+        const existingTab = tabContainer.querySelector(`[data-category="${category}"]`);
+        if (!existingTab) {
+            // Jika tidak, buat tab baru
+            createTabAndDisplayReports(category, "tab-controls", "cardContainer");
+        }
+
+        // Membuat card container
+        const cardCollapse = document.createElement("div");
+        cardCollapse.className = "collapse";
+        cardCollapse.id = `tab-${category.replace(/\s+/g, '-').toLowerCase()}`;
+        cardContainer.appendChild(cardCollapse);
+
+        // Menambahkan kelas "show" ke tab pertama untuk menampilkannya secara otomatis
+        if (tabContainer.children.length === 1) {
+            existingTab.classList.add("show");
+            cardCollapse.classList.add("show");
+        }
+
+        // Menampilkan laporan dalam card container
+        if (Array.isArray(data)) {
+            data.forEach(report => {
+                const newCard = createReportCard(report, category);
+                cardCollapse.appendChild(newCard);
+            });
+        } else if (data && typeof data === "object") {
+            // Jika data adalah objek, membuat satu card
+            const newCard = createReportCard(data, category);
+            cardCollapse.appendChild(newCard);
+        } else {
+            console.error("Format data tidak didukung:", data);
+        }
+    } catch (error) {
+        console.error("Error fetching or processing data:", error);
+    }
 };
 
 // Memanggil fungsi untuk membuat tab dan menampilkan laporan
 createTabAndDisplayReports("Unsafe Action", "tab-controls", "cardContainer");
-createTabAndDisplayReports(
-  "Compromised Action",
-  "tab-controls",
-  "cardContainer"
-);
+createTabAndDisplayReports("Compromised Action", "tab-controls", "cardContainer");
