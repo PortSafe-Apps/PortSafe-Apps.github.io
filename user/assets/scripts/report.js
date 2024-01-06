@@ -70,7 +70,6 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
-// Fungsi untuk membuat kontrol tab dan menampilkan laporan
 const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -86,7 +85,9 @@ const createTabControlsAndDisplayReports = async () => {
 
   // Menambahkan tautan tab berdasarkan kategori
   const categories = ["Unsafe Action", "Compromised Action"];
-  categories.forEach(async (category, index) => {
+  const tabContentContainer = document.createElement("div");
+
+  await Promise.all(categories.map(async (category, index) => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
@@ -96,9 +97,6 @@ const createTabControlsAndDisplayReports = async () => {
       tabLink.dataset.active = true;
     }
     tabControls.appendChild(tabLink);
-
-    // Membuat container konten tab
-    const tabContentContainer = document.createElement("div");
 
     // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(report => report.category === category);
@@ -110,16 +108,16 @@ const createTabControlsAndDisplayReports = async () => {
       // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
       data.forEach(report => {
-        const newCard = createReportCard(report, reportUrl.category);
+        const newCard = createReportCard(report, category);
         tabContent.appendChild(newCard);
       });
 
       tabContentContainer.appendChild(tabContent);
     }
+  }));
 
-    // Menambahkan container konten tab ke dalam tabContainer
-    tabContainer.appendChild(tabContentContainer);
-  });
+  // Menambahkan container konten tab ke dalam tabContainer
+  tabContainer.appendChild(tabContentContainer);
 
   // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
