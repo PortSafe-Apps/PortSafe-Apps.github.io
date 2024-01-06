@@ -125,12 +125,11 @@ const createTabControls = () => {
   tabContainer.appendChild(tabControlsContainer);
 };
 
-// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
-    { url: "https://your-api-url-for-unsafe-action-reports", category: "Unsafe Action" },
-    { url: "https://your-api-url-for-compromised-action-reports", category: "Compromised Action" }
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
     // Add more URLs and categories as needed
   ];
 
