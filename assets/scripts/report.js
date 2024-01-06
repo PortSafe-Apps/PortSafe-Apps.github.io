@@ -44,21 +44,16 @@ const getUserReportsByCategory = async (url, category) => {
                 // Memproses dan menampilkan data laporan dalam tab
                 processReportData(data.data, category);
             } else {
-                console.error(
-                    "Respon server:",
-                    data.message || "Data tidak dapat ditemukan"
-                );
+                console.error("Respon server:", data.message || "Data tidak dapat ditemukan");
             }
         } else {
             console.error("Kesalahan HTTP:", response.status);
         }
     } catch (error) {
-        console.error(
-            "Error:",
-            error.message || "Terjadi kesalahan yang tidak diketahui"
-        );
+        console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
     }
 };
+
 
 // Fungsi untuk memproses dan menampilkan data laporan dalam tab
 const processReportData = (data, category) => {
