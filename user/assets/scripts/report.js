@@ -70,7 +70,6 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
-// Fungsi untuk membuat kontrol tab dan menampilkan laporan
 const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -100,14 +99,10 @@ const createTabControlsAndDisplayReports = async () => {
 
     // Membuat container konten tab
     const tabContentContainer = document.createElement("div");
+    tabContentContainer.id = `tab-${index + 1}`; // Set the id for the tab content container
 
     // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(report => report.category === category);
-    if (filteredReports.length === 0) {
-      console.error(`Tidak ada URL untuk kategori ${category}`);
-      continue; // Lanjut ke iterasi selanjutnya jika tidak ada URL
-    }
-
     for (const [urlIndex, reportUrl] of filteredReports.entries()) {
       const tabContent = document.createElement("div");
       tabContent.className = "collapse";
@@ -115,10 +110,6 @@ const createTabControlsAndDisplayReports = async () => {
 
       // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
-      if (data.length === 0) {
-        console.error(`Tidak ada data dari URL ${reportUrl.url}`);
-      }
-
       data.forEach(report => {
         const newCard = createReportCard(report, category);
         tabContent.appendChild(newCard);
