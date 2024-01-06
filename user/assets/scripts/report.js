@@ -125,6 +125,13 @@ const createTabControls = () => {
   tabContainer.appendChild(tabControlsContainer);
 };
 
+// Fungsi untuk membersihkan konten tab sebelum menambahkan yang baru
+const clearTabContent = (tabContainerId) => {
+  const tabContainer = document.getElementById(tabContainerId);
+  tabContainer.innerHTML = "";
+};
+
+// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
@@ -166,6 +173,10 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
+          
+          // Membersihkan konten tab sebelum menambahkan yang baru
+          clearTabContent("tab-container");
+
           // Memproses dan menampilkan data laporan dalam tab
           createTabAndDisplayReports(data, reportUrl.category, "tab-container");
         } else {
