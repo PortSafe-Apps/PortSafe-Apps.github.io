@@ -1,3 +1,6 @@
+
+
+User
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -85,25 +88,38 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   cardMargin.className = "mt-3";
   tabContentContainer.appendChild(cardMargin);
 
-  // Create container for reports
-  const reportsContainer = document.createElement("div");
+  // Create separate containers for Unsafe Action and Compromised Action
+  const unsafeContainer = document.createElement("div");
+  unsafeContainer.className = "collapse";
+  unsafeContainer.id = `tab-unsafe`;
+  const compromisedContainer = document.createElement("div");
+  compromisedContainer.className = "collapse show"; // Make the Compromised Action tab active by default
+  compromisedContainer.id = `tab-compromised`;
 
-  // Iterate over each report
-  data.forEach((report, index) => {
-    if (report.category === category) {
+  // Check if the category is "Unsafe Action" and populate the corresponding container
+  if (category === "Unsafe Action") {
+    // Iterate over each report
+    data.forEach((report, index) => {
+      // Create card for each report
       const newCard = createReportCard(report, category, index);
-      reportsContainer.appendChild(newCard);
-    }
-  });
+      unsafeContainer.appendChild(newCard);
+    });
+  } else if (category === "Compromised Action") {
+    // Iterate over each report
+    data.forEach((report, index) => {
+      // Create card for each report
+      const newCard = createReportCard(report, category, index);
+      compromisedContainer.appendChild(newCard);
+    });
+  }
 
-  // Append the reports container to the tab content container
-  tabContentContainer.appendChild(reportsContainer);
-
-  // Append the reports container to the tab content container
-  tabContentContainer.appendChild(reportsContainer);
+  // Append the containers to the tab content container
+  tabContentContainer.appendChild(unsafeContainer);
+  tabContentContainer.appendChild(compromisedContainer);
 
   tabContainer.appendChild(tabContentContainer);
 };
+
 
 const createTabControls = () => {
   const tabContainerId = "tab-container";
@@ -153,7 +169,7 @@ const getUserReportsByCategoryAndGroup = async () => {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
       category: "Compromised Action",
     },
-    // Tambahkan URL dan kategori lain sesuai kebutuhan
+    // Add more URLs and categories as needed
   ];
 
   // Mendapatkan token dari cookie
@@ -189,7 +205,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          // Memproses dan menampilkan data laporan dalam tab sesuai kategori
+          // Memproses dan menampilkan data laporan dalam tab
           createTabAndDisplayReports(
             data,
             reportUrl.category,
@@ -217,8 +233,8 @@ const getUserReportsByCategoryAndGroup = async () => {
   }
 };
 
-// Panggil fungsi untuk membuat kontrol tab dan menampilkan laporan
+// Call the function to create tab controls and display reports
 createTabControls();
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan
+// Call the function to get and display reports
 getUserReportsByCategoryAndGroup();
