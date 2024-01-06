@@ -90,8 +90,9 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   const unsafeContainer = document.createElement("div");
   unsafeContainer.className = "collapse";
   unsafeContainer.id = `tab-unsafe`;
+
   const compromisedContainer = document.createElement("div");
-  compromisedContainer.className = "collapse show"; // Make the Compromised Action tab active by default
+  compromisedContainer.className = "collapse";
   compromisedContainer.id = `tab-compromised`;
 
   // Check if the category is "Unsafe Action" and populate the corresponding container
@@ -118,54 +119,18 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   tabContainer.appendChild(tabContentContainer);
 };
 
-
-const createTabControls = () => {
-  const tabContainerId = "tab-container";
-  const tabContainer = document.getElementById(tabContainerId);
-
-  // Create container for tab controls
-  const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
-
-  // Create tab controls
-  const tabControls = document.createElement("div");
-  tabControls.className = "tab-controls tabs-large tabs-rounded";
-  tabControls.dataset.highlight = "bg-dark-dark";
-
-  // Add tab links based on categories
-  const categories = ["Unsafe Action", "Compromised Action"];
-  categories.forEach((category, index) => {
-    const tabLink = document.createElement("a");
-    tabLink.href = "#";
-    tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${category.toLowerCase()}`;
-    tabLink.innerHTML = category;
-    if (index === 0) {
-      tabLink.dataset.active = true;
-    }
-    tabControls.appendChild(tabLink);
-  });
-
-  tabControlsContainer.appendChild(tabControls);
-
-  // Add a margin above the tabs
-  const tabsMargin = document.createElement("div");
-  tabsMargin.className = "mt-3";
-  tabContainer.appendChild(tabsMargin);
-
-  tabContainer.appendChild(tabControlsContainer);
-};
-
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
       category: "Unsafe Action",
+      tabId: "unsafe",
     },
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
       category: "Compromised Action",
+      tabId: "compromised",
     },
     // Add more URLs and categories as needed
   ];
