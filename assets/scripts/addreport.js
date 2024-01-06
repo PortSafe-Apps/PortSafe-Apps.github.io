@@ -38,6 +38,14 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+const showAlert = (message, type = 'success') => {
+  Swal.fire({
+    icon: type,
+    text: message,
+    showConfirmButton: true,
+  });
+};
+
   const insertObservationReport = async (event) => {
     event.preventDefault();
   
