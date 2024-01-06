@@ -1,4 +1,3 @@
-// File Upload
 // Fungsi untuk menghasilkan angka acak antara 1 dan 1000
 function generateRandomID() {
   return Math.floor(Math.random() * 1000) + 1;

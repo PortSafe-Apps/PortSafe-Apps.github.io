@@ -13,18 +13,18 @@ function getTokenFromCookies(cookieName) {
 // Fungsi untuk mendapatkan laporan berdasarkan kategori
 const getUserReportsByCategory = async (url, category) => {
     const token = getTokenFromCookies("Login");
-
+    
     if (!token) {
         Swal.fire({
-            icon: "warning",
-            title: "Error Autentikasi",
-            text: "Anda belum login!",
+          icon: "warning",
+          title: "Authentication Error",
+          text: "Kamu Belum Login!",
         }).then(() => {
-            window.location.href = "https://portsafe-apps.github.io/";
+          window.location.href = "https://portsafe-apps.github.io/";
         });
         return;
-    }
-
+      }
+    
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
 
@@ -59,32 +59,10 @@ const getUserReportsByCategory = async (url, category) => {
 // Fungsi untuk memproses dan menampilkan data laporan dalam tab
 const processReportData = (data, category) => {
     // Menyesuaikan struktur HTML sesuai dengan kebutuhan
-    const tabContainer = document.getElementById("tab-container");
-    const tabControlsContainer = document.getElementById("tab-controls");
+    const tabContainerId = "tab-container";
 
-    // Membuat card container
-    const cardCollapse = document.createElement("div");
-    cardCollapse.className = "collapse";
-    cardCollapse.id = `tab-${category.toLowerCase().replace(" ", "-")}`;
-
-    // Menampilkan laporan dalam card container
-    data.forEach(report => {
-        const newCard = createReportCard(report, category);
-        cardCollapse.appendChild(newCard);
-    });
-
-    // Menambahkan card container ke tab content
-    tabContainer.appendChild(cardCollapse);
-
-    // Membuat tab link
-    const tabLink = document.createElement("a");
-    tabLink.href = "#";
-    tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${category.toLowerCase().replace(" ", "-")}`;
-    tabLink.innerHTML = category;
-
-    // Menambahkan tab link ke tab controls
-    tabControlsContainer.appendChild(tabLink);
+    // Membuat tab baru dan menampilkan laporan
+    createTabAndDisplayReports(data, category, tabContainerId);
 };
 
 // Fungsi untuk membuat kartu laporan
@@ -98,12 +76,10 @@ const createReportCard = (report, category) => {
 
     // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
     const locationName = report.location ? report.location.locationName : "Unknown Location";
-    const typeName =
-    report.typeDangerousActions &&
-    report.typeDangerousActions.length > 0 &&
-    report.typeDangerousActions[0].subTypes &&
-    report.typeDangerousActions[0].subTypes.length > 0
-        ? report.typeDangerousActions[0].subTypes.map((subType) => subType.typeName).join(", ")
+    const typeName = report.typeDangerousActions && report.typeDangerousActions.length > 0 &&
+        report.typeDangerousActions[0].subTypes && report.typeDangerousActions[0].subTypes.length > 0 &&
+        report.typeDangerousActions[0].subTypes[0].typeName
+        ? report.typeDangerousActions[0].subTypes[0].typeName
         : "Unknown Type";
     const userName = report.user ? report.user.nama : "Unknown User";
 
@@ -113,7 +89,7 @@ const createReportCard = (report, category) => {
             <div class="d-flex">
                 <div>
                     <h4>${report.reportid}</h4>
-                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
+                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
                 </div>
                 <div class="ms-auto align-self-center">
                     ${statusBadge}
@@ -138,6 +114,61 @@ const createReportCard = (report, category) => {
     return newCard;
 };
 
+// Fungsi untuk membuat tab dan menampilkan laporan
+const createTabAndDisplayReports = async (data, category, tabContainerId) => {
+    const tabContainer = document.getElementById(tabContainerId);
+
+    // Membuat tab controls
+    const tabControlsContainer = document.createElement("div");
+    tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
+
+    const tabControls = document.createElement("div");
+    tabControls.className = "tab-controls tabs-large tabs-rounded";
+    tabControls.dataset.highlight = "bg-dark-dark";
+
+    // Menambahkan tab controls sesuai dengan kategori
+    const tabLinks = [];
+    const tabContents = [];
+    data.forEach((report, index) => {
+        const tabLinkId = `tab-${index + 1}`;
+        const tabContentId = `tab-content-${index + 1}`;
+
+        // Membuat tab link
+        const tabLink = document.createElement("a");
+        tabLink.href = "#";
+        tabLink.dataset.bsToggle = "collapse";
+        tabLink.dataset.bsTarget = `#${tabContentId}`;
+        tabLink.innerHTML = category;
+        if (index === 0) {
+            tabLink.dataset.active = true;
+        }
+        tabControls.appendChild(tabLink);
+        tabLinks.push(tabLink);
+
+        // Membuat tab content
+        const tabContent = document.createElement("div");
+        tabContent.className = "collapse show";
+        tabContent.id = tabContentId;
+
+        const cardContainer = document.createElement("div");
+        cardContainer.className = "mt-3";
+
+        // Menampilkan laporan dalam card container
+        const newCard = createReportCard(report, category);
+        cardContainer.appendChild(newCard);
+        tabContent.appendChild(cardContainer);
+        tabContents.push(tabContent);
+    });
+
+    tabControlsContainer.appendChild(tabControls);
+    tabContainer.appendChild(tabControlsContainer);
+
+    // Menambahkan tab contents ke tabContainer
+    tabContents.forEach(tabContent => {
+        tabContainer.appendChild(tabContent);
+    });
+};
+
 // Fungsi untuk membuat tab controls
 const createTabControls = () => {
     const tabContainerId = "tab-container";
@@ -152,7 +183,7 @@ const createTabControls = () => {
         const tabLink = document.createElement("a");
         tabLink.href = "#";
         tabLink.dataset.bsToggle = "collapse";
-        tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+        tabLink.dataset.bsTarget = `#tab-content-${index + 1}`;
         tabLink.innerHTML = category;
         if (index === 0) {
             tabLink.dataset.active = true;

@@ -89,9 +89,15 @@ const getallUserReportsWithToken = async () => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
-        console.error('Authentication Error: You are not logged in!');
+        Swal.fire({
+          icon: "warning",
+          title: "Authentication Error",
+          text: "Kamu Belum Login!",
+        }).then(() => {
+          window.location.href = "https://portsafe-apps.github.io/";
+        });
         return;
-    }
+      }
 
     const url1 = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser';
     const url2 = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
