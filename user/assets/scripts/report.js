@@ -13,7 +13,7 @@ function getTokenFromCookies(cookieName) {
 // Fungsi untuk membuat kartu laporan
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
-  newCard.className = "card card-style";
+  newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
   // Menambahkan badge status untuk kategori "Compromised Action"
