@@ -10,65 +10,65 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk membuat kartu laporan
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
+  // Menambahkan badge kategori "Unsafe" atau "Compromised"
+  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'danger' : 'success'} text-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
     category === "Compromised Action"
-      ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
+      ? `<span class="badge bg-success text-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
       : "";
-
-  // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
     ? report.location.locationName
-    : "Unknown Location";
+    : "Lokasi Tidak Diketahui";
 
   // Menangani properti yang mungkin undefined
   const typeName =
-  (report.typeDangerousActions &&
-  report.typeDangerousActions.length > 0 &&
-  report.typeDangerousActions[0].typeName) || "Unknown Type";
+    (report.typeDangerousActions &&
+      report.typeDangerousActions.length > 0 &&
+      report.typeDangerousActions[0].typeName) || "Jenis Tidak Diketahui";
 
-  const userName = (report.user && report.user.nama) || "Unknown User";
+  const userName = (report.user && report.user.nama) || "Pengguna Tidak Diketahui";
 
   // Sesuaikan struktur kartu dengan data yang Anda miliki
   newCard.innerHTML = `
-        <div class="content">
-            <div class="d-flex">
-                <div>
-                    <h4>${report.reportid}</h4>
-                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
-                </div>
-                <div class="ms-auto align-self-center">
-                ${categoryBadge}   
-                ${statusBadge}      
-                </div>
+    <div class="content">
+        <div class="d-flex">
+            <div>
+                <h4>${report.reportid}</h4>
+                <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
             </div>
-            <div class="divider bg-highlight mt-0 mb-2"></div>
-            <p class="mb-0 color-highlight">
-                Jenis Ketidaksesuaian
-            </p>
-            <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
-            <div class="row mb-n2 color-theme">
-                <div class="col-5 font-11">
-                    <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
-                </div>
-                <div class="col-7 font-11">
-                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
-                </div>
+            <div class="ms-auto align-self-center">
+                ${categoryBadge}
+                ${statusBadge}
             </div>
         </div>
-    `;
+        <div class="divider bg-highlight mt-0 mb-2"></div>
+        <p class="mb-0 color-highlight">
+            Jenis Ketidaksesuaian
+        </p>
+        <span class="badge bg-highlight text-white font-10 mb-1 rounded-s">${typeName}</span>
+        <div class="row mb-n2 color-theme">
+            <div class="col-5 font-11">
+                <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
+            </div>
+            <div class="col-7 font-11">
+                <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
+            </div>
+        </div>
+    </div>
+  `;
 
   return newCard;
 };
+
 
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
