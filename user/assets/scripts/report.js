@@ -92,17 +92,18 @@ const createTabControlsAndDisplayReports = async () => {
     const category = categories[index];
 
     const tabLink = document.createElement("a");
-    tabLink.href = "#";
-    tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+    tabLink.dataset.bsToggle = "tab";
+    tabLink.href = `#tab-${index + 1}`;
     tabLink.innerHTML = category;
+    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
     if (index === 0) {
-      tabLink.dataset.active = true;
+      tabLink.classList.add("active");
     }
     tabControls.appendChild(tabLink);
 
     // Membuat container konten tab
     const tabContentContainer = document.createElement("div");
+    tabContentContainer.className = "tab-content";
 
     // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(
@@ -112,7 +113,9 @@ const createTabControlsAndDisplayReports = async () => {
       const reportUrl = filteredReports[urlIndex];
 
       const tabContent = document.createElement("div");
-      tabContent.className = "collapse";
+      tabContent.className = `tab-pane fade${
+        index === 0 ? " show active" : ""
+      }`;
       tabContent.id = `tab-${index + 1}-url-${urlIndex + 1}`;
 
       // Mengambil dan membuat kartu untuk setiap laporan
