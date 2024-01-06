@@ -29,15 +29,20 @@ const createReportCard = (report, category, index) => {
   const locationName = report.location
     ? report.location.locationName
     : "Unknown Location";
+  
+  // Menangani properti yang mungkin undefined
   const typeName =
-    report.typeDangerousActions &&
+    (report.typeDangerousActions &&
     report.typeDangerousActions.length > 0 &&
     report.typeDangerousActions[0].subTypes &&
     report.typeDangerousActions[0].subTypes.length > 0 &&
-    report.typeDangerousActions[0].subTypes[0].typeName
-      ? report.typeDangerousActions[0].subTypes[0].typeName
-      : "Unknown Type";
-  const userName = report.user ? report.user.nama : "Unknown User";
+    report.typeDangerousActions[0].subTypes[0].typeName) || "Unknown Type";
+
+  const userName = (report.user && report.user.nama) || "Unknown User";
+  
+  // Menangani properti yang mungkin undefined
+  const reportDate = report.date || "Unknown Date";
+  const reportTime = report.time || "Unknown Time";
 
   // Sesuaikan struktur kartu dengan data yang Anda miliki
   newCard.innerHTML = `
@@ -62,7 +67,7 @@ const createReportCard = (report, category, index) => {
                     <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
                 </div>
                 <div class="col-7 font-11">
-                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
+                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${reportDate} <i class="ms-4 far fa-clock"></i> ${reportTime}</p>
                 </div>
             </div>
         </div>
@@ -70,6 +75,7 @@ const createReportCard = (report, category, index) => {
 
   return newCard;
 };
+
 
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
@@ -142,8 +148,8 @@ const createTabControls = () => {
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action", tabId: 0 },
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action", tabId: 1 }
     // Add more URLs and categories as needed
   ];
 
@@ -181,7 +187,7 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(data, reportUrl.category, "tab-container", reportUrl.category === "Unsafe Action" ? 0 : 1);
+          createTabAndDisplayReports(data, reportUrl.category, "tab-container", reportUrl.tabId);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
