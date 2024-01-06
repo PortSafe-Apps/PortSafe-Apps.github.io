@@ -29,20 +29,14 @@ const createReportCard = (report, category, index) => {
   const locationName = report.location
     ? report.location.locationName
     : "Unknown Location";
-  
+
   // Menangani properti yang mungkin undefined
   const typeName =
-    (report.typeDangerousActions &&
-    report.typeDangerousActions.length > 0 &&
-    report.typeDangerousActions[0].subTypes &&
-    report.typeDangerousActions[0].subTypes.length > 0 &&
-    report.typeDangerousActions[0].subTypes[0].typeName) || "Unknown Type";
+  (report.typeDangerousActions &&
+  report.typeDangerousActions.length > 0 &&
+  report.typeDangerousActions[0].typeName) || "Unknown Type";
 
   const userName = (report.user && report.user.nama) || "Unknown User";
-  
-  // Menangani properti yang mungkin undefined
-  const reportDate = report.date || "Unknown Date";
-  const reportTime = report.time || "Unknown Time";
 
   // Sesuaikan struktur kartu dengan data yang Anda miliki
   newCard.innerHTML = `
@@ -67,7 +61,7 @@ const createReportCard = (report, category, index) => {
                     <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
                 </div>
                 <div class="col-7 font-11">
-                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${reportDate} <i class="ms-4 far fa-clock"></i> ${reportTime}</p>
+                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
                 </div>
             </div>
         </div>
@@ -75,7 +69,6 @@ const createReportCard = (report, category, index) => {
 
   return newCard;
 };
-
 
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
@@ -90,18 +83,30 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   cardMargin.className = "mt-3";
   tabContentContainer.appendChild(cardMargin);
 
-  // Add tab contents based on categories
-  data.forEach((report, index) => {
-    const tabContent = document.createElement("div");
-    tabContent.className = `collapse ${activeTab === index ? 'show' : ''}`;
-    tabContent.id = `tab-${index + 1}`;
+  // Create separate containers for Unsafe Action and Compromised Action
+  const unsafeContainer = document.createElement("div");
+  unsafeContainer.className = "collapse";
+  unsafeContainer.id = `tab-unsafe`;
+  const compromisedContainer = document.createElement("div");
+  compromisedContainer.className = "collapse";
+  compromisedContainer.id = `tab-compromised`;
 
+  // Iterate over each report
+  data.forEach((report, index) => {
     // Create card for each report
     const newCard = createReportCard(report, category, index);
-    tabContent.appendChild(newCard);
 
-    tabContentContainer.appendChild(tabContent);
+    // Decide which container to add the card based on the category
+    if (category === "Unsafe Action") {
+      unsafeContainer.appendChild(newCard);
+    } else if (category === "Compromised Action") {
+      compromisedContainer.appendChild(newCard);
+    }
   });
+
+  // Append the containers to the tab content container
+  tabContentContainer.appendChild(unsafeContainer);
+  tabContentContainer.appendChild(compromisedContainer);
 
   tabContainer.appendChild(tabContentContainer);
 };
@@ -126,7 +131,7 @@ const createTabControls = () => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+    tabLink.dataset.bsTarget = `#tab-${category.toLowerCase()}`;
     tabLink.innerHTML = category;
     if (index === 0) {
       tabLink.dataset.active = true;
@@ -148,8 +153,8 @@ const createTabControls = () => {
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action", tabId: 0 },
-    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action", tabId: 1 }
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
     // Add more URLs and categories as needed
   ];
 
