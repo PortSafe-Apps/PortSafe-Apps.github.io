@@ -38,15 +38,13 @@ const getUserReportsByCategory = async (url, category) => {
         const response = await fetch(url, requestOptions);
 
         if (response.ok) {
-            const responseData = await response.json();
+            const data = await response.json();
 
-            if (responseData.status === 200) {
-                // Menggunakan responseData.data sebagai data laporan
-                const data = responseData.data;
+            if (data.status === 200) {
                 // Memproses dan menampilkan data laporan dalam tab
-                processReportData(data, category);
+                processReportData(data.data, category);
             } else {
-                console.error("Respon server:", responseData.message || "Data tidak dapat ditemukan");
+                console.error("Respon server:", data.message || "Data tidak dapat ditemukan");
             }
         } else {
             console.error("Kesalahan HTTP:", response.status);
@@ -56,72 +54,7 @@ const getUserReportsByCategory = async (url, category) => {
     }
 };
 
-// Fungsi untuk memproses dan menampilkan data laporan dalam tab
-const processReportData = (data, category) => {
-    // Menyesuaikan struktur HTML sesuai dengan kebutuhan
-    const tabContainerId = "tab-controls";
-    const cardContainerId = "cardContainer";
-
-    // Memeriksa apakah tab untuk kategori sudah ada
-    const existingTab = document.querySelector(`#${tabContainerId} a[data-category="${category}"]`);
-    if (!existingTab) {
-        // Jika tab belum ada, membuat tab baru dan menampilkan laporan
-        createTabAndDisplayReports(category, tabContainerId, cardContainerId);
-    } else {
-        // Jika tab sudah ada, mengambil data baru dan memperbarui tab yang ada
-        fetchDataAndCreateCards(data, category);
-    }
-};
-
-// Fungsi untuk membuat kartu laporan
-const createReportCard = (report, category) => {
-    const newCard = document.createElement("div");
-    newCard.className = "card card-style";
-
-    // Menambahkan badge status untuk kategori "Compromised Action"
-    const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
-
-    // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
-    const locationName = report.location ? report.location.locationName : "Unknown Location";
-    const typeName = report.typeDangerousActions && report.typeDangerousActions.length > 0 &&
-        report.typeDangerousActions[0].subTypes && report.typeDangerousActions[0].subTypes.length > 0 &&
-        report.typeDangerousActions[0].subTypes[0].typeName
-        ? report.typeDangerousActions[0].subTypes[0].typeName
-        : "Unknown Type";
-    const userName = report.user ? report.user.nama : "Unknown User";
-
-    // Sesuaikan struktur kartu dengan data yang Anda miliki
-    newCard.innerHTML = `
-      <div class="content">
-          <div class="d-flex">
-              <div>
-                  <h4>${report.reportid}</h4>
-                  <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
-              </div>
-              <div class="ms-auto align-self-center">
-                  ${statusBadge}
-              </div>
-          </div>
-          <div class="divider bg-highlight mt-0 mb-2"></div>
-          <p class="mb-0 color-highlight">
-              Jenis Ketidaksesuaian
-          </p>
-          <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
-          <div class="row mb-n2 color-theme">
-              <div class="col-5 font-11">
-                  <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
-              </div>
-              <div class="col-7 font-11">
-                  <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
-              </div>
-          </div>
-      </div>
-    `;
-
-    return newCard;
-};
-
-// Fungsi untuk membuat tab dan menampilkan laporan
+// Fungsi untuk mendapatkan data dari server dan membuat tab serta menampilkan laporan
 const createTabAndDisplayReports = async (category, tabContainerId, cardContainerId) => {
     let targetURL;
     if (category === "Unsafe Action") {
@@ -146,16 +79,16 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
         const tabLink = document.createElement("a");
         tabLink.href = "#";
         tabLink.dataset.bsToggle = "collapse";
-        tabLink.dataset.bsTarget = `#tab-${category.replace(/\s+/g, '-').toLowerCase()}`; // Menyesuaikan id tab
+        tabLink.dataset.bsTarget = `#tab-${category.replace(/\s+/g, '-').toLowerCase()}`;
         tabLink.innerHTML = category;
-        tabLink.classList.add("nav-link"); // Menambahkan kelas nav-link untuk tautan tab
-        tabLink.dataset.category = category; // Menambahkan dataset untuk kategori
+        tabLink.classList.add("nav-link");
+        tabLink.dataset.category = category;
         tabContainer.appendChild(tabLink);
 
         // Membuat card container
         const cardCollapse = document.createElement("div");
         cardCollapse.className = "collapse";
-        cardCollapse.id = `tab-${category.replace(/\s+/g, '-').toLowerCase()}`; // Menyesuaikan id tab
+        cardCollapse.id = `tab-${category.replace(/\s+/g, '-').toLowerCase()}`;
         cardContainer.appendChild(cardCollapse);
 
         // Menambahkan kelas "show" ke tab pertama untuk menampilkannya secara otomatis
@@ -182,26 +115,54 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
     }
 };
 
-// Fungsi untuk memanggil fungsi createTabAndDisplayReports sesuai dengan kategori
-const fetchDataAndCreateCards = async (data, category) => {
-    const tabContainerId = "tab-controls";
-    const cardContainerId = "cardContainer";
-    createTabAndDisplayReports(category, tabContainerId, cardContainerId);
+// Fungsi untuk membuat kartu laporan
+const createReportCard = (report, category) => {
+    const newCard = document.createElement("div");
+    newCard.className = "card card-style";
+
+    // Menambahkan badge status untuk kategori "Compromised Action"
+    const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
+
+    // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
+    const locationName = report.location ? report.location.locationName : "Unknown Location";
+    const typeName = report.typeDangerousActions && report.typeDangerousActions.length > 0 &&
+        report.typeDangerousActions[0].subTypes && report.typeDangerousActions[0].subTypes.length > 0 &&
+        report.typeDangerousActions[0].subTypes[0].typeName
+        ? report.typeDangerousActions[0].subTypes[0].typeName
+        : "Unknown Type";
+    const userName = report.user ? report.user.nama : "Unknown User";
+
+    // Sesuaikan struktur kartu dengan data yang Anda miliki
+    newCard.innerHTML = `
+        <div class="content">
+            <div class="d-flex">
+                <div>
+                    <h4>${report.reportid}</h4>
+                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
+                </div>
+                <div class="ms-auto align-self-center">
+                    ${statusBadge}
+                </div>
+            </div>
+            <div class="divider bg-highlight mt-0 mb-2"></div>
+            <p class="mb-0 color-highlight">
+                Jenis Ketidaksesuaian
+            </p>
+            <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
+            <div class="row mb-n2 color-theme">
+                <div class="col-5 font-11">
+                    <p class="color-highlight font-11"><i class="fa fa-user"></i>${userName}</p>
+                </div>
+                <div class="col-7 font-11">
+                    <p class="color-highlight font-11"><i class="far fa-calendar"></i>${report.date} <i class="ms-4 far fa-clock"></i>${report.time}</p>
+                </div>
+            </div>
+        </div>
+    `;
+
+    return newCard;
 };
 
-// Fungsi untuk memulai aplikasi
-const startApp = async () => {
-    // Mengganti kategori yang diinginkan (Unsafe Action atau Compromised Action)
-    const category = "Unsafe Action";
-    // URL yang sesuai dengan kategori yang dipilih
-    const url =
-        category === "Unsafe Action"
-            ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser"
-            : "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
-
-    // Memanggil fungsi untuk mendapatkan dan menampilkan laporan
-    getUserReportsByCategory(url, category);
-};
-
-// Memanggil fungsi untuk memulai aplikasi
-startApp();
+// Memanggil fungsi untuk membuat tab dan menampilkan laporan
+createTabAndDisplayReports("Unsafe Action", "tab-controls", "cardContainer");
+createTabAndDisplayReports("Compromised Action", "tab-controls", "cardContainer");
