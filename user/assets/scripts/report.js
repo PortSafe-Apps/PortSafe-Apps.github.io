@@ -133,8 +133,8 @@ const createReportCard = (report, category) => {
                     <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
                 </div>
                 <div class="ms-auto align-self-center">
-                ${categoryBadge}   
-                ${statusBadge}      
+                    ${categoryBadge}
+                    ${statusBadge}
                 </div>
             </div>
             <div class="divider bg-highlight mt-0 mb-2"></div>
@@ -222,6 +222,9 @@ const createTabControls = () => {
 
   // Add tab controls based on categories
   const categories = ["Unsafe Action", "Compromised Action"];
+  const tabGroup = document.createElement("div");
+  tabGroup.id = "tab-group-1";
+  tabGroup.className = "card bg-transparent mb-0";
   categories.forEach((category, index) => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
@@ -231,8 +234,9 @@ const createTabControls = () => {
     if (index === 0) {
       tabLink.dataset.active = true;
     }
-    tabControlsContainer.appendChild(tabLink);
+    tabGroup.appendChild(tabLink);
   });
+  tabControlsContainer.appendChild(tabGroup);
 };
 
 // Call the function to create tab controls and display reports
