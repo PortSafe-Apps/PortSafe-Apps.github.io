@@ -11,7 +11,7 @@ function getTokenFromCookies(cookieName) {
 }
 
 // Fungsi untuk mendapatkan laporan berdasarkan kategori
-const getUserReportsByCategory = async (category) => {
+const getUserReportsByCategory = async (url, category) => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
@@ -25,18 +25,6 @@ const getUserReportsByCategory = async (category) => {
         return;
     }
 
-    let targetURL;
-    if (category === "Unsafe Action") {
-        targetURL =
-            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
-    } else if (category === "Compromised Action") {
-        targetURL =
-            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
-    } else {
-        console.error("Kategori tidak valid:", category);
-        return;
-    }
-
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
 
@@ -47,7 +35,7 @@ const getUserReportsByCategory = async (category) => {
     };
 
     try {
-        const response = await fetch(targetURL, requestOptions);
+        const response = await fetch(url, requestOptions);
 
         if (response.ok) {
             const data = await response.json();
@@ -89,53 +77,47 @@ const processReportData = (data, category) => {
     }
 };
 
-// Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Unsafe Action"
-getUserReportsByCategory("Unsafe Action");
-
-// Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Compromised Action"
-getUserReportsByCategory("Compromised Action");
-
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (url, category, tabContainerId, cardContainerId) => {
     try {
-      const response = await fetch(url);
-      const data = await response.json();
-  
-      const tabContainer = document.getElementById(tabContainerId);
-      const cardContainer = document.getElementById(cardContainerId);
-  
-      // Membuat tab
-      const tabLink = document.createElement("a");
-      tabLink.href = "#";
-      tabLink.dataset.bsToggle = "collapse";
-      tabLink.dataset.bsTarget = `#${category}`;
-      tabLink.innerHTML = category;
-      tabContainer.appendChild(tabLink);
-  
-      // Membuat card container
-      const cardCollapse = document.createElement("div");
-      cardCollapse.className = "collapse";
-      cardCollapse.id = category;
-      cardContainer.appendChild(cardCollapse);
-  
-      // Menampilkan laporan dalam card container
-      data.forEach(report => {
-        const newCard = createReportCard(report, category);
-        cardCollapse.appendChild(newCard);
-      });
+        const response = await fetch(url);
+        const data = await response.json();
+
+        const tabContainer = document.getElementById(tabContainerId);
+        const cardContainer = document.getElementById(cardContainerId);
+
+        // Membuat tab
+        const tabLink = document.createElement("a");
+        tabLink.href = "#";
+        tabLink.dataset.bsToggle = "collapse";
+        tabLink.dataset.bsTarget = `#${category}`;
+        tabLink.innerHTML = category;
+        tabContainer.appendChild(tabLink);
+
+        // Membuat card container
+        const cardCollapse = document.createElement("div");
+        cardCollapse.className = "collapse";
+        cardCollapse.id = category;
+        cardContainer.appendChild(cardCollapse);
+
+        // Menampilkan laporan dalam card container
+        data.forEach(report => {
+            const newCard = createReportCard(report, category);
+            cardCollapse.appendChild(newCard);
+        });
     } catch (error) {
-      console.error("Error fetching or processing data:", error);
+        console.error("Error fetching or processing data:", error);
     }
-  };
-  
-  // Fungsi untuk membuat kartu laporan
-  const createReportCard = (report, category) => {
+};
+
+// Fungsi untuk membuat kartu laporan
+const createReportCard = (report, category) => {
     const newCard = document.createElement("div");
     newCard.className = "card card-style";
-  
+
     // Menambahkan badge status untuk kategori "Compromised Action"
     const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
-  
+
     // Sesuaikan struktur kartu dengan data yang Anda miliki
     newCard.innerHTML = `
       <div class="content">
@@ -163,7 +145,12 @@ const createTabAndDisplayReports = async (url, category, tabContainerId, cardCon
           </div>
       </div>
     `;
-  
+
     return newCard;
-  };
-  
+};
+
+// Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Unsafe Action"
+getUserReportsByCategory("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", "Unsafe Action");
+
+// Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Compromised Action"
+getUserReportsByCategory("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", "Compromised Action");
