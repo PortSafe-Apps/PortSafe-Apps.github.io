@@ -10,92 +10,6 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
-const getUserReportsByCategoryAndGroup = async () => {
-  // URL untuk "Unsafe Action"
-  const urlUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
-  
-  // URL untuk "Compromised Action"
-  const urlCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
-
-  // Mendapatkan token dari cookie
-  const token = getTokenFromCookies("Login");
-
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
-
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
-  try {
-    // Mendapatkan laporan untuk "Unsafe Action"
-    const responseUnsafe = await fetch(urlUnsafe, requestOptions);
-    if (responseUnsafe.ok) {
-      const responseDataUnsafe = await responseUnsafe.json();
-
-      if (responseDataUnsafe.status === 200) {
-        const dataUnsafe = responseDataUnsafe.data;
-        // Memproses dan menampilkan data laporan "Unsafe Action" dalam tab
-        processReportData(dataUnsafe, "Unsafe Action");
-      } else {
-        console.error(
-          "Respon server (Unsafe Action):",
-          responseDataUnsafe.message || "Data tidak dapat ditemukan"
-        );
-      }
-    } else {
-      console.error("Kesalahan HTTP (Unsafe Action):", responseUnsafe.status);
-    }
-
-    // Mendapatkan laporan untuk "Compromised Action"
-    const responseCompromised = await fetch(urlCompromised, requestOptions);
-    if (responseCompromised.ok) {
-      const responseDataCompromised = await responseCompromised.json();
-
-      if (responseDataCompromised.status === 200) {
-        const dataCompromised = responseDataCompromised.data;
-        // Memproses dan menampilkan data laporan "Compromised Action" dalam tab
-        processReportData(dataCompromised, "Compromised Action");
-      } else {
-        console.error(
-          "Respon server (Compromised Action):",
-          responseDataCompromised.message || "Data tidak dapat ditemukan"
-        );
-      }
-    } else {
-      console.error("Kesalahan HTTP (Compromised Action):", responseCompromised.status);
-    }
-  } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
-  }
-};
-
-// Fungsi untuk memproses dan menampilkan data laporan dalam tab
-const processReportData = (data, category) => {
-  // Menyesuaikan struktur HTML sesuai dengan kebutuhan
-  const tabContainerId = "tab-group-1";
-
-  // Membuat tab baru dan menampilkan laporan
-  createTabAndDisplayReports(data, category, tabContainerId);
-};
-
 // Fungsi untuk membuat kartu laporan
 const createReportCard = (report, category) => {
   const newCard = document.createElement("div");
@@ -108,7 +22,7 @@ const createReportCard = (report, category) => {
       : "";
 
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'yellow' : 'red'}-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa ${category.toLowerCase() === 'unsafe' ? 'fa-exclamation-triangle' : 'fa-child'}"></i> ${category}</span>`;
+  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
@@ -212,5 +126,102 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   });
 };
 
+// Function to create tab controls
+const createTabControls = () => {
+  const tabContainerId = "tab-container";
+  const tabControlsContainer = document.getElementById(tabContainerId);
+
+  // Remove existing tab controls
+  tabControlsContainer.innerHTML = "";
+
+  // Add tab controls based on categories
+  const categories = ["Unsafe Action", "Compromised Action"];
+  categories.forEach((category, index) => {
+    const tabLink = document.createElement("a");
+    tabLink.href = "#";
+    tabLink.dataset.bsToggle = "collapse";
+    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+    tabLink.innerHTML = category;
+    if (index === 0) {
+      tabLink.dataset.active = true;
+    }
+    tabControlsContainer.appendChild(tabLink);
+  });
+};
+
+// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
+const getUserReportsByCategoryAndGroup = async () => {
+  // URL dan kategori laporan
+  const reportUrls = [
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
+    // Add more URLs and categories as needed
+  ];
+
+  // Mendapatkan token dari cookie
+  const token = getTokenFromCookies("Login");
+
+  if (!token) {
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
+    return;
+  }
+
+  const myHeaders = new Headers();
+  myHeaders.append("Login", token);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  try {
+    // Iterate over each URL and fetch reports
+    for (const reportUrl of reportUrls) {
+      const response = await fetch(reportUrl.url, requestOptions);
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        if (responseData.status === 200) {
+          const data = responseData.data;
+          // Memproses dan menampilkan data laporan dalam tab
+          processReportData(data, reportUrl.category);
+        } else {
+          console.error(
+            `Respon server (${reportUrl.category}):`,
+            responseData.message || "Data tidak dapat ditemukan"
+          );
+        }
+      } else {
+        console.error(`Kesalahan HTTP (${reportUrl.category}):`, response.status);
+      }
+    }
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
+  }
+};
+
+// Fungsi untuk memproses dan menampilkan data laporan dalam tab
+const processReportData = (data, category) => {
+  // Menyesuaikan struktur HTML sesuai dengan kebutuhan
+  const tabContainerId = "tab-container";
+
+  // Membuat tab baru dan menampilkan laporan
+  createTabAndDisplayReports(data, category, tabContainerId);
+};
+
 // Call the function to create tab controls and display reports
+createTabControls();
+
+// Call the function to get and display reports
 getUserReportsByCategoryAndGroup();
