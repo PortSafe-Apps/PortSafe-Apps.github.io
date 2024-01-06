@@ -103,6 +103,11 @@ const createTabControlsAndDisplayReports = async () => {
 
     // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(report => report.category === category);
+    if (filteredReports.length === 0) {
+      console.error(`Tidak ada URL untuk kategori ${category}`);
+      continue; // Lanjut ke iterasi selanjutnya jika tidak ada URL
+    }
+
     for (const [urlIndex, reportUrl] of filteredReports.entries()) {
       const tabContent = document.createElement("div");
       tabContent.className = "collapse";
@@ -110,6 +115,10 @@ const createTabControlsAndDisplayReports = async () => {
 
       // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
+      if (data.length === 0) {
+        console.error(`Tidak ada data dari URL ${reportUrl.url}`);
+      }
+
       data.forEach(report => {
         const newCard = createReportCard(report, category);
         tabContent.appendChild(newCard);
@@ -126,6 +135,7 @@ const createTabControlsAndDisplayReports = async () => {
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
 };
+
 
 // Fungsi untuk mengambil laporan dari URL tertentu
 const fetchReports = async (url) => {
