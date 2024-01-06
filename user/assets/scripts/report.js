@@ -11,9 +11,10 @@ function getTokenFromCookies(cookieName) {
 }
 
 // Fungsi untuk membuat kartu laporan
-const createReportCard = (report, category) => {
+const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style";
+  newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
@@ -90,7 +91,7 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
     tabContent.id = `tab-${index + 1}`;
 
     // Create card for each report
-    const newCard = createReportCard(report, category);
+    const newCard = createReportCard(report, category, index);
     tabContent.appendChild(newCard);
 
     tabContentContainer.appendChild(tabContent);
@@ -106,7 +107,7 @@ const createTabControls = () => {
 
   // Create container for tab controls
   const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3 mt-3";
+  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
 
   // Create tab controls
   const tabControls = document.createElement("div");
