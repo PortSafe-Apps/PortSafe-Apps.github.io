@@ -110,7 +110,7 @@ const createTabControlsAndDisplayReports = async () => {
       // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
       data.forEach(report => {
-        const newCard = createReportCard(report, category);
+        const newCard = createReportCard(report, reportUrl.category);
         tabContent.appendChild(newCard);
       });
 
@@ -124,6 +124,9 @@ const createTabControlsAndDisplayReports = async () => {
   // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
+
+  // Inisialisasi tab setelah tabControlsContainer ditambahkan ke tabContainer
+  initializeTabs();
 };
 
 // Fungsi untuk mengambil laporan dari URL tertentu
@@ -177,6 +180,19 @@ const reportUrls = [
   { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" },
   // Tambahkan URL dan kategori sesuai kebutuhan
 ];
+
+// Fungsi untuk menginisialisasi tab dengan menambahkan event listener
+const initializeTabs = () => {
+  const tabs = document.querySelectorAll('.tab-controls a');
+  tabs.forEach(tab => {
+    tab.addEventListener('click', (event) => {
+      event.preventDefault();
+      const targetId = event.currentTarget.dataset.bsTarget;
+      const targetTab = document.querySelector(targetId);
+      targetTab.classList.toggle('show');
+    });
+  });
+};
 
 // Memanggil fungsi untuk membuat kontrol tab dan menampilkan laporan
 createTabControlsAndDisplayReports();
