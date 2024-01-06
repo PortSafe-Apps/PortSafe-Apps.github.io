@@ -78,20 +78,20 @@ const showAlert = (message, type = 'success') => {
       function getCheckedCheckboxes() {
         var checkboxes = document.querySelectorAll('#checkboxContainer input[type="checkbox"]:checked');
         var checkedValues = [];
-  
+      
         checkboxes.forEach(function (checkbox) {
-          var typeId = checkbox.name;
-          var typeName = checkbox.dataset.typeName;
-  
+          var typeId = checkbox.id.split('_')[0]; // Ekstrak TypeId dari id checkbox
+          var typeName = checkbox.closest('.list-group').querySelector('.font-14').innerText; // Ekstrak TypeName dari ancestor terdekat dengan class 'list-group' dan mencari elemen pertama dengan class 'font-14' di dalamnya
+      
           checkedValues.push({
             TypeId: typeId,
             TypeName: typeName,
             SubTypes: [checkbox.value]
           });
         });
-  
+      
         return checkedValues;
-      }
+      }      
   
       const reportData = {
         Reportid: document.getElementById('nomorPelaporan').textContent,
