@@ -70,77 +70,82 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
-const createTabControlsAndDisplayReports = async () => {
+// Fungsi untuk membuat tab dan menampilkan laporan
+const createTabAndDisplayReports = async (data, category, tabContainerId) => {
+  const tabContainer = document.getElementById(tabContainerId);
+
+  // Create tab content container
+  const tabContentContainer = document.createElement("div");
+
+  // Add tab contents based on categories
+  data.forEach((report, index) => {
+    const tabContent = document.createElement("div");
+    tabContent.className = "collapse";
+    tabContent.id = `tab-${index + 1}`;
+
+    // Create card for each report
+    const newCard = createReportCard(report, category);
+    tabContent.appendChild(newCard);
+    
+    tabContentContainer.appendChild(tabContent);
+  });
+
+  tabContainer.appendChild(tabContentContainer);
+};
+
+// Function to create tab controls
+const createTabControls = () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
 
-  // Membuat container untuk kontrol tab
+  // Create container for tab controls
   const tabControlsContainer = document.createElement("div");
   tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
 
-  // Membuat kontrol tab
+  // Create tab controls
   const tabControls = document.createElement("div");
   tabControls.className = "tab-controls tabs-large tabs-rounded";
   tabControls.dataset.highlight = "bg-dark-dark";
 
-  // Menambahkan tautan tab berdasarkan kategori
+  // Add tab links based on categories
   const categories = ["Unsafe Action", "Compromised Action"];
-  for (let index = 0; index < categories.length; index++) {
-    const category = categories[index];
+  categories.forEach((category, index) => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
     tabLink.dataset.bsTarget = `#tab-${index + 1}`;
     tabLink.innerHTML = category;
     if (index === 0) {
-      tabLink.classList.add('active');
+      tabLink.dataset.active = true;
     }
     tabControls.appendChild(tabLink);
+  });
 
-    // Membuat container konten tab
-    const tabContentContainer = document.createElement("div");
-    tabContentContainer.id = `tab-${index + 1}`; // Set the id for the tab content container
-
-    // Menambahkan konten tab berdasarkan kategori dan URL
-    const filteredReports = reportUrls.filter(report => report.category === category);
-    for (const [urlIndex, reportUrl] of filteredReports.entries()) {
-      const tabContent = document.createElement("div");
-      tabContent.className = "collapse";
-      tabContent.id = `tab-${index + 1}-url-${urlIndex + 1}`;
-
-      // Mengambil dan membuat kartu untuk setiap laporan
-      const data = await fetchReports(reportUrl.url);
-      data.forEach(report => {
-        const newCard = createReportCard(report, category);
-        tabContent.appendChild(newCard);
-      });
-
-      tabContentContainer.appendChild(tabContent);
-    }
-
-    // Menambahkan container konten tab ke dalam tabContainer
-    tabContainer.appendChild(tabContentContainer);
-  }
-
-  // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
 };
 
+// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
+const getUserReportsByCategoryAndGroup = async () => {
+  // URL dan kategori laporan
+  const reportUrls = [
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
+    { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" }
+    // Add more URLs and categories as needed
+  ];
 
-// Fungsi untuk mengambil laporan dari URL tertentu
-const fetchReports = async (url) => {
+  // Mendapatkan token dari cookie
   const token = getTokenFromCookies("Login");
 
   if (!token) {
     Swal.fire({
       icon: "warning",
-      title: "Error Otentikasi",
-      text: "Anda belum login!",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
     }).then(() => {
       window.location.href = "https://portsafe-apps.github.io/";
     });
-    return [];
+    return;
   }
 
   const myHeaders = new Headers();
@@ -153,32 +158,37 @@ const fetchReports = async (url) => {
   };
 
   try {
-    const response = await fetch(url, requestOptions);
+    // Iterate over each URL and fetch reports
+    for (const reportUrl of reportUrls) {
+      const response = await fetch(reportUrl.url, requestOptions);
 
-    if (response.ok) {
-      const responseData = await response.json();
+      if (response.ok) {
+        const responseData = await response.json();
 
-      if (responseData.status === 200) {
-        return responseData.data;
+        if (responseData.status === 200) {
+          const data = responseData.data;
+          // Memproses dan menampilkan data laporan dalam tab
+          createTabAndDisplayReports(data, reportUrl.category, "tab-container");
+        } else {
+          console.error(
+            `Respon server (${reportUrl.category}):`,
+            responseData.message || "Data tidak dapat ditemukan"
+          );
+        }
       } else {
-        console.error(`Respon server (${url}):`, responseData.message || "Data tidak ditemukan");
+        console.error(`Kesalahan HTTP (${reportUrl.category}):`, response.status);
       }
-    } else {
-      console.error(`Kesalahan HTTP (${url}):`, response.status);
     }
   } catch (error) {
-    console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
-
-  return [];
 };
 
-// Report URLs berisi endpoint dan kategori laporan
-const reportUrls = [
-  { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", category: "Unsafe Action" },
-  { url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", category: "Compromised Action" },
-  // Tambahkan URL dan kategori sesuai kebutuhan
-];
+// Call the function to create tab controls and display reports
+createTabControls();
 
-// Memanggil fungsi untuk membuat kontrol tab dan menampilkan laporan
-createTabControlsAndDisplayReports();
+// Call the function to get and display reports
+getUserReportsByCategoryAndGroup();
