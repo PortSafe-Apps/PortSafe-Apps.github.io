@@ -73,12 +73,7 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (
-  data,
-  category,
-  tabContainerId,
-  activeTab
-) => {
+const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -93,23 +88,27 @@ const createTabAndDisplayReports = async (
   // Create separate containers for Unsafe Action and Compromised Action
   const unsafeContainer = document.createElement("div");
   unsafeContainer.className = "collapse";
-  unsafeContainer.id = `tab-unsafe`; // Ensure consistent IDs
+  unsafeContainer.id = `tab-unsafe`;
   const compromisedContainer = document.createElement("div");
-  compromisedContainer.className = "collapse";
-  compromisedContainer.id = `tab-compromised`; // Ensure consistent IDs
+  compromisedContainer.className = "collapse show"; // Make the Compromised Action tab active by default
+  compromisedContainer.id = `tab-compromised`;
 
-  // Iterate over each report
-  data.forEach((report, index) => {
-    // Create card for each report
-    const newCard = createReportCard(report, category, index);
-
-    // Decide which container to add the card based on the category
-    if (category === "Unsafe Action") {
+  // Check if the category is "Unsafe Action" and populate the corresponding container
+  if (category === "Unsafe Action") {
+    // Iterate over each report
+    data.forEach((report, index) => {
+      // Create card for each report
+      const newCard = createReportCard(report, category, index);
       unsafeContainer.appendChild(newCard);
-    } else if (category === "Compromised Action") {
+    });
+  } else if (category === "Compromised Action") {
+    // Iterate over each report
+    data.forEach((report, index) => {
+      // Create card for each report
+      const newCard = createReportCard(report, category, index);
       compromisedContainer.appendChild(newCard);
-    }
-  });
+    });
+  }
 
   // Append the containers to the tab content container
   tabContentContainer.appendChild(unsafeContainer);
@@ -117,6 +116,7 @@ const createTabAndDisplayReports = async (
 
   tabContainer.appendChild(tabContentContainer);
 };
+
 
 const createTabControls = () => {
   const tabContainerId = "tab-container";
