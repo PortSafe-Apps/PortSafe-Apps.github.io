@@ -10,6 +10,12 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+// Fungsi untuk membersihkan konten tab
+const clearTabContent = (tabContainerId) => {
+  const tabContainer = document.getElementById(tabContainerId);
+  tabContainer.innerHTML = "";
+};
+
 // Fungsi untuk membuat kartu laporan
 const createReportCard = (report, category) => {
   const newCard = document.createElement("div");
@@ -70,6 +76,19 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
+// Fungsi untuk membuat tab
+const createTab = (index, category) => {
+  const tabLink = document.createElement("a");
+  tabLink.href = "#";
+  tabLink.dataset.bsToggle = "collapse";
+  tabLink.dataset.bsTarget = `#tab-${index + 1}`;
+  tabLink.innerHTML = category;
+  if (index === 0) {
+    tabLink.dataset.active = true;
+  }
+  return tabLink;
+};
+
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   const tabContainer = document.getElementById(tabContainerId);
@@ -77,8 +96,16 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   // Create tab content container
   const tabContentContainer = document.createElement("div");
 
-  // Add tab contents based on categories
+  // Add tab controls based on categories
+  const tabControls = document.createElement("div");
+  tabControls.className = "tab-controls tabs-large tabs-rounded";
+  tabControls.dataset.highlight = "bg-dark-dark";
+
+  // Add tab links based on categories
   data.forEach((report, index) => {
+    const tabLink = createTab(index, category);
+    tabControls.appendChild(tabLink);
+
     const tabContent = document.createElement("div");
     tabContent.className = "collapse";
     tabContent.id = `tab-${index + 1}`;
@@ -86,49 +113,28 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
     // Create card for each report
     const newCard = createReportCard(report, category);
     tabContent.appendChild(newCard);
-    
+
     tabContentContainer.appendChild(tabContent);
   });
 
+  tabContainer.appendChild(tabControls);
   tabContainer.appendChild(tabContentContainer);
 };
 
-// Function to create tab controls
+// Fungsi untuk membuat tab controls
 const createTabControls = () => {
   const tabContainerId = "tab-container";
-  const tabContainer = document.getElementById(tabContainerId);
+  const tabControlsContainer = document.getElementById(tabContainerId);
 
-  // Create container for tab controls
-  const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
+  // Remove existing tab controls
+  tabControlsContainer.innerHTML = "";
 
-  // Create tab controls
-  const tabControls = document.createElement("div");
-  tabControls.className = "tab-controls tabs-large tabs-rounded";
-  tabControls.dataset.highlight = "bg-dark-dark";
-
-  // Add tab links based on categories
+  // Add tab controls based on categories
   const categories = ["Unsafe Action", "Compromised Action"];
   categories.forEach((category, index) => {
-    const tabLink = document.createElement("a");
-    tabLink.href = "#";
-    tabLink.dataset.bsToggle = "collapse";
-    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
-    tabLink.innerHTML = category;
-    if (index === 0) {
-      tabLink.dataset.active = true;
-    }
-    tabControls.appendChild(tabLink);
+    const tabLink = createTab(index, category);
+    tabControlsContainer.appendChild(tabLink);
   });
-
-  tabControlsContainer.appendChild(tabControls);
-  tabContainer.appendChild(tabControlsContainer);
-};
-
-// Fungsi untuk membersihkan konten tab sebelum menambahkan yang baru
-const clearTabContent = (tabContainerId) => {
-  const tabContainer = document.getElementById(tabContainerId);
-  tabContainer.innerHTML = "";
 };
 
 // Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
@@ -173,11 +179,11 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          
+
           // Membersihkan konten tab sebelum menambahkan yang baru
           clearTabContent("tab-container");
 
-          // Memproses dan menampilkan data laporan dalam tab
+          // Membuat tab baru
           createTabAndDisplayReports(data, reportUrl.category, "tab-container");
         } else {
           console.error(
