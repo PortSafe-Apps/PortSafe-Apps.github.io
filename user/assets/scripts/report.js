@@ -76,18 +76,23 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
 
   // Create tab content container
   const tabContentContainer = document.createElement("div");
-  tabContentContainer.className = "tab-content"; // Tambahkan class "tab-content" di sini
+  tabContentContainer.className = "tab-content";
+
+  // Add a margin below the card
+  const cardMargin = document.createElement("div");
+  cardMargin.className = "mt-3";
+  tabContentContainer.appendChild(cardMargin);
 
   // Add tab contents based on categories
   data.forEach((report, index) => {
     const tabContent = document.createElement("div");
-    tabContent.className = `collapse ${activeTab === index ? 'show' : ''}`; // Tambahkan class "show" untuk tab yang aktif
+    tabContent.className = `collapse ${activeTab === index ? 'show' : ''}`;
     tabContent.id = `tab-${index + 1}`;
 
     // Create card for each report
     const newCard = createReportCard(report, category);
     tabContent.appendChild(newCard);
-    
+
     tabContentContainer.appendChild(tabContent);
   });
 
@@ -101,7 +106,7 @@ const createTabControls = () => {
 
   // Create container for tab controls
   const tabControlsContainer = document.createElement("div");
-  tabControlsContainer.className = "rounded-m overflow-hidden mx-3 mt-3"; // Tambahkan margin top di sini
+  tabControlsContainer.className = "rounded-m overflow-hidden mx-3 mt-3";
 
   // Create tab controls
   const tabControls = document.createElement("div");
@@ -123,6 +128,12 @@ const createTabControls = () => {
   });
 
   tabControlsContainer.appendChild(tabControls);
+
+  // Add a margin above the tabs
+  const tabsMargin = document.createElement("div");
+  tabsMargin.className = "mt-3";
+  tabContainer.appendChild(tabsMargin);
+
   tabContainer.appendChild(tabControlsContainer);
 };
 
@@ -169,7 +180,7 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(data, reportUrl.category, "tab-container", 0); // Set tab pertama sebagai tab aktif
+          createTabAndDisplayReports(data, reportUrl.category, "tab-container", reportUrl.category === "Unsafe Action" ? 0 : 1);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
