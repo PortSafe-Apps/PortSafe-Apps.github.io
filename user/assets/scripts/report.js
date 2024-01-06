@@ -73,7 +73,7 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (data, category, tabContainerId) => {
+const createTabAndDisplayReports = async (data, tabContainerId, activeTab) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -85,28 +85,24 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   cardMargin.className = "mt-3";
   tabContentContainer.appendChild(cardMargin);
 
-  // Create separate containers for both Unsafe Action and Compromised Action
-  const unsafeContainer = document.createElement("div");
-  unsafeContainer.className = "collapse";
-  unsafeContainer.id = `tab-unsafe`;
+  // Create container for reports
+  const reportsContainer = document.createElement("div");
 
-  const compromisedContainer = document.createElement("div");
-  compromisedContainer.className = "collapse";
-  compromisedContainer.id = `tab-compromised`;
-
-  // Iterate over each report and create a card for each category
+  // Iterate over each report
   data.forEach((report, index) => {
-    const newCard = createReportCard(report, category, index);
-    if (category === "Unsafe Action") {
-      unsafeContainer.appendChild(newCard);
-    } else if (category === "Compromised Action") {
-      compromisedContainer.appendChild(newCard);
+    if (report.category === category) {
+      // Hanya menambahkan kartu jika kategori sesuai
+      // Create card for each report
+      const newCard = createReportCard(report, category, index);
+      reportsContainer.appendChild(newCard);
     }
   });
 
-  // Append the containers to the tab content container
-  tabContentContainer.appendChild(unsafeContainer);
-  tabContentContainer.appendChild(compromisedContainer);
+  // Append the reports container to the tab content container
+  tabContentContainer.appendChild(reportsContainer);
+
+  // Append the reports container to the tab content container
+  tabContentContainer.appendChild(reportsContainer);
 
   tabContainer.appendChild(tabContentContainer);
 };
@@ -125,7 +121,7 @@ const createTabControls = () => {
   tabControls.dataset.highlight = "bg-dark-dark";
 
   // Add tab links based on categories
-  const categories = ["Unsafe Action", "Compromised Action"]; // Include both categories
+  const categories = ["Unsafe Action", "Compromised Action"];
   categories.forEach((category, index) => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
@@ -159,7 +155,7 @@ const getUserReportsByCategoryAndGroup = async () => {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
       category: "Compromised Action",
     },
-    // Add more URLs and categories as needed
+    // Tambahkan URL dan kategori lain sesuai kebutuhan
   ];
 
   // Mendapatkan token dari cookie
@@ -185,39 +181,46 @@ const getUserReportsByCategoryAndGroup = async () => {
     redirect: "follow",
   };
 
-  // Iterate over each URL and fetch reports
-  for (const reportUrl of reportUrls) {
-    const response = await fetch(reportUrl.url, requestOptions);
+  try {
+    // Iterate over each URL and fetch reports
+    for (const reportUrl of reportUrls) {
+      const response = await fetch(reportUrl.url, requestOptions);
 
-    if (response.ok) {
-      const responseData = await response.json();
+      if (response.ok) {
+        const responseData = await response.json();
 
-      if (responseData.status === 200) {
-        const data = responseData.data;
-        // Memproses dan menampilkan data laporan dalam tab
-        createTabAndDisplayReports(
-          data,
-          reportUrl.category,
-          "tab-container",
-          reportUrl.tabId
-        );
+        if (responseData.status === 200) {
+          const data = responseData.data;
+          // Memproses dan menampilkan data laporan dalam tab sesuai kategori
+          createTabAndDisplayReports(
+            data,
+            reportUrl.category,
+            "tab-container",
+            reportUrl.tabId
+          );
+        } else {
+          console.error(
+            `Respon server (${reportUrl.category}):`,
+            responseData.message || "Data tidak dapat ditemukan"
+          );
+        }
       } else {
         console.error(
-          `Respon server (${reportUrl.category}):`,
-          responseData.message || "Data tidak dapat ditemukan"
+          `Kesalahan HTTP (${reportUrl.category}):`,
+          response.status
         );
       }
-    } else {
-      console.error(
-        `Kesalahan HTTP (${reportUrl.category}):`,
-        response.status
-      );
     }
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 };
 
-// Call the function to create tab controls and display reports
+// Panggil fungsi untuk membuat kontrol tab dan menampilkan laporan
 createTabControls();
 
-// Call the function to get and display reports
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan
 getUserReportsByCategoryAndGroup();
