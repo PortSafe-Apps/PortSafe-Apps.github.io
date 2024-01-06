@@ -70,7 +70,7 @@ const createReportCard = (report, category) => {
   return newCard;
 };
 
-// Fungsi untuk membuat tab controls dan menampilkan laporan
+// Fungsi untuk membuat kontrol tab dan menampilkan laporan
 const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -117,9 +117,11 @@ const createTabControlsAndDisplayReports = async () => {
       tabContentContainer.appendChild(tabContent);
     }
 
+    // Menambahkan container konten tab ke dalam tabContainer
     tabContainer.appendChild(tabContentContainer);
   });
 
+  // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
 };
