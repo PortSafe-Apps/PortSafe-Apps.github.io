@@ -208,7 +208,10 @@ const getUserReportsByCategoryAndGroup = async () => {
         );
       }
     } else {
-      console.error(`Kesalahan HTTP (${reportUrl.category}):`, response.status);
+      console.error(
+        `Kesalahan HTTP (${reportUrl.category}):`,
+        response.status
+      );
     }
   }
 };
