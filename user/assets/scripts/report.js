@@ -15,18 +15,15 @@ const createReportCard = (report, category) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style";
 
-  // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
     category === "Compromised Action"
       ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
       : "";
 
-  // Menambahkan badge kategori "Unsafe" atau "Compromised"
   const categoryBadge = `<span class="badge bg-${
     category.toLowerCase() === "unsafe" ? "red" : "green"
   }-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
 
-  // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
     ? report.location.locationName
     : "Unknown Location";
@@ -40,34 +37,33 @@ const createReportCard = (report, category) => {
       : "Unknown Type";
   const userName = report.user ? report.user.nama : "Unknown User";
 
-  // Sesuaikan struktur kartu dengan data yang Anda miliki
   newCard.innerHTML = `
-        <div class="content">
-            <div class="d-flex">
-                <div>
-                    <h4>${report.reportid}</h4>
-                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
-                </div>
-                <div class="ms-auto align-self-center">
-                ${categoryBadge}   
-                ${statusBadge}      
-                </div>
-            </div>
-            <div class="divider bg-highlight mt-0 mb-2"></div>
-            <p class="mb-0 color-highlight">
-                Jenis Ketidaksesuaian
-            </p>
-            <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
-            <div class="row mb-n2 color-theme">
-                <div class="col-5 font-11">
-                    <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
-                </div>
-                <div class="col-7 font-11">
-                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
-                </div>
-            </div>
+    <div class="content">
+      <div class="d-flex">
+        <div>
+          <h4>${report.reportid}</h4>
+          <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
         </div>
-    `;
+        <div class="ms-auto align-self-center">
+          ${categoryBadge}   
+          ${statusBadge}      
+        </div>
+      </div>
+      <div class="divider bg-highlight mt-0 mb-2"></div>
+      <p class="mb-0 color-highlight">
+        Jenis Ketidaksesuaian
+      </p>
+      <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
+      <div class="row mb-n2 color-theme">
+        <div class="col-5 font-11">
+          <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
+        </div>
+        <div class="col-7 font-11">
+          <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
+        </div>
+      </div>
+    </div>
+  `;
 
   return newCard;
 };
@@ -77,16 +73,13 @@ const createTabControlsAndDisplayReports = async () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
 
-  // Membuat container untuk kontrol tab
   const tabControlsContainer = document.createElement("div");
   tabControlsContainer.className = "rounded-m overflow-hidden mx-3";
 
-  // Membuat kontrol tab
   const tabControls = document.createElement("div");
   tabControls.className = "tab-controls tabs-large tabs-rounded";
-  tabControls.dataset.highlight = "bg-dark-dark";
+  tabControls.dataset.bsToggle = "tabs";
 
-  // Menambahkan tautan tab berdasarkan kategori
   const categories = ["Unsafe Action", "Compromised Action"];
   for (let index = 0; index < categories.length; index++) {
     const category = categories[index];
@@ -95,17 +88,14 @@ const createTabControlsAndDisplayReports = async () => {
     tabLink.dataset.bsToggle = "tab";
     tabLink.href = `#tab-${index + 1}`;
     tabLink.innerHTML = category;
-    tabLink.dataset.bsTarget = `#tab-${index + 1}`;
     if (index === 0) {
       tabLink.classList.add("active");
     }
     tabControls.appendChild(tabLink);
 
-    // Membuat container konten tab
     const tabContentContainer = document.createElement("div");
     tabContentContainer.className = "tab-content";
 
-    // Menambahkan konten tab berdasarkan kategori dan URL
     const filteredReports = reportUrls.filter(
       (report) => report.category === category
     );
@@ -116,9 +106,8 @@ const createTabControlsAndDisplayReports = async () => {
       tabContent.className = `tab-pane fade${
         index === 0 ? " show active" : ""
       }`;
-      tabContent.id = `tab-${index + 1}-url-${urlIndex + 1}`;
+      tabContent.id = `tab-${index + 1}-${urlIndex + 1}`;
 
-      // Mengambil dan membuat kartu untuk setiap laporan
       const data = await fetchReports(reportUrl.url);
       data.forEach((report) => {
         const newCard = createReportCard(report, category);
@@ -128,11 +117,9 @@ const createTabControlsAndDisplayReports = async () => {
       tabContentContainer.appendChild(tabContent);
     }
 
-    // Menambahkan container konten tab ke dalam tabContainer
     tabContainer.appendChild(tabContentContainer);
   }
 
-  // Menambahkan kontrol tab ke dalam container
   tabControlsContainer.appendChild(tabControls);
   tabContainer.appendChild(tabControlsContainer);
 };
