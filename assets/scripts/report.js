@@ -71,6 +71,54 @@ const processReportData = (data, category) => {
     }
 };
 
+// Fungsi untuk membuat kartu laporan
+const createReportCard = (report, category) => {
+    const newCard = document.createElement("div");
+    newCard.className = "card card-style";
+
+    // Menambahkan badge status untuk kategori "Compromised Action"
+    const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
+
+    // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
+    const locationName = report.location ? report.location.locationName : "Unknown Location";
+    const typeName = report.typeDangerousActions && report.typeDangerousActions.length > 0 &&
+        report.typeDangerousActions[0].subTypes && report.typeDangerousActions[0].subTypes.length > 0 &&
+        report.typeDangerousActions[0].subTypes[0].typeName
+        ? report.typeDangerousActions[0].subTypes[0].typeName
+        : "Unknown Type";
+    const userName = report.user ? report.user.nama : "Unknown User";
+
+    // Sesuaikan struktur kartu dengan data yang Anda miliki
+    newCard.innerHTML = `
+      <div class="content">
+          <div class="d-flex">
+              <div>
+                  <h4>${report.reportid}</h4>
+                  <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
+              </div>
+              <div class="ms-auto align-self-center">
+                  ${statusBadge}
+              </div>
+          </div>
+          <div class="divider bg-highlight mt-0 mb-2"></div>
+          <p class="mb-0 color-highlight">
+              Jenis Ketidaksesuaian
+          </p>
+          <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${typeName}</span>
+          <div class="row mb-n2 color-theme">
+              <div class="col-5 font-11">
+                  <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
+              </div>
+              <div class="col-7 font-11">
+                  <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
+              </div>
+          </div>
+      </div>
+    `;
+
+    return newCard;
+};
+
 // Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (category, tabContainerId, cardContainerId) => {
     let targetURL;
@@ -123,49 +171,6 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
         console.error("Error fetching or processing data:", error);
     }
 };
-
-// Fungsi untuk mendapatkan kartu laporan
-const createReportCard = (report, category) => {
-    const newCard = document.createElement("div");
-    newCard.className = "card card-style";
-
-    // Menambahkan badge status untuk kategori "Compromised Action"
-    const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
-
-    // Memastikan bahwa objek report.location tidak undefined sebelum mengakses propertinya
-    const locationName = report.location ? report.location.locationName : "Unknown Location";
-
-    // Sesuaikan struktur kartu dengan data yang Anda miliki
-    newCard.innerHTML = `
-      <div class="content">
-          <div class="d-flex">
-              <div>
-                  <h4>${report.reportid}</h4>
-                  <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
-              </div>
-              <div class="ms-auto align-self-center">
-                  ${statusBadge}
-              </div>
-          </div>
-          <div class="divider bg-highlight mt-0 mb-2"></div>
-          <p class="mb-0 color-highlight">
-              Jenis Ketidaksesuaian
-          </p>
-          <span class="badge bg-highlight color-white font-10 mb-1 rounded-s">${report.typeDangerousActions[0].subTypes[0].typeName}</span>
-          <div class="row mb-n2 color-theme">
-              <div class="col-5 font-11">
-                  <p class="color-highlight font-11"><i class="fa fa-user"></i> ${report.user.nama}</p>
-              </div>
-              <div class="col-7 font-11">
-                  <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
-              </div>
-          </div>
-      </div>
-    `;
-
-    return newCard;
-};
-
 
 // Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Unsafe Action"
 createTabAndDisplayReports("Unsafe Action", "tab-controls", "cardContainer");
