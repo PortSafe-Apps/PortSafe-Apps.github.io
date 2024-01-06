@@ -10,8 +10,15 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mendapatkan laporan berdasarkan kategori
-const getUserReportsByCategory = async (url, category) => {
+// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
+const getUserReportsByCategoryAndGroup = async () => {
+  // URL untuk "Unsafe Action"
+  const urlUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
+  
+  // URL untuk "Compromised Action"
+  const urlCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
+
+  // Mendapatkan token dari cookie
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -35,24 +42,42 @@ const getUserReportsByCategory = async (url, category) => {
   };
 
   try {
-    const response = await fetch(url, requestOptions);
+    // Mendapatkan laporan untuk "Unsafe Action"
+    const responseUnsafe = await fetch(urlUnsafe, requestOptions);
+    if (responseUnsafe.ok) {
+      const responseDataUnsafe = await responseUnsafe.json();
 
-    if (response.ok) {
-      const responseData = await response.json();
-
-      if (responseData.status === 200) {
-        // Menggunakan responseData.data sebagai data laporan
-        const data = responseData.data;
-        // Memproses dan menampilkan data laporan dalam tab
-        processReportData(data, category);
+      if (responseDataUnsafe.status === 200) {
+        const dataUnsafe = responseDataUnsafe.data;
+        // Memproses dan menampilkan data laporan "Unsafe Action" dalam tab
+        processReportData(dataUnsafe, "Unsafe Action");
       } else {
         console.error(
-          "Respon server:",
-          responseData.message || "Data tidak dapat ditemukan"
+          "Respon server (Unsafe Action):",
+          responseDataUnsafe.message || "Data tidak dapat ditemukan"
         );
       }
     } else {
-      console.error("Kesalahan HTTP:", response.status);
+      console.error("Kesalahan HTTP (Unsafe Action):", responseUnsafe.status);
+    }
+
+    // Mendapatkan laporan untuk "Compromised Action"
+    const responseCompromised = await fetch(urlCompromised, requestOptions);
+    if (responseCompromised.ok) {
+      const responseDataCompromised = await responseCompromised.json();
+
+      if (responseDataCompromised.status === 200) {
+        const dataCompromised = responseDataCompromised.data;
+        // Memproses dan menampilkan data laporan "Compromised Action" dalam tab
+        processReportData(dataCompromised, "Compromised Action");
+      } else {
+        console.error(
+          "Respon server (Compromised Action):",
+          responseDataCompromised.message || "Data tidak dapat ditemukan"
+        );
+      }
+    } else {
+      console.error("Kesalahan HTTP (Compromised Action):", responseCompromised.status);
     }
   } catch (error) {
     console.error(
@@ -82,6 +107,9 @@ const createReportCard = (report, category) => {
       ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
       : "";
 
+  // Menambahkan badge kategori "Unsafe" atau "Compromised"
+  const categoryBadge = `<span class="badge bg-${category.toLowerCase() === 'unsafe' ? 'red' : 'green'}-dark color-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
     ? report.location.locationName
@@ -102,10 +130,11 @@ const createReportCard = (report, category) => {
             <div class="d-flex">
                 <div>
                     <h4>${report.reportid}</h4>
-                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
+                    <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
                 </div>
                 <div class="ms-auto align-self-center">
-                    ${statusBadge}
+                ${categoryBadge}   
+                ${statusBadge}      
                 </div>
             </div>
             <div class="divider bg-highlight mt-0 mb-2"></div>
@@ -146,7 +175,7 @@ const createTabAndDisplayReports = async (data, category, tabContainerId) => {
     const tabLinkId = `tab-${index + 1}`;
     const tabContentId = `tab-${index + 1}`;
 
-    // Membuat tab link
+    // Create tab link
     const tabLink = document.createElement("a");
     tabLink.href = "#";
     tabLink.dataset.bsToggle = "collapse";
@@ -206,17 +235,8 @@ const createTabControls = () => {
   });
 };
 
-// Call the function to create tab controls
+// Call the function to create tab controls and display reports
 createTabControls();
 
-// Call the function to get and display reports for "Unsafe Action"
-getUserReportsByCategory(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
-  "Unsafe Action"
-);
-
-// Call the function to get and display reports for "Compromised Action"
-getUserReportsByCategory(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
-  "Compromised Action"
-);
+// Call the function to get and display reports
+getUserReportsByCategoryAndGroup();

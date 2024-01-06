@@ -740,7 +740,7 @@ document.addEventListener("DOMContentLoaded", () => {
           loadHighlight.className = "page-highlight";
           loadHighlight.type = "text/css";
           loadHighlight.href =
-            "styles/highlights/highlight_" + highlight + ".css";
+            "assets/styles/highlights/highlight_" + highlight + ".css";
           document.getElementsByTagName("head")[0].appendChild(loadHighlight);
           document.body.setAttribute(
             "data-highlight",
@@ -756,7 +756,7 @@ document.addEventListener("DOMContentLoaded", () => {
         loadHighlight.className = "page-highlight";
         loadHighlight.type = "text/css";
         loadHighlight.href =
-          "styles/highlights/highlight_" + rememberHighlight + ".css";
+          "assets/styles/highlights/highlight_" + rememberHighlight + ".css";
         if (!document.querySelectorAll(".page-highlight").length) {
           document.getElementsByTagName("head")[0].appendChild(loadHighlight);
           document.body.setAttribute(
