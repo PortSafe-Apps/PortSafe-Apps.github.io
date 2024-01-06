@@ -65,9 +65,11 @@ const processReportData = (data, category) => {
     const existingTab = document.querySelector(`#${tabContainerId} a[data-category="${category}"]`);
     if (!existingTab) {
         // Jika tab belum ada, membuat tab baru dan menampilkan laporan
+        console.log("Membuat tab dan menampilkan laporan");
         createTabAndDisplayReports(category, tabContainerId, cardContainerId, data);
     } else {
         // Jika tab sudah ada, mengambil data baru dan memperbarui tab yang ada
+        console.log("Memperbarui tab yang ada");
         fetchDataAndCreateCards(data, category);
     }
 };
