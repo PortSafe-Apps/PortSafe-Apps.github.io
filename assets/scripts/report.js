@@ -113,10 +113,14 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
         cardContainer.appendChild(cardCollapse);
 
         // Menampilkan laporan dalam card container
-        data.forEach(report => {
-            const newCard = createReportCard(report, category);
-            cardCollapse.appendChild(newCard);
-        });
+        if (Array.isArray(data)) {
+            data.forEach(report => {
+                const newCard = createReportCard(report, category);
+                cardCollapse.appendChild(newCard);
+            });
+        } else {
+            console.error("Data is not an array:", data);
+        }
     } catch (error) {
         console.error("Error fetching or processing data:", error);
     }
