@@ -54,7 +54,6 @@ const getUserReportsByCategory = async (url, category) => {
     }
 };
 
-
 // Fungsi untuk memproses dan menampilkan data laporan dalam tab
 const processReportData = (data, category) => {
     // Menyesuaikan struktur HTML sesuai dengan kebutuhan
@@ -113,8 +112,12 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
                 const newCard = createReportCard(report, category);
                 cardCollapse.appendChild(newCard);
             });
+        } else if (data && typeof data === 'object') {
+            // Jika data adalah objek, membuat satu card
+            const newCard = createReportCard(data, category);
+            cardCollapse.appendChild(newCard);
         } else {
-            console.error("Data is not an array:", data);
+            console.error("Format data tidak didukung:", data);
         }
     } catch (error) {
         console.error("Error fetching or processing data:", error);
