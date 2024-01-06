@@ -38,13 +38,15 @@ const getUserReportsByCategory = async (url, category) => {
         const response = await fetch(url, requestOptions);
 
         if (response.ok) {
-            const data = await response.json();
+            const responseData = await response.json();
 
-            if (Array.isArray(data)) {
+            if (responseData.status === 200) {
+                // Menggunakan responseData.data sebagai data laporan
+                const data = responseData.data;
                 // Memproses dan menampilkan data laporan dalam tab
                 processReportData(data, category);
             } else {
-                console.error("Format data tidak valid:", data);
+                console.error("Respon server:", responseData.message || "Data tidak dapat ditemukan");
             }
         } else {
             console.error("Kesalahan HTTP:", response.status);
@@ -53,6 +55,7 @@ const getUserReportsByCategory = async (url, category) => {
         console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
     }
 };
+
 
 // Fungsi untuk memproses dan menampilkan data laporan dalam tab
 const processReportData = (data, category) => {
