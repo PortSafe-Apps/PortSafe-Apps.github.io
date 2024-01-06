@@ -73,7 +73,7 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (data, tabContainerId, activeTab) => {
+const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -91,8 +91,6 @@ const createTabAndDisplayReports = async (data, tabContainerId, activeTab) => {
   // Iterate over each report
   data.forEach((report, index) => {
     if (report.category === category) {
-      // Hanya menambahkan kartu jika kategori sesuai
-      // Create card for each report
       const newCard = createReportCard(report, category, index);
       reportsContainer.appendChild(newCard);
     }
