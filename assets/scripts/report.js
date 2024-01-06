@@ -70,7 +70,7 @@ const processReportData = (data, category) => {
     const existingTab = document.querySelector(`#${tabContainerId} a[data-category="${category}"]`);
     if (!existingTab) {
         // Jika tab belum ada, membuat tab baru dan menampilkan laporan
-        createTabAndDisplayReports(data, category, tabContainerId, cardContainerId);
+        createTabAndDisplayReports(category, tabContainerId, cardContainerId);
     } else {
         // Jika tab sudah ada, mengambil data baru dan memperbarui tab yang ada
         fetchDataAndCreateCards(data, category);
@@ -78,9 +78,21 @@ const processReportData = (data, category) => {
 };
 
 // Fungsi untuk membuat tab dan menampilkan laporan
-const createTabAndDisplayReports = async (url, category, tabContainerId, cardContainerId) => {
+const createTabAndDisplayReports = async (category, tabContainerId, cardContainerId) => {
+    let targetURL;
+    if (category === "Unsafe Action") {
+        targetURL =
+            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser";
+    } else if (category === "Compromised Action") {
+        targetURL =
+            "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser";
+    } else {
+        console.error("Kategori tidak valid:", category);
+        return;
+    }
+
     try {
-        const response = await fetch(url);
+        const response = await fetch(targetURL);
         const data = await response.json();
 
         const tabContainer = document.getElementById(tabContainerId);
@@ -150,7 +162,7 @@ const createReportCard = (report, category) => {
 };
 
 // Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Unsafe Action"
-getUserReportsByCategory("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser", "Unsafe Action");
+createTabAndDisplayReports("Unsafe Action", "tab-controls", "cardContainer");
 
 // Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Compromised Action"
-getUserReportsByCategory("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser", "Compromised Action");
+createTabAndDisplayReports("Compromised Action", "tab-controls", "cardContainer");
