@@ -106,7 +106,6 @@ const createReportCard = (report, category) => {
         ? report.typeDangerousActions[0].subTypes.map((subType) => subType.typeName).join(", ")
         : "Unknown Type";
     const userName = report.user ? report.user.nama : "Unknown User";
-    const time = report.time ? report.time : "Unknown Time";
 
     // Sesuaikan struktur kartu dengan data yang Anda miliki
     newCard.innerHTML = `
@@ -130,7 +129,7 @@ const createReportCard = (report, category) => {
                     <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
                 </div>
                 <div class="col-7 font-11">
-                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${time}</p>
+                    <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${report.date} <i class="ms-4 far fa-clock"></i> ${report.time}</p>
                 </div>
             </div>
         </div>
@@ -141,7 +140,11 @@ const createReportCard = (report, category) => {
 
 // Fungsi untuk membuat tab controls
 const createTabControls = () => {
-    const tabControlsContainer = document.getElementById("tab-controls");
+    const tabContainerId = "tab-container";
+    const tabControlsContainer = document.getElementById(tabContainerId);
+
+    // Hapus elemen-elemen tab controls yang mungkin sudah ada sebelumnya
+    tabControlsContainer.innerHTML = '';
 
     // Tambahkan tab controls sesuai dengan kategori
     const categories = ["Unsafe Action", "Compromised Action"];
@@ -149,7 +152,7 @@ const createTabControls = () => {
         const tabLink = document.createElement("a");
         tabLink.href = "#";
         tabLink.dataset.bsToggle = "collapse";
-        tabLink.dataset.bsTarget = `#tab-${category.toLowerCase().replace(" ", "-")}`;
+        tabLink.dataset.bsTarget = `#tab-${index + 1}`;
         tabLink.innerHTML = category;
         if (index === 0) {
             tabLink.dataset.active = true;
