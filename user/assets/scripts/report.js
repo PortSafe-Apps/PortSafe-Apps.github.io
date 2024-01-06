@@ -73,7 +73,7 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
+const createTabAndDisplayReports = async (data, category, tabContainerId) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -85,30 +85,24 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   cardMargin.className = "mt-3";
   tabContentContainer.appendChild(cardMargin);
 
-  // Create separate containers for Unsafe Action and Compromised Action
+  // Create separate containers for both Unsafe Action and Compromised Action
   const unsafeContainer = document.createElement("div");
   unsafeContainer.className = "collapse";
   unsafeContainer.id = `tab-unsafe`;
+
   const compromisedContainer = document.createElement("div");
-  compromisedContainer.className = "collapse show"; // Make the Compromised Action tab active by default
+  compromisedContainer.className = "collapse";
   compromisedContainer.id = `tab-compromised`;
 
-  // Check if the category is "Unsafe Action" and populate the corresponding container
-  if (category === "Unsafe Action") {
-    // Iterate over each report
-    data.forEach((report, index) => {
-      // Create card for each report
-      const newCard = createReportCard(report, category, index);
+  // Iterate over each report and create a card for each category
+  data.forEach((report, index) => {
+    const newCard = createReportCard(report, category, index);
+    if (category === "Unsafe Action") {
       unsafeContainer.appendChild(newCard);
-    });
-  } else if (category === "Compromised Action") {
-    // Iterate over each report
-    data.forEach((report, index) => {
-      // Create card for each report
-      const newCard = createReportCard(report, category, index);
+    } else if (category === "Compromised Action") {
       compromisedContainer.appendChild(newCard);
-    });
-  }
+    }
+  });
 
   // Append the containers to the tab content container
   tabContentContainer.appendChild(unsafeContainer);
@@ -116,7 +110,6 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
 
   tabContainer.appendChild(tabContentContainer);
 };
-
 
 const createTabControls = () => {
   const tabContainerId = "tab-container";
@@ -132,7 +125,7 @@ const createTabControls = () => {
   tabControls.dataset.highlight = "bg-dark-dark";
 
   // Add tab links based on categories
-  const categories = ["Unsafe Action", "Compromised Action"];
+  const categories = ["Unsafe Action", "Compromised Action"]; // Include both categories
   categories.forEach((category, index) => {
     const tabLink = document.createElement("a");
     tabLink.href = "#";
@@ -192,41 +185,31 @@ const getUserReportsByCategoryAndGroup = async () => {
     redirect: "follow",
   };
 
-  try {
-    // Iterate over each URL and fetch reports
-    for (const reportUrl of reportUrls) {
-      const response = await fetch(reportUrl.url, requestOptions);
+  // Iterate over each URL and fetch reports
+  for (const reportUrl of reportUrls) {
+    const response = await fetch(reportUrl.url, requestOptions);
 
-      if (response.ok) {
-        const responseData = await response.json();
+    if (response.ok) {
+      const responseData = await response.json();
 
-        if (responseData.status === 200) {
-          const data = responseData.data;
-          // Memproses dan menampilkan data laporan dalam tab
-          createTabAndDisplayReports(
-            data,
-            reportUrl.category,
-            "tab-container",
-            reportUrl.tabId
-          );
-        } else {
-          console.error(
-            `Respon server (${reportUrl.category}):`,
-            responseData.message || "Data tidak dapat ditemukan"
-          );
-        }
+      if (responseData.status === 200) {
+        const data = responseData.data;
+        // Memproses dan menampilkan data laporan dalam tab
+        createTabAndDisplayReports(
+          data,
+          reportUrl.category,
+          "tab-container",
+          reportUrl.tabId
+        );
       } else {
         console.error(
-          `Kesalahan HTTP (${reportUrl.category}):`,
-          response.status
+          `Respon server (${reportUrl.category}):`,
+          responseData.message || "Data tidak dapat ditemukan"
         );
       }
+    } else {
+      console.error(`Kesalahan HTTP (${reportUrl.category}):`, response.status);
     }
-  } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
   }
 };
 
