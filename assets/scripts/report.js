@@ -124,7 +124,7 @@ const createTabAndDisplayReports = async (category, tabContainerId, cardContaine
     }
 };
 
-// Fungsi untuk membuat kartu laporan
+// Fungsi untuk mendapatkan kartu laporan
 const createReportCard = (report, category) => {
     const newCard = document.createElement("div");
     newCard.className = "card card-style";
@@ -132,13 +132,16 @@ const createReportCard = (report, category) => {
     // Menambahkan badge status untuk kategori "Compromised Action"
     const statusBadge = category === "Compromised Action" ? `<span class="badge bg-green-dark color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
 
+    // Memastikan bahwa objek report.location tidak undefined sebelum mengakses propertinya
+    const locationName = report.location ? report.location.locationName : "Unknown Location";
+
     // Sesuaikan struktur kartu dengan data yang Anda miliki
     newCard.innerHTML = `
       <div class="content">
           <div class="d-flex">
               <div>
                   <h4>${report.reportid}</h4>
-                  <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> Branch ${report.location.locationName}</p>
+                  <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i>${locationName}</p>
               </div>
               <div class="ms-auto align-self-center">
                   ${statusBadge}
@@ -162,6 +165,7 @@ const createReportCard = (report, category) => {
 
     return newCard;
 };
+
 
 // Memanggil fungsi untuk mendapatkan laporan berdasarkan kategori "Unsafe Action"
 createTabAndDisplayReports("Unsafe Action", "tab-controls", "cardContainer");
