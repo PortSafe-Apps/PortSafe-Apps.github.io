@@ -94,7 +94,7 @@ const createTabControlsAndDisplayReports = async () => {
     tabLink.dataset.bsTarget = `#tab-${index + 1}`;
     tabLink.innerHTML = category;
     if (index === 0) {
-      tabLink.dataset.active = true;
+      tabLink.dataset.active = true; // Menandai tab "Unsafe Action" sebagai aktif secara default
     }
     tabControls.appendChild(tabLink);
 
