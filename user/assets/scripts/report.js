@@ -69,8 +69,6 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-
-// Fungsi untuk membuat tab dan menampilkan laporan
 const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
   const tabContainer = document.getElementById(tabContainerId);
 
@@ -111,7 +109,6 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   tabContainer.appendChild(tabContentContainer);
 };
 
-// Function to create tab controls
 const createTabControls = () => {
   const tabContainerId = "tab-container";
   const tabContainer = document.getElementById(tabContainerId);
@@ -149,7 +146,6 @@ const createTabControls = () => {
   tabContainer.appendChild(tabControlsContainer);
 };
 
-// Fungsi untuk mendapatkan laporan berdasarkan kategori dan kelompokkan berdasarkan URL
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
