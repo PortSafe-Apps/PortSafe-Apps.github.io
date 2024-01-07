@@ -199,7 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -486,7 +486,5 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  const isUnsafeTab = window.location.href.includes("tab-unsafe");
-  const category = isUnsafeTab ? "Unsafe Action" : "Compromised Action";
-  getDetailedReportByCategory(reportid, detailContainerId, category);
+  getDetailedReportByCategory(reportid, detailContainerId);
 }
