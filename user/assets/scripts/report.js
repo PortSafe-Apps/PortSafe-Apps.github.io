@@ -491,17 +491,7 @@ getUserReportsByCategoryAndGroup();
 
 const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
-let category = new URLSearchParams(window.location.search).get("category");
-
-// Check if category is null and provide a default value
-category = category || "Unsafe Action";
 
 if (reportid) {
-  if (category === "Compromised Action") {
-    getDetailedReport(reportid, detailContainerId, "Compromised Action");
-  } else if (category === "Unsafe Action") {
-    getDetailedReport(reportid, detailContainerId, "Unsafe Action");
-  } else {
-    console.error("Invalid category:", category);
-  }
+  getDetailedReport(reportid, detailContainerId, "Compromised Action");
 }
