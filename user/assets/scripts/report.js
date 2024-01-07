@@ -275,6 +275,8 @@ const getDetailedReport = async (reportid, detailContainerId, category) => {
 };
 
 const createReportCard = (report, category, index) => {
+  console.log("Report Data:", report);
+  console.log("Category:", category);
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
@@ -494,5 +496,7 @@ const reportid = new URLSearchParams(window.location.search).get("reportid");
 const category = new URLSearchParams(window.location.search).get("category");
 
 if (reportid && category) {
+  console.log("Report ID:", reportid);
+  console.log("Category:", category);
   getDetailedReport(reportid, detailContainerId, category);
 }
