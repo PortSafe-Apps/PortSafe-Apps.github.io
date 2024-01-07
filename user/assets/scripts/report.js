@@ -82,14 +82,14 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
        <p class="color-theme font-700">Unit Kerja</p>
      </div>
      <div class="col-8">
-       <p class="font-400">${detailedReport.area.areaName}</p>
+       <p class="font-400">${detailedReport.area.locationName}</p>
      </div>
 
      <div class="col-4">
        <p class="color-theme font-700">Area</p>
      </div>
      <div class="col-8">
-       <p class="font-400">${detailedReport.location.locationName}</p>
+       <p class="font-400">${detailedReport.location.areaName}</p>
      </div>
    </div>
     </div>
@@ -369,11 +369,13 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
-      // Menambahkan event listener untuk menangani klik pada card
       newCard.addEventListener("click", () => {
-        // Memanggil fungsi getDetailedReportByCategory dengan kategori yang sesuai
-        getDetailedReportByCategory(report.reportid, detailContainerId, category);
-      });
+        // Determine the category of the report based on the report data
+        const reportCategory = report.category.toLowerCase();
+    
+        // Call the function with the correct category
+        getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
+    });
 
       container.appendChild(newCard);
     });
@@ -487,13 +489,10 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  const category = window.location.href.includes("tab-unsafe")
-    ? "Unsafe Action"
-    : "Compromised Action";
+  const isUnsafeTab = window.location.href.includes("tab-unsafe");
+  const category = isUnsafeTab ? "Unsafe Action" : "Compromised Action";
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
-
-
 
 
 
