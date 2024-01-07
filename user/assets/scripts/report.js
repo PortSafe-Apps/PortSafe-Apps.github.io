@@ -125,6 +125,8 @@ const createTabAndDisplayReports = async (
 
   // Initialize tabs (simple toggle logic)
   const tabs = document.querySelectorAll(`#${tabContainerId} .tab-controls a`);
+  let hasActiveTab = false;
+
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       const targetTabId = tab.getAttribute("data-bs-target");
@@ -141,14 +143,21 @@ const createTabAndDisplayReports = async (
         targetTab.classList.add("show");
       }
     });
+
+    // Check if the tab is already active
+    if (tab.classList.contains("active")) {
+      hasActiveTab = true;
+    }
   });
 
-  // Activate the initial tab
-  const initialTab = document.querySelector(
-    `#${tabContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
-  );
-  if (initialTab) {
-    initialTab.click();
+  // Activate the initial tab only if no tab is already active and the activeTab is not "tab-compromised"
+  if (!hasActiveTab && activeTab !== "tab-compromised") {
+    const initialTab = document.querySelector(
+      `#${tabContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
+    );
+    if (initialTab) {
+      initialTab.click();
+    }
   }
 };
 
@@ -201,7 +210,12 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(data, reportUrl.category, "tab-group-1", reportUrl.tabId);
+          createTabAndDisplayReports(
+            data,
+            reportUrl.category,
+            "tab-group-1",
+            reportUrl.tabId
+          );
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
