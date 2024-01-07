@@ -1,4 +1,3 @@
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -132,7 +131,7 @@ const getUserReportsByCategoryAndGroup = async () => {
       category: "Compromised Action",
       tabId: "compromised",
     },
-    // Add more URLs and categories as needed
+    // Tambahkan URL dan kategori lain jika diperlukan
   ];
 
   // Mendapatkan token dari cookie
@@ -159,7 +158,7 @@ const getUserReportsByCategoryAndGroup = async () => {
   };
 
   try {
-    // Iterate over each URL and fetch reports
+    // Iterasi ke setiap URL dan ambil laporan
     for (const reportUrl of reportUrls) {
       const response = await fetch(reportUrl.url, requestOptions);
 
@@ -168,7 +167,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          // Memproses dan menampilkan data laporan dalam tab
+          // Proses dan tampilkan data laporan dalam tab
           createTabAndDisplayReports(
             data,
             reportUrl.category,
@@ -196,8 +195,5 @@ const getUserReportsByCategoryAndGroup = async () => {
   }
 };
 
-// Call the function to create tab controls and display reports
-createTabControls();
-
-// Call the function to get and display reports
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan
 getUserReportsByCategoryAndGroup();
