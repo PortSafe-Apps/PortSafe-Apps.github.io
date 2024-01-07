@@ -124,7 +124,7 @@ const createTabAndDisplayReports = async (
   tabContainer.appendChild(tabContentContainer);
 
   // Initialize tabs (simple toggle logic)
-  const tabs = document.querySelectorAll(`#${tabContainerId} .nav-link`);
+  const tabs = document.querySelectorAll(`#${tabContainerId} .tab-controls a`);
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
       const targetTabId = tab.getAttribute("data-bs-target");
@@ -145,7 +145,7 @@ const createTabAndDisplayReports = async (
 
   // Activate the initial tab
   const initialTab = document.querySelector(
-    `#${tabContainerId} .nav-link[data-bs-target="#${activeTab}"]`
+    `#${tabContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
   );
   if (initialTab) {
     initialTab.click();
@@ -158,12 +158,12 @@ const getUserReportsByCategoryAndGroup = async () => {
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
       category: "Unsafe Action",
-      tabId: "unsafe",
+      tabId: "tab-unsafe",
     },
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
       category: "Compromised Action",
-      tabId: "compromised",
+      tabId: "tab-compromised",
     },
     // Tambahkan URL dan kategori lain jika diperlukan
   ];
@@ -201,13 +201,11 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          // Proses dan tampilkan data laporan dalam tab
-          // Call the function to get and display reports
           createTabAndDisplayReports(
             data,
-            "Unsafe Action",
-            "tab-container",
-            "tab-unsafe"
+            reportUrl.category,
+            "tab-group-1",
+            reportUrl.tabId
           );
         } else {
           console.error(
