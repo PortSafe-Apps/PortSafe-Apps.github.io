@@ -1,3 +1,6 @@
+// Variabel global untuk menyimpan informasi kategori tab terakhir kali diakses
+let lastAccessedTab = localStorage.getItem("lastAccessedTab") || "tab-unsafe";
+
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -274,7 +277,6 @@ const getDetailedReport = async (reportid, detailContainerId, category) => {
   }
 };
 
-
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -353,7 +355,9 @@ tabs.forEach((tab) => {
     tabs.forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
 
-    const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
+    const tabContents = document.querySelectorAll(
+      `#${tabsContainerId} .collapse`
+    );
     tabContents.forEach((tc) => tc.classList.remove("show"));
 
     const targetTab = document.querySelector(targetTabId);
@@ -371,7 +375,6 @@ const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
 const createTabAndDisplayReports = async (data, category, activeTab) => {
-  // Periksa kategori dan tentukan kontainer yang sesuai
   let container;
   if (category === "Unsafe Action") {
     container = containerUnsafe;
@@ -380,14 +383,12 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 
   if (container) {
-    // Iterasi setiap laporan dan buat kartu-kartu
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
       container.appendChild(newCard);
     });
   }
 
-  // Inisialisasi tab (logika toggle sederhana)
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
   let hasActiveTab = false;
 
@@ -397,7 +398,9 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       tabs.forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
 
-      const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
+      const tabContents = document.querySelectorAll(
+        `#${tabsContainerId} .collapse`
+      );
       tabContents.forEach((tc) => tc.classList.remove("show"));
 
       const targetTab = document.querySelector(targetTabId);
@@ -406,13 +409,11 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       }
     });
 
-    // Periksa apakah tab sudah aktif
     if (tab.classList.contains("active")) {
       hasActiveTab = true;
     }
   });
 
-  // Aktifkan tab awal hanya jika tidak ada tab yang sudah aktif dan activeTab bukan "tab-compromised"
   if (!hasActiveTab && activeTab !== containerIdCompromised) {
     const initialTab = document.querySelector(
       `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
@@ -423,9 +424,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 };
 
-
 const getUserReportsByCategoryAndGroup = async () => {
-  // URL dan kategori laporan
   const reportUrls = [
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
@@ -437,7 +436,6 @@ const getUserReportsByCategoryAndGroup = async () => {
       category: "Compromised Action",
       tabId: "tab-compromised",
     },
-    // Tambahkan URL dan kategori lain jika diperlukan
   ];
 
   // Mendapatkan token dari cookie
@@ -473,13 +471,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(
-            data,
-            reportUrl.category,
-            "tab-group-1",
-            reportUrl.tabId
-          );
-
+          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
