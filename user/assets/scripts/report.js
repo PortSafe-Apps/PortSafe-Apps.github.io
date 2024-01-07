@@ -1,6 +1,3 @@
-// Variabel global untuk menyimpan informasi kategori tab terakhir kali diakses
-let lastAccessedTab = localStorage.getItem("lastAccessedTab") || "tab-unsafe";
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -277,6 +274,7 @@ const getDetailedReport = async (reportid, detailContainerId, category) => {
   }
 };
 
+
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -355,9 +353,7 @@ tabs.forEach((tab) => {
     tabs.forEach((t) => t.classList.remove("active"));
     tab.classList.add("active");
 
-    const tabContents = document.querySelectorAll(
-      `#${tabsContainerId} .collapse`
-    );
+    const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
     tabContents.forEach((tc) => tc.classList.remove("show"));
 
     const targetTab = document.querySelector(targetTabId);
@@ -375,6 +371,7 @@ const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
 const createTabAndDisplayReports = async (data, category, activeTab) => {
+  // Periksa kategori dan tentukan kontainer yang sesuai
   let container;
   if (category === "Unsafe Action") {
     container = containerUnsafe;
@@ -383,12 +380,14 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 
   if (container) {
+    // Iterasi setiap laporan dan buat kartu-kartu
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
       container.appendChild(newCard);
     });
   }
 
+  // Inisialisasi tab (logika toggle sederhana)
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
   let hasActiveTab = false;
 
@@ -398,9 +397,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       tabs.forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
 
-      const tabContents = document.querySelectorAll(
-        `#${tabsContainerId} .collapse`
-      );
+      const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
       tabContents.forEach((tc) => tc.classList.remove("show"));
 
       const targetTab = document.querySelector(targetTabId);
@@ -409,11 +406,13 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       }
     });
 
+    // Periksa apakah tab sudah aktif
     if (tab.classList.contains("active")) {
       hasActiveTab = true;
     }
   });
 
+  // Aktifkan tab awal hanya jika tidak ada tab yang sudah aktif dan activeTab bukan "tab-compromised"
   if (!hasActiveTab && activeTab !== containerIdCompromised) {
     const initialTab = document.querySelector(
       `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
@@ -425,6 +424,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 };
 
 const getUserReportsByCategoryAndGroup = async () => {
+  // URL dan kategori laporan
   const reportUrls = [
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
@@ -436,6 +436,7 @@ const getUserReportsByCategoryAndGroup = async () => {
       category: "Compromised Action",
       tabId: "tab-compromised",
     },
+    // Tambahkan URL dan kategori lain jika diperlukan
   ];
 
   // Mendapatkan token dari cookie
@@ -501,8 +502,16 @@ const detailContainerId = "detailContainer";
 
 // Ambil reportid dari parameter query
 const reportid = new URLSearchParams(window.location.search).get("reportid");
+const categoryUnsafe = "Unsafe Action";
+const categoryCompromised = "Compromised Action";
 
 // Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
 if (reportid) {
-  getDetailedReport(reportid, detailContainerId);
+  // Determine the category based on your data or logic
+  const category = getCategoryForReport(reportid); // Replace with your logic
+  if (category === categoryUnsafe || category === categoryCompromised) {
+    getDetailedReport(reportid, detailContainerId, category);
+  } else {
+    console.error("Invalid category:", category);
+  }
 }
