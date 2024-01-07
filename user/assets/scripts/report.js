@@ -423,9 +423,6 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 };
 
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan
-getUserReportsByCategoryAndGroup();
-
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
@@ -501,6 +498,9 @@ const getUserReportsByCategoryAndGroup = async () => {
     );
   }
 };
+
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan
+getUserReportsByCategoryAndGroup();
 
 // ID elemen target di halaman detail report
 const detailContainerId = "detailContainer";
