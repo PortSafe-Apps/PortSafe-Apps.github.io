@@ -10,7 +10,7 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-const displayDetailedReport = (detailedReport, detailContainerId, category) => {
+const displayDetailedReport = (detailedReport, detailContainerId) => {
   const detailContainer = document.getElementById(detailContainerId);
 
   // Clear existing content
@@ -423,6 +423,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 };
 
+
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
   const reportUrls = [
@@ -478,6 +479,11 @@ const getUserReportsByCategoryAndGroup = async () => {
             "tab-group-1",
             reportUrl.tabId
           );
+
+          // Iterate over each report and call getDetailedReport with the category
+          for (const report of data) {
+            getDetailedReport(report.reportid, "detailContainer", reportUrl.category);
+          }
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
