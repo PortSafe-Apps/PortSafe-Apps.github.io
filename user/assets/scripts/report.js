@@ -201,12 +201,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(
-            data,
-            reportUrl.category,
-            "tab-group-1",
-            reportUrl.tabId
-          );
+          createTabAndDisplayReports(data, reportUrl.category, "tab-group-1", reportUrl.tabId);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
