@@ -82,14 +82,14 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
        <p class="color-theme font-700">Unit Kerja</p>
      </div>
      <div class="col-8">
-       <p class="font-400">${detailedReport.area.locationName}</p>
+       <p class="font-400">${detailedReport.location.locationName}</p>
      </div>
 
      <div class="col-4">
        <p class="color-theme font-700">Area</p>
      </div>
      <div class="col-8">
-       <p class="font-400">${detailedReport.location.areaName}</p>
+       <p class="font-400">${detailedReport.area.areaName}</p>
      </div>
    </div>
     </div>
@@ -199,7 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -213,18 +213,23 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
     return;
   }
 
-  // Tentukan URL endpoint berdasarkan kategori
+  // Extract category from the URL
+  const urlParams = new URLSearchParams(window.location.search);
+  const category = urlParams.get("category");
+
+  // Validate category
+  if (!category || (category !== "Unsafe Action" && category !== "Compromised Action")) {
+    console.error("Invalid category:", category);
+    return;
+  }
+
+  // Determine URL endpoint based on category
   const targetURL =
     category === "Unsafe Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
       : category === "Compromised Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised"
       : "";
-
-  if (!targetURL) {
-    console.error("Invalid category:", category);
-    return;
-  }
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -243,24 +248,19 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
       const data = await response.json();
 
       if (data.status === 200) {
-        // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
+        // Ensure the category is correct when calling the displayDetailedReport function
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
-        console.error(
-          `Server response (${category}):`,
-          data.message || "Data tidak dapat ditemukan"
-        );
+        console.error(`Server response (${category}):`, data.message || "Data tidak dapat ditemukan");
       }
     } else {
       console.error(`HTTP error (${category}):`, response.status);
     }
   } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
+    console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
   }
 };
+
 
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
