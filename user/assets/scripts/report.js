@@ -491,7 +491,8 @@ getUserReportsByCategoryAndGroup();
 
 const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
+const category = new URLSearchParams(window.location.search).get("category");
 
-if (reportid) {
-  getDetailedReport(reportid, detailContainerId, "Compromised Action");
+if (reportid && category) {
+  getDetailedReport(reportid, detailContainerId, category);
 }
