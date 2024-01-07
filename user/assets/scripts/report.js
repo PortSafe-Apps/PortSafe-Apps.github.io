@@ -79,25 +79,10 @@ const createTabAndDisplayReports = async (
   tabContainerId,
   activeTab
 ) => {
-  const tabContainer = document.getElementById(tabContainerId);
 
-  // Create tab content container
-  const tabContentContainer = document.createElement("div");
-  tabContentContainer.className = "tab-content";
-
-  // Add a margin below the card
-  const cardMargin = document.createElement("div");
-  cardMargin.className = "mt-3";
-  tabContentContainer.appendChild(cardMargin);
-
-  // Create separate containers for Unsafe Action and Compromised Action
-  const unsafeContainer = document.createElement("div");
-  unsafeContainer.className = "collapse";
-  unsafeContainer.id = `tab-unsafe`;
-
-  const compromisedContainer = document.createElement("div");
-  compromisedContainer.className = "collapse";
-  compromisedContainer.id = `tab-compromised`;
+  // Get the containers for Unsafe Action and Compromised Action
+  const unsafeContainer = document.getElementById(`tab-unsafe`);
+  const compromisedContainer = document.getElementById(`tab-compromised`);
 
   // Check if the category is "Unsafe Action" and populate the corresponding container
   if (category === "Unsafe Action") {
@@ -116,13 +101,6 @@ const createTabAndDisplayReports = async (
     });
   }
 
-  // Append the containers to the tab content container
-  tabContentContainer.appendChild(unsafeContainer);
-  tabContentContainer.appendChild(compromisedContainer);
-
-  // Append the tab content container to the tab container
-  tabContainer.appendChild(tabContentContainer);
-
   // Initialize tabs (simple toggle logic)
   const tabs = document.querySelectorAll(`#${tabContainerId} .tab-controls a`);
   let hasActiveTab = false;
@@ -133,9 +111,7 @@ const createTabAndDisplayReports = async (
       tabs.forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
 
-      const tabContents = document.querySelectorAll(
-        `#${tabContainerId} .tab-content .collapse`
-      );
+      const tabContents = document.querySelectorAll(`#${tabContainerId} .collapse`);
       tabContents.forEach((tc) => tc.classList.remove("show"));
 
       const targetTab = document.querySelector(targetTabId);
