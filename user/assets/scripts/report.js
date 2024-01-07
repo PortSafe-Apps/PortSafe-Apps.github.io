@@ -493,5 +493,5 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  getDetailedReport(reportid, detailContainerId);
+  getDetailedReport(reportid, detailContainerId, "Compromised Action");
 }
