@@ -343,27 +343,52 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (
-  data,
-  category,
-  tabContainerId,
-  activeTab
-) => {
-  const containerId = `tab-${category.toLowerCase()}`;
-  const container = document.getElementById(containerId);
+// Inisialisasi tab
+const tabsContainerId = "tab-group-1";
+const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
 
-  // Check if the category is "Unsafe Action" and populate the corresponding container
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const targetTabId = tab.getAttribute("data-bs-target");
+    tabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
+    tabContents.forEach((tc) => tc.classList.remove("show"));
+
+    const targetTab = document.querySelector(targetTabId);
+    if (targetTab) {
+      targetTab.classList.add("show");
+    }
+  });
+});
+
+// Periksa apakah kontainer ada sebelum menambahkan kartu-kartu
+const containerIdUnsafe = "tab-unsafe";
+const containerIdCompromised = "tab-compromised";
+
+const containerUnsafe = document.getElementById(containerIdUnsafe);
+const containerCompromised = document.getElementById(containerIdCompromised);
+
+const createTabAndDisplayReports = async (data, category, activeTab) => {
+  // Periksa kategori dan tentukan kontainer yang sesuai
+  let container;
+  if (category === "Unsafe Action") {
+    container = containerUnsafe;
+  } else if (category === "Compromised Action") {
+    container = containerCompromised;
+  }
+
   if (container) {
-    // Iterate over each report
+    // Iterasi setiap laporan dan buat kartu-kartu
     data.forEach((report, index) => {
-      // Create card for each report
       const newCard = createReportCard(report, category, index);
       container.appendChild(newCard);
     });
   }
 
-  // Initialize tabs (simple toggle logic)
-  const tabs = document.querySelectorAll(`#${tabContainerId} .tab-controls a`);
+  // Inisialisasi tab (logika toggle sederhana)
+  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
   let hasActiveTab = false;
 
   tabs.forEach((tab) => {
@@ -372,9 +397,7 @@ const createTabAndDisplayReports = async (
       tabs.forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
 
-      const tabContents = document.querySelectorAll(
-        `#${tabContainerId} .collapse`
-      );
+      const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
       tabContents.forEach((tc) => tc.classList.remove("show"));
 
       const targetTab = document.querySelector(targetTabId);
@@ -383,16 +406,16 @@ const createTabAndDisplayReports = async (
       }
     });
 
-    // Check if the tab is already active
+    // Periksa apakah tab sudah aktif
     if (tab.classList.contains("active")) {
       hasActiveTab = true;
     }
   });
 
-  // Activate the initial tab only if no tab is already active and the activeTab is not "tab-compromised"
-  if (!hasActiveTab && activeTab !== containerId) {
+  // Aktifkan tab awal hanya jika tidak ada tab yang sudah aktif dan activeTab bukan "tab-compromised"
+  if (!hasActiveTab && activeTab !== containerIdCompromised) {
     const initialTab = document.querySelector(
-      `#${tabContainerId} .tab-controls a[data-bs-target="#${containerId}"]`
+      `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
     );
     if (initialTab) {
       initialTab.click();
@@ -400,7 +423,8 @@ const createTabAndDisplayReports = async (
   }
 };
 
-
+// Panggil fungsi untuk mendapatkan dan menampilkan laporan
+getUserReportsByCategoryAndGroup();
 
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
@@ -477,9 +501,6 @@ const getUserReportsByCategoryAndGroup = async () => {
     );
   }
 };
-
-// Panggil fungsi untuk mendapatkan dan menampilkan laporan
-getUserReportsByCategoryAndGroup();
 
 // ID elemen target di halaman detail report
 const detailContainerId = "detailContainer";
