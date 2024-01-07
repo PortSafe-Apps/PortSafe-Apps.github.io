@@ -10,7 +10,7 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-const displayDetailedReport = (detailedReport, detailContainerId) => {
+const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   const detailContainer = document.getElementById(detailContainerId);
 
   // Clear existing content
@@ -480,10 +480,6 @@ const getUserReportsByCategoryAndGroup = async () => {
             reportUrl.tabId
           );
 
-          // Iterate over each report and call getDetailedReport with the category
-          for (const report of data) {
-            getDetailedReport(report.reportid, "detailContainer", reportUrl.category);
-          }
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
