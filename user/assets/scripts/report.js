@@ -10,6 +10,271 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+const displayDetailedReport = (detailedReport, detailContainerId, category) => {
+  const detailContainer = document.getElementById(detailContainerId);
+
+  // Clear existing content
+  detailContainer.innerHTML = "";
+
+  // Create a new card for detailed view
+  const detailCard = document.createElement("div");
+  detailCard.className = "card card-style mb-3";
+
+  // Header for detailed view
+  const header = document.createElement("div");
+  header.className = "content";
+  header.innerHTML = `
+    <div class="d-flex">
+      <div>
+        <h4 class="mb-n1">Detail Observasi</h4>
+      </div>
+      <div class="ms-auto">
+        <span class="badge ${
+          category === "Unsafe Action" ? "bg-yellow-dark" : "bg-red-dark"
+        } color-white font-10 mb-1 d-block rounded-s">
+          <i class="${
+            category === "Compromised Action"
+              ? "fa fa-exclamation-triangle"
+              : "fa fa-child"
+          }"></i> ${category}
+        </span>
+        ${
+          detailedReport.status
+            ? `<span class="badge ${
+                detailedReport.status === "Opened"
+                  ? "bg-green-dark"
+                  : "bg-red-dark"
+              } color-white font-10 mb-1 d-block rounded-s">${
+                detailedReport.status
+              }</span>`
+            : ""
+        }
+      </div>
+    </div>
+    <div class="divider mt-3 mb-2"></div>
+  `;
+  detailCard.appendChild(header);
+
+  // Details of the report
+  const detailsContent = document.createElement("div");
+  detailsContent.className = "content";
+  detailsContent.innerHTML = `
+    <div class="row mb-0">
+      <div class="col-4">
+        <p class="color-theme font-700">No. Pelaporan</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.reportid}</p>
+      </div>
+
+      <div class="col-4">
+        <p class="color-theme font-700">Tanggal</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.date}</p>
+      </div>
+
+      <div class="col-4">
+        <p class="color-theme font-700">Waktu</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.time}</p>
+      </div>
+
+      <div class="col-4">
+        <p class="color-theme font-700">Observator</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.user.nama}</p>
+      </div>
+
+      <div class="col-4">
+        <p class="color-theme font-700">Unit Kerja</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.area.areaName}</p>
+      </div>
+
+      <div class="col-4">
+        <p class="color-theme font-700">Area</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.location.locationName}</p>
+      </div>
+    </div>
+  `;
+  detailCard.appendChild(detailsContent);
+
+  // Deskripsi Pengamatan
+  const descriptionContent = document.createElement("div");
+  descriptionContent.className = "content";
+  descriptionContent.innerHTML = `
+    <h4 class="mb-n1">Deskripsi Pengamatan</h4>
+    <div class="divider mt-3 mb-2"></div>
+    <div class="row mb-0">
+      <p class="mb-3">${detailedReport.description}</p>
+      ${
+        detailedReport.observationPhoto
+          ? `<img height="175" src="${detailedReport.observationPhoto}" alt="">`
+          : ""
+      }
+    </div>
+  `;
+  detailCard.appendChild(descriptionContent);
+
+  // Jenis Tindakan Berbahaya
+  const dangerousActionContent = document.createElement("div");
+  dangerousActionContent.className = "content";
+  dangerousActionContent.innerHTML = `
+    <h4 class="mb-n1">Jenis Tindakan Berbahaya</h4>
+    <div class="divider mt-3 mb-2"></div>
+    <div class="content mb-2">
+      ${
+        detailedReport.typeDangerousActions &&
+        detailedReport.typeDangerousActions.length
+          ? detailedReport.typeDangerousActions
+              .map(
+                (action, index) => `
+              <h5 href="#type${
+                index + 1
+              }" data-bs-toggle="collapse" role="button" class="font-600">
+                ${action.typeName}
+                <i class="fa fa-angle-down float-end me-2 mt-1 opacity-50 font-10"></i>
+              </h5>
+              <div class="collapse" id="type${index + 1}">
+                ${action.subTypes
+                  .map(
+                    (subType) => `
+                  <span class="badge bg-red-dark mt-2 p-2 font-8 rounded-s">${subType}</span>
+                `
+                  )
+                  .join("")}
+              </div>
+              <div class="divider mt-3 mb-3"></div>
+            `
+              )
+              .join("")
+          : "<p>Tidak ada data tindakan berbahaya.</p>"
+      }
+    </div>
+  `;
+  detailCard.appendChild(dangerousActionContent);
+
+  // Tindakan Perbaikan Segera
+  const immediateActionContent = document.createElement("div");
+  immediateActionContent.className = "content";
+  immediateActionContent.innerHTML = `
+    <h4 class="mb-n1">Tindakan Perbaikan Segera</h4>
+    <div class="divider mt-3 mb-2"></div>
+    <div class="row mb-0">
+      <p class="mb-3">${detailedReport.immediateAction}</p>
+      ${
+        detailedReport.improvementPhoto
+          ? `<img height="175" src="${detailedReport.improvementPhoto}" alt="">`
+          : ""
+      }
+    </div>
+  `;
+  detailCard.appendChild(immediateActionContent);
+
+  // Tindakan Pencegahan Terulang Kembali
+  if (category === "Compromised Action") {
+    const preventionContent = document.createElement("div");
+    preventionContent.className = "content";
+    preventionContent.innerHTML = `
+      <h4 class="mb-n1">Tindakan Pencegahan Terulang Kembali</h4>
+      <div class="divider mt-3 mb-2"></div>
+      <div class="row mb-0">
+        <h5 class="mb-n1">1. Rekomendasi</h5>
+        <p class="mb-3">${detailedReport.recomendation}</p>
+        <h5 class="mb-n1">2. Tindak Lanjut</h5>
+        <p class="mb-3">${detailedReport.ActionDesc}</p>
+        ${
+          detailedReport.EvidencePhoto
+            ? `<img height="175" src="${detailedReport.EvidencePhoto}" alt="">`
+            : ""
+        }
+      </div>
+    `;
+    preventionContent.innerHTML += detailedReport.recomendation
+      ? detailedReport.recomendation
+          .map(
+            (action, index) => `
+                <span class="badge bg-green-dark mt-2 p-2 font-8 rounded-s">${action}</span>
+              `
+          )
+          .join("")
+      : "<p>Tidak ada data tindakan pencegahan terulang kembali.</p>";
+    detailCard.appendChild(preventionContent);
+  }
+
+  detailContainer.appendChild(detailCard);
+};
+
+// Fungsi untuk mendapatkan laporan detail berdasarkan reportid
+const getDetailedReport = async (reportid, detailContainerId, category) => {
+  const token = getTokenFromCookies("Login");
+
+  if (!token) {
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
+    return;
+  }
+
+  // Tentukan URL endpoint berdasarkan kategori
+  const targetURL =
+    category === "Unsafe Action"
+      ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
+      : category === "Compromised Action"
+      ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised"
+      : "";
+
+  if (!targetURL) {
+    console.error("Invalid category:", category);
+    return;
+  }
+
+  const myHeaders = new Headers();
+  myHeaders.append("Login", token);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: JSON.stringify({ reportid }),
+    redirect: "follow",
+  };
+
+  try {
+    const response = await fetch(targetURL, requestOptions);
+
+    if (response.ok) {
+      const data = await response.json();
+
+      if (data.status === 200) {
+        displayDetailedReport(data.data, detailContainerId, category);
+      } else {
+        console.error(
+          `Server response (${category}):`,
+          data.message || "Data tidak dapat ditemukan"
+        );
+      }
+    } else {
+      console.error(`HTTP error (${category}):`, response.status);
+    }
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
+  }
+};
+
+
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -69,6 +334,11 @@ const createReportCard = (report, category, index) => {
         </div>
     </div>
   `;
+  // Tambahkan event listener untuk menangani klik pada card
+  newCard.addEventListener("click", () => {
+    // Redirect ke halaman detail dengan menyertakan reportid sebagai parameter query
+    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
+  });
 
   return newCard;
 };
@@ -79,25 +349,16 @@ const createTabAndDisplayReports = async (
   tabContainerId,
   activeTab
 ) => {
-
-  // Get the containers for Unsafe Action and Compromised Action
-  const unsafeContainer = document.getElementById(`tab-unsafe`);
-  const compromisedContainer = document.getElementById(`tab-compromised`);
+  const containerId = `tab-${category.toLowerCase()}`;
+  const container = document.getElementById(containerId);
 
   // Check if the category is "Unsafe Action" and populate the corresponding container
-  if (category === "Unsafe Action") {
+  if (container) {
     // Iterate over each report
     data.forEach((report, index) => {
       // Create card for each report
       const newCard = createReportCard(report, category, index);
-      unsafeContainer.appendChild(newCard);
-    });
-  } else if (category === "Compromised Action") {
-    // Iterate over each report
-    data.forEach((report, index) => {
-      // Create card for each report
-      const newCard = createReportCard(report, category, index);
-      compromisedContainer.appendChild(newCard);
+      container.appendChild(newCard);
     });
   }
 
@@ -111,7 +372,9 @@ const createTabAndDisplayReports = async (
       tabs.forEach((t) => t.classList.remove("active"));
       tab.classList.add("active");
 
-      const tabContents = document.querySelectorAll(`#${tabContainerId} .collapse`);
+      const tabContents = document.querySelectorAll(
+        `#${tabContainerId} .collapse`
+      );
       tabContents.forEach((tc) => tc.classList.remove("show"));
 
       const targetTab = document.querySelector(targetTabId);
@@ -127,15 +390,17 @@ const createTabAndDisplayReports = async (
   });
 
   // Activate the initial tab only if no tab is already active and the activeTab is not "tab-compromised"
-  if (!hasActiveTab && activeTab !== "tab-compromised") {
+  if (!hasActiveTab && activeTab !== containerId) {
     const initialTab = document.querySelector(
-      `#${tabContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
+      `#${tabContainerId} .tab-controls a[data-bs-target="#${containerId}"]`
     );
     if (initialTab) {
       initialTab.click();
     }
   }
 };
+
+
 
 const getUserReportsByCategoryAndGroup = async () => {
   // URL dan kategori laporan
@@ -215,3 +480,14 @@ const getUserReportsByCategoryAndGroup = async () => {
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan
 getUserReportsByCategoryAndGroup();
+
+// ID elemen target di halaman detail report
+const detailContainerId = "detailContainer";
+
+// Ambil reportid dari parameter query
+const reportid = new URLSearchParams(window.location.search).get("reportid");
+
+// Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
+if (reportid) {
+  getDetailedReport(reportid, detailContainerId);
+}
