@@ -73,7 +73,12 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const createTabAndDisplayReports = async (data, category, tabContainerId, activeTab) => {
+const createTabAndDisplayReports = async (
+  data,
+  category,
+  tabContainerId,
+  activeTab
+) => {
   const tabContainer = document.getElementById(tabContainerId);
 
   // Create tab content container
@@ -115,7 +120,36 @@ const createTabAndDisplayReports = async (data, category, tabContainerId, active
   tabContentContainer.appendChild(unsafeContainer);
   tabContentContainer.appendChild(compromisedContainer);
 
+  // Append the tab content container to the tab container
   tabContainer.appendChild(tabContentContainer);
+
+  // Initialize tabs (simple toggle logic)
+  const tabs = document.querySelectorAll(`#${tabContainerId} .nav-link`);
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      const targetTabId = tab.getAttribute("data-bs-target");
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const tabContents = document.querySelectorAll(
+        `#${tabContainerId} .tab-content .collapse`
+      );
+      tabContents.forEach((tc) => tc.classList.remove("show"));
+
+      const targetTab = document.querySelector(targetTabId);
+      if (targetTab) {
+        targetTab.classList.add("show");
+      }
+    });
+  });
+
+  // Activate the initial tab
+  const initialTab = document.querySelector(
+    `#${tabContainerId} .nav-link[data-bs-target="#${activeTab}"]`
+  );
+  if (initialTab) {
+    initialTab.click();
+  }
 };
 
 const getUserReportsByCategoryAndGroup = async () => {
@@ -168,11 +202,12 @@ const getUserReportsByCategoryAndGroup = async () => {
         if (responseData.status === 200) {
           const data = responseData.data;
           // Proses dan tampilkan data laporan dalam tab
+          // Call the function to get and display reports
           createTabAndDisplayReports(
             data,
-            reportUrl.category,
+            "Unsafe Action",
             "tab-container",
-            reportUrl.tabId
+            "tab-unsafe"
           );
         } else {
           console.error(
