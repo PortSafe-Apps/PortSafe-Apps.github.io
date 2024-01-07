@@ -199,7 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (reportid, detailContainerId) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -215,19 +215,19 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
 
   // Extract category from the URL
   const urlParams = new URLSearchParams(window.location.search);
-  const category = urlParams.get("category");
+  const categoryParam = urlParams.get("category");
 
   // Validate category
-  if (!category || (category !== "Unsafe Action" && category !== "Compromised Action")) {
-    console.error("Invalid category:", category);
+  if (!categoryParam || (categoryParam !== "Unsafe Action" && categoryParam !== "Compromised Action")) {
+    console.error("Invalid category:", categoryParam);
     return;
   }
 
   // Determine URL endpoint based on category
   const targetURL =
-    category === "Unsafe Action"
+    categoryParam === "Unsafe Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
-      : category === "Compromised Action"
+      : categoryParam === "Compromised Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised"
       : "";
 
@@ -249,12 +249,12 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
 
       if (data.status === 200) {
         // Ensure the category is correct when calling the displayDetailedReport function
-        displayDetailedReport(data.data, detailContainerId, category);
+        displayDetailedReport(data.data, detailContainerId, categoryParam);
       } else {
-        console.error(`Server response (${category}):`, data.message || "Data tidak dapat ditemukan");
+        console.error(`Server response (${categoryParam}):`, data.message || "Data tidak dapat ditemukan");
       }
     } else {
-      console.error(`HTTP error (${category}):`, response.status);
+      console.error(`HTTP error (${categoryParam}):`, response.status);
     }
   } catch (error) {
     console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
@@ -370,12 +370,9 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       const newCard = createReportCard(report, category, index);
 
       newCard.addEventListener("click", () => {
-        // Determine the category of the report based on the report data
         const reportCategory = report.category.toLowerCase();
-    
-        // Call the function with the correct category
         getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
-    });
+      });
 
       container.appendChild(newCard);
     });
@@ -464,13 +461,13 @@ const getUserReportsByCategoryAndGroup = async () => {
           createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
         } else {
           console.error(
-            `Respon server (${reportUrl.category}):`,
+            `Server response (${reportUrl.category}):`,
             responseData.message || "Data tidak dapat ditemukan"
           );
         }
       } else {
         console.error(
-          `Kesalahan HTTP (${reportUrl.category}):`,
+          `HTTP error (${reportUrl.category}):`,
           response.status
         );
       }
@@ -493,6 +490,3 @@ if (reportid) {
   const category = isUnsafeTab ? "Unsafe Action" : "Compromised Action";
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
-
-
-
