@@ -199,7 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReport = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
