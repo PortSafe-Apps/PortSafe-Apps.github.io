@@ -271,25 +271,21 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
-  // Menambahkan badge kategori "Unsafe" atau "Compromised"
   const badgeCategory = category.toLowerCase();
-
-  // Menentukan warna dan ikon badge sesuai kategori
   const badgeColor = badgeCategory === "unsafe action" ? "danger" : "yellow";
   const badgeIcon =
-    badgeCategory === "unsafe action" ? "fa-exclamation-triangle" : "fa-child";
+    badgeCategory === "unsafe action"
+      ? "fa-exclamation-triangle"
+      : "fa-child";
 
-  // Membuat badge kategori
   const categoryBadge = `<span class="badge bg-${badgeColor} text-white font-10 mb-1 d-block rounded-s">
     <i class="fa ${badgeIcon}"></i> ${category}
   </span>`;
 
-  // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
     category === "Compromised Action"
       ? `<span class="badge bg-success text-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
       : "";
-
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
     ? report.location.locationName
@@ -379,11 +375,11 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
   if (container) {
     data.forEach((report, index) => {
-      const newCard = createReportCard(report, category.toLowerCase(), index);
+      const newCard = createReportCard(report, category, index);
 
-      // Menambahkan event listener untuk menangani klik pada card
+      // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Memanggil fungsi getDetailedReportByCategory dengan kategori yang sesuai
+        // Call getDetailedReportByCategory function with the appropriate category
         getDetailedReportByCategory(
           report.reportid,
           detailContainerId,
