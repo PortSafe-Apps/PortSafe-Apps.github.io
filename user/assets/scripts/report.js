@@ -379,7 +379,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
   if (container) {
     data.forEach((report, index) => {
-      const newCard = createReportCard(report, category, index);
+      const newCard = createReportCard(report, category.toLowerCase(), index);
 
       // Menambahkan event listener untuk menangani klik pada card
       newCard.addEventListener("click", () => {
