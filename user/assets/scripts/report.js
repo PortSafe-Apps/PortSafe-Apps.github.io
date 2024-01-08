@@ -14,7 +14,6 @@ function getTokenFromCookies(cookieName) {
 }
 
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
-  console.log("Displaying Detailed Report:", detailedReport);
   const detailContainer = document.getElementById(detailContainerId);
 
   // Clear existing content
@@ -54,128 +53,128 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
       </div>
       <div class="divider mt-3 mb-2"></div>
       <div class="row mb-0">
-     <div class="col-4">
-       <p class="color-theme font-700">No. Pelaporan</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.reportid}</p>
-     </div>
+        <div class="col-4">
+          <p class="color-theme font-700">No. Pelaporan</p>
+        </div>
+        <div class="col-8">
+          <p class="font-400">${detailedReport.reportid}</p>
+        </div>
 
-     <div class="col-4">
-       <p class="color-theme font-700">Tanggal</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.date}</p>
-     </div>
-
-     <div class="col-4">
-       <p class="color-theme font-700">Waktu</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.time}</p>
-     </div>
-
-     <div class="col-4">
-       <p class="color-theme font-700">Observator</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.user.nama}</p>
-     </div>
-
-     <div class="col-4">
-       <p class="color-theme font-700">Unit Kerja</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.location.locationName}</p>
-     </div>
-
-     <div class="col-4">
-       <p class="color-theme font-700">Area</p>
-     </div>
-     <div class="col-8">
-       <p class="font-400">${detailedReport.area.areaName}</p>
-     </div>
-   </div>
+        <div class="col-4">
+        <p class="color-theme font-700">Tanggal</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.date}</p>
+      </div>
+ 
+      <div class="col-4">
+        <p class="color-theme font-700">Waktu</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.time}</p>
+      </div>
+ 
+      <div class="col-4">
+        <p class="color-theme font-700">Observator</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.user.nama}</p>
+      </div>
+ 
+      <div class="col-4">
+        <p class="color-theme font-700">Unit Kerja</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.location.locationName}</p>
+      </div>
+ 
+      <div class="col-4">
+        <p class="color-theme font-700">Area</p>
+      </div>
+      <div class="col-8">
+        <p class="font-400">${detailedReport.area.areaName}</p>
+      </div>
     </div>
-  `;
+     </div>
+   `;
   detailContainer.appendChild(detailCard);
 
   // Deskripsi Pengamatan Card
   const descriptionCard = document.createElement("div");
   descriptionCard.className = "card card-style";
   descriptionCard.innerHTML = `
-    <div class="content">
-      <h4 class="mb-n1">Deskripsi Pengamatan</h4>
-      <div class="divider mt-3 mb-2"></div>
-      <div class="row mb-0">
-        <p class="mb-3">${detailedReport.description}</p>
-        ${
-          detailedReport.observationPhoto
-            ? `<img height="175" src="${detailedReport.observationPhoto}" alt="">`
-            : ""
-        }
-      </div>
-    </div>
-  `;
+     <div class="content">
+       <h4 class="mb-n1">Deskripsi Pengamatan</h4>
+       <div class="divider mt-3 mb-2"></div>
+       <div class="row mb-0">
+         <p class="mb-3">${detailedReport.description}</p>
+         ${
+           detailedReport.observationPhoto
+             ? `<img height="175" src="${detailedReport.observationPhoto}" alt="">`
+             : ""
+         }
+       </div>
+     </div>
+   `;
   detailContainer.appendChild(descriptionCard);
 
   // Jenis Tindakan Berbahaya Card
   const dangerousActionCard = document.createElement("div");
   dangerousActionCard.className = "card card-style";
   dangerousActionCard.innerHTML = `
-    <div class="content">
-      <h4 class="mb-n1">Jenis Tindakan Berbahaya</h4>
-      <div class="divider mt-3 mb-2"></div>
-      <div class="content mb-2">
-        ${
-          detailedReport.typeDangerousActions &&
-          detailedReport.typeDangerousActions.length
-            ? detailedReport.typeDangerousActions
-                .map(
-                  (action, index) => `
-                <h5 href="#type${
-                  index + 1
-                }" data-bs-toggle="collapse" role="button" class="font-600">
-                  ${action.typeName}
-                  <i class="fa fa-angle-down float-end me-2 mt-1 opacity-50 font-10"></i>
-                </h5>
-                <div class="collapse" id="type${index + 1}">
-                  ${action.subTypes
-                    .map(
-                      (subType) => `
-                    <span class="badge bg-red-dark mt-2 p-2 font-8 rounded-s">${subType}</span>
-                  `
-                    )
-                    .join("")}
-                </div>
-                <div class="divider mt-3 mb-3"></div>
-              `
-                )
-                .join("")
-            : "<p>Tidak ada data tindakan berbahaya.</p>"
-        }
-      </div>
-    </div>
-  `;
+     <div class="content">
+       <h4 class="mb-n1">Jenis Tindakan Berbahaya</h4>
+       <div class="divider mt-3 mb-2"></div>
+       <div class="content mb-2">
+         ${
+           detailedReport.typeDangerousActions &&
+           detailedReport.typeDangerousActions.length
+             ? detailedReport.typeDangerousActions
+                 .map(
+                   (action, index) => `
+                 <h5 href="#type${
+                   index + 1
+                 }" data-bs-toggle="collapse" role="button" class="font-600">
+                   ${action.typeName}
+                   <i class="fa fa-angle-down float-end me-2 mt-1 opacity-50 font-10"></i>
+                 </h5>
+                 <div class="collapse" id="type${index + 1}">
+                   ${action.subTypes
+                     .map(
+                       (subType) => `
+                     <span class="badge bg-red-dark mt-2 p-2 font-8 rounded-s">${subType}</span>
+                   `
+                     )
+                     .join("")}
+                 </div>
+                 <div class="divider mt-3 mb-3"></div>
+               `
+                 )
+                 .join("")
+             : "<p>Tidak ada data tindakan berbahaya.</p>"
+         }
+       </div>
+     </div>
+   `;
   detailContainer.appendChild(dangerousActionCard);
 
   // Tindakan Perbaikan Segera Card
   const immediateActionCard = document.createElement("div");
   immediateActionCard.className = "card card-style";
   immediateActionCard.innerHTML = `
-    <div class="content">
-      <h4 class="mb-n1">Tindakan Perbaikan Segera</h4>
-      <div class="divider mt-3 mb-2"></div>
-      <div class="row mb-0">
-        <p class="mb-3">${detailedReport.immediateAction}</p>
-        ${
-          detailedReport.improvementPhoto
-            ? `<img height="175" src="${detailedReport.improvementPhoto}" alt="">`
-            : ""
-        }
-      </div>
-    </div>
-  `;
+     <div class="content">
+       <h4 class="mb-n1">Tindakan Perbaikan Segera</h4>
+       <div class="divider mt-3 mb-2"></div>
+       <div class="row mb-0">
+         <p class="mb-3">${detailedReport.immediateAction}</p>
+         ${
+           detailedReport.improvementPhoto
+             ? `<img height="175" src="${detailedReport.improvementPhoto}" alt="">`
+             : ""
+         }
+       </div>
+     </div>
+   `;
   detailContainer.appendChild(immediateActionCard);
 
   // Tindakan Pencegahan Terulang Kembali Card
@@ -183,22 +182,22 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
     const preventionCard = document.createElement("div");
     preventionCard.className = "card card-style";
     preventionCard.innerHTML = `
-      <div class="content">
-        <h4 class="mb-n1">Tindakan Pencegahan Terulang Kembali</h4>
-        <div class="divider mt-3 mb-2"></div>
-        <div class="row mb-0">
-          <h5 class="mb-n1">1. Rekomendasi</h5>
-          <p class="mb-3">${detailedReport.recomendation}</p>
-          <h5 class="mb-n1">2. Tindak Lanjut</h5>
-          <p class="mb-3">${detailedReport.ActionDesc}</p>
-          ${
-            detailedReport.EvidencePhoto
-              ? `<img height="175" src="${detailedReport.EvidencePhoto}" alt="">`
-              : ""
-          }
-        </div>
-      </div>
-    `;
+       <div class="content">
+         <h4 class="mb-n1">Tindakan Pencegahan Terulang Kembali</h4>
+         <div class="divider mt-3 mb-2"></div>
+         <div class="row mb-0">
+           <h5 class="mb-n1">1. Rekomendasi</h5>
+           <p class="mb-3">${detailedReport.recomendation}</p>
+           <h5 class="mb-n1">2. Tindak Lanjut</h5>
+           <p class="mb-3">${detailedReport.ActionDesc}</p>
+           ${
+             detailedReport.EvidencePhoto
+               ? `<img height="175" src="${detailedReport.EvidencePhoto}" alt="">`
+               : ""
+           }
+         </div>
+       </div>
+     `;
     detailContainer.appendChild(preventionCard);
   }
   console.log("Detailed Report Displayed");
@@ -209,7 +208,12 @@ const getDetailedReportByCategory = async (
   detailContainerId,
   category
 ) => {
-  console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
+  console.log(
+    "Fetching Detailed Report for:",
+    category,
+    "Report ID:",
+    reportid
+  );
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -223,7 +227,7 @@ const getDetailedReportByCategory = async (
     return;
   }
 
-  // Tentukan URL endpoint berdasarkan kategori
+  // Define the URL endpoint based on the category
   const targetURL =
     category === "Unsafe Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
@@ -255,22 +259,19 @@ const getDetailedReportByCategory = async (
       if (data.status === 200) {
         console.log("Detailed Report Data:", data.data);
 
-        // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
+        // Make sure the category is available when calling the displayDetailedReport function
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
         console.error(
           `Server response (${category}):`,
-          data.message || "Data tidak dapat ditemukan"
+          data.message || "Data cannot be found"
         );
       }
     } else {
       console.error(`HTTP error (${category}):`, response.status);
     }
   } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
+    console.error("Error:", error.message || "An unknown error occurred");
   }
 };
 
@@ -386,7 +387,12 @@ const containerIdCompromised = "tab-compromised";
 const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
-const createTabAndDisplayReports = async (data, category, activeTab, detailContainerId) => {
+const createTabAndDisplayReports = async (
+  data,
+  category,
+  activeTab,
+  detailContainerId
+) => {
   let container;
   if (category === "Unsafe Action") {
     container = containerUnsafe;
@@ -396,11 +402,15 @@ const createTabAndDisplayReports = async (data, category, activeTab, detailConta
 
   if (container) {
     data.forEach((report, index) => {
-      const newCard = createReportCard(report, category, index, detailContainerId);
+      const newCard = createReportCard(
+        report,
+        category,
+        index,
+        detailContainerId
+      );
 
       // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Call getDetailedReportByCategory function with the appropriate category
         getDetailedReportByCategory(
           report.reportid,
           detailContainerId,
@@ -492,7 +502,12 @@ const getUserReportsByCategoryAndGroup = async (detailContainerId) => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId, detailContainerId);
+          createTabAndDisplayReports(
+            data,
+            reportUrl.category,
+            reportUrl.tabId,
+            detailContainerId
+          );
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
@@ -516,17 +531,25 @@ const getUserReportsByCategoryAndGroup = async (detailContainerId) => {
 
 getUserReportsByCategoryAndGroup(detailContainerId);
 
+// Get the reportid and category from the query parameters
 const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
 
 const activeTabElement = document.querySelector(".tab-controls a.active");
 
-const activeTab = activeTabElement ? activeTabElement.getAttribute("data-bs-target") : null;
+const activeTab = activeTabElement
+  ? activeTabElement.getAttribute("data-bs-target")
+  : null;
 
 const categoryBadge = document.querySelector(`${activeTab} .badge`);
 
-const category = categoryBadge ? (categoryBadge.textContent.trim() === "Unsafe Action" ? "Unsafe Action" : "Compromised Action") : null;
+const category = categoryBadge
+  ? categoryBadge.textContent.trim() === "Unsafe Action"
+    ? "Unsafe Action"
+    : "Compromised Action"
+  : null;
 
+// If both reportid and category are available, fetch and display the detailed report
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
