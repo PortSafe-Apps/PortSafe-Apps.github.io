@@ -296,7 +296,7 @@ const createReportCard = (report, category, index) => {
     report.status === "Opened"
       ? "bg-green-dark"
       : category === "Compromised Action"
-      ? "bg-warning"
+      ? "bg-red-dark"
       : ""
   } text-white font-10 mb-1 d-block rounded-s">${report.status}</span>`;
 
@@ -381,10 +381,14 @@ const containerCompromised = document.getElementById(containerIdCompromised);
 
 const createTabAndDisplayReports = async (data, category, activeTab) => {
   let container;
+  let detailCategory;
+
   if (category === "Unsafe Action") {
     container = containerUnsafe;
+    detailCategory = "Unsafe Action";
   } else if (category === "Compromised Action") {
     container = containerCompromised;
+    detailCategory = "Compromised Action";
   }
 
   if (container) {
@@ -397,7 +401,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
         getDetailedReportByCategory(
           report.reportid,
           detailContainerId,
-          category
+          detailCategory
         );
       });
 
@@ -512,7 +516,15 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 
 const reportid = new URLSearchParams(window.location.search).get("reportid");
+const activeTab = new URLSearchParams(window.location.search).get("activeTab");
 
-if (reportid) {
-    getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
+if (reportid && activeTab) {
+  getDetailedReportByCategory(reportid, detailContainerId, activeTab);
+} else {
+  // Default to "Unsafe Action" if no specific category is provided
+  getDetailedReportByCategory(
+    "defaultReportId",  // Replace with an appropriate default report ID
+    detailContainerId,
+    "Unsafe Action"
+  );
 }
