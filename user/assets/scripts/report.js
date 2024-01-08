@@ -27,7 +27,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
         </div>
         <div class="ms-auto">
           <span class="badge ${
-            category === "Compromised Action" ? "bg-red-dark" : "bg-yellow-dark"
+            category === "Unsafe Action" ? "bg-red-dark" : "bg-yellow-dark"
           } color-white font-10 mb-1 d-block rounded-s">
             <i class="${
               category === "Unsafe Action"
@@ -213,13 +213,18 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
     return;
   }
 
-  // Determine URL endpoint based on category
+  // Tentukan URL endpoint berdasarkan kategori
   const targetURL =
     category === "Unsafe Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
       : category === "Compromised Action"
       ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised"
       : "";
+
+  if (!targetURL) {
+    console.error("Invalid category:", category);
+    return;
+  }
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -238,19 +243,24 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
       const data = await response.json();
 
       if (data.status === 200) {
-        // Ensure the category is correct when calling the displayDetailedReport function
+        // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
-        console.error(`Server response (${category}):`, data.message || "Data tidak dapat ditemukan");
+        console.error(
+          `Server response (${category}):`,
+          data.message || "Data tidak dapat ditemukan"
+        );
       }
     } else {
       console.error(`HTTP error (${category}):`, response.status);
     }
   } catch (error) {
-    console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 };
-
 
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
@@ -320,21 +330,26 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const handleTabClick = (tab, tabGroupId) => {
-  const targetTabId = tab.getAttribute("data-bs-target");
-  const tabs = document.querySelectorAll(`#${tabGroupId} .tab-controls a`);
+const tabsContainerId = "tab-group-1";
+const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
 
-  tabs.forEach((t) => t.classList.remove("active"));
-  tab.classList.add("active");
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const targetTabId = tab.getAttribute("data-bs-target");
+    tabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
 
-  const tabContents = document.querySelectorAll(`#${tabGroupId} .collapse`);
-  tabContents.forEach((tc) => tc.classList.remove("show"));
+    const tabContents = document.querySelectorAll(
+      `#${tabsContainerId} .collapse`
+    );
+    tabContents.forEach((tc) => tc.classList.remove("show"));
 
-  const targetTab = document.querySelector(targetTabId);
-  if (targetTab) {
-    targetTab.classList.add("show");
-  }
-};
+    const targetTab = document.querySelector(targetTabId);
+    if (targetTab) {
+      targetTab.classList.add("show");
+    }
+  });
+});
 
 const containerIdUnsafe = "tab-unsafe";
 const containerIdCompromised = "tab-compromised";
@@ -342,16 +357,21 @@ const containerIdCompromised = "tab-compromised";
 const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
-// Function to create tab and display reports
 const createTabAndDisplayReports = async (data, category, activeTab) => {
-  const containerId = `tab-${category.toLowerCase()}`;
-  const container = document.getElementById(containerId);
+  let container;
+  if (category === "Unsafe Action") {
+    container = containerUnsafe;
+  } else if (category === "Compromised Action") {
+    container = containerCompromised;
+  }
 
   if (container) {
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
+      // Menambahkan event listener untuk menangani klik pada card
       newCard.addEventListener("click", () => {
+        // Memanggil fungsi getDetailedReportByCategory dengan kategori yang sesuai
         getDetailedReportByCategory(report.reportid, detailContainerId, category);
       });
 
@@ -359,12 +379,24 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     });
   }
 
-  const tabs = document.querySelectorAll(`#tab-group-1 .tab-controls a`);
+  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
   let hasActiveTab = false;
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      handleTabClick(tab, "tab-group-1");
+      const targetTabId = tab.getAttribute("data-bs-target");
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const tabContents = document.querySelectorAll(
+        `#${tabsContainerId} .collapse`
+      );
+      tabContents.forEach((tc) => tc.classList.remove("show"));
+
+      const targetTab = document.querySelector(targetTabId);
+      if (targetTab) {
+        targetTab.classList.add("show");
+      }
     });
 
     if (tab.classList.contains("active")) {
@@ -372,16 +404,15 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     }
   });
 
-  if (!hasActiveTab && activeTab !== `tab-${category.toLowerCase()}`) {
+  if (!hasActiveTab && activeTab !== containerIdCompromised) {
     const initialTab = document.querySelector(
-      `#tab-group-1 .tab-controls a[data-bs-target="#${activeTab}"]`
+      `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
     );
     if (initialTab) {
       initialTab.click();
     }
   }
 };
-
 
 const getUserReportsByCategoryAndGroup = async () => {
   const reportUrls = [
@@ -431,13 +462,13 @@ const getUserReportsByCategoryAndGroup = async () => {
           createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
         } else {
           console.error(
-            `Server response (${reportUrl.category}):`,
+            `Respon server (${reportUrl.category}):`,
             responseData.message || "Data tidak dapat ditemukan"
           );
         }
       } else {
         console.error(
-          `HTTP error (${reportUrl.category}):`,
+          `Kesalahan HTTP (${reportUrl.category}):`,
           response.status
         );
       }
@@ -456,6 +487,8 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  const category = reportid.includes("Compromised") ? "Compromised Action" : "Unsafe Action";
+  const category = window.location.href.includes("tab-unsafe")
+    ? "Unsafe Action"
+    : "Compromised Action";
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
