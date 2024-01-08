@@ -30,7 +30,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
             category === "Compromised Action" ? "bg-red-dark" : "bg-yellow-dark"
           } color-white font-10 mb-1 d-block rounded-s">
             <i class="${
-              category === "Compromised Action"
+              category === "Unsafe Action"
                 ? "fa fa-exclamation-triangle"
                 : "fa fa-child"
             }"></i> ${category}
@@ -202,6 +202,9 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
 const getDetailedReportByCategory = async (reportid, detailContainerId) => {
   const token = getTokenFromCookies("Login");
 
+  // Define urlParams
+  const urlParams = new URLSearchParams(window.location.search);
+
   if (!token) {
     Swal.fire({
       icon: "warning",
@@ -224,7 +227,6 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
     console.error("Invalid category:", categoryParam);
     return;
   }
-
   // Determine URL endpoint based on category
   const targetURL =
     categoryParam === "Unsafe Action"
