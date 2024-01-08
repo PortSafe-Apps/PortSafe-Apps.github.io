@@ -238,7 +238,7 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
       const data = await response.json();
 
       if (data.status === 200) {
-        // Ensure the category is correct when calling the displayDetailedReport function
+        // Menggunakan parameter category langsung di sini
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
         console.error(`Server response (${category}):`, data.message || "Data tidak dapat ditemukan");
@@ -312,9 +312,8 @@ const createReportCard = (report, category, index) => {
     </div>
   `;
   newCard.addEventListener("click", () => {
-    const clickedCategory = report.category;
     window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
-    getDetailedReportByCategory(report.reportid, detailContainerId, clickedCategory);
+    getDetailedReportByCategory(report.reportid, detailContainerId, category)
   });
 
   return newCard;
@@ -462,6 +461,6 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-if (reportid) {
-  getDetailedReportByCategory(reportid, detailContainerId, clickedCategory);
+if (reportid) {e
+  getDetailedReportByCategory(reportid, detailContainerId, category);
 }
