@@ -10,6 +10,11 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+const getActiveTabCategory = () => {
+  const activeTab = document.querySelector(`#${tabsContainerId} .tab-controls a.active`);
+  return activeTab ? activeTab.getAttribute("data-category") : null;
+};
+
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   const detailContainer = document.getElementById(detailContainerId);
 
@@ -381,14 +386,11 @@ const containerCompromised = document.getElementById(containerIdCompromised);
 
 const createTabAndDisplayReports = async (data, category, activeTab) => {
   let container;
-  let detailCategory;
 
   if (category === "Unsafe Action") {
     container = containerUnsafe;
-    detailCategory = "Unsafe Action";
   } else if (category === "Compromised Action") {
     container = containerCompromised;
-    detailCategory = "Compromised Action";
   }
 
   if (container) {
@@ -397,12 +399,16 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
       // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Call getDetailedReportByCategory function with the appropriate category
-        getDetailedReportByCategory(
-          report.reportid,
-          detailContainerId,
-          detailCategory
-        );
+        // Get the active tab's category
+        const activeTabCategory = getActiveTabCategory();
+        if (activeTabCategory) {
+          // Call getDetailedReportByCategory function with the active tab's category
+          getDetailedReportByCategory(
+            report.reportid,
+            detailContainerId,
+            activeTabCategory
+          );
+        }
       });
 
       container.appendChild(newCard);
@@ -516,15 +522,10 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 
 const reportid = new URLSearchParams(window.location.search).get("reportid");
-const activeTab = new URLSearchParams(window.location.search).get("activeTab");
 
-if (reportid && activeTab) {
-  getDetailedReportByCategory(reportid, detailContainerId, activeTab);
-} else {
-  // Default to "Unsafe Action" if no specific category is provided
-  getDetailedReportByCategory(
-    "defaultReportId",  // Replace with an appropriate default report ID
-    detailContainerId,
-    "Unsafe Action"
-  );
+if (reportid) {
+  const activeTabCategory = getActiveTabCategory();
+  if (activeTabCategory) {
+    getDetailedReportByCategory(reportid, detailContainerId, activeTabCategory);
+  }
 }
