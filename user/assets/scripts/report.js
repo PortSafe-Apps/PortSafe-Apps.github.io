@@ -205,7 +205,7 @@ const getDetailedReportByCategory = async (
   category
 ) => {
   console.log("getDetailedReportByCategory called with:", reportid, detailContainerId, category);
-  
+
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -275,10 +275,10 @@ const createReportCard = (report, category, index) => {
 
   const badgeIcon = category === "Unsafe Action" ? "fa-exclamation-triangle" : "fa-child";
 
-  const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+  const categoryBadge = `<span class="badge bg-${category} text-white font-10 mb-1 d-block rounded-s">
       <i class="fa ${badgeIcon}"></i> ${category}
     </span>`;
-  
+
   const statusBadge = category === "Compromised Action" ? `<span class="badge ${
       report.status === "Opened" ? "bg-green-dark" : "bg-warning"
     } color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
