@@ -511,19 +511,19 @@ const detailContainerId = "detailContainer";
 
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-// Tambahkan event listener untuk kartu pada tab Unsafe Action
-const unsafeCards = document.querySelectorAll("#tab-unsafe .card.card-style");
+// Inside the event listener for unsafe cards
 unsafeCards.forEach((card) => {
   card.addEventListener("click", () => {
+    console.log("Unsafe Card Clicked");
     const reportIdUnsafe = card.querySelector("h4").textContent;
     getDetailedReportByCategory(reportIdUnsafe, detailContainerId, "Unsafe Action");
   });
 });
 
-// Tambahkan event listener untuk kartu pada tab Compromised Action
-const compromisedCards = document.querySelectorAll("#tab-compromised .card.card-style");
+// Inside the event listener for compromised cards
 compromisedCards.forEach((card) => {
   card.addEventListener("click", () => {
+    console.log("Compromised Card Clicked");
     const reportIdCompromised = card.querySelector("h4").textContent;
     getDetailedReportByCategory(reportIdCompromised, detailContainerId, "Compromised Action");
   });
