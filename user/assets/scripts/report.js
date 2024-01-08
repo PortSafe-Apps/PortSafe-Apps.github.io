@@ -347,45 +347,29 @@ const containerIdCompromised = "tab-compromised";
 const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
+// Function to create tab and display reports
 const createTabAndDisplayReports = async (data, category, activeTab) => {
-  let container;
-  if (category === "Unsafe Action") {
-    container = containerUnsafe;
-  } else if (category === "Compromised Action") {
-    container = containerCompromised;
-  }
+  const containerId = `tab-${category.toLowerCase()}`;
+  const container = document.getElementById(containerId);
 
   if (container) {
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
       newCard.addEventListener("click", () => {
-        const reportCategory = report.category.toLowerCase();
-        getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
+        getDetailedReportByCategory(report.reportid, detailContainerId, category);
       });
 
       container.appendChild(newCard);
     });
   }
 
-  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
+  const tabs = document.querySelectorAll(`#tab-group-1 .tab-controls a`);
   let hasActiveTab = false;
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      const targetTabId = tab.getAttribute("data-bs-target");
-      tabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-
-      const tabContents = document.querySelectorAll(
-        `#${tabsContainerId} .collapse`
-      );
-      tabContents.forEach((tc) => tc.classList.remove("show"));
-
-      const targetTab = document.querySelector(targetTabId);
-      if (targetTab) {
-        targetTab.classList.add("show");
-      }
+      handleTabClick(tab, "tab-group-1");
     });
 
     if (tab.classList.contains("active")) {
@@ -393,15 +377,16 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     }
   });
 
-  if (!hasActiveTab && activeTab !== containerIdCompromised) {
+  if (!hasActiveTab && activeTab !== `tab-${category.toLowerCase()}`) {
     const initialTab = document.querySelector(
-      `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
+      `#tab-group-1 .tab-controls a[data-bs-target="#${activeTab}"]`
     );
     if (initialTab) {
       initialTab.click();
     }
   }
 };
+
 
 const getUserReportsByCategoryAndGroup = async () => {
   const reportUrls = [
@@ -476,6 +461,6 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  const category = "Unsafe Action"; // or "Compromised Action" based on your report structure
+  const category = reportid.includes("Compromised") ? "Compromised Action" : "Unsafe Action";
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
