@@ -199,7 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId,category) => {
   console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
   const token = getTokenFromCookies("Login");
 
@@ -214,16 +214,14 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
     return;
   }
 
-  // Determine detail URL based on category
+  // Tentukan URL endpoint berdasarkan kategori
   const detailURLs = {
     "Unsafe Action": "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1",
     "Compromised Action": "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised",
     // Add more categories as needed
   };
 
-  const targetURL = detailURLs[category];
-
-  if (!targetURL) {
+  if (!detailURLs[category]) {
     console.error("Invalid category:", category);
     return;
   }
@@ -239,7 +237,7 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
   };
 
   try {
-    const response = await fetch(targetURL, requestOptions);
+    const response = await fetch(detailURLs[category], requestOptions);
 
     if (response.ok) {
       const data = await response.json();
@@ -247,7 +245,7 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
       if (data.status === 200) {
         console.log("Detailed Report Data:", data.data);
 
-        // Ensure the category is available when calling the displayDetailedReport function
+        // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
         console.error(
@@ -265,7 +263,6 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
     );
   }
 };
-
 
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
@@ -343,10 +340,14 @@ const createReportCard = (report, category, index) => {
   `;
   // Tambahkan event listener untuk menangani klik pada card
   newCard.addEventListener("click", () => {
-    // Redirect ke halaman detail dengan menyertakan reportid sebagai parameter query
-    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
-  });
-
+         // Dapatkan reportid dan category dari card yang diklik
+         const clickedReportId = report.reportid;
+         const clickedCategory = category;
+ 
+         // Arahkan pengguna ke halaman detail dengan menyertakan reportid sebagai parameter query
+         window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${clickedReportId}&category=${clickedCategory}`;
+     });
+ 
   return newCard;
 };
 
@@ -510,21 +511,9 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 
 const reportid = new URLSearchParams(window.location.search).get("reportid");
+const category = new URLSearchParams(window.location.search).get("category");
 
-// Inside the event listener for unsafe cards
-unsafeCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    console.log("Unsafe Card Clicked");
-    const reportIdUnsafe = card.querySelector("h4").textContent;
-    getDetailedReportByCategory(reportIdUnsafe, detailContainerId, "Unsafe Action");
-  });
-});
+// Sekarang, Anda dapat menggunakan reportid dan category untuk memuat detail laporan sesuai.
+getDetailedReportByCategory(reportid, detailContainerId, category);
 
-// Inside the event listener for compromised cards
-compromisedCards.forEach((card) => {
-  card.addEventListener("click", () => {
-    console.log("Compromised Card Clicked");
-    const reportIdCompromised = card.querySelector("h4").textContent;
-    getDetailedReportByCategory(reportIdCompromised, detailContainerId, "Compromised Action");
-  });
-});
+
