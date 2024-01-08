@@ -267,12 +267,13 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
-// Menambahkan badge kategori "Unsafe" atau "Compromised"
-const categoryBadge = category.toLowerCase() === "unsafe"
-  ? `<span class="badge bg-red-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-exclamation-triangle"></i> Unsafe Action</span>`
-  : (category.toLowerCase() === "compromised"
-    ? `<span class="badge bg-yellow-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-child"></i> Compromised Action</span>`
-    : '');
+  let categoryBadge;
+
+  if (category.toLowerCase() === "unsafe") {
+    categoryBadge = `<span class="badge bg-red-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-exclamation-triangle"></i> Unsafe Action</span>`;
+  } else if (category.toLowerCase() === "compromised") {
+    categoryBadge = `<span class="badge bg-yellow-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-child"></i> Compromised Action</span>`;
+  }
 
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
