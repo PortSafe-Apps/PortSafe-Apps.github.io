@@ -204,6 +204,8 @@ const getDetailedReportByCategory = async (
   detailContainerId,
   category
 ) => {
+  console.log("getDetailedReportByCategory called with:", reportid, detailContainerId, category);
+  
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -271,16 +273,15 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
-  const badgeCategory = category === "Unsafe Action" ? "danger" : category === "Compromised Action" ? "warning" : "yellow";
-  const badgeIcon = category === "Unsafe Action" ? "fa-exclamation-triangle" : category === "Compromised Action" ? "fa-shield-alt" : "fa-child";
+  const badgeIcon = category === "Unsafe Action" ? "fa-exclamation-triangle" : "fa-child";
 
   const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-    <i class="fa ${badgeIcon}"></i> ${category}
-  </span>`;
-
-  const statusBadge = `<span class="badge ${
-    report.status === "Opened" ? "bg-green-dark" : category === "Compromised Action" ? "bg-warning" : "bg-red-dark"
-  } color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`;
+      <i class="fa ${badgeIcon}"></i> ${category}
+    </span>`;
+  
+  const statusBadge = category === "Compromised Action" ? `<span class="badge ${
+      report.status === "Opened" ? "bg-green-dark" : "bg-warning"
+    } color-white font-10 mb-1 d-block rounded-s">${report.status}</span>` : "";
 
 
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
@@ -374,14 +375,9 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
-      // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Call getDetailedReportByCategory function with the appropriate category
-        getDetailedReportByCategory(
-          report.reportid,
-          detailContainerId,
-          category
-        );
+        console.log("Card clicked!");  // Add this line
+        getDetailedReportByCategory(report.reportid, detailContainerId, category);
       });
 
       container.appendChild(newCard);
