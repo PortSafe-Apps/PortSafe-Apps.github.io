@@ -394,19 +394,15 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   if (container) {
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
-
+  
       // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Call getDetailedReportByCategory function with the appropriate category
-        getDetailedReportByCategory(
-          report.reportid,
-          detailContainerId,
-          detailCategory
-        );
+        // Call getDetailedReportByCategory function with the appropriate category and detailContainerId
+        getDetailedReportByCategory(report.reportid, detailContainerId, category);
       });
-
+  
       container.appendChild(newCard);
-    });
+    });  
   }
 
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
@@ -489,7 +485,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
+          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId, detailContainerId);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
@@ -517,6 +513,20 @@ const detailContainerId = "detailContainer";
 
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-if (reportid) {
-    getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
-}
+// Tambahkan event listener untuk kartu pada tab Unsafe Action
+const unsafeCards = document.querySelectorAll("#tab-unsafe .card.card-style");
+unsafeCards.forEach((card) => {
+  card.addEventListener("click", () => {
+    const reportIdUnsafe = card.querySelector("h4").textContent;
+    getDetailedReportByCategory(reportIdUnsafe, detailContainerId, "Unsafe Action");
+  });
+});
+
+// Tambahkan event listener untuk kartu pada tab Compromised Action
+const compromisedCards = document.querySelectorAll("#tab-compromised .card.card-style");
+compromisedCards.forEach((card) => {
+  card.addEventListener("click", () => {
+    const reportIdCompromised = card.querySelector("h4").textContent;
+    getDetailedReportByCategory(reportIdCompromised, detailContainerId, "Compromised Action");
+  });
+});
