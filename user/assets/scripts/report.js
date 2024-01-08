@@ -199,7 +199,11 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (
+  reportid,
+  detailContainerId,
+  category
+) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -267,13 +271,18 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
-  let categoryBadge;
+  // Menambahkan badge kategori "Unsafe" atau "Compromised"
+  const badgeCategory = category.toLowerCase();
 
-  if (category.toLowerCase() === "unsafe") {
-    categoryBadge = `<span class="badge bg-red-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-exclamation-triangle"></i> Unsafe Action</span>`;
-  } else if (category.toLowerCase() === "compromised") {
-    categoryBadge = `<span class="badge bg-yellow-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-child"></i> Compromised Action</span>`;
-  }
+  // Menentukan warna dan ikon badge sesuai kategori
+  const badgeColor = badgeCategory === "unsafe action" ? "danger" : "yellow";
+  const badgeIcon =
+    badgeCategory === "unsafe action" ? "fa-exclamation-triangle" : "fa-child";
+
+  // Membuat badge kategori
+  const categoryBadge = `<span class="badge bg-${badgeColor} text-white font-10 mb-1 d-block rounded-s">
+    <i class="fa ${badgeIcon}"></i> ${category}
+  </span>`;
 
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
@@ -333,7 +342,6 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-
 const tabsContainerId = "tab-group-1";
 const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
 
@@ -376,7 +384,11 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
       // Menambahkan event listener untuk menangani klik pada card
       newCard.addEventListener("click", () => {
         // Memanggil fungsi getDetailedReportByCategory dengan kategori yang sesuai
-        getDetailedReportByCategory(report.reportid, detailContainerId, category);
+        getDetailedReportByCategory(
+          report.reportid,
+          detailContainerId,
+          category
+        );
       });
 
       container.appendChild(newCard);
