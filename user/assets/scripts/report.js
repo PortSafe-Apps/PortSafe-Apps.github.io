@@ -275,6 +275,7 @@ const getDetailedReportByCategory = async (
   }
 };
 
+
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -552,4 +553,7 @@ const category = categoryBadge
 // If both reportid and category are available, fetch and display the detailed report
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
+} else {
+  // If reportid and category are not available, fetch and display user reports
+  getUserReportsByCategoryAndGroup(detailContainerId);
 }
