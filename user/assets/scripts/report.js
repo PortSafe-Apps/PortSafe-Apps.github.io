@@ -1,6 +1,3 @@
-// Define detailContainerId
-const detailContainerId = "detailContainer";
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -275,7 +272,6 @@ const getDetailedReportByCategory = async (
   }
 };
 
-
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -412,6 +408,7 @@ const createTabAndDisplayReports = async (
 
       // Add event listener to handle card click
       newCard.addEventListener("click", () => {
+        // Call getDetailedReportByCategory function with the appropriate category
         getDetailedReportByCategory(
           report.reportid,
           detailContainerId,
@@ -532,7 +529,9 @@ const getUserReportsByCategoryAndGroup = async (detailContainerId) => {
 
 getUserReportsByCategoryAndGroup(detailContainerId);
 
-// Get the reportid and category from the query parameters
+
+const detailContainerId = "detailContainer";
+
 const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
 
@@ -553,7 +552,4 @@ const category = categoryBadge
 // If both reportid and category are available, fetch and display the detailed report
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
-} else {
-  // If reportid and category are not available, fetch and display user reports
-  getUserReportsByCategoryAndGroup(detailContainerId);
 }
