@@ -487,8 +487,13 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  const category = window.location.href.includes("tab-unsafe")
+  // Mendapatkan kategori dari URL yang sedang aktif
+  const activeTab = document.querySelector(`#${tabsContainerId} .tab-controls a.active`);
+  const category = activeTab
+    ? activeTab.getAttribute("data-bs-target").replace("#", "")
+    : window.location.href.includes("tab-unsafe")
     ? "Unsafe Action"
     : "Compromised Action";
+
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
