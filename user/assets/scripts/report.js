@@ -199,11 +199,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (
-  reportid,
-  detailContainerId,
-  category
-) => {
+const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
   console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
   const token = getTokenFromCookies("Login");
 
@@ -218,13 +214,14 @@ const getDetailedReportByCategory = async (
     return;
   }
 
-  // Tentukan URL endpoint berdasarkan kategori
-  const targetURL =
-    category === "Unsafe Action"
-      ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1"
-      : category === "Compromised Action"
-      ? "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised"
-      : "";
+  // Determine detail URL based on category
+  const detailURLs = {
+    "Unsafe Action": "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/oneReport-1",
+    "Compromised Action": "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getOneReportCompromised",
+    // Add more categories as needed
+  };
+
+  const targetURL = detailURLs[category];
 
   if (!targetURL) {
     console.error("Invalid category:", category);
@@ -250,7 +247,7 @@ const getDetailedReportByCategory = async (
       if (data.status === 200) {
         console.log("Detailed Report Data:", data.data);
 
-        // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
+        // Ensure the category is available when calling the displayDetailedReport function
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
         console.error(
@@ -268,6 +265,7 @@ const getDetailedReportByCategory = async (
     );
   }
 };
+
 
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
