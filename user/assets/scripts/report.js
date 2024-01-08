@@ -515,10 +515,18 @@ const detailContainerId = "detailContainer";
 const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
 
-// Mendapatkan category dari badge di card
-const activeTab = document.querySelector(".tab-controls a.active").getAttribute("data-bs-target");
-const categoryBadge = document.querySelector(`${activeTab} .badge`); // Sesuaikan dengan selektor yang sesuai
+const activeTabElement = document.querySelector(".tab-controls a.active");
+
+const activeTab = activeTabElement ? activeTabElement.getAttribute("data-bs-target") : null;
+
+const categoryBadge = document.querySelector(`${activeTab} .badge`);
+
 const category = categoryBadge ? (categoryBadge.textContent.trim() === "Unsafe Action" ? "Unsafe Action" : "Compromised Action") : null;
+
+if (reportid && category) {
+  getDetailedReportByCategory(reportid, detailContainerId, category);
+}
+
 
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
