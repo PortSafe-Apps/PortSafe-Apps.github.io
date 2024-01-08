@@ -271,21 +271,18 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
-  const badgeCategory = category.toLowerCase();
-  const badgeColor = badgeCategory === "unsafe action" ? "danger" : "yellow";
-  const badgeIcon =
-    badgeCategory === "unsafe action"
-      ? "fa-exclamation-triangle"
-      : "fa-child";
+  const badgeCategory = category === "Unsafe Action" ? "danger" : category === "Compromised Action" ? "warning" : "yellow";
+  const badgeIcon = category === "Unsafe Action" ? "fa-exclamation-triangle" : category === "Compromised Action" ? "fa-shield-alt" : "fa-child";
 
-  const categoryBadge = `<span class="badge bg-${badgeColor} text-white font-10 mb-1 d-block rounded-s">
+  const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
     <i class="fa ${badgeIcon}"></i> ${category}
   </span>`;
 
-  const statusBadge =
-    category === "Compromised Action"
-      ? `<span class="badge bg-success text-white font-10 mb-1 d-block rounded-s">${report.status}</span>`
-      : "";
+  const statusBadge = `<span class="badge ${
+    report.status === "Opened" ? "bg-green-dark" : category === "Compromised Action" ? "bg-warning" : "bg-red-dark"
+  } color-white font-10 mb-1 d-block rounded-s">${report.status}</span>`;
+
+
   // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
   const locationName = report.location
     ? report.location.locationName
