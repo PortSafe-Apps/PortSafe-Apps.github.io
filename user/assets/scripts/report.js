@@ -11,6 +11,7 @@ function getTokenFromCookies(cookieName) {
 }
 
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
+  console.log("Displaying Detailed Report:", detailedReport);
   const detailContainer = document.getElementById(detailContainerId);
 
   // Clear existing content
@@ -197,6 +198,7 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
     `;
     detailContainer.appendChild(preventionCard);
   }
+  console.log("Detailed Report Displayed");
 };
 
 const getDetailedReportByCategory = async (
@@ -204,6 +206,7 @@ const getDetailedReportByCategory = async (
   detailContainerId,
   category
 ) => {
+  console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -247,6 +250,8 @@ const getDetailedReportByCategory = async (
       const data = await response.json();
 
       if (data.status === 200) {
+        console.log("Detailed Report Data:", data.data);
+
         // Pastikan kategori ada saat memanggil fungsi displayDetailedReport
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
@@ -509,7 +514,10 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
-const category = queryParams.get("category");
+
+// Mendapatkan category dari badge di card
+const categoryBadge = document.querySelector(".badge.bg-danger"); // Sesuaikan dengan selektor yang sesuai
+const category = categoryBadge ? (categoryBadge.textContent.trim() === "Unsafe Action" ? "Unsafe Action" : "Compromised Action") : null;
 
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
