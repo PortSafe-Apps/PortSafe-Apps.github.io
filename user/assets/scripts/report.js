@@ -267,10 +267,14 @@ const createReportCard = (report, category, index) => {
   newCard.className = "card card-style mb-3";
   newCard.id = `card-${category.toLowerCase()}-${index + 1}`;
 
+  let categoryBadge;
+
   // Menambahkan badge kategori "Unsafe" atau "Compromised"
-  const categoryBadge = `<span class="badge bg-${
-    category.toLowerCase() === "unsafe" ? "danger" : "success"
-  } text-white font-10 mb-1 d-block rounded-s">${category}</span>`;
+  if (category.toLowerCase() === "unsafe") {
+    categoryBadge = `<span class="badge bg-red-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-exclamation-triangle"></i> Unsafe Action</span>`;
+  } else if (category.toLowerCase() === "compromised") {
+    categoryBadge = `<span class="badge bg-yellow-dark color-white font-10 mb-1 d-block rounded-s"><i class="fa fa-child"></i> Compromised Action</span>`;
+  }
 
   // Menambahkan badge status untuk kategori "Compromised Action"
   const statusBadge =
@@ -329,6 +333,7 @@ const createReportCard = (report, category, index) => {
 
   return newCard;
 };
+
 
 const tabsContainerId = "tab-group-1";
 const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
@@ -484,16 +489,10 @@ const getUserReportsByCategoryAndGroup = async () => {
 getUserReportsByCategoryAndGroup();
 
 const detailContainerId = "detailContainer";
-const reportid = new URLSearchParams(window.location.search).get("reportid");
+const queryParams = new URLSearchParams(window.location.search);
+const reportid = queryParams.get("reportid");
+const category = queryParams.get("category");
 
-if (reportid) {
-  // Mendapatkan kategori dari URL yang sedang aktif
-  const activeTab = document.querySelector(`#${tabsContainerId} .tab-controls a.active`);
-  const category = activeTab
-    ? activeTab.getAttribute("data-bs-target").replace("#", "")
-    : window.location.href.includes("tab-unsafe")
-    ? "Unsafe Action"
-    : "Compromised Action";
-
+if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
