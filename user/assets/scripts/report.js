@@ -311,10 +311,10 @@ const createReportCard = (report, category, index) => {
         </div>
     </div>
   `;
-  // Tambahkan event listener untuk menangani klik pada card
   newCard.addEventListener("click", () => {
-    // Redirect ke halaman detail dengan menyertakan reportid sebagai parameter query
+    const clickedCategory = report.category;
     window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
+    getDetailedReportByCategory(report.reportid, detailContainerId, clickedCategory);
   });
 
   return newCard;
@@ -353,19 +353,6 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     container = containerUnsafe;
   } else if (category === "Compromised Action") {
     container = containerCompromised;
-  }
-
-  if (container) {
-    data.forEach((report, index) => {
-      const newCard = createReportCard(report, category, index);
-
-      newCard.addEventListener("click", () => {
-        const reportCategory = report.category.toLowerCase();
-        getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
-      });
-
-      container.appendChild(newCard);
-    });
   }
 
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
@@ -476,5 +463,5 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  getDetailedReportByCategory(reportid, detailContainerId, "Compromiesd Action");
+  getDetailedReportByCategory(reportid, detailContainerId, clickedCategory);
 }
