@@ -213,8 +213,6 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
     return;
   }
 
-  // Extract category from the URL
-  const urlParams = new URLSearchParams(window.location.search);
   const categoryParam = urlParams.get("category");
 
   // Validate category
