@@ -527,8 +527,3 @@ if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
 
-
-if (reportid && category) {
-  getDetailedReportByCategory(reportid, detailContainerId, category);
-}
-
