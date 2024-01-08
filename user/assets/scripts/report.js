@@ -218,7 +218,11 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
   const categoryParam = urlParams.get("category");
 
   // Validate category
-  if (!categoryParam || (categoryParam !== "Unsafe Action" && categoryParam !== "Compromised Action")) {
+  if (
+    !categoryParam ||
+    (categoryParam !== "Unsafe Action" &&
+      categoryParam !== "Compromised Action")
+  ) {
     console.error("Invalid category:", categoryParam);
     return;
   }
@@ -251,16 +255,21 @@ const getDetailedReportByCategory = async (reportid, detailContainerId) => {
         // Ensure the category is correct when calling the displayDetailedReport function
         displayDetailedReport(data.data, detailContainerId, categoryParam);
       } else {
-        console.error(`Server response (${categoryParam}):`, data.message || "Data tidak dapat ditemukan");
+        console.error(
+          `Server response (${categoryParam}):`,
+          data.message || "Data tidak dapat ditemukan"
+        );
       }
     } else {
       console.error(`HTTP error (${categoryParam}):`, response.status);
     }
   } catch (error) {
-    console.error("Error:", error.message || "Terjadi kesalahan yang tidak diketahui");
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
   }
 };
-
 
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
@@ -359,45 +368,53 @@ const containerCompromised = document.getElementById(containerIdCompromised);
 
 const createTabAndDisplayReports = async (data, category, activeTab) => {
   let container;
+
+  // Validate category
+  if (
+    !category ||
+    (category !== "Unsafe Action" && category !== "Compromised Action")
+  ) {
+    console.error("Invalid category:", category);
+    // Handle the error, e.g., set a default category or display an error message
+    return;
+  }
+
+  // Determine the container based on the category
   if (category === "Unsafe Action") {
     container = containerUnsafe;
   } else if (category === "Compromised Action") {
     container = containerCompromised;
   }
 
-  if (container) {
-    data.forEach((report, index) => {
-      const newCard = createReportCard(report, category, index);
-
-      newCard.addEventListener("click", () => {
-        const reportCategory = report.category.toLowerCase();
-        getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
-      });
-
-      container.appendChild(newCard);
-    });
+  if (!container) {
+    console.error("Container not found for category:", category);
+    // Handle the error, e.g., display an error message
+    return;
   }
 
+  // Check if data is available
+  if (!data || !Array.isArray(data) || data.length === 0) {
+    console.error("No data available for category:", category);
+    // Handle the error, e.g., display a message indicating no data
+    return;
+  }
+
+  // Iterate through the data to create report cards
+  data.forEach((report, index) => {
+    const newCard = createReportCard(report, category, index);
+
+    newCard.addEventListener("click", () => {
+      getDetailedReportByCategory(report.reportid, detailContainerId);
+    });
+
+    container.appendChild(newCard);
+  });
+
+  // Activate the initial tab if available
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
   let hasActiveTab = false;
 
   tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      const targetTabId = tab.getAttribute("data-bs-target");
-      tabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-
-      const tabContents = document.querySelectorAll(
-        `#${tabsContainerId} .collapse`
-      );
-      tabContents.forEach((tc) => tc.classList.remove("show"));
-
-      const targetTab = document.querySelector(targetTabId);
-      if (targetTab) {
-        targetTab.classList.add("show");
-      }
-    });
-
     if (tab.classList.contains("active")) {
       hasActiveTab = true;
     }
@@ -407,6 +424,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     const initialTab = document.querySelector(
       `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
     );
+
     if (initialTab) {
       initialTab.click();
     }
@@ -466,10 +484,7 @@ const getUserReportsByCategoryAndGroup = async () => {
           );
         }
       } else {
-        console.error(
-          `HTTP error (${reportUrl.category}):`,
-          response.status
-        );
+        console.error(`HTTP error (${reportUrl.category}):`, response.status);
       }
     }
   } catch (error) {
