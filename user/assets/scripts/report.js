@@ -1,11 +1,3 @@
-const tabsContainerId = "tab-group-1";
-const containerIdUnsafe = "tab-unsafe";
-const containerIdCompromised = "tab-compromised";
-const detailContainerId = "detailContainer";
-const containerUnsafe = document.getElementById(containerIdUnsafe);
-const containerCompromised = document.getElementById(containerIdCompromised);
-
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -18,12 +10,6 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Function to get active tab category
-const getActiveTabCategory = () => {
-  const activeTab = document.querySelector(`#${tabsContainerId} .tab-controls a.active`);
-  return activeTab ? activeTab.getAttribute("data-category") : null;
-};
-// Function to display detailed report
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   const detailContainer = document.getElementById(detailContainerId);
 
@@ -213,8 +199,11 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-// Function to get detailed report by category
-const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
+const getDetailedReportByCategory = async (
+  reportid,
+  detailContainerId,
+  category
+) => {
   console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
   const token = getTokenFromCookies("Login");
 
@@ -280,7 +269,6 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
   }
 };
 
-// Function to create report card
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -364,45 +352,57 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-// Function to handle tab clicks
-const handleTabClick = (clickedTab) => {
-  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
-  
-  tabs.forEach((tab) => {
-    tab.classList.remove("active");
+const tabsContainerId = "tab-group-1";
+const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
+
+tabs.forEach((tab) => {
+  tab.addEventListener("click", () => {
+    const targetTabId = tab.getAttribute("data-bs-target");
+    tabs.forEach((t) => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    const tabContents = document.querySelectorAll(
+      `#${tabsContainerId} .collapse`
+    );
+    tabContents.forEach((tc) => tc.classList.remove("show"));
+
+    const targetTab = document.querySelector(targetTabId);
+    if (targetTab) {
+      targetTab.classList.add("show");
+    }
   });
-  
-  clickedTab.classList.add("active");
+});
 
-  const targetTabId = clickedTab.getAttribute("data-bs-target");
-  const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
-  
-  tabContents.forEach((tc) => {
-    tc.classList.remove("show");
-  });
+const containerIdUnsafe = "tab-unsafe";
+const containerIdCompromised = "tab-compromised";
 
-  const targetTab = document.querySelector(targetTabId);
-  
-  if (targetTab) {
-    targetTab.classList.add("show");
-  }
-};
+const containerUnsafe = document.getElementById(containerIdUnsafe);
+const containerCompromised = document.getElementById(containerIdCompromised);
 
-// Function to create tab and display reports
 const createTabAndDisplayReports = async (data, category, activeTab) => {
-  const container = category === "Unsafe Action" ? containerUnsafe : category === "Compromised Action" ? containerCompromised : null;
+  let container;
+  let detailCategory;
+
+  if (category === "Unsafe Action") {
+    container = containerUnsafe;
+    detailCategory = "Unsafe Action";
+  } else if (category === "Compromised Action") {
+    container = containerCompromised;
+    detailCategory = "Compromised Action";
+  }
 
   if (container) {
-    container.innerHTML = ""; // Clear existing content
-
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
+      // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        const activeTabCategory = getActiveTabCategory();
-        if (activeTabCategory) {
-          getDetailedReportByCategory(report.reportid, detailContainerId, activeTabCategory);
-        }
+        // Call getDetailedReportByCategory function with the appropriate category
+        getDetailedReportByCategory(
+          report.reportid,
+          detailContainerId,
+          detailCategory
+        );
       });
 
       container.appendChild(newCard);
@@ -414,7 +414,19 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      handleTabClick(tab);
+      const targetTabId = tab.getAttribute("data-bs-target");
+      tabs.forEach((t) => t.classList.remove("active"));
+      tab.classList.add("active");
+
+      const tabContents = document.querySelectorAll(
+        `#${tabsContainerId} .collapse`
+      );
+      tabContents.forEach((tc) => tc.classList.remove("show"));
+
+      const targetTab = document.querySelector(targetTabId);
+      if (targetTab) {
+        targetTab.classList.add("show");
+      }
     });
 
     if (tab.classList.contains("active")) {
@@ -423,7 +435,9 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   });
 
   if (!hasActiveTab && activeTab !== containerIdCompromised) {
-    const initialTab = document.querySelector(`#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`);
+    const initialTab = document.querySelector(
+      `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
+    );
     if (initialTab) {
       initialTab.click();
     }
@@ -497,46 +511,12 @@ const getUserReportsByCategoryAndGroup = async () => {
   }
 };
 
+getUserReportsByCategoryAndGroup();
 
-// Initialize tabs and display initial reports
-const initializeTabsAndReports = () => {
-  // Get user reports by category and group
-  getUserReportsByCategoryAndGroup();
+const detailContainerId = "detailContainer";
 
-  // Add event listeners for tab clicks
-  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
-  tabs.forEach((tab) => {
-    tab.addEventListener("click", () => {
-      handleTabClick(tab);
-      // Additional logic if needed when a tab is clicked
-    });
-  });
+const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-  // Display initial reports for the default tab
-  const defaultTab = document.querySelector(`#${tabsContainerId} .tab-controls a[data-bs-target="#defaultTabId"]`);
-  if (defaultTab) {
-    defaultTab.click();
-  }
-};
-
-// Call initializeTabsAndReports when the document is ready
-document.addEventListener("DOMContentLoaded", initializeTabsAndReports);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+if (reportid) {
+    getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
+}
