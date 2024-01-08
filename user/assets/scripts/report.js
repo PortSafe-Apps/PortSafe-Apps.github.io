@@ -232,13 +232,13 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
   };
 
   try {
-   const response = await fetch(targetURL, requestOptions);
+    const response = await fetch(targetURL, requestOptions);
 
     if (response.ok) {
       const data = await response.json();
 
       if (data.status === 200) {
-        // Menggunakan parameter category langsung di sini
+        // Ensure the category is correct when calling the displayDetailedReport function
         displayDetailedReport(data.data, detailContainerId, category);
       } else {
         console.error(`Server response (${category}):`, data.message || "Data tidak dapat ditemukan");
@@ -311,8 +311,10 @@ const createReportCard = (report, category, index) => {
         </div>
     </div>
   `;
+  // Tambahkan event listener untuk menangani klik pada card
   newCard.addEventListener("click", () => {
-    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`
+    // Redirect ke halaman detail dengan menyertakan reportid sebagai parameter query
+    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
   });
 
   return newCard;
@@ -351,6 +353,19 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
     container = containerUnsafe;
   } else if (category === "Compromised Action") {
     container = containerCompromised;
+  }
+
+  if (container) {
+    data.forEach((report, index) => {
+      const newCard = createReportCard(report, category, index);
+
+      newCard.addEventListener("click", () => {
+        const reportCategory = report.category.toLowerCase();
+        getDetailedReportByCategory(report.reportid, detailContainerId, reportCategory);
+      });
+
+      container.appendChild(newCard);
+    });
   }
 
   const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
@@ -461,7 +476,6 @@ const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
 if (reportid) {
-  // Specify the category based on your report structure
-  const category = "Unsafe Action"; // or "Compromised Action" depending on your use case
+  const category = "Unsafe Action"; // or "Compromised Action" based on your report structure
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
