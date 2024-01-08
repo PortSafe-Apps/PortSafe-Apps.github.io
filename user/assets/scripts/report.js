@@ -514,20 +514,8 @@ getUserReportsByCategoryAndGroup();
 // ID elemen target di halaman detail report
 const detailContainerId = "detailContainer";
 
-// Ambil reportid dari parameter query
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-// Example: Determine category from the data or pass it explicitly
-const categoryUnsafe = "Unsafe Action";
-const categoryCompromised = "Compromised Action";
-
-// Panggil fungsi getDetailedReport untuk mendapatkan dan menampilkan laporan detail
 if (reportid) {
-  // Determine the category based on your data or logic
-  const category = getCategoryForReport(reportid); // Replace with your logic
-  if (category === categoryUnsafe || category === categoryCompromised) {
-    getDetailedReport(reportid, detailContainerId, category);
-  } else {
-    console.error("Invalid category:", category);
-  }
+    getDetailedReportByCategory(reportid, detailContainerId, "Unsafe Action");
 }
