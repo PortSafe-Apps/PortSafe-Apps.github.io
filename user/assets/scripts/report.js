@@ -1,3 +1,11 @@
+const tabsContainerId = "tab-group-1";
+const containerIdUnsafe = "tab-unsafe";
+const containerIdCompromised = "tab-compromised";
+const detailContainerId = "detailContainer";
+const containerUnsafe = document.getElementById(containerIdUnsafe);
+const containerCompromised = document.getElementById(containerIdCompromised);
+
+
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -10,11 +18,12 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
+// Function to get active tab category
 const getActiveTabCategory = () => {
   const activeTab = document.querySelector(`#${tabsContainerId} .tab-controls a.active`);
   return activeTab ? activeTab.getAttribute("data-category") : null;
 };
-
+// Function to display detailed report
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   const detailContainer = document.getElementById(detailContainerId);
 
@@ -204,11 +213,8 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
   }
 };
 
-const getDetailedReportByCategory = async (
-  reportid,
-  detailContainerId,
-  category
-) => {
+// Function to get detailed report by category
+const getDetailedReportByCategory = async (reportid, detailContainerId, category) => {
   console.log("Fetching Detailed Report for:", category, "Report ID:", reportid);
   const token = getTokenFromCookies("Login");
 
@@ -274,6 +280,7 @@ const getDetailedReportByCategory = async (
   }
 };
 
+// Function to create report card
 const createReportCard = (report, category, index) => {
   const newCard = document.createElement("div");
   newCard.className = "card card-style mb-3";
@@ -357,57 +364,44 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const tabsContainerId = "tab-group-1";
-const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
-
-tabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const targetTabId = tab.getAttribute("data-bs-target");
-    tabs.forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
-
-    const tabContents = document.querySelectorAll(
-      `#${tabsContainerId} .collapse`
-    );
-    tabContents.forEach((tc) => tc.classList.remove("show"));
-
-    const targetTab = document.querySelector(targetTabId);
-    if (targetTab) {
-      targetTab.classList.add("show");
-    }
+// Function to handle tab clicks
+const handleTabClick = (clickedTab) => {
+  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
+  
+  tabs.forEach((tab) => {
+    tab.classList.remove("active");
   });
-});
+  
+  clickedTab.classList.add("active");
 
-const containerIdUnsafe = "tab-unsafe";
-const containerIdCompromised = "tab-compromised";
+  const targetTabId = clickedTab.getAttribute("data-bs-target");
+  const tabContents = document.querySelectorAll(`#${tabsContainerId} .collapse`);
+  
+  tabContents.forEach((tc) => {
+    tc.classList.remove("show");
+  });
 
-const containerUnsafe = document.getElementById(containerIdUnsafe);
-const containerCompromised = document.getElementById(containerIdCompromised);
-
-const createTabAndDisplayReports = async (data, category, activeTab) => {
-  let container;
-
-  if (category === "Unsafe Action") {
-    container = containerUnsafe;
-  } else if (category === "Compromised Action") {
-    container = containerCompromised;
+  const targetTab = document.querySelector(targetTabId);
+  
+  if (targetTab) {
+    targetTab.classList.add("show");
   }
+};
+
+// Function to create tab and display reports
+const createTabAndDisplayReports = async (data, category, activeTab) => {
+  const container = category === "Unsafe Action" ? containerUnsafe : category === "Compromised Action" ? containerCompromised : null;
 
   if (container) {
+    container.innerHTML = ""; // Clear existing content
+
     data.forEach((report, index) => {
       const newCard = createReportCard(report, category, index);
 
-      // Add event listener to handle card click
       newCard.addEventListener("click", () => {
-        // Get the active tab's category
         const activeTabCategory = getActiveTabCategory();
         if (activeTabCategory) {
-          // Call getDetailedReportByCategory function with the active tab's category
-          getDetailedReportByCategory(
-            report.reportid,
-            detailContainerId,
-            activeTabCategory
-          );
+          getDetailedReportByCategory(report.reportid, detailContainerId, activeTabCategory);
         }
       });
 
@@ -420,19 +414,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
   tabs.forEach((tab) => {
     tab.addEventListener("click", () => {
-      const targetTabId = tab.getAttribute("data-bs-target");
-      tabs.forEach((t) => t.classList.remove("active"));
-      tab.classList.add("active");
-
-      const tabContents = document.querySelectorAll(
-        `#${tabsContainerId} .collapse`
-      );
-      tabContents.forEach((tc) => tc.classList.remove("show"));
-
-      const targetTab = document.querySelector(targetTabId);
-      if (targetTab) {
-        targetTab.classList.add("show");
-      }
+      handleTabClick(tab);
     });
 
     if (tab.classList.contains("active")) {
@@ -441,91 +423,52 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   });
 
   if (!hasActiveTab && activeTab !== containerIdCompromised) {
-    const initialTab = document.querySelector(
-      `#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`
-    );
+    const initialTab = document.querySelector(`#${tabsContainerId} .tab-controls a[data-bs-target="#${activeTab}"]`);
     if (initialTab) {
       initialTab.click();
     }
   }
 };
 
-const getUserReportsByCategoryAndGroup = async () => {
-  const reportUrls = [
-    {
-      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
-      category: "Unsafe Action",
-      tabId: "tab-unsafe",
-    },
-    {
-      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
-      category: "Compromised Action",
-      tabId: "tab-compromised",
-    },
-  ];
+// Initialize tabs and display initial reports
+const initializeTabsAndReports = () => {
+  // Get user reports by category and group
+  getUserReportsByCategoryAndGroup();
 
-  const token = getTokenFromCookies("Login");
-
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
+  // Add event listeners for tab clicks
+  const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
+  tabs.forEach((tab) => {
+    tab.addEventListener("click", () => {
+      handleTabClick(tab);
+      // Additional logic if needed when a tab is clicked
     });
-    return;
-  }
+  });
 
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-
-  const requestOptions = {
-    method: "POST",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
-  try {
-    for (const reportUrl of reportUrls) {
-      const response = await fetch(reportUrl.url, requestOptions);
-
-      if (response.ok) {
-        const responseData = await response.json();
-
-        if (responseData.status === 200) {
-          const data = responseData.data;
-          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
-        } else {
-          console.error(
-            `Respon server (${reportUrl.category}):`,
-            responseData.message || "Data tidak dapat ditemukan"
-          );
-        }
-      } else {
-        console.error(
-          `Kesalahan HTTP (${reportUrl.category}):`,
-          response.status
-        );
-      }
-    }
-  } catch (error) {
-    console.error(
-      "Error:",
-      error.message || "Terjadi kesalahan yang tidak diketahui"
-    );
+  // Display initial reports for the default tab
+  const defaultTab = document.querySelector(`#${tabsContainerId} .tab-controls a[data-bs-target="#defaultTabId"]`);
+  if (defaultTab) {
+    defaultTab.click();
   }
 };
 
-getUserReportsByCategoryAndGroup();
+// Call initializeTabsAndReports when the document is ready
+document.addEventListener("DOMContentLoaded", initializeTabsAndReports);
 
-const detailContainerId = "detailContainer";
 
-const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-if (reportid) {
-  const activeTabCategory = getActiveTabCategory();
-  if (activeTabCategory) {
-    getDetailedReportByCategory(reportid, detailContainerId, activeTabCategory);
-  }
-}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
