@@ -516,9 +516,11 @@ const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
 
 // Mendapatkan category dari badge di card
-const categoryBadge = document.querySelector(".badge.bg-danger"); // Sesuaikan dengan selektor yang sesuai
+const activeTab = document.querySelector(".tab-controls a.active").getAttribute("data-bs-target");
+const categoryBadge = document.querySelector(`${activeTab} .badge`); // Sesuaikan dengan selektor yang sesuai
 const category = categoryBadge ? (categoryBadge.textContent.trim() === "Unsafe Action" ? "Unsafe Action" : "Compromised Action") : null;
 
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
+
