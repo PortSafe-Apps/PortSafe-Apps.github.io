@@ -11,7 +11,6 @@ function getTokenFromCookies(cookieName) {
 }
 
 const displayDetailedReport = (detailedReport, detailContainerId, category) => {
-  console.log("Displaying Detailed Report:", detailedReport);
   const detailContainer = document.getElementById(detailContainerId);
 
   // Clear existing content
@@ -198,7 +197,6 @@ const displayDetailedReport = (detailedReport, detailContainerId, category) => {
     `;
     detailContainer.appendChild(preventionCard);
   }
-  console.log("Detailed Report Displayed");
 };
 
 const getDetailedReportByCategory = async (
@@ -511,11 +509,11 @@ const getUserReportsByCategoryAndGroup = async () => {
 
 getUserReportsByCategoryAndGroup();
 
-// ID elemen target di halaman detail report
 const detailContainerId = "detailContainer";
+const queryParams = new URLSearchParams(window.location.search);
+const reportid = queryParams.get("reportid");
 
-const reportid = new URLSearchParams(window.location.search).get("reportid");
-
-if (reportid) {
-    getDetailedReportByCategory(reportid, detailContainerId, "Unsafe Action");
+if (reportid && category) {
+  getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
 }
+
