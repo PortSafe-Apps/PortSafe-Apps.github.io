@@ -232,7 +232,7 @@ const getDetailedReportByCategory = async (reportid, detailContainerId, category
   };
 
   try {
-    const response = await fetch(targetURL, requestOptions);
+   const response = await fetch(targetURL, requestOptions);
 
     if (response.ok) {
       const data = await response.json();
@@ -312,8 +312,7 @@ const createReportCard = (report, category, index) => {
     </div>
   `;
   newCard.addEventListener("click", () => {
-    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
-    getDetailedReportByCategory(report.reportid, detailContainerId, category)
+    window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`
   });
 
   return newCard;
@@ -461,6 +460,8 @@ getUserReportsByCategoryAndGroup();
 const detailContainerId = "detailContainer";
 const reportid = new URLSearchParams(window.location.search).get("reportid");
 
-if (reportid) {e
+if (reportid) {
+  // Specify the category based on your report structure
+  const category = "Unsafe Action"; // or "Compromised Action" depending on your use case
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
