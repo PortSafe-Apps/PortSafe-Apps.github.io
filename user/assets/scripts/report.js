@@ -320,26 +320,21 @@ const createReportCard = (report, category, index) => {
   return newCard;
 };
 
-const tabsContainerId = "tab-group-1";
-const tabs = document.querySelectorAll(`#${tabsContainerId} .tab-controls a`);
+const handleTabClick = (tab, tabGroupId) => {
+  const targetTabId = tab.getAttribute("data-bs-target");
+  const tabs = document.querySelectorAll(`#${tabGroupId} .tab-controls a`);
 
-tabs.forEach((tab) => {
-  tab.addEventListener("click", () => {
-    const targetTabId = tab.getAttribute("data-bs-target");
-    tabs.forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
+  tabs.forEach((t) => t.classList.remove("active"));
+  tab.classList.add("active");
 
-    const tabContents = document.querySelectorAll(
-      `#${tabsContainerId} .collapse`
-    );
-    tabContents.forEach((tc) => tc.classList.remove("show"));
+  const tabContents = document.querySelectorAll(`#${tabGroupId} .collapse`);
+  tabContents.forEach((tc) => tc.classList.remove("show"));
 
-    const targetTab = document.querySelector(targetTabId);
-    if (targetTab) {
-      targetTab.classList.add("show");
-    }
-  });
-});
+  const targetTab = document.querySelector(targetTabId);
+  if (targetTab) {
+    targetTab.classList.add("show");
+  }
+};
 
 const containerIdUnsafe = "tab-unsafe";
 const containerIdCompromised = "tab-compromised";
