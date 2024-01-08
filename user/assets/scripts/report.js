@@ -1,3 +1,6 @@
+// Define detailContainerId
+const detailContainerId = "detailContainer";
+
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -349,6 +352,8 @@ const createReportCard = (report, category, index) => {
   newCard.addEventListener("click", () => {
     // Redirect ke halaman detail dengan menyertakan reportid sebagai parameter query
     window.location.href = `https://portsafe-apps.github.io/user/detailreport.html?reportid=${report.reportid}`;
+
+    getDetailedReportByCategory(report.reportid, detailContainerId, category);
   });
 
   return newCard;
@@ -381,7 +386,7 @@ const containerIdCompromised = "tab-compromised";
 const containerUnsafe = document.getElementById(containerIdUnsafe);
 const containerCompromised = document.getElementById(containerIdCompromised);
 
-const createTabAndDisplayReports = async (data, category, activeTab) => {
+const createTabAndDisplayReports = async (data, category, activeTab, detailContainerId) => {
   let container;
   if (category === "Unsafe Action") {
     container = containerUnsafe;
@@ -391,7 +396,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
 
   if (container) {
     data.forEach((report, index) => {
-      const newCard = createReportCard(report, category, index);
+      const newCard = createReportCard(report, category, index, detailContainerId);
 
       // Add event listener to handle card click
       newCard.addEventListener("click", () => {
@@ -442,7 +447,7 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 };
 
-const getUserReportsByCategoryAndGroup = async () => {
+const getUserReportsByCategoryAndGroup = async (detailContainerId) => {
   const reportUrls = [
     {
       url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
@@ -487,7 +492,7 @@ const getUserReportsByCategoryAndGroup = async () => {
 
         if (responseData.status === 200) {
           const data = responseData.data;
-          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
+          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId, detailContainerId);
         } else {
           console.error(
             `Respon server (${reportUrl.category}):`,
@@ -509,9 +514,8 @@ const getUserReportsByCategoryAndGroup = async () => {
   }
 };
 
-getUserReportsByCategoryAndGroup();
+getUserReportsByCategoryAndGroup(detailContainerId);
 
-const detailContainerId = "detailContainer";
 const queryParams = new URLSearchParams(window.location.search);
 const reportid = queryParams.get("reportid");
 
@@ -526,4 +530,3 @@ const category = categoryBadge ? (categoryBadge.textContent.trim() === "Unsafe A
 if (reportid && category) {
   getDetailedReportByCategory(reportid, detailContainerId, category);
 }
-
