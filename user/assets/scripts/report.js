@@ -510,10 +510,9 @@ const getUserReportsByCategoryAndGroup = async () => {
 getUserReportsByCategoryAndGroup();
 
 const detailContainerId = "detailContainer";
-const queryParams = new URLSearchParams(window.location.search);
-const reportid = queryParams.get("reportid");
 
-if (reportid && category) {
-  getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
+const reportid = new URLSearchParams(window.location.search).get("reportid");
+
+if (reportid) {
+    getDetailedReportByCategory(reportid, detailContainerId, "Compromised Action");
 }
-
