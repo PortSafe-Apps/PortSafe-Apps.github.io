@@ -430,6 +430,74 @@ const createTabAndDisplayReports = async (data, category, activeTab) => {
   }
 };
 
+const getUserReportsByCategoryAndGroup = async () => {
+  const reportUrls = [
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+      category: "Unsafe Action",
+      tabId: "tab-unsafe",
+    },
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+      category: "Compromised Action",
+      tabId: "tab-compromised",
+    },
+  ];
+
+  const token = getTokenFromCookies("Login");
+
+  if (!token) {
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
+    return;
+  }
+
+  const myHeaders = new Headers();
+  myHeaders.append("Login", token);
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  };
+
+  try {
+    for (const reportUrl of reportUrls) {
+      const response = await fetch(reportUrl.url, requestOptions);
+
+      if (response.ok) {
+        const responseData = await response.json();
+
+        if (responseData.status === 200) {
+          const data = responseData.data;
+          createTabAndDisplayReports(data, reportUrl.category, reportUrl.tabId);
+        } else {
+          console.error(
+            `Respon server (${reportUrl.category}):`,
+            responseData.message || "Data tidak dapat ditemukan"
+          );
+        }
+      } else {
+        console.error(
+          `Kesalahan HTTP (${reportUrl.category}):`,
+          response.status
+        );
+      }
+    }
+  } catch (error) {
+    console.error(
+      "Error:",
+      error.message || "Terjadi kesalahan yang tidak diketahui"
+    );
+  }
+};
+
+
 // Initialize tabs and display initial reports
 const initializeTabsAndReports = () => {
   // Get user reports by category and group
