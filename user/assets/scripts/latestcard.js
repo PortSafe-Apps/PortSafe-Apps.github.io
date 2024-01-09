@@ -109,7 +109,6 @@ const latestDisplayReportData = (reportData, cardContainerId, category) => {
     }
 };
 
-// Fungsi untuk mendapatkan laporan pengguna terbaru tanpa pengurutan
 const getLatestReport = async () => {
     const token = getTokenFromCookies("Login");
 
@@ -149,26 +148,34 @@ const getLatestReport = async () => {
         const responses = await Promise.all(
             reportUrls.map(async ({ url, category }) => {
                 const response = await fetch(url, requestOptions);
-                return response.json();
+                return { category, data: await response.json() };
             })
         );
 
-        const latestData = responses.map(({ data }, index) => {
-            const category = reportUrls[index].category;
+        // Menggabungkan data dari kedua kategori
+        const allData = responses.reduce((acc, { category, data }) => {
+            acc.push(...data.map(report => ({ category, report })));
+            return acc;
+        }, []);
 
-            // Sort data berdasarkan waktu pembuatan (gunakan properti yang sesuai)
-            data.sort((a, b) => {
-                const timeA = new Date(`${a.date} ${a.time}`);
-                const timeB = new Date(`${b.date} ${b.time}`);
-                return timeB - timeA; // Urutkan dari yang terbaru
-            });
-
-            return { category, data: data[data.length - 1] };
+        // Mengurutkan data berdasarkan waktu pembuatan (gunakan properti yang sesuai)
+        allData.sort((a, b) => {
+            const timeA = new Date(`${a.report.date} ${a.report.time}`);
+            const timeB = new Date(`${b.report.date} ${b.report.time}`);
+            return timeB - timeA; // Urutkan dari yang terbaru
         });
 
+        // Menampilkan informasi detail laporan terakhir dari kategori yang sesuai
+        const latestData = allData.reduce((acc, { category, report }) => {
+            if (!acc[category]) {
+                acc[category] = report;
+            }
+            return acc;
+        }, {});
+
         // Tampilkan informasi detail laporan
-        latestData.forEach(({ category, data }) => {
-            latestDisplayReportData([data], "latestCardContainer", category);
+        Object.keys(latestData).forEach(category => {
+            latestDisplayReportData([latestData[category]], "latestCardContainer", category);
         });
     } catch (error) {
         console.error("Error:", error);
