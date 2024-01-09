@@ -146,7 +146,6 @@ const getLatestReport = async () => {
     };
 
     try {
-        // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
         const responses = await Promise.all(
             reportUrls.map(async ({ url, category }) => {
                 const response = await fetch(url, requestOptions);
@@ -154,9 +153,16 @@ const getLatestReport = async () => {
             })
         );
 
-        // Ambil satu data terbaru dari semua kategori
         const latestData = responses.map(({ data }, index) => {
             const category = reportUrls[index].category;
+
+            // Sort data berdasarkan waktu pembuatan (gunakan properti yang sesuai)
+            data.sort((a, b) => {
+                const timeA = new Date(`${a.date} ${a.time}`);
+                const timeB = new Date(`${b.date} ${b.time}`);
+                return timeB - timeA; // Urutkan dari yang terbaru
+            });
+
             return { category, data: data[data.length - 1] };
         });
 
