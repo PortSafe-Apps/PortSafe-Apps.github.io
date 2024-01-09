@@ -148,17 +148,22 @@ const getLatestReport = async () => {
     try {
         // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
         const responses = await Promise.all(
-            reportUrls.map(async ({ url }) => {
+            reportUrls.map(async ({ url, category }) => {
                 const response = await fetch(url, requestOptions);
                 return response.json();
             })
         );
 
         // Ambil satu data terbaru dari semua kategori
-        const latestData = responses.map(({ data }) => data[data.length - 1]);
+        const latestData = responses.map(({ data }, index) => {
+            const category = reportUrls[index].category;
+            return { category, data: data[data.length - 1] };
+        });
 
         // Tampilkan informasi detail laporan
-        latestDisplayReportData(latestData, "latestCardContainer" ,category);
+        latestData.forEach(({ category, data }) => {
+            latestDisplayReportData([data], "latestCardContainer", category);
+        });
     } catch (error) {
         console.error("Error:", error);
     }
