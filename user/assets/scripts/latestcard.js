@@ -79,13 +79,26 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
   if (reportData && reportData.length > 0) {
     const latestReport = reportData[reportData.length - 1];
 
-    // Memastikan bahwa latestReport dan latestReport.category terdefinisi sebelum mengakses propertinya
+    // Memastikan bahwa latestReport terdefinisi sebelum mengakses propertinya
+    const categoryObject = reportUrls.find(
+      (item) => item.url === latestReport.apiUrl
+    );
+
+    if (!categoryObject) {
+      console.error(
+        `Error: Category not found for URL "${latestReport.apiUrl}".`
+      );
+      return;
+    }
+
+    const category = categoryObject.category || "";
+
     const badgeCategory =
       category === "Unsafe Action"
         ? "danger"
         : category === "Compromised Action"
         ? "warning"
-        : "info"; // Use "info" or any other class for the default case
+        : ""; 
 
     const badgeIcon =
       category === "Unsafe Action"
@@ -95,8 +108,8 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         : "";
 
     const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-    <i class="fa ${badgeIcon}"></i> ${category}
-    </span>`;
+            <i class="fa ${badgeIcon}"></i> ${category}
+        </span>`;
 
     const statusBadge = `<span class="badge ${
       latestReport.status === "Opened"
