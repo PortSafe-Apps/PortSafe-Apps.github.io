@@ -78,8 +78,11 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
     if (reportData && reportData.length > 0) {
         const latestReport = reportData[reportData.length - 1];
 
+        // Mengakses kategori langsung dari laporan terbaru
+        const reportCategory = latestReport.category;
+
         const categoryBadge = reportUrls
-            .filter(({ category }) => category === latestReport.category)
+            .filter(({ category }) => category === reportCategory)
             .map(({ category, url }) => {
                 const badgeCategory =
                     category === "Unsafe Action"
@@ -104,7 +107,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
         const statusBadge = `<span class="badge ${
             latestReport.status === "Opened"
                 ? "bg-green-dark"
-                : latestReport.category === "Compromised Action"
+                : reportCategory === "Compromised Action"
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
@@ -130,7 +133,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
         // Sesuaikan struktur kartu dengan data yang Anda miliki
         const newCard = document.createElement("div");
         newCard.className = "card card-style mb-3";
-        newCard.id = `card-${latestReport.category.toLowerCase()}-${latestReport.index + 1}`;
+        newCard.id = `card-${(reportCategory || "unknown").toLowerCase()}-${latestReport.index + 1}`;
 
         newCard.innerHTML = `
             <div class="content">
