@@ -47,7 +47,7 @@ const getLatestReport = async () => {
     };
 
     try {
-        // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
+
         const responses = await Promise.all(
             reportUrls.map(async ({ url }) => {
                 const response = await fetch(url, requestOptions);
@@ -79,26 +79,30 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
     if (reportData && reportData.length > 0) {
         const latestReport = reportData[reportData.length - 1];
 
-        // Memastikan bahwa latestReport dan latestReport.category terdefinisi sebelum mengakses propertinya
-        const category = latestReport && latestReport.category ? latestReport.category : "";
+        const categoryBadge = reportUrls
+        .map(({ category: reportCategory }) => {
+            const badgeCategory =
+                reportCategory === "Unsafe Action"
+                    ? "danger"
+                    : reportCategory === "Compromised Action"
+                    ? "warning"
+                    : "";
 
-        const badgeCategory =
-        category === "Unsafe Action"
-            ? "danger"
-            : category === "Compromised Action"
-                ? "warning"
-                : ""; 
-    
-    const badgeIcon =
-        category === "Unsafe Action"
-            ? "fa-exclamation-triangle"
-            : category === "Compromised Action"
-                ? "fa-child"
+            const badgeIcon =
+                reportCategory === "Unsafe Action"
+                    ? "fa-exclamation-triangle"
+                    : reportCategory === "Compromised Action"
+                    ? "fa-child"
+                    : "";
+
+            return reportCategory === category
+                ? `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+                    <i class="fa ${badgeIcon}"></i> ${reportCategory}
+                  </span>`
                 : "";
-    
-    const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-        <i class="fa ${badgeIcon}"></i> ${category}
-    </span>`;
+        })
+        .join("");
+
 
         const statusBadge = `<span class="badge ${
             latestReport.status === "Opened"
