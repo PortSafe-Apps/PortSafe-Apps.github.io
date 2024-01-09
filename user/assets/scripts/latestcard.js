@@ -135,7 +135,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
             <div class="content">
                 <div class="d-flex">
                     <div>
-                        <h4>${latestReport.latestReportid}</h4>
+                        <h4>${latestReport.reportid}</h4>
                         <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
                     </div>
                     <div class="ms-auto align-self-center">
