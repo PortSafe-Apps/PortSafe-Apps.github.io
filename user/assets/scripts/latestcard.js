@@ -154,7 +154,11 @@ const getLatestReport = async () => {
 
         // Menggabungkan data dari kedua kategori
         const allData = responses.reduce((acc, { category, data }) => {
-            acc.push(...data.map(report => ({ category, report })));
+            if (Array.isArray(data)) {
+                acc.push(...data.map(report => ({ category, report })));
+            } else {
+                console.error(`Error: Invalid data structure for category ${category}`);
+            }
             return acc;
         }, []);
 

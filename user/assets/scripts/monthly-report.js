@@ -11,36 +11,60 @@ function getTokenFromCookies(cookieName) {
 }
 
 // Fungsi untuk mengambil data dari server
+const targetURLs = [
+  {
+    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+    category: "Unsafe Action",
+  },
+  {
+    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+    category: "Compromised Action",
+  },
+];
+
 async function fetchDataFromServer() {
   try {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      // Tangani kesalahan autentikasi jika tidak ada token
+      // Handle authentication error if no token is present
       Swal.fire({
         icon: "warning",
         title: "Authentication Error",
-        text: "Kamu Belum Login!",
+        text: "You are not logged in!",
       }).then(() => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
       return [];
     }
 
-    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser`;
+    const fetchDataPromises = targetURLs.map(async (target) => {
+      const myHeaders = new Headers();
+      myHeaders.append("Login", token);
 
-    const myHeaders = new Headers();
-    myHeaders.append("Login", token);
+      const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        redirect: "follow",
+      };
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      redirect: "follow",
-    };
+      const response = await fetch(target.url, requestOptions);
+      const data = await response.json();
+      return {
+        category: target.category,
+        data: data.data || [],
+      };
+    });
 
-    const response = await fetch(targetURL, requestOptions);
-    const data = await response.json();
-    return data.data || [];
+    // Wait for all fetch requests to complete
+    const fetchedData = await Promise.all(fetchDataPromises);
+
+    // Merge data from "Unsafe Action" and "Compromised Action" categories into a single array
+    const allReportData = fetchedData.reduce((accumulator, current) => {
+      return accumulator.concat(current.data);
+    }, []);
+
+    return allReportData;
   } catch (error) {
     console.error("Error fetching data:", error);
     return [];
