@@ -42,7 +42,7 @@ const getLatestReport = async () => {
     ];
 
     const myHeaders = new Headers();
-    myHeaders.append("Login", token);
+    myHeaders.append("Authorization", `Bearer ${token}`);
 
     const requestOptions = {
         method: "POST",
@@ -64,7 +64,9 @@ const getLatestReport = async () => {
         const latestData = responses.map(({ data, category }) => {
             const latestReport = data[data.length - 1];
             // Tambahkan properti category ke objek latestReport
-            latestReport.category = category;
+            if (latestReport) {
+                latestReport.category = category;
+            }
             return latestReport;
         });
 
@@ -104,7 +106,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
-        
+
         // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
         const locationName =
             latestReport && latestReport.location
@@ -126,7 +128,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
         // Sesuaikan struktur kartu dengan data yang Anda miliki
         const newCard = document.createElement("div");
         newCard.className = "card card-style mb-3";
-        newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
+        newCard.id = `card-${latestReport.category.toLowerCase()}-${latestReport.index + 1}`;
 
         newCard.innerHTML = `
             <div class="content">
@@ -165,5 +167,3 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan terbaru
 getLatestReport();
-
-
