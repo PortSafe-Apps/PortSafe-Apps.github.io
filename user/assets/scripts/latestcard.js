@@ -30,10 +30,14 @@ const getLatestReport = async () => {
         {
             url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
             category: "Unsafe Action",
+            badgeCategory: "danger",
+            badgeIcon: "fa-exclamation-triangle",
         },
         {
             url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
             category: "Compromised Action",
+            badgeCategory: "danger",
+            badgeIcon: "fa-shield-alt",
         },
     ];
 
@@ -48,14 +52,21 @@ const getLatestReport = async () => {
 
     try {
         const responses = await Promise.all(
-            reportUrls.map(async ({ url }) => {
+            reportUrls.map(async ({ url, category }) => {
                 const response = await fetch(url, requestOptions);
-                return response.json();
+                const data = await response.json();
+                // Tambahkan properti category ke objek latestReport
+                return { data, category };
             })
         );
 
         // Ambil satu data terbaru dari semua kategori
-        const latestData = responses.map(({ data }) => data[data.length - 1]);
+        const latestData = responses.map(({ data, category }) => {
+            const latestReport = data[data.length - 1];
+            // Tambahkan properti category ke objek latestReport
+            latestReport.category = category;
+            return latestReport;
+        });
 
         // Tampilkan informasi detail laporan
         latestDisplayReportData(latestData, "latestCardContainer", reportUrls);
@@ -93,8 +104,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
-
-
+        
         // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
         const locationName =
             latestReport && latestReport.location
@@ -116,7 +126,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
         // Sesuaikan struktur kartu dengan data yang Anda miliki
         const newCard = document.createElement("div");
         newCard.className = "card card-style mb-3";
-        newCard.id = `card-${(reportCategory || "unknown").toLowerCase()}-${latestReport.index + 1}`;
+        newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
 
         newCard.innerHTML = `
             <div class="content">
@@ -155,3 +165,5 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan terbaru
 getLatestReport();
+
+
