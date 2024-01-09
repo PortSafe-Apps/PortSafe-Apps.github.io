@@ -1,137 +1,135 @@
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-        const [name, value] = cookie.trim().split("=");
-        if (name === cookieName) {
-            return value;
-        }
+  const cookies = document.cookie.split(";");
+  for (const cookie of cookies) {
+    const [name, value] = cookie.trim().split("=");
+    if (name === cookieName) {
+      return value;
     }
-    return null;
+  }
+  return null;
 }
 
 // Fungsi untuk mendapatkan laporan pengguna terbaru tanpa pengurutan
 const getLatestReport = async () => {
-    const token = getTokenFromCookies("Login");
+  const token = getTokenFromCookies("Login");
 
-    if (!token) {
-        // Tangani kesalahan autentikasi jika tidak ada token
-        Swal.fire({
-            icon: "warning",
-            title: "Authentication Error",
-            text: "Kamu Belum Login!",
-        }).then(() => {
-            window.location.href = "https://portsafe-apps.github.io/";
-        });
-        return;
-    }
+  if (!token) {
+    // Tangani kesalahan autentikasi jika tidak ada token
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
+    return;
+  }
 
-    const reportUrls = [
-        {
-            url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
-            category: "Unsafe Action",
-        },
-        {
-            url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
-            category: "Compromised Action",
-        },
-    ];
+  const reportUrls = [
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+      category: "Unsafe Action",
+    },
+    {
+      url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+      category: "Compromised Action",
+    },
+  ];
 
-    const myHeaders = new Headers();
-    myHeaders.append("Login", token);
+  const myHeaders = new Headers();
+  myHeaders.append("Login", token);
 
-    const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        redirect: "follow",
-    };
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  };
 
-    try {
-        // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
-        const responses = await Promise.all(
-            reportUrls.map(async ({ url }) => {
-                const response = await fetch(url, requestOptions);
-                return response.json();
-            })
-        );
+  try {
+    // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
+    const responses = await Promise.all(
+      reportUrls.map(async ({ url }) => {
+        const response = await fetch(url, requestOptions);
+        return response.json();
+      })
+    );
 
-        // Ambil satu data terbaru dari semua kategori
-        const latestData = responses.map(({ data }) => data[data.length - 1]);
+    // Ambil satu data terbaru dari semua kategori
+    const latestData = responses.map(({ data }) => data[data.length - 1]);
 
-        // Tampilkan informasi detail laporan
-        latestDisplayReportData(latestData, "latestCardContainer");
-    } catch (error) {
-        console.error("Error:", error);
-    }
+    // Tampilkan informasi detail laporan
+    latestDisplayReportData(latestData, "latestCardContainer");
+  } catch (error) {
+    console.error("Error:", error);
+  }
 };
 
 // Fungsi untuk menampilkan laporan pengguna terbaru dalam bentuk kartu tanpa pengurutan
 const latestDisplayReportData = (reportData, cardContainerId) => {
-    const latestCardContainer = document.getElementById(cardContainerId);
+  const latestCardContainer = document.getElementById(cardContainerId);
 
-    if (!latestCardContainer) {
-        console.error(`Error: Element with ID "${cardContainerId}" not found.`);
-        return;
-    }
+  if (!latestCardContainer) {
+    console.error(`Error: Element with ID "${cardContainerId}" not found.`);
+    return;
+  }
 
-    latestCardContainer.innerHTML = "";
+  latestCardContainer.innerHTML = "";
 
-    if (reportData && reportData.length > 0) {
-        const latestReport = reportData[reportData.length - 1];
+  if (reportData && reportData.length > 0) {
+    const latestReport = reportData[reportData.length - 1];
 
-        // Memastikan bahwa latestReport dan latestReport.category terdefinisi sebelum mengakses propertinya
-        const category = latestReport && latestReport.category ? latestReport.category : "";
+    // Memastikan bahwa latestReport dan latestReport.category terdefinisi sebelum mengakses propertinya
+    const badgeCategory =
+      category === "Unsafe Action"
+        ? "danger"
+        : category === "Compromised Action"
+        ? "warning"
+        : "info"; // Use "info" or any other class for the default case
 
-        const badgeCategory =
-            category === "Unsafe Action"
-                ? "danger"
-                : category === "Compromised Action"
-                    ? "warning"
-                    : "yellow";
+    const badgeIcon =
+      category === "Unsafe Action"
+        ? "fa-exclamation-triangle"
+        : category === "Compromised Action"
+        ? "fa-child"
+        : "";
 
-        const badgeIcon =
-            category === "Unsafe Action"
-                ? "fa-exclamation-triangle"
-                : category === "Compromised Action"
-                    ? "fa-child"
-                    : "";
+    const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+    <i class="fa ${badgeIcon}"></i> ${category}
+    </span>`;
 
-        const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-            <i class="fa ${badgeIcon}"></i> ${category}
-          </span>`;
+    const statusBadge = `<span class="badge ${
+      latestReport.status === "Opened"
+        ? "bg-green-dark"
+        : category === "Compromised Action"
+        ? "bg-red-dark"
+        : ""
+    } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
 
-        const statusBadge = `<span class="badge ${
-            latestReport.status === "Opened"
-                ? "bg-green-dark"
-                : category === "Compromised Action"
-                    ? "bg-red-dark"
-                    : ""
-        } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
+    // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
+    const locationName =
+      latestReport && latestReport.location
+        ? latestReport.location.locationName
+        : "Lokasi Tidak Diketahui";
 
-        // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
-        const locationName =
-            latestReport && latestReport.location
-                ? latestReport.location.locationName
-                : "Lokasi Tidak Diketahui";
+    // Menangani properti yang mungkin undefined
+    const typeName =
+      (latestReport &&
+        latestReport.typeDangerousActions &&
+        latestReport.typeDangerousActions.length > 0 &&
+        latestReport.typeDangerousActions[0].typeName) ||
+      "Jenis Tidak Diketahui";
 
-        // Menangani properti yang mungkin undefined
-        const typeName =
-            (latestReport &&
-                latestReport.typeDangerousActions &&
-                latestReport.typeDangerousActions.length > 0 &&
-                latestReport.typeDangerousActions[0].typeName) ||
-            "Jenis Tidak Diketahui";
+    const userName =
+      (latestReport && latestReport.user && latestReport.user.nama) ||
+      "Pengguna Tidak Diketahui";
 
-        const userName =
-            (latestReport && latestReport.user && latestReport.user.nama) ||
-            "Pengguna Tidak Diketahui";
+    // Sesuaikan struktur kartu dengan data yang Anda miliki
+    const newCard = document.createElement("div");
+    newCard.className = "card card-style mb-3";
+    newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
 
-        // Sesuaikan struktur kartu dengan data yang Anda miliki
-        const newCard = document.createElement("div");
-        newCard.className = "card card-style mb-3";
-        newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
-
-        newCard.innerHTML = `
+    newCard.innerHTML = `
             <div class="content">
                 <div class="d-flex">
                     <div>
@@ -159,11 +157,11 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
             </div>
           `;
 
-        // Tambahkan kartu terbaru ke awal kontainer laporan
-        latestCardContainer.prepend(newCard);
-    } else {
-        latestCardContainer.innerHTML = "<p>No latestReport data found.</p>";
-    }
+    // Tambahkan kartu terbaru ke awal kontainer laporan
+    latestCardContainer.prepend(newCard);
+  } else {
+    latestCardContainer.innerHTML = "<p>No latestReport data found.</p>";
+  }
 };
 
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan terbaru
