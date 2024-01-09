@@ -47,7 +47,6 @@ const getLatestReport = async () => {
     };
 
     try {
-
         const responses = await Promise.all(
             reportUrls.map(async ({ url }) => {
                 const response = await fetch(url, requestOptions);
@@ -59,14 +58,14 @@ const getLatestReport = async () => {
         const latestData = responses.map(({ data }) => data[data.length - 1]);
 
         // Tampilkan informasi detail laporan
-        latestDisplayReportData(latestData, "latestCardContainer");
+        latestDisplayReportData(latestData, "latestCardContainer", reportUrls);
     } catch (error) {
         console.error("Error:", error);
     }
 };
 
 // Fungsi untuk menampilkan laporan pengguna terbaru dalam bentuk kartu tanpa pengurutan
-const latestDisplayReportData = (reportData, cardContainerId) => {
+const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
     const latestCardContainer = document.getElementById(cardContainerId);
 
     if (!latestCardContainer) {
@@ -80,34 +79,32 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         const latestReport = reportData[reportData.length - 1];
 
         const categoryBadge = reportUrls
-        .map(({ category: reportCategory }) => {
-            const badgeCategory =
-                reportCategory === "Unsafe Action"
-                    ? "danger"
-                    : reportCategory === "Compromised Action"
-                    ? "warning"
-                    : "";
+            .filter(({ category }) => category === latestReport.category)
+            .map(({ category, url }) => {
+                const badgeCategory =
+                    category === "Unsafe Action"
+                        ? "danger"
+                        : category === "Compromised Action"
+                            ? "warning"
+                            : "";
 
-            const badgeIcon =
-                reportCategory === "Unsafe Action"
-                    ? "fa-exclamation-triangle"
-                    : reportCategory === "Compromised Action"
-                    ? "fa-child"
-                    : "";
+                const badgeIcon =
+                    category === "Unsafe Action"
+                        ? "fa-exclamation-triangle"
+                        : category === "Compromised Action"
+                            ? "fa-child"
+                            : "";
 
-            return reportCategory === category
-                ? `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-                    <i class="fa ${badgeIcon}"></i> ${reportCategory}
-                  </span>`
-                : "";
-        })
-        .join("");
-
+                return `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+                        <i class="fa ${badgeIcon}"></i> ${category}
+                      </span>`;
+            })
+            .join("");
 
         const statusBadge = `<span class="badge ${
             latestReport.status === "Opened"
                 ? "bg-green-dark"
-                : category === "Compromised Action"
+                : latestReport.category === "Compromised Action"
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
@@ -133,7 +130,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         // Sesuaikan struktur kartu dengan data yang Anda miliki
         const newCard = document.createElement("div");
         newCard.className = "card card-style mb-3";
-        newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
+        newCard.id = `card-${latestReport.category.toLowerCase()}-${latestReport.index + 1}`;
 
         newCard.innerHTML = `
             <div class="content">
