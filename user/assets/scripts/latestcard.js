@@ -30,19 +30,15 @@ const getLatestReport = async () => {
         {
             url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
             category: "Unsafe Action",
-            badgeCategory: "danger",
-            badgeIcon: "fa-exclamation-triangle",
         },
         {
             url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
             category: "Compromised Action",
-            badgeCategory: "danger",
-            badgeIcon: "fa-shield-alt",
         },
     ];
 
     const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${token}`);
+    myHeaders.append("Login", token);
 
     const requestOptions = {
         method: "POST",
@@ -51,34 +47,26 @@ const getLatestReport = async () => {
     };
 
     try {
+        // Gunakan Promise.all untuk mendapatkan data dari kedua endpoint secara bersamaan
         const responses = await Promise.all(
-            reportUrls.map(async ({ url, category }) => {
+            reportUrls.map(async ({ url }) => {
                 const response = await fetch(url, requestOptions);
-                const data = await response.json();
-                // Tambahkan properti category ke objek latestReport
-                return { data, category };
+                return response.json();
             })
         );
 
         // Ambil satu data terbaru dari semua kategori
-        const latestData = responses.map(({ data, category }) => {
-            const latestReport = data[data.length - 1];
-            // Tambahkan properti category ke objek latestReport
-            if (latestReport) {
-                latestReport.category = category;
-            }
-            return latestReport;
-        });
+        const latestData = responses.map(({ data }) => data[data.length - 1]);
 
         // Tampilkan informasi detail laporan
-        latestDisplayReportData(latestData, "latestCardContainer", reportUrls);
+        latestDisplayReportData(latestData, "latestCardContainer");
     } catch (error) {
         console.error("Error:", error);
     }
 };
 
 // Fungsi untuk menampilkan laporan pengguna terbaru dalam bentuk kartu tanpa pengurutan
-const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
+const latestDisplayReportData = (reportData, cardContainerId) => {
     const latestCardContainer = document.getElementById(cardContainerId);
 
     if (!latestCardContainer) {
@@ -91,18 +79,31 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
     if (reportData && reportData.length > 0) {
         const latestReport = reportData[reportData.length - 1];
 
-        // Mengambil informasi categoryBadge dari reportUrls berdasarkan kategori
-        const categoryInfo = reportUrls.find(({ category }) => category === latestReport.category);
-        const categoryBadge = categoryInfo
-            ? `<span class="badge bg-${categoryInfo.badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-                <i class="fa ${categoryInfo.badgeIcon}"></i> ${latestReport.category}
-              </span>`
-            : '';
+        // Memastikan bahwa latestReport dan latestReport.category terdefinisi sebelum mengakses propertinya
+        const category = latestReport && latestReport.category ? latestReport.category : "";
+
+        const badgeCategory =
+        category === "Unsafe Action"
+            ? "danger"
+            : category === "Compromised Action"
+                ? "warning"
+                : ""; 
+
+    const badgeIcon =
+        category === "Unsafe Action"
+            ? "fa-exclamation-triangle"
+            : category === "Compromised Action"
+                ? "fa-child"
+                : "";
+
+    const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+        <i class="fa ${badgeIcon}"></i> ${category}
+    </span>`;
 
         const statusBadge = `<span class="badge ${
             latestReport.status === "Opened"
                 ? "bg-green-dark"
-                : latestReport.category === "Compromised Action"
+                : category === "Compromised Action"
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
@@ -128,7 +129,7 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
         // Sesuaikan struktur kartu dengan data yang Anda miliki
         const newCard = document.createElement("div");
         newCard.className = "card card-style mb-3";
-        newCard.id = `card-${latestReport.category.toLowerCase()}-${latestReport.index + 1}`;
+        newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
 
         newCard.innerHTML = `
             <div class="content">
