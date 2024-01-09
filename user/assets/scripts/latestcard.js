@@ -59,14 +59,14 @@ const getLatestReport = async () => {
     const latestData = responses.map(({ data }) => data[data.length - 1]);
 
     // Tampilkan informasi detail laporan
-    latestDisplayReportData(latestData, "latestCardContainer");
+    latestDisplayReportData(latestData, reportUrls, "latestCardContainer");
   } catch (error) {
     console.error("Error:", error);
   }
 };
 
 // Fungsi untuk menampilkan laporan pengguna terbaru dalam bentuk kartu tanpa pengurutan
-const latestDisplayReportData = (reportData, cardContainerId) => {
+const latestDisplayReportData = (reportData, reportUrls, cardContainerId) => {
   const latestCardContainer = document.getElementById(cardContainerId);
 
   if (!latestCardContainer) {
@@ -98,7 +98,7 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         ? "danger"
         : category === "Compromised Action"
         ? "warning"
-        : ""; 
+        : "";
 
     const badgeIcon =
       category === "Unsafe Action"
@@ -108,8 +108,8 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         : "";
 
     const categoryBadge = `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-            <i class="fa ${badgeIcon}"></i> ${category}
-        </span>`;
+              <i class="fa ${badgeIcon}"></i> ${category}
+          </span>`;
 
     const statusBadge = `<span class="badge ${
       latestReport.status === "Opened"
@@ -118,7 +118,6 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
         ? "bg-red-dark"
         : ""
     } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
-
     // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
     const locationName =
       latestReport && latestReport.location
@@ -143,32 +142,32 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
     newCard.id = `card-${category.toLowerCase()}-${latestReport.index + 1}`;
 
     newCard.innerHTML = `
-            <div class="content">
-                <div class="d-flex">
-                    <div>
-                        <h4>${latestReport.reportid}</h4>
-                        <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
-                    </div>
-                    <div class="ms-auto align-self-center">
-                        ${categoryBadge}
-                        ${statusBadge}
-                    </div>
-                </div>
-                <div class="divider bg-highlight mt-0 mb-2"></div>
-                <p class="mb-0 color-highlight">
-                    Jenis Ketidaksesuaian
-                </p>
-                <span class="badge bg-highlight text-white font-10 mb-1 rounded-s">${typeName}</span>
-                <div class="row mb-n2 color-theme">
-                    <div class="col-5 font-11">
-                        <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
-                    </div>
-                    <div class="col-7 font-11">
-                        <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${latestReport.date} <i class="ms-4 far fa-clock"></i> ${latestReport.time}</p>
-                    </div>
-                </div>
-            </div>
-          `;
+         <div class="content">
+             <div class="d-flex">
+                 <div>
+                     <h4>${latestReport.reportid}</h4>
+                     <p class="color-highlight mt-n1 font-12"><i class="fa fa-map-marker-alt"></i> ${locationName}</p>
+                 </div>
+                 <div class="ms-auto align-self-center">
+                     ${categoryBadge}
+                     ${statusBadge}
+                 </div>
+             </div>
+             <div class="divider bg-highlight mt-0 mb-2"></div>
+             <p class="mb-0 color-highlight">
+                 Jenis Ketidaksesuaian
+             </p>
+             <span class="badge bg-highlight text-white font-10 mb-1 rounded-s">${typeName}</span>
+             <div class="row mb-n2 color-theme">
+                 <div class="col-5 font-11">
+                     <p class="color-highlight font-11"><i class="fa fa-user"></i> ${userName}</p>
+                 </div>
+                 <div class="col-7 font-11">
+                     <p class="color-highlight font-11"><i class="far fa-calendar"></i> ${latestReport.date} <i class="ms-4 far fa-clock"></i> ${latestReport.time}</p>
+                 </div>
+             </div>
+         </div>
+       `;
 
     // Tambahkan kartu terbaru ke awal kontainer laporan
     latestCardContainer.prepend(newCard);
@@ -176,6 +175,5 @@ const latestDisplayReportData = (reportData, cardContainerId) => {
     latestCardContainer.innerHTML = "<p>No latestReport data found.</p>";
   }
 };
-
 // Panggil fungsi untuk mendapatkan dan menampilkan laporan terbaru
 getLatestReport();
