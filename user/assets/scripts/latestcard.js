@@ -78,39 +78,22 @@ const latestDisplayReportData = (reportData, cardContainerId, reportUrls) => {
     if (reportData && reportData.length > 0) {
         const latestReport = reportData[reportData.length - 1];
 
-        // Mengakses kategori langsung dari laporan terbaru
-        const reportCategory = latestReport.category;
-
-        const categoryBadge = reportUrls
-            .filter(({ category }) => category === reportCategory)
-            .map(({ category, url }) => {
-                const badgeCategory =
-                    category === "Unsafe Action"
-                        ? "danger"
-                        : category === "Compromised Action"
-                            ? "warning"
-                            : "";
-
-                const badgeIcon =
-                    category === "Unsafe Action"
-                        ? "fa-exclamation-triangle"
-                        : category === "Compromised Action"
-                            ? "fa-child"
-                            : "";
-
-                return `<span class="badge bg-${badgeCategory} text-white font-10 mb-1 d-block rounded-s">
-                        <i class="fa ${badgeIcon}"></i> ${category}
-                      </span>`;
-            })
-            .join("");
+        // Mengambil informasi categoryBadge dari reportUrls berdasarkan kategori
+        const categoryInfo = reportUrls.find(({ category }) => category === latestReport.category);
+        const categoryBadge = categoryInfo
+            ? `<span class="badge bg-${categoryInfo.badgeCategory} text-white font-10 mb-1 d-block rounded-s">
+                <i class="fa ${categoryInfo.badgeIcon}"></i> ${latestReport.category}
+              </span>`
+            : '';
 
         const statusBadge = `<span class="badge ${
             latestReport.status === "Opened"
                 ? "bg-green-dark"
-                : reportCategory === "Compromised Action"
+                : latestReport.category === "Compromised Action"
                     ? "bg-red-dark"
                     : ""
         } text-white font-10 mb-1 d-block rounded-s">${latestReport.status}</span>`;
+
 
         // Memastikan bahwa properti yang akan diakses tersedia sebelum mengaksesnya
         const locationName =
