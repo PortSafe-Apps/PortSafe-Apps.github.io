@@ -59,7 +59,7 @@ async function fetchDataFromServer() {
     // Wait for all fetch requests to complete
     const fetchedData = await Promise.all(fetchDataPromises);
 
-    // Merge data from "Unsafe Action" and "Compromised Action" categories into a single array
+    // Merge data from both target URLs
     const allReportData = fetchedData.reduce((accumulator, current) => {
       return accumulator.concat(current.data);
     }, []);
@@ -74,11 +74,17 @@ async function fetchDataFromServer() {
 // Fungsi untuk menggambar grafik
 const drawChart = async () => {
   const reportData = await fetchDataFromServer();
+  const currentYear = new Date().getFullYear();
+  const filteredReportData = reportData.filter((report) => {
+    return new Date(report.date).getFullYear() === currentYear;
+  });
 
-  if (reportData) {
+  // Check if there is data for the current year
+  if (filteredReportData.length === 0) {
+    console.log("No data available for the current year.");
     // Menggambar Monthly Chart
     const transformedMonthlyData = transformDataForChart(
-      reportData,
+      filteredReportData,
       "monthChart"
     );
     const monthlyChartConfig = createChartConfig(
@@ -90,7 +96,7 @@ const drawChart = async () => {
 
     // Menggambar Location Chart
     const transformedLocationData = transformDataForChart(
-      reportData,
+      filteredReportData,
       "locationChart"
     );
     const locationChartConfig = createChartConfig(
@@ -101,7 +107,7 @@ const drawChart = async () => {
     renderChart("#locationChart", locationChartConfig);
 
     // Menggambar Area Chart
-    const transformedAreaData = transformDataForChart(reportData, "areaChart");
+    const transformedAreaData = transformDataForChart(filteredReportData, "areaChart");
     const areaChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Area",
       transformedAreaData,
@@ -110,7 +116,7 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(reportData, "typeChart");
+    const transformedTypeData = transformDataForChart(filteredReportData, "typeChart");
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
@@ -120,21 +126,23 @@ const drawChart = async () => {
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
         const selectedTypeName = config.w.config.labels[config.dataPointIndex];
-        updateSubtypeChart(reportData, selectedTypeName);
+        updateSubtypeChart(filteredReportData, selectedTypeName);
       },
     };
 
     renderChart("#typeChart", typeChartConfig);
 
     // Menggambar Subtype Chart awal
-    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
+    updateSubtypeChart(filteredReportData, transformedTypeData.labels[0]);
+   
+    return
   }
 };
 
-const updateSubtypeChart = (reportData, selectedTypeName) => {
+const updateSubtypeChart = (filteredReportData, selectedTypeName) => {
   // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
-    reportData,
+    filteredReportData,
     "subtypeChart",
     selectedTypeName
   );
@@ -150,8 +158,8 @@ const updateSubtypeChart = (reportData, selectedTypeName) => {
 };
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-const transformDataForChart = (reportData, chartType, selectedTypeName) => {
-  if (!reportData || reportData.length === 0) {
+const transformDataForChart = (filteredReportData, chartType, selectedTypeName) => {
+  if (!filteredReportData || filteredReportData.length === 0) {
     return { labels: [], series: [] };
   }
 
@@ -159,7 +167,7 @@ const transformDataForChart = (reportData, chartType, selectedTypeName) => {
     case "monthChart":
       const monthCounts = Array(12).fill(0);
 
-      reportData.forEach((report) => {
+      filteredReportData.forEach((report) => {
         const month = new Date(report.date).getMonth();
         monthCounts[month] += 1;
       });
@@ -208,7 +216,7 @@ const transformDataForChart = (reportData, chartType, selectedTypeName) => {
       });
 
       // Hitung jumlah laporan untuk setiap lokasi
-      reportData.forEach((report) => {
+      filteredReportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName]++;
       });
@@ -241,7 +249,7 @@ const transformDataForChart = (reportData, chartType, selectedTypeName) => {
       });
 
       // Hitung jumlah laporan untuk setiap area
-      reportData.forEach((report) => {
+      filteredReportData.forEach((report) => {
         const areaName = report.area.areaName || "Unknown Area";
         areaCounts[areaName]++;
       });
@@ -261,7 +269,7 @@ const transformDataForChart = (reportData, chartType, selectedTypeName) => {
 
     case "typeChart":
       const typeCounts = {};
-      reportData.forEach((report) => {
+      filteredReportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           const typeName = action.typeName;
           typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
@@ -284,7 +292,7 @@ const transformDataForChart = (reportData, chartType, selectedTypeName) => {
     case "subtypeChart":
       const subtypeCounts = {};
 
-      reportData.forEach((report) => {
+      filteredReportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           if (action.typeName === selectedTypeName && action.subTypes) {
             action.subTypes.forEach((subType) => {
