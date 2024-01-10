@@ -164,15 +164,18 @@ const getLatestReport = async () => {
 
     // Menggabungkan data dari kedua kategori
     const allData = responses.reduce((acc, { category, data }) => {
-      if (Array.isArray(data)) {
-        acc.push(...data.map((report) => ({ category, report })));
+      if (Array.isArray(data) && data.length > 0) {
+        const latestReport = data[data.length - 1]; // Ambil laporan terakhir dari setiap kategori
+        acc.push({ category, report: latestReport });
       } else {
-        console.error(`Error: Invalid data structure for category ${category}`);
+        console.error(
+          `Error: Invalid data structure or empty data for category ${category}`
+        );
       }
       return acc;
     }, []);
 
-    // Mengurutkan data berdasarkan waktu pembuatan (gunakan properti yang sesuai)
+    // Mengurutkan data berdasarkan waktu tambahan terakhir
     allData.sort((a, b) => {
       const timeA = new Date(`${a.report.date} ${a.report.time}`);
       const timeB = new Date(`${b.report.date} ${b.report.time}`);
