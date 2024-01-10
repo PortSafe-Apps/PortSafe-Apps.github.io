@@ -144,13 +144,19 @@ const getLatestReport = async () => {
 
   try {
     const responses = await Promise.all(
-      reportUrls.map(async ({ url, category }) => {
-        const response = await fetch(url, requestOptions);
-        const data = await response.json();
-        console.log(`Category: ${category}, Data:`, data); // Tambahkan baris ini
-        return { category, data };
-      })
-    );
+        reportUrls.map(async ({ url, category }) => {
+          const response = await fetch(url, requestOptions);
+          const data = await response.json();
+          console.log(`Category: ${category}, Data:`, data);
+      
+          if (Array.isArray(data) && data.length > 0) {
+            return { category, data };
+          } else {
+            console.error(`Error: Invalid data structure for category ${category}`);
+            return { category, data: [] }; // Return an empty array to avoid errors
+          }
+        })
+      );
     // Menggabungkan data dari kedua kategori
     const allData = responses.reduce((acc, { category, data }) => {
       if (Array.isArray(data)) {
