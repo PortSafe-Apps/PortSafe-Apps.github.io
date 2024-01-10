@@ -74,17 +74,11 @@ async function fetchDataFromServer() {
 // Fungsi untuk menggambar grafik
 const drawChart = async () => {
   const reportData = await fetchDataFromServer();
-  const currentYear = new Date().getFullYear();
-  const filteredReportData = reportData.filter((report) => {
-    return new Date(report.date).getFullYear() === currentYear;
-  });
 
-  // Check if there is data for the current year
-  if (filteredReportData.length === 0) {
-    console.log("No data available for the current year.");
+  if (reportData) {
     // Menggambar Monthly Chart
     const transformedMonthlyData = transformDataForChart(
-      filteredReportData,
+      reportData,
       "monthChart"
     );
     const monthlyChartConfig = createChartConfig(
@@ -96,7 +90,7 @@ const drawChart = async () => {
 
     // Menggambar Location Chart
     const transformedLocationData = transformDataForChart(
-      filteredReportData,
+      reportData,
       "locationChart"
     );
     const locationChartConfig = createChartConfig(
@@ -107,7 +101,7 @@ const drawChart = async () => {
     renderChart("#locationChart", locationChartConfig);
 
     // Menggambar Area Chart
-    const transformedAreaData = transformDataForChart(filteredReportData, "areaChart");
+    const transformedAreaData = transformDataForChart(reportData, "areaChart");
     const areaChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Area",
       transformedAreaData,
@@ -116,7 +110,7 @@ const drawChart = async () => {
     renderChart("#areaChart", areaChartConfig);
 
     // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(filteredReportData, "typeChart");
+    const transformedTypeData = transformDataForChart(reportData, "typeChart");
     const typeChartConfig = createChartConfig(
       "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
       transformedTypeData,
@@ -126,23 +120,21 @@ const drawChart = async () => {
     typeChartConfig.chart.events = {
       dataPointSelection: function (event, chartContext, config) {
         const selectedTypeName = config.w.config.labels[config.dataPointIndex];
-        updateSubtypeChart(filteredReportData, selectedTypeName);
+        updateSubtypeChart(reportData, selectedTypeName);
       },
     };
 
     renderChart("#typeChart", typeChartConfig);
 
     // Menggambar Subtype Chart awal
-    updateSubtypeChart(filteredReportData, transformedTypeData.labels[0]);
-   
-    return
+    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
   }
 };
 
-const updateSubtypeChart = (filteredReportData, selectedTypeName) => {
+const updateSubtypeChart = (reportData, selectedTypeName) => {
   // Panggil fungsi dengan menyediakan selectedTypeName
   const transformedSubtypeData = transformDataForChart(
-    filteredReportData,
+    reportData,
     "subtypeChart",
     selectedTypeName
   );
@@ -158,8 +150,8 @@ const updateSubtypeChart = (filteredReportData, selectedTypeName) => {
 };
 
 // Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-const transformDataForChart = (filteredReportData, chartType, selectedTypeName) => {
-  if (!filteredReportData || filteredReportData.length === 0) {
+const transformDataForChart = (reportData, chartType, selectedTypeName) => {
+  if (!reportData || reportData.length === 0) {
     return { labels: [], series: [] };
   }
 
@@ -167,7 +159,7 @@ const transformDataForChart = (filteredReportData, chartType, selectedTypeName) 
     case "monthChart":
       const monthCounts = Array(12).fill(0);
 
-      filteredReportData.forEach((report) => {
+      reportData.forEach((report) => {
         const month = new Date(report.date).getMonth();
         monthCounts[month] += 1;
       });
@@ -216,7 +208,7 @@ const transformDataForChart = (filteredReportData, chartType, selectedTypeName) 
       });
 
       // Hitung jumlah laporan untuk setiap lokasi
-      filteredReportData.forEach((report) => {
+      reportData.forEach((report) => {
         const locationName = report.location.locationName || "Unknown Location";
         locationCounts[locationName]++;
       });
@@ -249,7 +241,7 @@ const transformDataForChart = (filteredReportData, chartType, selectedTypeName) 
       });
 
       // Hitung jumlah laporan untuk setiap area
-      filteredReportData.forEach((report) => {
+      reportData.forEach((report) => {
         const areaName = report.area.areaName || "Unknown Area";
         areaCounts[areaName]++;
       });
@@ -269,7 +261,7 @@ const transformDataForChart = (filteredReportData, chartType, selectedTypeName) 
 
     case "typeChart":
       const typeCounts = {};
-      filteredReportData.forEach((report) => {
+      reportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           const typeName = action.typeName;
           typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
@@ -292,7 +284,7 @@ const transformDataForChart = (filteredReportData, chartType, selectedTypeName) 
     case "subtypeChart":
       const subtypeCounts = {};
 
-      filteredReportData.forEach((report) => {
+      reportData.forEach((report) => {
         report.typeDangerousActions.forEach((action) => {
           if (action.typeName === selectedTypeName && action.subTypes) {
             action.subTypes.forEach((subType) => {
