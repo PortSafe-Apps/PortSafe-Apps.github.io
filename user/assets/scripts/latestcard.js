@@ -144,21 +144,24 @@ const getLatestReport = async () => {
 
   try {
     const responses = await Promise.all(
-        reportUrls.map(async ({ url, category }) => {
-          const response = await fetch(url, requestOptions);
-          const responseData = await response.json();
-          console.log(`Category: ${category}, Data:`, responseData);
-      
-          const data = responseData.data; // Akses data laporan dengan benar
-      
-          if (Array.isArray(data) && data.length > 0) {
-            return { category, data };
-          } else {
-            console.error(`Error: Struktur data tidak valid untuk kategori ${category}`);
-            return { category, data: [] }; // Mengembalikan array kosong untuk menghindari error
-          }
-        })
-      );
+      reportUrls.map(async ({ url, category }) => {
+        const response = await fetch(url, requestOptions);
+        const responseData = await response.json();
+        console.log(`Category: ${category}, Data:`, responseData);
+
+        const data = responseData.data; // Akses data laporan dengan benar
+
+        if (Array.isArray(data) && data.length > 0) {
+          return { category, data };
+        } else {
+          console.error(
+            `Error: Struktur data tidak valid untuk kategori ${category}`
+          );
+          return { category, data: [] }; // Mengembalikan array kosong untuk menghindari error
+        }
+      })
+    );
+
     // Menggabungkan data dari kedua kategori
     const allData = responses.reduce((acc, { category, data }) => {
       if (Array.isArray(data)) {
@@ -177,20 +180,16 @@ const getLatestReport = async () => {
     });
 
     // Menampilkan informasi detail laporan terakhir dari kategori yang sesuai
-    const latestData = allData.reduce((acc, { category, report }) => {
-        if (!acc[category]) {
-          acc[category] = [report];
-        } else {
-          acc[category].push(report);
-        }
-        return acc;
-      }, {});
-      
-
-    // Tampilkan informasi detail laporan
-    Object.keys(latestData).forEach((category) => {
-        latestDisplayReportData(latestData[category], "latestCardContainer", category);
-    });
+    if (Array.isArray(allData) && allData.length > 0) {
+      const latestReport = allData[0]; // Mengambil laporan terakhir dari data yang sudah diurutkan
+      latestDisplayReportData(
+        [latestReport.report],
+        "latestCardContainer",
+        latestReport.category
+      );
+    } else {
+      console.error("Error: No valid data found.");
+    }
   } catch (error) {
     console.error("Error:", error);
   }
