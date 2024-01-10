@@ -25,32 +25,32 @@ const displaySumReports = (combinedTotalReports, containerId) => {
 
 // Fungsi untuk menampilkan jumlah total data report unsafe
 const displaySumReportsUnsafe = (unsafeTotalReports, containerId) => {
-    const unsafetotalReportsElement = document.getElementById(containerId);
+    const unsafeTotalReportsElement = document.getElementById(containerId);
 
-    if (!unsafetotalReportsElement) {
+    if (!unsafeTotalReportsElement) {
         console.error(`Elemen dengan ID "${containerId}" tidak ditemukan.`);
         return;
     }
 
-    // Tampilkan jumlah total data report
-    unsafetotalReportsElement.innerText = unsafeTotalReports;
+    // Tampilkan jumlah total data report unsafe
+    unsafeTotalReportsElement.innerText = unsafeTotalReports;
 };
 
 // Fungsi untuk menampilkan jumlah total data report compromised
 const displaySumReportsCompromised = (compromisedTotalReports, containerId) => {
-    const compromisedtotalReportsElement = document.getElementById(containerId);
+    const compromisedTotalReportsElement = document.getElementById(containerId);
 
-    if (!compromisedtotalReportsElement) {
+    if (!compromisedTotalReportsElement) {
         console.error(`Elemen dengan ID "${containerId}" tidak ditemukan.`);
         return;
     }
 
     // Tampilkan jumlah total data report compromised
-    compromisedtotalReportsElement.innerText = compromisedTotalReports;
+    compromisedTotalReportsElement.innerText = compromisedTotalReports;
 };
 
-// Fungsi untuk mengambil data dari API dan jumlah data laporan yang telah dibuat
-const getAllUserReports = async (token, targetURL) => {
+// Fungsi untuk mengambil data laporan dari API dan jumlah data laporan yang telah dibuat untuk tahun tertentu
+const getAllUserReportsForYear = async (token, targetURL, year) => {
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
 
@@ -58,6 +58,7 @@ const getAllUserReports = async (token, targetURL) => {
         method: 'POST',
         headers: myHeaders,
         redirect: 'follow',
+        body: JSON.stringify({ year: year }), // Add the year parameter to the request body
     };
 
     try {
@@ -75,8 +76,9 @@ const getAllUserReports = async (token, targetURL) => {
         return 0; // Return 0 if there is an error
     }
 };
-// Fungsi untuk mengambil data laporan unsafe dari API
-const getUnsafeReports = async (token, targetURL) => {
+
+// Fungsi untuk mengambil data laporan unsafe dari API untuk tahun tertentu
+const getUnsafeReportsForYear = async (token, targetURL, year) => {
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
 
@@ -84,6 +86,7 @@ const getUnsafeReports = async (token, targetURL) => {
         method: 'POST',
         headers: myHeaders,
         redirect: 'follow',
+        body: JSON.stringify({ year: year }), // Add the year parameter to the request body
     };
 
     try {
@@ -91,7 +94,7 @@ const getUnsafeReports = async (token, targetURL) => {
         const data = await response.json();
 
         if (data.status === 200) {
-            return data.data.length; // Return the number of unsafe reports for this URL
+            return data.data.length; // Return the number of reports for this URL
         } else {
             console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
             return 0; // Return 0 if there is an error
@@ -102,8 +105,8 @@ const getUnsafeReports = async (token, targetURL) => {
     }
 };
 
-// Fungsi untuk mengambil data laporan compromised dari API
-const getCompromisedReports = async (token, targetURL) => {
+// Fungsi untuk mengambil data laporan compromised dari API untuk tahun tertentu
+const getCompromisedReportsForYear = async (token, targetURL, year) => {
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
 
@@ -111,6 +114,7 @@ const getCompromisedReports = async (token, targetURL) => {
         method: 'POST',
         headers: myHeaders,
         redirect: 'follow',
+        body: JSON.stringify({ year: year }), // Add the year parameter to the request body
     };
 
     try {
@@ -118,7 +122,7 @@ const getCompromisedReports = async (token, targetURL) => {
         const data = await response.json();
 
         if (data.status === 200) {
-            return data.data.length; // Return the number of compromised reports for this URL
+            return data.data.length; // Return the number of reports for this URL
         } else {
             console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
             return 0; // Return 0 if there is an error
@@ -129,8 +133,8 @@ const getCompromisedReports = async (token, targetURL) => {
     }
 };
 
-// Fungsi untuk menghitung total laporan unsafe dan compromised dan menampilkan hasilnya
-const calculateAndDisplayTotalUnsafeCompromisedReports = async () => {
+// Fungsi untuk menghitung total laporan unsafe dan compromised dan menampilkan hasilnya untuk tahun berjalan
+const calculateAndDisplayTotalUnsafeCompromisedReportsForYear = async (year) => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
@@ -147,11 +151,11 @@ const calculateAndDisplayTotalUnsafeCompromisedReports = async () => {
     const compromised = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser';
     const unsafe = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser';
 
-    // Call the function for the first URL and get the number of compromised reports
-    const totalReportsCompromised = await getCompromisedReports(token, compromised);
+    // Call the function for the first URL and get the number of compromised reports for the specified year
+    const totalReportsCompromised = await getCompromisedReportsForYear(token, compromised, year);
 
-    // Call the function for the second URL and get the number of unsafe reports
-    const totalReportsUnsafe = await getUnsafeReports(token, unsafe);
+    // Call the function for the second URL and get the number of unsafe reports for the specified year
+    const totalReportsUnsafe = await getUnsafeReportsForYear(token, unsafe, year);
 
     // Calculate the combined total
     const combinedTotalReports = totalReportsCompromised + totalReportsUnsafe;
@@ -162,5 +166,6 @@ const calculateAndDisplayTotalUnsafeCompromisedReports = async () => {
     displaySumReportsUnsafe(totalReportsUnsafe, 'unsafe-total-reports');
 };
 
-// Panggil fungsi untuk menghitung total laporan unsafe dan compromised dan menampilkan hasilnya
-calculateAndDisplayTotalUnsafeCompromisedReports();
+// Panggil fungsi untuk menghitung total laporan unsafe dan compromised dan menampilkan hasilnya untuk tahun berjalan
+const currentYear = new Date().getFullYear(); // Mendapatkan tahun berjalan
+calculateAndDisplayTotalUnsafeCompromisedReportsForYear(currentYear);
