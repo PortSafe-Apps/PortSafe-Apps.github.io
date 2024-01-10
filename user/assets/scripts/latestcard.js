@@ -178,19 +178,18 @@ const getLatestReport = async () => {
 
     // Menampilkan informasi detail laporan terakhir dari kategori yang sesuai
     const latestData = allData.reduce((acc, { category, report }) => {
-      if (!acc[category]) {
-        acc[category] = report;
-      }
-      return acc;
-    }, {});
+        if (!acc[category]) {
+          acc[category] = [report];
+        } else {
+          acc[category].push(report);
+        }
+        return acc;
+      }, {});
+      
 
     // Tampilkan informasi detail laporan
     Object.keys(latestData).forEach((category) => {
-      latestDisplayReportData(
-        [latestData[category]],
-        "latestCardContainer",
-        category
-      );
+        latestDisplayReportData(latestData[category], "latestCardContainer", category);
     });
   } catch (error) {
     console.error("Error:", error);
