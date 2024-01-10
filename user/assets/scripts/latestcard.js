@@ -146,14 +146,16 @@ const getLatestReport = async () => {
     const responses = await Promise.all(
         reportUrls.map(async ({ url, category }) => {
           const response = await fetch(url, requestOptions);
-          const data = await response.json();
-          console.log(`Category: ${category}, Data:`, data);
+          const responseData = await response.json();
+          console.log(`Category: ${category}, Data:`, responseData);
+      
+          const data = responseData.data; // Akses data laporan dengan benar
       
           if (Array.isArray(data) && data.length > 0) {
             return { category, data };
           } else {
-            console.error(`Error: Invalid data structure for category ${category}`);
-            return { category, data: [] }; // Return an empty array to avoid errors
+            console.error(`Error: Struktur data tidak valid untuk kategori ${category}`);
+            return { category, data: [] }; // Mengembalikan array kosong untuk menghindari error
           }
         })
       );

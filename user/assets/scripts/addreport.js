@@ -134,7 +134,7 @@ const showAlert = (message, type = 'success') => {
         showAlert(data.message, 'error');
       } else {
         showAlert("Data Pelaporan Berhasil di Input!", 'success');
-        window.location.href = 'https://portsafe-apps.github.io/user/listreport';
+        window.location.href = 'https://portsafe-apps.github.io/user/listreport.html';
       }
     } catch (error) {
       console.error('Error:', error);
