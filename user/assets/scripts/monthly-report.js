@@ -725,7 +725,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             offsetY: 0,
             floating: false,
             style: {
-              fontSize: "15px",
+              fontSize: "10px",
               color: "text-dark",
               fontWeight: "bold",
               marginBottom: "10rem",
@@ -799,7 +799,7 @@ const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
             offsetY: 0,
             floating: false,
             style: {
-              fontSize: "15px",
+              fontSize: "10px",
               color: "text-dark",
               fontWeight: "bold",
               marginBottom: "10rem",

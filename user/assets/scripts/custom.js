@@ -10,10 +10,10 @@ document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
   //Global Variables
-  let isPWA = false; // Enables or disables the service worker and PWA
+  let isPWA = true; // Enables or disables the service worker and PWA
   var pwaName = "Portsafe+"; //Local Storage Names for PWA
   var pwaRemind = 1; //Days to re-remind to add to home
-  var pwaNoCache = false; //Requires server and HTTPS/SSL. Will clear cache with each visit
+  var pwaNoCache = true; //Requires server and HTTPS/SSL. Will clear cache with each visit
 
   //Setting Service Worker Locations scope = folder | location = service worker js location
   var pwaScope = "/";
