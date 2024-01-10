@@ -7679,6 +7679,14 @@ input[type=number] {
   background-image: url(../images/pictures/34.jpg);
 }
 
+.bg-35 {
+  background-image: url(../images/pictures/35.png);
+}
+
+.bg-36 {
+  background-image: url(../images/pictures/36.png);
+}
+
 /*Demo Colors*/
 .demo-color {
   display: block;
