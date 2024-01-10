@@ -54,14 +54,17 @@ function getTokenFromCookies(cookieName) {
   function displayUserDataProfile(userData) {
     const namaProfil = document.getElementById("nama-profil");
     const jabatanProfil = document.getElementById("Jabatan-profil");
+    const locationUser = document.getElementById("Unit-kerja");
   
     if (userData && userData.length > 0) {
         const user = userData[0];
         namaProfil.textContent = user.nama;
         jabatanProfil.textContent = user.jabatan;
+        locationUser.textContent = user.location.locationName;
     } else {
         namaProfil.textContent = 'No user data found';
         jabatanProfil.textContent = '';
+        locationUser.textContent = '';
     }
   }
   
