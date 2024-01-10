@@ -28,6 +28,7 @@
     <link rel="stylesheet" href="css/apexcharts.css">
 </head>
 
+
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -35,7 +36,7 @@
         <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
-            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+            <a class="sidebar-brand d-flex align-items-center justify-content-center" href="dashboard.html">
                 <div class="sidebar-brand-icon">
                     <img src="img/core-img/Logo-small.png" alt="Image Alt Text" width="50" height="50">
                 </div>
@@ -47,24 +48,33 @@
 
             <!-- Nav Item - Dashboard -->
             <li class="nav-item active">
-                <a class="nav-link" href="index.html">
+                <a class="nav-link" href="dashboard.html">
                     <i class="fas fa-fw fa-tachometer-alt"></i>
                     <span>Dashboard</span></a>
             </li>
 
             <!-- Nav Item - Report -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="charts.html">
+            <li class="nav-item">
+                <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapseTwo"
+                    aria-expanded="true" aria-controls="collapseTwo">
                     <i class="fas fa-fw fa-clipboard-check"></i>
-                    <span>Reporting</span></a>
-            </li> -->
+                    <span>Reporting</span>
+                </a>
+                <div id="collapseTwo" class="collapse" aria-labelledby="headingTwo" data-parent="#accordionSidebar">
+                    <div class="bg-white py-2 collapse-inner rounded">
+                        <a class="collapse-item" href="unsafereport.html">Unsafe Report</a>
+                        <a class="collapse-item" href="compromisedreport.html">Compromised Report</a>
+                    </div>
+                </div>
+            </li>
+
 
             <!-- Nav Item - User -->
-            <!-- <li class="nav-item">
-                <a class="nav-link" href="tables.html">
-                    <i class="fas fa-fw fa-table"></i>
+            <li class="nav-item">
+                <a class="nav-link" href="user.html">
+                    <i class="fas fa-fw fa-user"></i>
                     <span>User</span></a>
-            </li> -->
+            </li>
 
             <!-- Divider -->
             <hr class="sidebar-divider d-none d-md-block">
@@ -135,7 +145,7 @@
                                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">
                                                 Jumlah Laporan</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><span
-                                                    id="total-reports"></span></div>
+                                                    id="combined-total-reports"></span></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-arrow-up fa-2x text-gray-300"></i>
@@ -145,16 +155,16 @@
                             </div>
                         </div>
 
-                        <!-- Jumlah Laporan (Bulanan) Card Example -->
+                        <!-- Jumlah Laporan (Unsafe Action) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-primary shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-primary text-uppercase mb-1">
-                                                Jumlah Laporan (Bulanan)</div>
+                                                Jumlah Laporan (Unsafe Action)</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><span
-                                                    id="monthly-reports"></span></div>
+                                                    id="unsafe-total-reports"></span></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-check fa-2x text-gray-300"></i>
@@ -164,16 +174,16 @@
                             </div>
                         </div>
 
-                        <!-- Jumlah Laporan (Harian) Card Example -->
+                        <!-- Jumlah Laporan (Compromised Action) Card Example -->
                         <div class="col-xl-3 col-md-6 mb-4">
                             <div class="card border-left-success shadow h-100 py-2">
                                 <div class="card-body">
                                     <div class="row no-gutters align-items-center">
                                         <div class="col mr-2">
                                             <div class="text-xs font-weight-bold text-success text-uppercase mb-1">
-                                                Jumlah Laporan (Harian)</div>
+                                                Jumlah Laporan (Compromised Action)</div>
                                             <div class="h5 mb-0 font-weight-bold text-gray-800"><span
-                                                    id="daily-reports"></span></div>
+                                                    id="compromised-total-reports"></span></div>
                                         </div>
                                         <div class="col-auto">
                                             <i class="fas fa-clipboard-list fa-2x text-gray-300"></i>
@@ -205,6 +215,7 @@
                     </div>
                     <!-- Content Row -->
                     <div class="row">
+
                         <!-- Area Chart -->
                         <div class="col-xl-7 col-lg-6">
                             <div class="card shadow mb-4">
@@ -370,12 +381,12 @@
     <script src="vendor/apexchart.js/apexcharts.min.js"></script>
 
     <!-- Page level custom scripts -->
-    <script src="js/dashboard/monthly-report.js" type="module"></script>
+    <!-- <script src="js/dashboard/monthly-report.js" type="module"></script>
     <script src="js/dashboard/sumreport.js" type="module"></script>
     <script src="js/dashboard/sumreport-daily.js" type="module"></script>
     <script src="js/dashboard/sumreport-month.js" type="module"></script>
     <script src="js/dashboard/sum-user.js" type="module"></script>
-    <script src="js/dashboard/user-active.js" type="module"></script>
+    <script src="js/dashboard/user-active.js" type="module"></script> -->
 
     <!-- Logout Configuration -->
     <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>

@@ -148,10 +148,11 @@ const getLatestReport = async () => {
         const responses = await Promise.all(
             reportUrls.map(async ({ url, category }) => {
                 const response = await fetch(url, requestOptions);
-                return { category, data: await response.json() };
+                const data = await response.json();
+                console.log(`Category: ${category}, Data:`, data); // Tambahkan baris ini
+                return { category, data };
             })
         );
-
         // Menggabungkan data dari kedua kategori
         const allData = responses.reduce((acc, { category, data }) => {
             if (Array.isArray(data)) {
