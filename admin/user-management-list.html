@@ -112,10 +112,16 @@
                             <div class="row align-items-center justify-content-between">
                                 <div class="col-auto mt-4">
                                     <h1 class="page-header-title">
-                                        <div class="page-header-icon"><i data-feather="clipboard"></i></div>
-                                        Reporting Management
+                                        <div class="page-header-icon"><i data-feather="user"></i></div>
+                                        User Management
                                     </h1>
-                                    <div class="page-header-subtitle">List Data Unsafe Report</div>
+                                    <div class="page-header-subtitle">List account yang telah terdaftar</div>
+                                </div>
+                                <div class="col-12 col-xl-auto mb-3">
+                                    <a class="btn btn-sm btn-light text-primary" href="user-management-add-user.html">
+                                        <i class="me-1" data-feather="user-plus"></i>
+                                        Add New User
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -128,34 +134,37 @@
                             <table id="datatablesSimple">
                                 <thead>
                                     <tr>
-                                        <th>No Pelaporan</th>
-                                        <th>Tanggal</th>
-                                        <th>Waktu</th>
-                                        <th>Unit Kerja</th>
-                                        <th>Area</th>
-                                        <th>Action</th>
+                                        <th>NIPP</th>
+                                        <th>Nama</th>
+                                        <th>Jabatan</th>
+                                        <th>unit Kerja</th>
+                                        <th>Role</th>
+                                        <th>Joined Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tfoot>
                                     <tr>
-                                        <th>No Pelaporan</th>
-                                        <th>Tanggal</th>
-                                        <th>Waktu</th>
+                                        <th>NIPP</th>
+                                        <th>Nama</th>
+                                        <th>Jabatan</th>
                                         <th>Unit Kerja</th>
-                                        <th>Area</th>
-                                        <th>Action</th>
+                                        <th>Role</th>
+                                        <th>Joined Date</th>
+                                        <th>Actions</th>
                                     </tr>
                                 </tfoot>
                                 <tbody>
                                     <tr>
-                                        <td>2024-K3-001</td>
-                                        <td>14/01/2024</td>
-                                        <td>14:17 PM</td>
-                                        <td>Branch Belawan</td>
-                                        <td>Gudang</td>
+                                        <td>1204044</td>
+                                        <td>Tiger Nixon</td>
+                                        <td>Vice Precident</td>
+                                        <td>Branch Dumai</td>
+                                        <td>Observator</td>
+                                        <td>20 Jun 2021</td>
                                         <td>
                                             <a class="btn btn-datatable btn-icon btn-transparent-dark me-2"
-                                                href="detailreport.html"><i data-feather="external-link"></i></a>
+                                                href="user-management-edit-user.html"><i data-feather="edit"></i></a>
                                             <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!"><i
                                                     data-feather="trash-2"></i></a>
                                         </td>

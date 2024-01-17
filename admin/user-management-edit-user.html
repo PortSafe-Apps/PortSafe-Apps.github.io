@@ -92,7 +92,6 @@
                             <div class="nav-link-icon"><i data-feather="user"></i></div>
                             User
                         </a>
-
                     </div>
                 </div>
                 <!-- Sidenav Footer-->
@@ -112,59 +111,113 @@
                             <div class="row align-items-center justify-content-between">
                                 <div class="col-auto mt-4">
                                     <h1 class="page-header-title">
-                                        <div class="page-header-icon"><i data-feather="clipboard"></i></div>
-                                        Reporting Management
+                                        <div class="page-header-icon"><i data-feather="user"></i></div>
+                                        User Management
                                     </h1>
-                                    <div class="page-header-subtitle">List Data Unsafe Report</div>
+                                    <div class="page-header-subtitle">Update data account</div>
+                                </div>
+                                <div class="col-12 col-xl-auto mb-3">
+                                    <a class="btn btn-sm btn-light text-primary" href="user-management-list.html">
+                                        <i class="me-1" data-feather="arrow-left"></i>
+                                        Back to Users List
+                                    </a>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </header>
-                <!-- Main page content-->
-                <div class="container-xl px-4 mt-n10">
-                    <div class="card">
-                        <div class="card-body">
-                            <table id="datatablesSimple">
-                                <thead>
-                                    <tr>
-                                        <th>No Pelaporan</th>
-                                        <th>Tanggal</th>
-                                        <th>Waktu</th>
-                                        <th>Unit Kerja</th>
-                                        <th>Area</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </thead>
-                                <tfoot>
-                                    <tr>
-                                        <th>No Pelaporan</th>
-                                        <th>Tanggal</th>
-                                        <th>Waktu</th>
-                                        <th>Unit Kerja</th>
-                                        <th>Area</th>
-                                        <th>Action</th>
-                                    </tr>
-                                </tfoot>
-                                <tbody>
-                                    <tr>
-                                        <td>2024-K3-001</td>
-                                        <td>14/01/2024</td>
-                                        <td>14:17 PM</td>
-                                        <td>Branch Belawan</td>
-                                        <td>Gudang</td>
-                                        <td>
-                                            <a class="btn btn-datatable btn-icon btn-transparent-dark me-2"
-                                                href="detailreport.html"><i data-feather="external-link"></i></a>
-                                            <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!"><i
-                                                    data-feather="trash-2"></i></a>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
+               <!-- Main page content-->
+               <div class="container-xl px-4 mt-n10">
+                <div class="card">
+                    <div class="card-body">
+                        <form>
+                            <!-- Form Row-->
+                            <div class="row gx-3 mb-3">
+                                <!-- Form Group (nipp)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="nipp">NIPP</label>
+                                    <input class="form-control" id="nipp" type="text" placeholder="Masukkan NIPP" value="" />
+                                </div>
+                                <!-- Form Group (nama)-->
+                                <div class="col-md-6">
+                                    <label class="small mb-1" for="nama">Nama</label>
+                                    <input class="form-control" id="nama" type="text" placeholder="Masukkan Nama Lengkap" value="" />
+                                </div>
+                            </div>
+                             <!-- Form Group (Group Selection radios)-->
+                             <div class="mb-3">
+                                <label class="small mb-1">Jabatan</label>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioSVP" type="radio" value="Senior Vice Precident" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioSVP">Senior Vice Precident</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioVP" type="radio" value="Vice Precident" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioVP">Vice Precident</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioPM" type="radio" value="Project Manager" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioPM">Project Manager</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioBM" type="radio" value="Branch Manager" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioBM">Branch Manager</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioDPM" type="radio" value="Deputi Branch Manager" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioDPM">Deputi Branch Manager</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioSP" type="radio" value="Supervisi" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioSP">Supervisi</label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" id="radioKoor" type="radio" value="Koordinator" name="radioJabatan" />
+                                    <label class="form-check-label" for="radioKoor">Koordinator</label>
+                                </div>
+                            </div>
+                            <!-- Form Group (Roles)-->
+                            <div class="mb-3">
+                                <label class="small mb-1">Unit Kerja</label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected disabled>Pilih Unit Kerja</option>
+                                    <option value="Kantor Pusat SPMT">Kantor Pusat SPMT</option>
+                                    <option value="Branch Dumai">Branch Dumai</option>
+                                    <option value="Branch Belawan">Branch Belawan</option>
+                                    <option value="Branch Tanjung Intan">Branch Tanjung Intan</option>
+                                    <option value="Branch Bumiharjo - Bagendang">Branch Bumiharjo - Bagendang</option>
+                                    <option value="Branch Tanjung Wangi">Branch Tanjung Wangi</option>
+                                    <option value="Branch Makassar">Branch Makassar</option>
+                                    <option value="Branch Balikpapa">Branch Balikpapan</option>
+                                    <option value="Branch Trisakti - Mekar Putih">Branch Trisakti - Mekar Putih</option>
+                                    <option value="Branch Jamrud Nilam Mirah">Branch Jamrud Nilam Mirah</option>
+                                    <option value="Branch Lembar - Badas">Branch Lembar - Badas</option>
+                                    <option value="Branch ParePare - Garongkon">Branch ParePare - Garongkong</option>
+                                    <option value="Branch Lhokseumawe">Branch Lhokseumawe</option>
+                                    <option value="Branch Malahayati">Branch Malahayati</option>
+                                    <option value="Branch Gresik">Branch Gresik</option>
+                                </select>
+                            </div>
+                              <!-- Form Group (Password)-->
+                              <div class="mb-3">
+                                <label class="small mb-1">Role</label>
+                                <select class="form-select" aria-label="Default select example">
+                                    <option selected disabled>Pilih Role</option>
+                                    <option value="admin">Administrator</option>
+                                    <option value="user">Observator</option>
+                                </select>
+                            </div>
+                            <!-- Form Group (Roles)-->
+                            <div class="mb-3">
+                                <label class="small mb-1" for="password">Password</label>
+                                <input class="form-control" id="password" type="text" placeholder="Masukkan Password" value="" />
+                            </div>
+                            <!-- Submit button-->
+                            <button class="btn btn-primary" type="button">Update user</button>
+                        </form>
                     </div>
                 </div>
+            </div>
             </main>
             <footer class="footer-admin mt-auto footer-light">
                 <div class="container-xl px-4">
