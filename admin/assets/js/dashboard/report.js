@@ -25,7 +25,6 @@ function getTokenFromCookies(cookieName) {
         return "" + Math.round(n);
       };
   
-    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
     s = toFixedFix(n).split(".");
   
     if (s[0].length > 3) {
@@ -73,8 +72,8 @@ function getTokenFromCookies(cookieName) {
     }
   }
   
-// Function to update the area chart
-async function updateAreaChart() {
+  // Function to update the line chart
+  async function updateLineChart() {
     try {
       console.log("Fetching unsafe data...");
       const unsafeData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport", "Unsafe Action");
@@ -88,147 +87,84 @@ async function updateAreaChart() {
       console.log("Unsafe data length:", unsafeData.data.length);
       console.log("Compromised data length:", compromisedData.data.length);
   
-      const labels = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-  
-      const datasets = [
-        {
-          label: "Unsafe Action",
-          lineTension: 0.3,
-          backgroundColor: "rgba(255, 0, 0, 0.05)",
-          borderColor: "rgba(255, 0, 0, 1)",
-          pointRadius: 3,
-          pointBackgroundColor: "rgba(255, 0, 0, 1)",
-          pointBorderColor: "rgba(255, 0, 0, 1)",
-          pointHoverRadius: 3,
-          pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-          pointHoverBorderColor: "rgba(255, 0, 0, 1)",
-          pointHitRadius: 10,
-          pointBorderWidth: 2,
-          data: unsafeData.data,
+      const config = {
+        type: 'line',
+        data: {
+          labels: [
+            "Jan",
+            "Feb",
+            "Mar",
+            "Apr",
+            "May",
+            "Jun",
+            "Jul",
+            "Aug",
+            "Sep",
+            "Oct",
+            "Nov",
+            "Dec",
+          ],
+          datasets: [
+            {
+              label: 'Unsafe Action',
+              data: unsafeData.data,
+              borderColor: 'rgba(255, 0, 0, 1)',
+              backgroundColor: 'rgba(255, 0, 0, 0.05)',
+              yAxisID: 'y',
+              lineTension: 0.3,
+            },
+            {
+              label: 'Compromised Action',
+              data: compromisedData.data,
+              borderColor: 'rgba(0, 97, 242, 1)',
+              backgroundColor: 'rgba(0, 97, 242, 0.05)',
+              yAxisID: 'y1',
+              lineTension: 0.3,
+            },
+          ],
         },
-        {
-          label: "Compromised Action",
-          lineTension: 0.3,
-          backgroundColor: "rgba(0, 97, 242, 0.05)",
-          borderColor: "rgba(0, 97, 242, 1)",
-          pointRadius: 3,
-          pointBackgroundColor: "rgba(0, 97, 242, 1)",
-          pointBorderColor: "rgba(0, 97, 242, 1)",
-          pointHoverRadius: 3,
-          pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-          pointHoverBorderColor: "rgba(0, 97, 242, 1)",
-          pointHitRadius: 10,
-          pointBorderWidth: 2,
-          data: compromisedData.data,
+        options: {
+          responsive: true,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          stacked: false,
+          scales: {
+            y: {
+              type: 'linear',
+              display: true,
+              position: 'left',
+              ticks: {
+                beginAtZero: true,
+              },
+            },
+            y1: {
+              type: 'linear',
+              display: true,
+              position: 'right',
+              ticks: {
+                beginAtZero: true,
+              },
+              grid: {
+                drawOnChartArea: false,
+              },
+            },
+          },
         },
-      ];
-  
-      const updatedData = {
-        labels: labels,
-        datasets: datasets,
       };
   
-      console.log("Updated data:", updatedData);
+      const ctx = document.getElementById("myLineChart").getContext("2d");
   
-      const ctx = document.getElementById("myAreaChart").getContext("2d");
-  
-      // Additional logging
-      console.log("Context:", ctx);
-  
-      const myAreaChart = new Chart(ctx, {
-        type: "line",
-        data: updatedData,
-        options: {
-          maintainAspectRatio: false,
-          layout: {
-            padding: {
-              left: 10,
-              right: 25,
-              top: 25,
-              bottom: 0,
-            },
-          },
-          scales: {
-            xAxes: [
-              {
-                time: {
-                  unit: "date",
-                },
-                gridLines: {
-                  display: false,
-                  drawBorder: false,
-                },
-                ticks: {
-                  maxTicksLimit: 7,
-                },
-              },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  maxTicksLimit: 5,
-                  padding: 10,
-                  // Include a dollar sign in the ticks
-                  callback: function (value, index, values) {
-                    return number_format(value);
-                  },
-                },
-                gridLines: {
-                  color: "rgb(234, 236, 244)",
-                  zeroLineColor: "rgb(234, 236, 244)",
-                  drawBorder: false,
-                  borderDash: [2],
-                  zeroLineBorderDash: [2],
-                },
-              },
-            ],
-          },
-          legend: {
-            display: true,
-          },
-          tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-              label: function (tooltipItem, chart) {
-                var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || "";
-                return datasetLabel + number_format(tooltipItem.yLabel);
-              },
-            },
-          },
-        },
-      });
+      const myLineChart = new Chart(ctx, config);
   
       console.log("Chart initialized successfully!");
     } catch (error) {
-      console.error("Error updating area chart:", error);
+      console.error("Error updating line chart:", error);
       // Handle the error appropriately, e.g., show an error message to the user
     }
   }
   
-  // Call the updateAreaChart function to initialize the chart
-  updateAreaChart();
+  // Call the updateLineChart function to initialize the chart
+  updateLineChart();
+  

@@ -68,9 +68,7 @@ const displayUserReports = (data, sortedUsers, containerId) => {
       // Membuat elemen div untuk judul dengan class "fw-bold"
       const titleDiv = document.createElement("div");
       titleDiv.classList.add("fw-bold");
-      titleDiv.innerText = `${nipp} - ${
-        userData?.nama || "Nama Tidak Ditemukan"
-      }`;
+      titleDiv.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
 
       // Membuat elemen div untuk persentase dengan class "small"
       const percentageDiv = document.createElement("div");
@@ -113,26 +111,26 @@ const displayUserReports = (data, sortedUsers, containerId) => {
 
 // Fungsi untuk mengambil data dari API dan jumlah data laporan yang telah dibuat
 const getActiveUser = async () => {
-  const token = getTokenFromCookies("Login");
+  const token = getTokenFromCookies('Login');
 
   if (!token) {
-    // Tangani kesalahan autentikasi jika tidak ada token
     Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
+      icon: 'warning',
+      title: 'Authentication Error',
+      text: 'Kamu Belum Login!',
     }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
+      window.location.href = 'https://portsafe-apps.github.io/';
     });
     return;
   }
 
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+  const compromised = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised';
+  const unsafe = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport';
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
 
+  const targetURL = compromised;  // Ganti dengan 'unsafe' jika ingin menggunakan URL unsafe
   const requestOptions = {
     method: "POST",
     headers: myHeaders,
@@ -143,7 +141,6 @@ const getActiveUser = async () => {
     const response = await fetch(targetURL, requestOptions);
     const result = await response.json();
 
-    // Check if sortedUsers is defined and is an array
     const sortedUsers = result.sortedUsers;
 
     if (!Array.isArray(sortedUsers)) {
@@ -151,7 +148,6 @@ const getActiveUser = async () => {
       return;
     }
 
-    // Pass sortedUsers along with other data to displayUserReports
     displayUserReports(result.data, sortedUsers, "userActive");
   } catch (error) {
     console.error("Error fetching data:", error);
