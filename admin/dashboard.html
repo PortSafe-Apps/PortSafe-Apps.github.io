@@ -109,14 +109,14 @@
                         <div class="me-4 mb-3 mb-sm-0">
                             <h1 class="mb-0">Dashboard</h1>
                             <div class="small">
-                                <span class="fw-500 text-primary">Friday</span>
-                                &middot; September 20, 2021 &middot; 12:16 PM
+                                <span id="dynamicDateTime" class="fw-500 text-primary"></span>
                             </div>
                         </div>
                         <!-- Date range picker example-->
                         <div class="input-group input-group-joined border-0 shadow" style="width: 16.5rem">
                             <span class="input-group-text"><i data-feather="calendar"></i></span>
-                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin" placeholder="Select date range..." />
+                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin"
+                                placeholder="Select date range..." />
                         </div>
                     </div>
                     <!-- Illustration dashboard card example-->
@@ -144,7 +144,8 @@
                                             <div class="small fw-bold text-secondary mb-1">Laporan Unsafe</div>
                                             <h1 class="text-xl"><span id="unsafe-total-reports"></span></h1>
                                         </div>
-                                        <div class="ms-2"><i class="fas fa-exclamation-triangle fa-2x text-gray-200"></i></div>
+                                        <div class="ms-2"><i
+                                                class="fas fa-exclamation-triangle fa-2x text-gray-200"></i></div>
                                     </div>
                                 </div>
                             </div>
@@ -179,129 +180,100 @@
                         </div>
                     </div>
                     <div class="row">
-                        <!-- Area Chart -->
-                        <div class="col-xl-7 col-lg-6">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Tren Jumlah Pelanggaran Setiap Bulan
-                                    </h6>
-                                </div>
-                                <!-- Card Body -->
+                        <div class="col-lg-7 mb-4">
+                            <!-- Area chart example-->
+                            <div class="card mb-4">
+                                <div class="card-header">Tren Laporan Pelanggaran Berdasarkan Aksi</div>
                                 <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="monthlyChart"></div>
+                                    <div class="chart-area"><canvas id="myLineChart" width="100%" height="30"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!-- Content Column -->
                         <div class="col-xl-5 col-lg-6">
-                            <!-- Project Card Example -->
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Aktivitas Pengawas dalam Pelaporan
-                                    </h6>
-                                </div>
+                            <div class="card mb-4">
+                                <div class="card-header">Aktivitas Pengawas dalam Pelaporan</div>
                                 <div id="userActive"></div>
                             </div>
                         </div>
                     </div>
 
                     <div class="row">
-                        <div class="col-xl-6 col-lg-5 ">
-                            <!-- Bar Chart -->
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Jumlah Laporan Berdasarkan Unit
-                                        Kerja</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="locationChart"></div>
+                        <!-- Content Row -->
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <!-- Bar chart example-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Laporan Pelanggaran Berdasarkan Unit Kerja</div>
+                                    <div class="card-body">
+                                        <div class="chart-bar"><canvas id="myBarChart" width="100%" height="30"></canvas>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-xl-6 col-lg-5">
-                            <!-- Bar Chart -->
-                            <div class="card shadow mb-4">
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Jumlah Laporan Berdasarkan Area
-                                        Kerja</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="areaChart"></div>
+                            <div class="col-lg-6 mb-4">
+                                <!-- Bar chart example-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Laporan Pelanggaran Berdasarkan Area</div>
+                                    <div class="card-body">
+                                        <!-- <div class="chart-pie"><canvas id="myPieChart" width="100%" height="30"></canvas>
+                                        </div> -->
                                     </div>
                                 </div>
                             </div>
+
                         </div>
                     </div>
-
-                    <!-- Content Row -->
                     <div class="row">
-                        <!-- Pie Chart -->
-                        <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Jumlah Laporan Berdasarkan Jenis
-                                        Pelanggaran</h6>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="typeChart"></div>
+                        <!-- Content Row -->
+                        <div class="row">
+                            <div class="col-lg-6 mb-4">
+                                <!-- Bar chart example-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Laporan Pelanggaran Berdasarkan Tipe</div>
+                                    <div class="card-body">
+                                        <div class="chart-pie"><canvas id="myPieChart" width="100%" height="30"></canvas>
+                                        </div>
                                     </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 mb-4">
+                                <!-- Bar chart example-->
+                                <div class="card mb-4">
+                                    <div class="card-header">Laporan Pelanggaran Berdasarkan Subtype</div>
+                                    <div class="card-body">
+                                        <!-- <div class="chart-pie"><canvas id="myPieChart" width="100%" height="30"></canvas>
+                                        </div> -->
+                                    </div>
+                                </div>
+                            </div>
 
-                                </div>
-                            </div>
-                        </div>
-                        <!-- Pie Chart -->
-                        <div class="col-xl-6 col-lg-5">
-                            <div class="card shadow mb-4">
-                                <!-- Card Header - Dropdown -->
-                                <div
-                                    class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                                    <h6 class="m-0 font-weight-bold text-dark">Jumlah Laporan Berdasarkan Sub Jenis
-                                        Pelanggaran</h6>
-                                </div>
-                                <!-- Card Body -->
-                                <div class="card-body">
-                                    <div class="chart-wrapper">
-                                        <div id="subtypeChart"></div>
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
             </main>
         </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/litepicker/dist/bundle.js" crossorigin="anonymous"></script>
-    <script src="assets/js/apexcharts.min.js"></script>
     <script src="assets/js/scripts.js"></script>
-    <script src="assets/js/dashboard/monthly-report.js" type="module"></script>
+    <script src="assets/js/dashboard/report.js" type="module"></script>
     <script src="assets/js/dashboard/user-active.js" type="module"></script>
     <script src="assets/js/dashboard/sumreport.js" type="module"></script>
     <script src="assets/js/dashboard/sum-user.js" type="module"></script>
     <script src="assets/js/litepicker.js"></script>
 
-     <!-- Logout Configuration -->
-     <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
+    <!-- Logout Configuration -->
+    <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
 
-     <!-- Sweet Alert -->
-     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
- 
-     <!-- Modal -->
-     <script src="/user/assets/scripts/config/modal.js" type="module"></script>
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Modal -->
+    <script src="/user/assets/scripts/config/modal.js" type="module"></script>
 </body>
+
 </html>

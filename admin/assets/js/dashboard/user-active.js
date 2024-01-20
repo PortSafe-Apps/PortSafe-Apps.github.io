@@ -41,22 +41,34 @@ const displayUserReports = (data, containerId) => {
     }
   });
 
-  // Mengurutkan user berdasarkan jumlah laporan dari yang terbanyak
-  const sortedUsers = Object.keys(userReportsCount).sort(
-    (a, b) => userReportsCount[b] - userReportsCount[a]
-  );
-
-  // Membuat elemen untuk setiap user dan menambahkannya ke userActiveElement
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
-
+  
     // Mencari data user berdasarkan nipp
     const userData = data.find((report) => report.user.nipp === nipp)?.user;
-
+  
+    // Membuat elemen div dengan class "d-flex align-items-center justify-content-between small mb-1"
+    const userInfoContainer = document.createElement("div");
+    userInfoContainer.classList.add("d-flex", "align-items-center", "justify-content-between", "small", "mb-1");
+  
+    // Membuat elemen div untuk judul dengan class "fw-bold"
+    const titleDiv = document.createElement("div");
+    titleDiv.classList.add("fw-bold");
+    titleDiv.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
+  
+    // Membuat elemen div untuk persentase dengan class "small"
+    const percentageDiv = document.createElement("div");
+    percentageDiv.classList.add("small");
+    percentageDiv.innerText = `${reportsCount}%`;
+  
+    // Menambahkan titleDiv dan percentageDiv ke userInfoContainer
+    userInfoContainer.appendChild(titleDiv);
+    userInfoContainer.appendChild(percentageDiv);
+  
     // Membuat elemen progressBarContainer
     const progressBarContainer = document.createElement("div");
     progressBarContainer.classList.add("progress", "mb-0");
-
+  
     // Membuat elemen progressBar
     const progressBar = document.createElement("div");
     progressBar.classList.add("progress-bar", "bg-dark");
@@ -65,39 +77,21 @@ const displayUserReports = (data, containerId) => {
     progressBar.setAttribute("aria-valuenow", reportsCount);
     progressBar.setAttribute("aria-valuemin", "0");
     progressBar.setAttribute("aria-valuemax", "100");
-
-    // Membuat elemen untuk menampilkan persentase di sebelah kanan
-    const progressBarText = document.createElement("span");
-    progressBarText.classList.add("float-right");
-    progressBarText.innerText = `${reportsCount} Laporan`;
-
-    // Membuat elemen h4 untuk judul
-    const heading = document.createElement("h4");
-    heading.classList.add("small", "font-weight-bold");
-
-    // Menambahkan judul dan progressBarText ke dalam heading
-    heading.appendChild(
-      document.createTextNode(
-        `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`
-      )
-    );
-    heading.appendChild(progressBarText);
-
+  
     // Menambahkan progressBar ke progressBarContainer
     progressBarContainer.appendChild(progressBar);
-
+  
     // Membuat elemen cardBody
     const cardBody = document.createElement("div");
     cardBody.classList.add("card-body");
-
-    // Menambahkan heading dan progressBarContainer ke cardBody
-    cardBody.appendChild(heading);
+  
+    // Menambahkan userInfoContainer, progressBarContainer, dan cardBody ke userActiveElement
+    cardBody.appendChild(userInfoContainer);
     cardBody.appendChild(progressBarContainer);
-
-    // Menambahkan cardBody ke userActiveElement
     userActiveElement.appendChild(cardBody);
   });
-};
+
+}; // Closing bracket for displayUserReports function
 
 // Fungsi untuk mengambil data dari API dan jumlah data laporan yang telah dibuat
 const getActiveUser = async () => {
