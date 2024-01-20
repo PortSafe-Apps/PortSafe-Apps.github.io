@@ -1,17 +1,5 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === cookieName) {
-      return value;
-    }
-  }
-  return null;
-}
-
 // Fungsi untuk menampilkan jumlah total data report dengan progress bar
-const displayUserReports = (data, containerId) => {
+const displayUserReports = (data, sortedUsers, containerId) => {
   // Mendapatkan elemen dengan ID containerId
   const userActiveElement = document.getElementById(containerId);
 
@@ -41,6 +29,7 @@ const displayUserReports = (data, containerId) => {
     }
   });
 
+  // Use sortedUsers for iteration
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
   
@@ -120,6 +109,7 @@ const getActiveUser = async () => {
     headers: myHeaders,
     redirect: "follow",
   };
+
   try {
     const response = await fetch(targetURL, requestOptions);
     const result = await response.json();
@@ -127,7 +117,11 @@ const getActiveUser = async () => {
     // Periksa struktur objek result
     console.log(result);
 
-    displayUserReports(result.data, "userActive");
+    // Assuming sortedUsers is an array within the result object
+    const sortedUsers = result.sortedUsers;
+
+    // Pass sortedUsers along with other data to displayUserReports
+    displayUserReports(result.data, sortedUsers, "userActive");
   } catch (error) {
     console.error("Error fetching data:", error);
   }
@@ -135,3 +129,5 @@ const getActiveUser = async () => {
 
 // Panggil fungsi untuk mengambil data dari API dan menampilkan jumlah laporan
 getActiveUser();
+
+
