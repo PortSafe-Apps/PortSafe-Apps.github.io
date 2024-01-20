@@ -154,23 +154,23 @@ function getTokenFromCookies(cookieName) {
         },
       };
   
-      const ctx = document.getElementById("myLineChart")?.getContext("2d");
+      const ctx = document.getElementById("myAreaChart")?.getContext("2d");
   
       if (!ctx) {
         console.error("Canvas context is null or undefined.");
         return;
       }
   
-      const myLineChart = new Chart(ctx, config);
+      const myAreaChart = new Chart(ctx, config);
   
       console.log("Chart initialized successfully!");
     } catch (error) {
-      console.error("Error updating line chart:", error);
+      console.error("Error updating area chart:", error);
       // Handle the error appropriately, e.g., show an error message to the user
     }
   }
   
-  // Call the updateLineChart function after the DOM has loaded
+  // Call the updateAreaChart function after the DOM has loaded
   document.addEventListener("DOMContentLoaded", function () {
     updateLineChart();
   });

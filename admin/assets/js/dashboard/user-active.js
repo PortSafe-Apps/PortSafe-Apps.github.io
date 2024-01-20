@@ -130,21 +130,15 @@ const getActiveUser = async () => {
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
 
-  const compromisedRequest = fetch(compromised, {
-    method: "POST",
-    headers: myHeaders,
-    redirect: "follow",
-  });
-
-  const unsafeRequest = fetch(unsafe, {
-    method: "POST",
-    headers: myHeaders,
-    redirect: "follow",
-  });
-
   try {
-    // Menunggu kedua permintaan selesai
-    const [compromisedResponse, unsafeResponse] = await Promise.all([compromisedRequest, unsafeRequest]);
+    const [compromisedResponse, unsafeResponse] = await Promise.all([
+      fetch(compromised, { method: "POST", headers: myHeaders, redirect: "follow" }),
+      fetch(unsafe, { method: "POST", headers: myHeaders, redirect: "follow" })
+    ]);
+
+    if (!compromisedResponse.ok || !unsafeResponse.ok) {
+      throw new Error("Failed to fetch data.");
+    }
 
     const compromisedResult = await compromisedResponse.json();
     const unsafeResult = await unsafeResponse.json();
