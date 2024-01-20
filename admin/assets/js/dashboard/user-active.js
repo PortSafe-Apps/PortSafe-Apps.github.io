@@ -130,25 +130,36 @@ const getActiveUser = async () => {
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
 
-  const targetURL = compromised;  // Ganti dengan 'unsafe' jika ingin menggunakan URL unsafe
-  const requestOptions = {
+  const compromisedRequest = fetch(compromised, {
     method: "POST",
     headers: myHeaders,
     redirect: "follow",
-  };
+  });
+
+  const unsafeRequest = fetch(unsafe, {
+    method: "POST",
+    headers: myHeaders,
+    redirect: "follow",
+  });
 
   try {
-    const response = await fetch(targetURL, requestOptions);
-    const result = await response.json();
+    // Menunggu kedua permintaan selesai
+    const [compromisedResponse, unsafeResponse] = await Promise.all([compromisedRequest, unsafeRequest]);
 
-    const sortedUsers = result.sortedUsers;
+    const compromisedResult = await compromisedResponse.json();
+    const unsafeResult = await unsafeResponse.json();
+
+    // Menggabungkan data dari 'compromised' dan 'unsafe'
+    const mergedData = [...compromisedResult.data, ...unsafeResult.data];
+
+    const sortedUsers = compromisedResult.sortedUsers || unsafeResult.sortedUsers;
 
     if (!Array.isArray(sortedUsers)) {
       console.error("Sorted users data is undefined or not an array.");
       return;
     }
 
-    displayUserReports(result.data, sortedUsers, "userActive");
+    displayUserReports(mergedData, sortedUsers, "userActive");
   } catch (error) {
     console.error("Error fetching data:", error);
   }

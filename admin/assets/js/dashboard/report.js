@@ -154,7 +154,12 @@ function getTokenFromCookies(cookieName) {
         },
       };
   
-      const ctx = document.getElementById("myLineChart").getContext("2d");
+      const ctx = document.getElementById("myLineChart")?.getContext("2d");
+  
+      if (!ctx) {
+        console.error("Canvas context is null or undefined.");
+        return;
+      }
   
       const myLineChart = new Chart(ctx, config);
   
@@ -165,6 +170,8 @@ function getTokenFromCookies(cookieName) {
     }
   }
   
-  // Call the updateLineChart function to initialize the chart
-  updateLineChart();
+  // Call the updateLineChart function after the DOM has loaded
+  document.addEventListener("DOMContentLoaded", function () {
+    updateLineChart();
+  });
   
