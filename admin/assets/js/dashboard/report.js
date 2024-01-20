@@ -75,138 +75,150 @@ async function fetchDataFromServer(url, category) {
 
 // Function to update the area chart
 async function updateAreaChart() {
-  const unsafeData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport", "Unsafe Action");
-  const compromisedData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised","Compromised Action");
-
-  const labels = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
-  ];
-
-  const datasets = [
-    {
-      label: unsafeData.category,
-      lineTension: 0.3,
-      backgroundColor: "rgba(255, 0, 0, 0.05)",
-      borderColor: "rgba(255, 0, 0, 1)",
-      pointRadius: 3,
-      pointBackgroundColor: "rgba(255, 0, 0, 1)",
-      pointBorderColor: "rgba(255, 0, 0, 1)",
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-      pointHoverBorderColor: "rgba(255, 0, 0, 1)",
-      pointHitRadius: 10,
-      pointBorderWidth: 2,
-      data: unsafeData.data,
-    },
-    {
-      label: compromisedData.category,
-      lineTension: 0.3,
-      backgroundColor: "rgba(0, 97, 242, 0.05)",
-      borderColor: "rgba(0, 97, 242, 1)",
-      pointRadius: 3,
-      pointBackgroundColor: "rgba(0, 97, 242, 1)",
-      pointBorderColor: "rgba(0, 97, 242, 1)",
-      pointHoverRadius: 3,
-      pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-      pointHoverBorderColor: "rgba(0, 97, 242, 1)",
-      pointHitRadius: 10,
-      pointBorderWidth: 2,
-      data: compromisedData.data,
-    },
-  ];
-
-  const updatedData = {
-    labels: labels,
-    datasets: datasets,
-  };
-
-  const ctx = document.getElementById("myAreaChart").getContext("2d");
-
-  const myAreaChart = new Chart(ctx, {
-    type: "line",
-    data: updatedData,
-    options: {
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: 10,
-                right: 25,
-                top: 25,
-                bottom: 0
-            }
+    try {
+      console.log("Fetching unsafe data...");
+      const unsafeData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport", "Unsafe Action");
+      console.log("Unsafe data:", unsafeData);
+  
+      console.log("Fetching compromised data...");
+      const compromisedData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
+      console.log("Compromised data:", compromisedData);
+  
+      const labels = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+  
+      const datasets = [
+        {
+          label: unsafeData.category,
+          lineTension: 0.3,
+          backgroundColor: "rgba(255, 0, 0, 0.05)",
+          borderColor: "rgba(255, 0, 0, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(255, 0, 0, 1)",
+          pointBorderColor: "rgba(255, 0, 0, 1)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+          pointHoverBorderColor: "rgba(255, 0, 0, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: unsafeData.data,
         },
-        scales: {
-            xAxes: [{
-                time: {
-                    unit: "date"
-                },
-                gridLines: {
-                    display: false,
-                    drawBorder: false
-                },
-                ticks: {
-                    maxTicksLimit: 7
+        {
+          label: compromisedData.category,
+          lineTension: 0.3,
+          backgroundColor: "rgba(0, 97, 242, 0.05)",
+          borderColor: "rgba(0, 97, 242, 1)",
+          pointRadius: 3,
+          pointBackgroundColor: "rgba(0, 97, 242, 1)",
+          pointBorderColor: "rgba(0, 97, 242, 1)",
+          pointHoverRadius: 3,
+          pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+          pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+          pointHitRadius: 10,
+          pointBorderWidth: 2,
+          data: compromisedData.data,
+        },
+      ];
+  
+      const updatedData = {
+        labels: labels,
+        datasets: datasets,
+      };
+  
+      const ctx = document.getElementById("myAreaChart").getContext("2d");
+  
+      const myAreaChart = new Chart(ctx, {
+        type: "line",
+        data: updatedData,
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 25,
+                    top: 25,
+                    bottom: 0
                 }
-            }],
-            yAxes: [{
-                ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
-                        return "$" + number_format(value);
+            },
+            scales: {
+                xAxes: [{
+                    time: {
+                        unit: "date"
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false
+                    },
+                    ticks: {
+                        maxTicksLimit: 7
                     }
-                },
-                gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2]
-                }
-            }]
-        },
-        legend: {
-            display: false
-        },
-        tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-                label: function(tooltipItem, chart) {
-                    var datasetLabel =
-                        chart.datasets[tooltipItem.datasetIndex].label || "";
-                    return datasetLabel + ": $" + number_format(tooltipItem.yLabel);
+                }],
+                yAxes: [{
+                    ticks: {
+                        maxTicksLimit: 5,
+                        padding: 10,
+                        // Include a dollar sign in the ticks
+                        callback: function(value, index, values) {
+                            return "$" + number_format(value);
+                        }
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2]
+                    }
+                }]
+            },
+            legend: {
+                display: false
+            },
+            tooltips: {
+                backgroundColor: "rgb(255,255,255)",
+                bodyFontColor: "#858796",
+                titleMarginBottom: 10,
+                titleFontColor: "#6e707e",
+                titleFontSize: 14,
+                borderColor: "#dddfeb",
+                borderWidth: 1,
+                xPadding: 15,
+                yPadding: 15,
+                displayColors: false,
+                intersect: false,
+                mode: "index",
+                caretPadding: 10,
+                callbacks: {
+                    label: function(tooltipItem, chart) {
+                        var datasetLabel =
+                            chart.datasets[tooltipItem.datasetIndex].label || "";
+                        return datasetLabel + number_format(tooltipItem.yLabel);
+                    }
                 }
             }
         }
-    },
-  });
-}
-
-// Call the updateAreaChart function to initialize the chart
-updateAreaChart();
+      });
+  
+      console.log("Chart initialized successfully!");
+    } catch (error) {
+      console.error("Error updating area chart:", error);
+      // Handle the error appropriately, e.g., show an error message to the user
+    }
+  }
+  
+  // Call the updateAreaChart function to initialize the chart
+  updateAreaChart();
 
 

@@ -146,5 +146,6 @@ const getActiveUser = async () => {
   }
 };
 
+
 // Panggil fungsi untuk mengambil data dari API dan menampilkan jumlah laporan
 getActiveUser();
