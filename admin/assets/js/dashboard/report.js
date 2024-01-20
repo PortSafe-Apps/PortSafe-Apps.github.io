@@ -16,8 +16,23 @@ Chart.defaults.global.defaultFontFamily =
 Chart.defaults.global.defaultFontColor = "#858796";
 
 // Function for number formatting
-function number_format(number, decimals, dec_point, thousands_sep) {
-  // ... (your existing number_format function)
+function number_format(number) {
+    var n = !isFinite(+number) ? 0 : +number,
+        dec = ".",
+        sep = " ",
+        s = "",
+        toFixedFix = function (n) {
+            return "" + Math.round(n);
+        };
+
+    // Fix for IE parseFloat(0.55).toFixed(0) = 0;
+    s = toFixedFix(n).split(".");
+
+    if (s[0].length > 3) {
+        s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+    }
+
+    return s.join(dec);
 }
 
 // Function to fetch data from the server (similar to your existing logic)

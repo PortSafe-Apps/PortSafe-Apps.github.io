@@ -112,7 +112,7 @@ const getActiveUser = async () => {
     }).then(() => {
       window.location.href = "https://portsafe-apps.github.io/";
     });
-    return [];
+    return;
   }
 
   const targetURL =
@@ -134,7 +134,7 @@ const getActiveUser = async () => {
     // Check if sortedUsers is defined and is an array
     const sortedUsers = result.sortedUsers;
 
-    if (!sortedUsers || !Array.isArray(sortedUsers)) {
+    if (!Array.isArray(sortedUsers)) {
       console.error("Sorted users data is undefined or not an array.");
       return;
     }
