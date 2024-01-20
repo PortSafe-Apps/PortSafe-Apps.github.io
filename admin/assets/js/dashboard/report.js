@@ -61,12 +61,12 @@ async function fetchDataFromServer(url, category) {
 // Fungsi untuk memperbarui grafik dengan data yang diambil
 async function updateChart() {
   const unsafeData = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
     "Unsafe Action"
   );
 
   const compromisedData = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
     "Compromised Action"
   );
 
