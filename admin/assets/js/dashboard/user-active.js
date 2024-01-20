@@ -2,10 +2,10 @@
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(';');
   for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split('=');
-      if (name === cookieName) {
-          return value;
-      }
+    const [name, value] = cookie.trim().split('=');
+    if (name === cookieName) {
+      return value;
+    }
   }
   return null;
 }
@@ -40,6 +40,12 @@ const displayUserReports = (data, sortedUsers, containerId) => {
       userReportsCount[nipp]++;
     }
   });
+
+  // Check if sortedUsers is defined and is an array
+  if (!sortedUsers || !Array.isArray(sortedUsers)) {
+    console.error("Sorted users data is undefined or not an array.");
+    return;
+  }
 
   // Use sortedUsers for iteration
   sortedUsers.forEach((nipp) => {
@@ -91,7 +97,6 @@ const displayUserReports = (data, sortedUsers, containerId) => {
     cardBody.appendChild(progressBarContainer);
     userActiveElement.appendChild(cardBody);
   });
-
 }; // Closing bracket for displayUserReports function
 
 // Fungsi untuk mengambil data dari API dan jumlah data laporan yang telah dibuat
@@ -126,11 +131,13 @@ const getActiveUser = async () => {
     const response = await fetch(targetURL, requestOptions);
     const result = await response.json();
 
-    // Periksa struktur objek result
-    console.log(result);
-
-    // Assuming sortedUsers is an array within the result object
+    // Check if sortedUsers is defined and is an array
     const sortedUsers = result.sortedUsers;
+
+    if (!sortedUsers || !Array.isArray(sortedUsers)) {
+      console.error("Sorted users data is undefined or not an array.");
+      return;
+    }
 
     // Pass sortedUsers along with other data to displayUserReports
     displayUserReports(result.data, sortedUsers, "userActive");
@@ -141,5 +148,3 @@ const getActiveUser = async () => {
 
 // Panggil fungsi untuk mengambil data dari API dan menampilkan jumlah laporan
 getActiveUser();
-
-

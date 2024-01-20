@@ -1,13 +1,3 @@
-// Mendapatkan referensi ke elemen canvas
-const ctx = document.getElementById("myLineChart").getContext("2d");
-
-// Membuat objek grafik menggunakan Chart.js
-const myLineChart = new Chart(ctx, {
-  type: 'line',
-  data: {}, // Anda bisa membiarkannya kosong karena akan diperbarui segera
-  options: {} // Juga bisa kosong atau sesuai kebutuhan Anda
-});
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -20,7 +10,17 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mengambil data dari server
+// Set new default font family and font color
+Chart.defaults.global.defaultFontFamily =
+  "Poppins, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+Chart.defaults.global.defaultFontColor = "#858796";
+
+// Function for number formatting
+function number_format(number, decimals, dec_point, thousands_sep) {
+  // ... (your existing number_format function)
+}
+
+// Function to fetch data from the server (similar to your existing logic)
 async function fetchDataFromServer(url, category) {
   try {
     const token = getTokenFromCookies("Login");
@@ -58,28 +58,38 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-// Fungsi untuk memperbarui grafik dengan data yang diambil
-async function updateChart() {
-  const unsafeData = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
-    "Unsafe Action"
-  );
+// Function to update the area chart
+async function updateAreaChart() {
+  const unsafeData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport", "Unsafe Action");
+  const compromisedData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised","Compromised Action");
 
-  const compromisedData = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-    "Compromised Action"
-  );
-
-  const labels = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const labels = [
+    "Jan",
+    "Feb",
+    "Mar",
+    "Apr",
+    "May",
+    "Jun",
+    "Jul",
+    "Aug",
+    "Sep",
+    "Oct",
+    "Nov",
+    "Dec",
+  ];
 
   const datasets = [
     {
       label: unsafeData.category,
       lineTension: 0.3,
-      backgroundColor: "rgba(255, 0, 0, 0.1)", // Warna area untuk Unsafe Action
+      backgroundColor: "rgba(255, 0, 0, 0.05)",
       borderColor: "rgba(255, 0, 0, 1)",
       pointRadius: 3,
+      pointBackgroundColor: "rgba(255, 0, 0, 1)",
+      pointBorderColor: "rgba(255, 0, 0, 1)",
       pointHoverRadius: 3,
+      pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+      pointHoverBorderColor: "rgba(255, 0, 0, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
       data: unsafeData.data,
@@ -87,10 +97,14 @@ async function updateChart() {
     {
       label: compromisedData.category,
       lineTension: 0.3,
-      backgroundColor: "rgba(0, 97, 242, 0.1)", // Warna area untuk Compromised Action
+      backgroundColor: "rgba(0, 97, 242, 0.05)",
       borderColor: "rgba(0, 97, 242, 1)",
       pointRadius: 3,
+      pointBackgroundColor: "rgba(0, 97, 242, 1)",
+      pointBorderColor: "rgba(0, 97, 242, 1)",
       pointHoverRadius: 3,
+      pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+      pointHoverBorderColor: "rgba(0, 97, 242, 1)",
       pointHitRadius: 10,
       pointBorderWidth: 2,
       data: compromisedData.data,
@@ -102,14 +116,82 @@ async function updateChart() {
     datasets: datasets,
   };
 
-  // Mengasumsikan myLineChart adalah referensi ke grafik yang sudah ada
-  myLineChart.data = updatedData;
-  myLineChart.update();
+  const ctx = document.getElementById("myAreaChart").getContext("2d");
+
+  const myAreaChart = new Chart(ctx, {
+    type: "line",
+    data: updatedData,
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 25,
+                top: 25,
+                bottom: 0
+            }
+        },
+        scales: {
+            xAxes: [{
+                time: {
+                    unit: "date"
+                },
+                gridLines: {
+                    display: false,
+                    drawBorder: false
+                },
+                ticks: {
+                    maxTicksLimit: 7
+                }
+            }],
+            yAxes: [{
+                ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    // Include a dollar sign in the ticks
+                    callback: function(value, index, values) {
+                        return "$" + number_format(value);
+                    }
+                },
+                gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: false,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2]
+                }
+            }]
+        },
+        legend: {
+            display: false
+        },
+        tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: "#6e707e",
+            titleFontSize: 14,
+            borderColor: "#dddfeb",
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: "index",
+            caretPadding: 10,
+            callbacks: {
+                label: function(tooltipItem, chart) {
+                    var datasetLabel =
+                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                    return datasetLabel + ": $" + number_format(tooltipItem.yLabel);
+                }
+            }
+        }
+    },
+  });
 }
 
-// Panggil fungsi updateChart untuk mengisi awal grafik
-updateChart();
+// Call the updateAreaChart function to initialize the chart
+updateAreaChart();
 
-// Anda juga dapat menyiapkan timer atau listener acara untuk secara berkala memperbarui grafik
-// Misalnya, perbarui grafik setiap 5 menit
-// setInterval(updateChart, 5 * 60 * 1000);
+
