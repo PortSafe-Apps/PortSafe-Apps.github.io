@@ -71,136 +71,142 @@ async function fetchDataFromServer(url, category) {
 }
 
 // Function to update the line chart
-  async function updateLineChart() {
-    try {
-      // Fetch unsafe data
-      console.log("Fetching unsafe data...");
-      const unsafeData = await fetchDataFromServer(
-        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
-        "Unsafe Action"
-      );
-      console.log("Unsafe data:", unsafeData);
-  
-      // Fetch compromised data
-      console.log("Fetching compromised data...");
-      const compromisedData = await fetchDataFromServer(
-        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-        "Compromised Action"
-      );
-      console.log("Compromised data:", compromisedData);
-  
-      // Verify the structure of the combined data
-      const combinedData = unsafeData.data.map((value, index) => ({
-        unsafe: value,
-        compromised: compromisedData.data[index] || 0,
-      }));
-      console.log("Combined data:", combinedData);
-  
-      // Log datasets before chart initialization
-      console.log("Unsafe dataset:", combinedData.map(entry => entry.unsafe));
-      console.log("Compromised dataset:", combinedData.map(entry => entry.compromised));
-  
-      // Multi-axis Line Chart Initialization
-      const ctx = document.getElementById("myMultiAxisLineChart");
-      const multiAxisLineChart = new Chart(ctx, {
-        type: "line",
-        data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-          datasets: [
+async function updateLineChart() {
+  try {
+    // Fetch unsafe data
+    console.log("Fetching unsafe data...");
+    const unsafeData = await fetchDataFromServer(
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
+      "Unsafe Action"
+    );
+    console.log("Unsafe data:", unsafeData);
+
+    // Fetch compromised data
+    console.log("Fetching compromised data...");
+    const compromisedData = await fetchDataFromServer(
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+      "Compromised Action"
+    );
+    console.log("Compromised data:", compromisedData);
+
+    // Log datasets before chart initialization
+    console.log(
+      "Unsafe dataset:",
+      combinedData.map((entry) => entry.unsafe)
+    );
+    console.log(
+      "Compromised dataset:",
+      combinedData.map((entry) => entry.compromised)
+    );
+
+    // Verify the structure of the combined data
+    const combinedData = unsafeData.data.map((value, index) => ({
+      unsafe: value,
+      compromised: compromisedData.data[index] || 0,
+    }));
+
+    // Multi-axis Line Chart Initialization
+    const ctx = document.getElementById("myMultiAxisLineChart");
+    const multiAxisLineChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: combinedData.map((entry, index) => index + 1), // Menggunakan index + 1 sebagai label x-axis
+        datasets: [
+          {
+            label: "Unsafe Action",
+            borderColor: "rgba(78, 115, 223, 1)",
+            backgroundColor: "rgba(78, 115, 223, 0.05)",
+            data: combinedData.map((entry) => entry.unsafe),
+          },
+          {
+            label: "Compromised Action",
+            borderColor: "rgba(28, 200, 138, 1)",
+            backgroundColor: "rgba(28, 200, 138, 0.05)",
+            data: combinedData.map((entry) => entry.compromised),
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 10,
+            right: 10,
+            top: 0,
+            bottom: 0,
+          },
+        },
+        scales: {
+          xAxes: [
             {
-              label: "Unsafe Action",
-              borderColor: "rgba(78, 115, 223, 1)",
-              backgroundColor: "rgba(78, 115, 223, 0.05)",
-              data: combinedData.map(entry => entry.unsafe),
+              time: {
+                unit: "date",
+              },
+              gridLines: {
+                display: false,
+                drawBorder: false,
+              },
+              ticks: {
+                maxTicksLimit: 7,
+              },
             },
+          ],
+          yAxes: [
             {
-              label: "Compromised Action",
-              borderColor: "rgba(28, 200, 138, 1)",
-              backgroundColor: "rgba(28, 200, 138, 0.05)",
-              data: combinedData.map(entry => entry.compromised),
+              ticks: {
+                maxTicksLimit: 5,
+                padding: 10,
+                callback: function (value) {
+                  return number_format(value);
+                },
+              },
+              gridLines: {
+                color: "rgb(234, 236, 244)",
+                zeroLineColor: "rgb(234, 236, 244)",
+                drawBorder: false,
+                borderDash: [2],
+                zeroLineBorderDash: [2],
+              },
             },
           ],
         },
-        options: {
-            maintainAspectRatio: false,
-            layout: {
-              padding: {
-                left: 10,
-                right: 10,
-                top: 0,
-                bottom: 0,
-              },
-            },
-            scales: {
-              xAxes: [
-                {
-                  time: {
-                    unit: "date",
-                  },
-                  gridLines: {
-                    display: false,
-                    drawBorder: false,
-                  },
-                  ticks: {
-                    maxTicksLimit: 7,
-                  },
-                },
-              ],
-              yAxes: [
-                {
-                  ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    callback: function (value) {
-                      return number_format(value);
-                    },
-                  },
-                  gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2],
-                  },
-                },
-              ],
-            },
-            legend: {
-              display: true,
-              position: "top",
-            },
-            tooltips: {
-              backgroundColor: "rgb(255,255,255)",
-              bodyFontColor: "#858796",
-              titleMarginBottom: 10,
-              titleFontColor: "#6e707e",
-              titleFontSize: 14,
-              borderColor: "#dddfeb",
-              borderWidth: 1,
-              xPadding: 15,
-              yPadding: 15,
-              displayColors: false,
-              intersect: false,
-              mode: "index",
-              caretPadding: 10,
-              callbacks: {
-                label: function (tooltipItem, chart) {
-                  const datasetLabel =
-                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                  return datasetLabel + ": " + number_format(tooltipItem.yLabel);
-                },
-              },
+        legend: {
+          display: true,
+          position: "top",
+        },
+        tooltips: {
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          titleMarginBottom: 10,
+          titleFontColor: "#6e707e",
+          titleFontSize: 14,
+          borderColor: "#dddfeb",
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          displayColors: false,
+          intersect: false,
+          mode: "index",
+          caretPadding: 10,
+          callbacks: {
+            label: function (tooltipItem, chart) {
+              const datasetLabel =
+                chart.datasets[tooltipItem.datasetIndex].label || "";
+              const dataLabel = tooltipItem.xLabel;
+              return `${datasetLabel} (${dataLabel}): ${number_format(
+                tooltipItem.yLabel
+              )}`;
             },
           },
-      });
-  
-      console.log("Chart initialized successfully!");
-    } catch (error) {
-      console.error("Error updating line chart:", error);
-    }
+        },
+      },
+    });
+
+    console.log("Chart initialized successfully!");
+  } catch (error) {
+    console.error("Error updating line chart:", error);
   }
-  
-  // Call the function to update the line chart
-  updateLineChart();
-  
-  
+}
+
+// Call the function to update the line chart
+updateLineChart();
