@@ -89,6 +89,12 @@ async function updateLineChart() {
     );
     console.log("Compromised data:", compromisedData);
 
+    // Verify the structure of the combined data
+    const combinedData = unsafeData.data.map((value, index) => ({
+      unsafe: value,
+      compromised: compromisedData.data[index] || 0,
+    }));
+
     // Log datasets before chart initialization
     console.log(
       "Unsafe dataset:",
@@ -99,18 +105,12 @@ async function updateLineChart() {
       combinedData.map((entry) => entry.compromised)
     );
 
-    // Verify the structure of the combined data
-    const combinedData = unsafeData.data.map((value, index) => ({
-      unsafe: value,
-      compromised: compromisedData.data[index] || 0,
-    }));
-
     // Multi-axis Line Chart Initialization
     const ctx = document.getElementById("myMultiAxisLineChart");
     const multiAxisLineChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: combinedData.map((entry, index) => index + 1), // Menggunakan index + 1 sebagai label x-axis
+        labels: combinedData.map((entry, index) => index + 1),
         datasets: [
           {
             label: "Unsafe Action",
