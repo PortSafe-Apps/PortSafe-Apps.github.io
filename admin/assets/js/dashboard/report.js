@@ -71,8 +71,9 @@ async function fetchDataFromServer(url, category) {
 }
 
 // Function to update the line chart
-async function updateLineChart() {
+  async function updateLineChart() {
     try {
+      // Fetch unsafe data
       console.log("Fetching unsafe data...");
       const unsafeData = await fetchDataFromServer(
         "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
@@ -80,6 +81,7 @@ async function updateLineChart() {
       );
       console.log("Unsafe data:", unsafeData);
   
+      // Fetch compromised data
       console.log("Fetching compromised data...");
       const compromisedData = await fetchDataFromServer(
         "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
@@ -87,35 +89,23 @@ async function updateLineChart() {
       );
       console.log("Compromised data:", compromisedData);
   
-      // Use months as x-axis labels
-      const months = [
-        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
-      ];
-  
-      // Use months as x-axis labels
-      const labels = months;
-  
-      // Pad "Compromised Action" data with zeros to match the length of "Unsafe Action" data
-      const paddedCompromisedData = Array.from({ length: months.length }, (_, index) => {
-        return index < compromisedData.data.length ? compromisedData.data[index] : 0;
-      });
-  
-      // Sort both data sets based on the x-axis labels (months)
-      const sortedUnsafeData = months.map(month => unsafeData.data[months.indexOf(month)]);
-      const sortedCompromisedData = paddedCompromisedData;
-  
-      // Combine both datasets for the y-axis
-      const combinedData = sortedUnsafeData.map((value, index) => ({
+      // Verify the structure of the combined data
+      const combinedData = unsafeData.data.map((value, index) => ({
         unsafe: value,
-        compromised: sortedCompromisedData[index],
+        compromised: compromisedData.data[index] || 0,
       }));
+      console.log("Combined data:", combinedData);
   
-      // Multi-axis Line Chart Example (Single Sided)
+      // Log datasets before chart initialization
+      console.log("Unsafe dataset:", combinedData.map(entry => entry.unsafe));
+      console.log("Compromised dataset:", combinedData.map(entry => entry.compromised));
+  
+      // Multi-axis Line Chart Initialization
       const ctx = document.getElementById("myMultiAxisLineChart");
       const multiAxisLineChart = new Chart(ctx, {
         type: "line",
         data: {
-          labels: labels,
+          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
           datasets: [
             {
               label: "Unsafe Action",
@@ -132,76 +122,76 @@ async function updateLineChart() {
           ],
         },
         options: {
-          maintainAspectRatio: false,
-          layout: {
-            padding: {
-              left: 10,
-              right: 10,
-              top: 0,
-              bottom: 0,
-            },
-          },
-          scales: {
-            xAxes: [
-              {
-                time: {
-                  unit: "date",
-                },
-                gridLines: {
-                  display: false,
-                  drawBorder: false,
-                },
-                ticks: {
-                  maxTicksLimit: 7,
-                },
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 10,
+                right: 10,
+                top: 0,
+                bottom: 0,
               },
-            ],
-            yAxes: [
-              {
-                ticks: {
-                  maxTicksLimit: 5,
-                  padding: 10,
-                  callback: function (value) {
-                    return number_format(value);
+            },
+            scales: {
+              xAxes: [
+                {
+                  time: {
+                    unit: "date",
+                  },
+                  gridLines: {
+                    display: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    maxTicksLimit: 7,
                   },
                 },
-                gridLines: {
-                  color: "rgb(234, 236, 244)",
-                  zeroLineColor: "rgb(234, 236, 244)",
-                  drawBorder: false,
-                  borderDash: [2],
-                  zeroLineBorderDash: [2],
+              ],
+              yAxes: [
+                {
+                  ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    callback: function (value) {
+                      return number_format(value);
+                    },
+                  },
+                  gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: false,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2],
+                  },
                 },
-              },
-            ],
-          },
-          legend: {
-            display: true,
-            position: "top",
-          },
-          tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-              label: function (tooltipItem, chart) {
-                const datasetLabel =
-                  chart.datasets[tooltipItem.datasetIndex].label || "";
-                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+              ],
+            },
+            legend: {
+              display: true,
+              position: "top",
+            },
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              titleMarginBottom: 10,
+              titleFontColor: "#6e707e",
+              titleFontSize: 14,
+              borderColor: "#dddfeb",
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              intersect: false,
+              mode: "index",
+              caretPadding: 10,
+              callbacks: {
+                label: function (tooltipItem, chart) {
+                  const datasetLabel =
+                    chart.datasets[tooltipItem.datasetIndex].label || "";
+                  return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                },
               },
             },
           },
-        },
       });
   
       console.log("Chart initialized successfully!");
@@ -212,4 +202,5 @@ async function updateLineChart() {
   
   // Call the function to update the line chart
   updateLineChart();
+  
   
