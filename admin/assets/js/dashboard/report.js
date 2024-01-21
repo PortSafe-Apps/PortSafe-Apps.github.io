@@ -74,33 +74,32 @@ async function fetchDataFromServer(url, category) {
     }
 }
 
-// Assuming you have fetched data for both unsafe and compromised actions
+// Unsafe Data Fetch
 const unsafeDataResponse = await fetchDataFromServer(
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
     "Unsafe Action"
 );
 
+// Compromised Data Fetch
 const compromisedDataResponse = await fetchDataFromServer(
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
     "Compromised Action"
 );
 
-// Combine the data from both responses
-const allReportData = [...unsafeDataResponse.data, ...compromisedDataResponse.data];
-
-// Calculate monthly counts for both categories
+// Unsafe Data Processing
 const monthCountsUnsafe = Array(12).fill(0);
+
+unsafeDataResponse.data.forEach((report) => {
+    const month = new Date(report.date).getMonth();
+    monthCountsUnsafe[month] += 1;
+});
+
+// Compromised Data Processing
 const monthCountsCompromised = Array(12).fill(0);
 
-allReportData.forEach((report) => {
+compromisedDataResponse.data.forEach((report) => {
     const month = new Date(report.date).getMonth();
-    console.log("Report:", report); // Add this line to log the report data
-    console.log("Month:", month); // Add this line to log the calculated month
-    if (report.category === "Unsafe Action") {
-        monthCountsUnsafe[month] += 1;
-    } else if (report.category === "Compromised Action") {
-        monthCountsCompromised[month] += 1;
-    }
+    monthCountsCompromised[month] += 1;
 });
 
 // Multi-axis Line Chart Example
