@@ -123,20 +123,21 @@ const getActiveUser = async () => {
     console.log("Compromised Result:", compromisedResult);
     console.log("Unsafe Result:", unsafeResult);
 
-    // Check if sortedUsers is defined, otherwise use an empty array
-    const sortedUsers = compromisedResult.sortedUsers || unsafeResult.sortedUsers || [];
+    const mergedData = [...compromisedResult.data, ...unsafeResult.data];
 
+    // Combine sortedUsers from both compromisedResult and unsafeResult
+    const sortedUsers = [...(compromisedResult.sortedUsers || []), ...(unsafeResult.sortedUsers || [])];
+    
     console.log("Sorted Users:", sortedUsers);
-
+    
     // Check if sortedUsers is an array and not empty before proceeding
     if (!Array.isArray(sortedUsers) || sortedUsers.length === 0) {
       console.error("Sorted users data is undefined, not an array, or an empty array.");
       return;
     }
-
-    const mergedData = [...compromisedResult.data, ...unsafeResult.data];
-
+    
     displayUserReports(mergedData, sortedUsers, "userActive");
+    
   } catch (error) {
     console.error("Error fetching data:", error);
   }
