@@ -95,34 +95,37 @@ async function updateLineChart() {
       compromised: compromisedData.data[index] || 0,
     }));
 
-    // Log datasets before chart initialization
-    console.log(
-      "Unsafe dataset:",
-      combinedData.map((entry) => entry.unsafe)
-    );
-    console.log(
-      "Compromised dataset:",
-      combinedData.map((entry) => entry.compromised)
-    );
-
     // Multi-axis Line Chart Initialization
     const ctx = document.getElementById("myMultiAxisLineChart");
     const multiAxisLineChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: combinedData.map((entry, index) => index + 1),
+        labels: [
+          "Jan",
+          "Feb",
+          "Mar",
+          "Apr",
+          "May",
+          "Jun",
+          "Jul",
+          "Aug",
+          "Sep",
+          "Oct",
+          "Nov",
+          "Dec",
+        ],
         datasets: [
           {
             label: "Unsafe Action",
             borderColor: "rgba(78, 115, 223, 1)",
             backgroundColor: "rgba(78, 115, 223, 0.05)",
-            data: combinedData.map((entry) => entry.unsafe),
+            data: combinedData.map((entry, index) => entry.unsafe),
           },
           {
             label: "Compromised Action",
             borderColor: "rgba(28, 200, 138, 1)",
             backgroundColor: "rgba(28, 200, 138, 0.05)",
-            data: combinedData.map((entry) => entry.compromised),
+            data: combinedData.map((entry, index) => entry.compromised),
           },
         ],
       },
@@ -147,7 +150,7 @@ async function updateLineChart() {
                 drawBorder: false,
               },
               ticks: {
-                maxTicksLimit: 7,
+                maxTicksLimit: 12, // Sesuaikan dengan jumlah bulan yang akan ditampilkan
               },
             },
           ],
@@ -201,7 +204,6 @@ async function updateLineChart() {
         },
       },
     });
-
     console.log("Chart initialized successfully!");
   } catch (error) {
     console.error("Error updating line chart:", error);
