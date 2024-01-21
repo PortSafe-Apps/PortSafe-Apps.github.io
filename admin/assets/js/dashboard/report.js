@@ -87,7 +87,7 @@ async function updateLineChart() {
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
       "Compromised Action"
     );
-    console.log("Data compromised:", compromisedData);s
+    console.log("Data compromised:", compromisedData);
 
     // Menggabungkan data dengan penanganan panjang yang berbeda
     const combinedData = [];
