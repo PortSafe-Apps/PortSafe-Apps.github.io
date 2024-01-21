@@ -205,3 +205,6 @@ async function updateLineChart() {
     console.error("Error updating line chart:", error);
   }
 }
+
+// Call the function to update the line chart
+updateLineChart();
