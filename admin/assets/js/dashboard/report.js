@@ -104,6 +104,12 @@ async function updateLineChart() {
       const sortedUnsafeData = months.map(month => unsafeData.data[months.indexOf(month)]);
       const sortedCompromisedData = paddedCompromisedData;
   
+      // Combine both datasets for the y-axis
+      const combinedData = sortedUnsafeData.map((value, index) => ({
+        unsafe: value,
+        compromised: sortedCompromisedData[index],
+      }));
+  
       // Multi-axis Line Chart Example (Single Sided)
       const ctx = document.getElementById("myMultiAxisLineChart");
       const multiAxisLineChart = new Chart(ctx, {
@@ -113,17 +119,15 @@ async function updateLineChart() {
           datasets: [
             {
               label: "Unsafe Action",
-              yAxisID: "y-axis-unsafe",
               borderColor: "rgba(78, 115, 223, 1)",
               backgroundColor: "rgba(78, 115, 223, 0.05)",
-              data: sortedUnsafeData,
+              data: combinedData.map(entry => entry.unsafe),
             },
             {
               label: "Compromised Action",
-              yAxisID: "y-axis-compromised",
               borderColor: "rgba(28, 200, 138, 1)",
               backgroundColor: "rgba(28, 200, 138, 0.05)",
-              data: sortedCompromisedData,
+              data: combinedData.map(entry => entry.compromised),
             },
           ],
         },
@@ -154,26 +158,6 @@ async function updateLineChart() {
             ],
             yAxes: [
               {
-                id: "y-axis-unsafe",
-                position: "left",
-                ticks: {
-                  maxTicksLimit: 5,
-                  padding: 10,
-                  callback: function (value) {
-                    return number_format(value);
-                  },
-                },
-                gridLines: {
-                  color: "rgb(234, 236, 244)",
-                  zeroLineColor: "rgb(234, 236, 244)",
-                  drawBorder: false,
-                  borderDash: [2],
-                  zeroLineBorderDash: [2],
-                },
-              },
-              {
-                id: "y-axis-compromised",
-                position: "right",
                 ticks: {
                   maxTicksLimit: 5,
                   padding: 10,
@@ -228,7 +212,4 @@ async function updateLineChart() {
   
   // Call the function to update the line chart
   updateLineChart();
-  
-
-
   
