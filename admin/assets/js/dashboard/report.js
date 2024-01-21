@@ -8,35 +8,35 @@ function getTokenFromCookies(cookieName) {
         }
     }
     return null;
-  }
-  
-  // Set new default font family and font color to mimic Bootstrap's default styling
-  Chart.defaults.global.defaultFontFamily =
+}
+
+// Set new default font family and font color to mimic Bootstrap's default styling
+Chart.defaults.global.defaultFontFamily =
     "'Poppins', '-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif'";
-  Chart.defaults.global.defaultFontColor = "#858796";
-  
-  // Function for number formatting
-  function number_format(number) {
+Chart.defaults.global.defaultFontColor = "#858796";
+
+// Function for number formatting
+function number_format(number) {
     const n = isFinite(+number) ? +number : 0;
     const dec = ".";
     const sep = " ";
     const toFixedFix = function (n) {
         return "" + Math.round(n);
     };
-  
+
     const s = toFixedFix(n).split(".");
     if (s[0].length > 3) {
         s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
     }
-  
+
     return s.join(dec);
-  }
-  
-  // Function to fetch data from the server (similar to your existing logic)
-  async function fetchDataFromServer(url, category) {
+}
+
+// Function to fetch data from the server (similar to your existing logic)
+async function fetchDataFromServer(url, category) {
     try {
         const token = getTokenFromCookies("Login");
-  
+
         if (!token) {
             // Tangani kesalahan autentikasi jika tidak ada token
             Swal.fire({
@@ -48,56 +48,62 @@ function getTokenFromCookies(cookieName) {
             });
             return { category, data: [] };
         }
-  
+
         const myHeaders = new Headers();
         myHeaders.append("Login", token);
-  
+
         const requestOptions = {
             method: "POST",
             headers: myHeaders,
             redirect: "follow",
         };
-  
+
         const response = await fetch(url, requestOptions);
+
+        // Add error logging to fetchDataFromServer function
+        if (!response.ok) {
+            console.error("Server responded with an error:", response.status, response.statusText);
+            return { category, data: [] };
+        }
+
         const data = await response.json();
         return { category, data: data.data || [] };
     } catch (error) {
         console.error("Error fetching data:", error);
         return { category, data: [] };
     }
-  }
-  
-  // Assuming you have fetched data for both unsafe and compromised actions
-  const unsafeDataResponse = await fetchDataFromServer(
+}
+
+// Assuming you have fetched data for both unsafe and compromised actions
+const unsafeDataResponse = await fetchDataFromServer(
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
     "Unsafe Action"
-  );
-  
-  const compromisedDataResponse = await fetchDataFromServer(
+);
+
+const compromisedDataResponse = await fetchDataFromServer(
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
     "Compromised Action"
-  );
-  
-  // Combine the data from both responses
-  const allReportData = [...unsafeDataResponse.data, ...compromisedDataResponse.data];
-  
-  
-  // Calculate monthly counts for both categories
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
-  
-  allReportData.forEach((report) => {
+);
+
+// Combine the data from both responses
+const allReportData = [...unsafeDataResponse.data, ...compromisedDataResponse.data];
+
+// Calculate monthly counts for both categories
+const monthCountsUnsafe = Array(12).fill(0);
+const monthCountsCompromised = Array(12).fill(0);
+
+allReportData.forEach((report) => {
     const month = new Date(report.date).getMonth();
     if (report.category === "Unsafe Action") {
         monthCountsUnsafe[month] += 1;
     } else if (report.category === "Compromised Action") {
         monthCountsCompromised[month] += 1;
     }
-  });
-  
-  // Multi-axis Line Chart Example
-  var ctx = document.getElementById("myMultiAxisLineChart");
-  var multiAxisLineChart = new Chart(ctx, {
+});
+
+// Multi-axis Line Chart Example
+var ctx = document.getElementById("myMultiAxisLineChart");
+var multiAxisLineChart = new Chart(ctx, {
     type: "line",
     data: {
         labels: [
@@ -212,5 +218,4 @@ function getTokenFromCookies(cookieName) {
             }
         }
     }
-  });
-  
+});
