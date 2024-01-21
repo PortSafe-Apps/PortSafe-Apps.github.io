@@ -69,8 +69,7 @@ async function fetchDataFromServer(url, category) {
     return [];
   }
 }
-
-// Function to update the line chart
+    
   async function updateLineChart() {
     try {
       // Fetch unsafe data
@@ -96,28 +95,31 @@ async function fetchDataFromServer(url, category) {
       }));
       console.log("Combined data:", combinedData);
   
+      // Dynamic labels based on the number of reports
+      const labels = combinedData.map((_, index) => `Report ${index + 1}`);
+  
       // Log datasets before chart initialization
-      console.log("Unsafe dataset:", combinedData.map(entry => entry.unsafe));
-      console.log("Compromised dataset:", combinedData.map(entry => entry.compromised));
+      console.log("Unsafe dataset:", combinedData.map((entry) => entry.unsafe));
+      console.log("Compromised dataset:", combinedData.map((entry) => entry.compromised));
   
       // Multi-axis Line Chart Initialization
       const ctx = document.getElementById("myMultiAxisLineChart");
       const multiAxisLineChart = new Chart(ctx, {
         type: "line",
         data: {
-          labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          labels: labels,
           datasets: [
             {
               label: "Unsafe Action",
               borderColor: "rgba(78, 115, 223, 1)",
               backgroundColor: "rgba(78, 115, 223, 0.05)",
-              data: combinedData.map(entry => entry.unsafe),
+              data: combinedData.map((entry) => entry.unsafe),
             },
             {
               label: "Compromised Action",
               borderColor: "rgba(28, 200, 138, 1)",
               backgroundColor: "rgba(28, 200, 138, 0.05)",
-              data: combinedData.map(entry => entry.compromised),
+              data: combinedData.map((entry) => entry.compromised),
             },
           ],
         },
@@ -202,5 +204,4 @@ async function fetchDataFromServer(url, category) {
   
   // Call the function to update the line chart
   updateLineChart();
-  
   
