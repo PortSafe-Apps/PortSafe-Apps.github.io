@@ -12,25 +12,19 @@ function getTokenFromCookies(cookieName) {
 
 // Fungsi untuk menampilkan jumlah total data report dengan progress bar
 const displayUserReports = (data, sortedUsers, containerId) => {
-  // Mendapatkan elemen dengan ID containerId
   const userActiveElement = document.getElementById(containerId);
 
-  // Memeriksa apakah elemen ditemukan
   if (!userActiveElement) {
     console.error(`Elemen dengan ID "${containerId}" tidak ditemukan.`);
     return;
   }
 
-  // Mengosongkan semua elemen anak dari userActiveElement
   userActiveElement.innerHTML = "";
 
-  // Membuat objek untuk menyimpan jumlah laporan setiap user
   const userReportsCount = {};
 
-  // Pastikan data selalu dalam bentuk array
   const dataArray = Array.isArray(data) ? data : [data];
 
-  // Menghitung jumlah laporan setiap user
   dataArray.forEach((report) => {
     const nipp = report.user.nipp;
 
@@ -41,75 +35,57 @@ const displayUserReports = (data, sortedUsers, containerId) => {
     }
   });
 
-  // Check if sortedUsers is defined and is an array
-  if (!sortedUsers || !Array.isArray(sortedUsers)) {
-    console.error("Sorted users data is undefined or not an array.");
+  if (!sortedUsers || !Array.isArray(sortedUsers) || sortedUsers.length === 0) {
+    console.error("Sorted users data is undefined, not an array, or an empty array.");
     return;
   }
 
-  // Use sortedUsers for iteration only if it's a non-empty array
-  if (sortedUsers.length > 0) {
-    sortedUsers.forEach((nipp) => {
-      const reportsCount = userReportsCount[nipp];
+  sortedUsers.forEach((nipp) => {
+    const reportsCount = userReportsCount[nipp];
+    const userData = data.find((report) => report.user.nipp === nipp)?.user;
 
-      // Mencari data user berdasarkan nipp
-      const userData = data.find((report) => report.user.nipp === nipp)?.user;
+    const userInfoContainer = document.createElement("div");
+    userInfoContainer.classList.add(
+      "d-flex",
+      "align-items-center",
+      "justify-content-between",
+      "small",
+      "mb-1"
+    );
 
-      // Membuat elemen div dengan class "d-flex align-items-center justify-content-between small mb-1"
-      const userInfoContainer = document.createElement("div");
-      userInfoContainer.classList.add(
-        "d-flex",
-        "align-items-center",
-        "justify-content-between",
-        "small",
-        "mb-1"
-      );
+    const titleDiv = document.createElement("div");
+    titleDiv.classList.add("fw-bold");
+    titleDiv.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
 
-      // Membuat elemen div untuk judul dengan class "fw-bold"
-      const titleDiv = document.createElement("div");
-      titleDiv.classList.add("fw-bold");
-      titleDiv.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
+    const percentageDiv = document.createElement("div");
+    percentageDiv.classList.add("small");
+    percentageDiv.innerText = `${reportsCount}%`;
 
-      // Membuat elemen div untuk persentase dengan class "small"
-      const percentageDiv = document.createElement("div");
-      percentageDiv.classList.add("small");
-      percentageDiv.innerText = `${reportsCount}%`;
+    userInfoContainer.appendChild(titleDiv);
+    userInfoContainer.appendChild(percentageDiv);
 
-      // Menambahkan titleDiv dan percentageDiv ke userInfoContainer
-      userInfoContainer.appendChild(titleDiv);
-      userInfoContainer.appendChild(percentageDiv);
+    const progressBarContainer = document.createElement("div");
+    progressBarContainer.classList.add("progress", "mb-0");
 
-      // Membuat elemen progressBarContainer
-      const progressBarContainer = document.createElement("div");
-      progressBarContainer.classList.add("progress", "mb-0");
+    const progressBar = document.createElement("div");
+    progressBar.classList.add("progress-bar", "bg-dark");
+    progressBar.setAttribute("role", "progressbar");
+    progressBar.setAttribute("style", `width: ${reportsCount}%`);
+    progressBar.setAttribute("aria-valuenow", reportsCount);
+    progressBar.setAttribute("aria-valuemin", "0");
+    progressBar.setAttribute("aria-valuemax", "100");
 
-      // Membuat elemen progressBar
-      const progressBar = document.createElement("div");
-      progressBar.classList.add("progress-bar", "bg-dark");
-      progressBar.setAttribute("role", "progressbar");
-      progressBar.setAttribute("style", `width: ${reportsCount}%`);
-      progressBar.setAttribute("aria-valuenow", reportsCount);
-      progressBar.setAttribute("aria-valuemin", "0");
-      progressBar.setAttribute("aria-valuemax", "100");
+    progressBarContainer.appendChild(progressBar);
 
-      // Menambahkan progressBar ke progressBarContainer
-      progressBarContainer.appendChild(progressBar);
+    const cardBody = document.createElement("div");
+    cardBody.classList.add("card-body");
 
-      // Membuat elemen cardBody
-      const cardBody = document.createElement("div");
-      cardBody.classList.add("card-body");
-
-      // Menambahkan userInfoContainer, progressBarContainer, dan cardBody ke userActiveElement
-      cardBody.appendChild(userInfoContainer);
-      cardBody.appendChild(progressBarContainer);
-      userActiveElement.appendChild(cardBody);
-    });
-  } else {
-    console.error("Sorted users data is an empty array.");
-  }
+    cardBody.appendChild(userInfoContainer);
+    cardBody.appendChild(progressBarContainer);
+    userActiveElement.appendChild(cardBody);
+  });
 };
 
-// Fungsi untuk mengambil data dari API dan jumlah data laporan yang telah dibuat
 const getActiveUser = async () => {
   const token = getTokenFromCookies('Login');
 
@@ -143,15 +119,9 @@ const getActiveUser = async () => {
     const compromisedResult = await compromisedResponse.json();
     const unsafeResult = await unsafeResponse.json();
 
-    // Menggabungkan data dari 'compromised' dan 'unsafe'
     const mergedData = [...compromisedResult.data, ...unsafeResult.data];
 
-    const sortedUsers = compromisedResult.sortedUsers || unsafeResult.sortedUsers;
-
-    if (!Array.isArray(sortedUsers)) {
-      console.error("Sorted users data is undefined or not an array.");
-      return;
-    }
+    const sortedUsers = compromisedResult.sortedUsers || unsafeResult.sortedUsers || [];
 
     displayUserReports(mergedData, sortedUsers, "userActive");
   } catch (error) {
@@ -159,5 +129,4 @@ const getActiveUser = async () => {
   }
 };
 
-// Panggil fungsi untuk mengambil data dari API dan menampilkan jumlah laporan
 getActiveUser();

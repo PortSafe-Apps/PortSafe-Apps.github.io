@@ -154,23 +154,29 @@ function getTokenFromCookies(cookieName) {
         },
       };
   
-      const ctx = document.getElementById("myAreaChart")?.getContext("2d");
+      const ctx = document.getElementById("myLineChart")?.getContext("2d");
   
       if (!ctx) {
         console.error("Canvas context is null or undefined.");
         return;
       }
   
-      const myAreaChart = new Chart(ctx, config);
+      // Check if the chart already exists, and destroy it
+      if (window.myLineChart) {
+        window.myLineChart.destroy();
+      }
+  
+      const myLineChart = new Chart(ctx, config);
+      window.myLineChart = myLineChart; // Store the chart instance globally for future reference
   
       console.log("Chart initialized successfully!");
     } catch (error) {
-      console.error("Error updating area chart:", error);
+      console.error("Error updating line chart:", error);
       // Handle the error appropriately, e.g., show an error message to the user
     }
   }
   
-  // Call the updateAreaChart function after the DOM has loaded
+  // Panggil fungsi updateLineChart setelah DOM telah dimuat
   document.addEventListener("DOMContentLoaded", function () {
     updateLineChart();
   });
