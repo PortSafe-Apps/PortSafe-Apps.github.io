@@ -87,15 +87,22 @@ async function updateLineChart() {
       );
       console.log("Compromised data:", compromisedData);
   
-      // Dynamic labels based on the length of "Unsafe Action" data
-      const labels = Array.from({ length: unsafeData.data.length }, (_, index) => {
-        return "Label " + (index + 1);
-      });
+      // Use months as x-axis labels
+      const months = [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+      ];
+  
+      // Use months as x-axis labels
+      const labels = months;
   
       // Pad "Compromised Action" data with zeros to match the length of "Unsafe Action" data
-      const paddedCompromisedData = Array.from({ length: unsafeData.data.length }, (_, index) => {
+      const paddedCompromisedData = Array.from({ length: months.length }, (_, index) => {
         return index < compromisedData.data.length ? compromisedData.data[index] : 0;
       });
+  
+      // Sort both data sets based on the x-axis labels (months)
+      const sortedUnsafeData = months.map(month => unsafeData.data[months.indexOf(month)]);
+      const sortedCompromisedData = paddedCompromisedData;
   
       // Multi-axis Line Chart Example (Single Sided)
       const ctx = document.getElementById("myMultiAxisLineChart");
@@ -106,93 +113,111 @@ async function updateLineChart() {
           datasets: [
             {
               label: "Unsafe Action",
-              yAxisID: "y-axis-1",
+              yAxisID: "y-axis-unsafe",
               borderColor: "rgba(78, 115, 223, 1)",
               backgroundColor: "rgba(78, 115, 223, 0.05)",
-              data: unsafeData.data,
+              data: sortedUnsafeData,
             },
             {
               label: "Compromised Action",
-              yAxisID: "y-axis-1",
+              yAxisID: "y-axis-compromised",
               borderColor: "rgba(28, 200, 138, 1)",
               backgroundColor: "rgba(28, 200, 138, 0.05)",
-              data: paddedCompromisedData,
+              data: sortedCompromisedData,
             },
           ],
         },
         options: {
-            maintainAspectRatio: false,
-            layout: {
-              padding: {
-                left: 10,
-                right: 10,
-                top: 0,
-                bottom: 0,
+          maintainAspectRatio: false,
+          layout: {
+            padding: {
+              left: 10,
+              right: 10,
+              top: 0,
+              bottom: 0,
+            },
+          },
+          scales: {
+            xAxes: [
+              {
+                time: {
+                  unit: "date",
+                },
+                gridLines: {
+                  display: false,
+                  drawBorder: false,
+                },
+                ticks: {
+                  maxTicksLimit: 7,
+                },
               },
-            },
-            scales: {
-              xAxes: [
-                {
-                  time: {
-                    unit: "date",
-                  },
-                  gridLines: {
-                    display: false,
-                    drawBorder: false,
-                  },
-                  ticks: {
-                    maxTicksLimit: 7,
+            ],
+            yAxes: [
+              {
+                id: "y-axis-unsafe",
+                position: "left",
+                ticks: {
+                  maxTicksLimit: 5,
+                  padding: 10,
+                  callback: function (value) {
+                    return number_format(value);
                   },
                 },
-              ],
-              yAxes: [
-                {
-                  id: "y-axis-1",
-                  position: "left",
-                  ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    callback: function (value) {
-                      return number_format(value);
-                    },
-                  },
-                  gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2],
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  borderDash: [2],
+                  zeroLineBorderDash: [2],
+                },
+              },
+              {
+                id: "y-axis-compromised",
+                position: "right",
+                ticks: {
+                  maxTicksLimit: 5,
+                  padding: 10,
+                  callback: function (value) {
+                    return number_format(value);
                   },
                 },
-              ],
-            },
-            legend: {
-              display: true,
-              position: "top",
-            },
-            tooltips: {
-              backgroundColor: "rgb(255,255,255)",
-              bodyFontColor: "#858796",
-              titleMarginBottom: 10,
-              titleFontColor: "#6e707e",
-              titleFontSize: 14,
-              borderColor: "#dddfeb",
-              borderWidth: 1,
-              xPadding: 15,
-              yPadding: 15,
-              displayColors: false,
-              intersect: false,
-              mode: "index",
-              caretPadding: 10,
-              callbacks: {
-                label: function (tooltipItem, chart) {
-                  const datasetLabel =
-                    chart.datasets[tooltipItem.datasetIndex].label || "";
-                  return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                gridLines: {
+                  color: "rgb(234, 236, 244)",
+                  zeroLineColor: "rgb(234, 236, 244)",
+                  drawBorder: false,
+                  borderDash: [2],
+                  zeroLineBorderDash: [2],
                 },
+              },
+            ],
+          },
+          legend: {
+            display: true,
+            position: "top",
+          },
+          tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: "#6e707e",
+            titleFontSize: 14,
+            borderColor: "#dddfeb",
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: "index",
+            caretPadding: 10,
+            callbacks: {
+              label: function (tooltipItem, chart) {
+                const datasetLabel =
+                  chart.datasets[tooltipItem.datasetIndex].label || "";
+                return datasetLabel + ": " + number_format(tooltipItem.yLabel);
               },
             },
           },
+        },
       });
   
       console.log("Chart initialized successfully!");
@@ -203,3 +228,7 @@ async function updateLineChart() {
   
   // Call the function to update the line chart
   updateLineChart();
+  
+
+
+  
