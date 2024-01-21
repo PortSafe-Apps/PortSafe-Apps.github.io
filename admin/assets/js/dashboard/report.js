@@ -93,7 +93,20 @@ function getTokenFromCookies(cookieName) {
       const combinedData = [];
   
       // Check if both datasets have the same length
-      if (unsafeData.data.length === compromisedData.data.length) {
+      if (unsafeData.data.length !== compromisedData.data.length) {
+        // Log an error if the lengths do not match
+        console.error("Error: The lengths of unsafeData and compromisedData do not match.");
+        
+        // Handle the error gracefully, for example, by using the longer array and filling missing values with zeros
+        const maxLength = Math.max(unsafeData.data.length, compromisedData.data.length);
+        
+        for (let index = 0; index < maxLength; index++) {
+          combinedData.push({
+            unsafe: unsafeData.data[index] || 0,
+            compromised: compromisedData.data[index] || 0,
+          });
+        }
+      } else {
         // If the lengths match, combine the data
         for (let index = 0; index < unsafeData.data.length; index++) {
           combinedData.push({
@@ -101,13 +114,7 @@ function getTokenFromCookies(cookieName) {
             compromised: compromisedData.data[index] || 0,
           });
         }
-      } else {
-        // Log an error if the lengths do not match
-        console.error("Error: The lengths of unsafeData and compromisedData do not match.");
-        // Halt the execution of the function
-        return;
-      }
-  
+      }  
       // Multi-axis Line Chart Initialization
       const ctx = document.getElementById("myMultiAxisLineChart");
       const multiAxisLineChart = new Chart(ctx, {
