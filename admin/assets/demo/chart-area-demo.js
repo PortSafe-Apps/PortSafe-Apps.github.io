@@ -1,6 +1,6 @@
 // Set new default font family and font color to mimic Bootstrap's default styling
 (Chart.defaults.global.defaultFontFamily = "Poppins"),
-'-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+  "-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
 Chart.defaults.global.defaultFontColor = "#858796";
 
 function number_format(number, decimals, dec_point, thousands_sep) {
@@ -28,119 +28,157 @@ function number_format(number, decimals, dec_point, thousands_sep) {
     return s.join(dec);
 }
 
-// Area Chart Example
-var ctx = document.getElementById("myAreaChart");
-var myLineChart = new Chart(ctx, {
-    type: "line",
-    data: {
-        labels: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec"
-        ],
-        datasets: [{
-            label: "Earnings",
-            lineTension: 0.3,
-            backgroundColor: "rgba(0, 97, 242, 0.05)",
-            borderColor: "rgba(0, 97, 242, 1)",
-            pointRadius: 3,
-            pointBackgroundColor: "rgba(0, 97, 242, 1)",
-            pointBorderColor: "rgba(0, 97, 242, 1)",
-            pointHoverRadius: 3,
-            pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-            pointHoverBorderColor: "rgba(0, 97, 242, 1)",
-            pointHitRadius: 10,
-            pointBorderWidth: 2,
-            data: [
-                0,
-                10000,
-                5000,
-                15000,
-                10000,
-                20000,
-                15000,
-                25000,
-                20000,
-                30000,
-                25000,
-                40000
-            ]
-        }]
+// Multi-axis Line Chart Example (Single Sided)
+var ctx = document.getElementById("myMultiAxisLineChart");
+var multiAxisLineChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    datasets: [
+      {
+        label: "Earnings",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(0, 97, 242, 0.05)",
+        borderColor: "rgba(0, 97, 242, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointBorderColor: "rgba(0, 97, 242, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [
+          0,
+          10000,
+          5000,
+          15000,
+          10000,
+          20000,
+          15000,
+          25000,
+          20000,
+          30000,
+          25000,
+          40000
+        ]
+      },
+      {
+        label: "Expenses",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(255, 99, 132, 0.05)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointBorderColor: "rgba(255, 99, 132, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [
+          5000,
+          8000,
+          12000,
+          10000,
+          15000,
+          12000,
+          18000,
+          20000,
+          16000,
+          22000,
+          20000,
+          25000
+        ]
+      }
+    ]
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0
+      }
     },
-    options: {
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: 10,
-                right: 25,
-                top: 25,
-                bottom: 0
-            }
-        },
-        scales: {
-            xAxes: [{
-                time: {
-                    unit: "date"
-                },
-                gridLines: {
-                    display: false,
-                    drawBorder: false
-                },
-                ticks: {
-                    maxTicksLimit: 7
-                }
-            }],
-            yAxes: [{
-                ticks: {
-                    maxTicksLimit: 5,
-                    padding: 10,
-                    // Include a dollar sign in the ticks
-                    callback: function(value, index, values) {
-                        return "$" + number_format(value);
-                    }
-                },
-                gridLines: {
-                    color: "rgb(234, 236, 244)",
-                    zeroLineColor: "rgb(234, 236, 244)",
-                    drawBorder: false,
-                    borderDash: [2],
-                    zeroLineBorderDash: [2]
-                }
-            }]
-        },
-        legend: {
-            display: false
-        },
-        tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-                label: function(tooltipItem, chart) {
-                    var datasetLabel =
-                        chart.datasets[tooltipItem.datasetIndex].label || "";
-                    return datasetLabel + ": $" + number_format(tooltipItem.yLabel);
-                }
-            }
+    scales: {
+      xAxes: [
+        {
+          time: {
+            unit: "date"
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false
+          },
+          ticks: {
+            maxTicksLimit: 7
+          }
         }
+      ],
+      yAxes: [
+        {
+          id: "y-axis-1",
+          position: "left",
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            callback: function(value, index, values) {
+              return "$" + number_format(value);
+            }
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2]
+          }
+        }
+      ]
+    },
+    legend: {
+      display: true,
+      position: "top"
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": $" + number_format(tooltipItem.yLabel);
+        }
+      }
     }
+  }
 });

@@ -1,182 +1,177 @@
-// Fungsi untuk mendapatkan token dari cookie
-function getTokenFromCookies(cookieName) {
-    const cookies = document.cookie.split(";");
-    for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === cookieName) {
-        return value;
+(Chart.defaults.global.defaultFontFamily = "Poppins"),
+  "-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif";
+Chart.defaults.global.defaultFontColor = "#858796";
+
+function number_format(number) {
+  var n = !isFinite(+number) ? 0 : +number,
+    dec = ".",
+    sep = " ",
+    s = "",
+    toFixedFix = function (n) {
+      return "" + Math.round(n);
+    };
+
+  s = toFixedFix(n).split(".");
+
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+
+  return s.join(dec);
+}
+
+// Function to fetch data from the specified URL
+async function fetchData(url) {
+  const response = await fetch(url);
+  const data = await response.json();
+  return data;
+}
+
+// Update chart datasets with new data
+async function updateChartDatasets(chart, url, label, backgroundColor, borderColor) {
+  const data = await fetchData(url);
+
+  // Assuming the fetched data has the same structure as the original datasets
+  const newDataset = {
+    label: label,
+    yAxisID: "y-axis-1",
+    lineTension: 0.3,
+    backgroundColor: backgroundColor,
+    borderColor: borderColor,
+    pointRadius: 3,
+    pointBackgroundColor: borderColor,
+    pointBorderColor: borderColor,
+    pointHoverRadius: 3,
+    pointHoverBackgroundColor: borderColor,
+    pointHoverBorderColor: borderColor,
+    pointHitRadius: 10,
+    pointBorderWidth: 2,
+    data: data.map(item => item.value) // Adjust this line based on your actual data structure
+  };
+
+  // Replace the existing dataset in the chart
+  const datasets = chart.data.datasets;
+  const datasetIndex = datasets.findIndex(dataset => dataset.label === label);
+
+  if (datasetIndex !== -1) {
+    datasets[datasetIndex] = newDataset;
+  } else {
+    datasets.push(newDataset);
+  }
+
+  // Update the chart
+  chart.update();
+}
+
+// Multi-axis Line Chart Example (Single Sided)
+var ctx = document.getElementById("myMultiAxisLineChart");
+var multiAxisLineChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec"
+    ],
+    datasets: []
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0
       }
-    }
-    return null;
-  }
-  
-  // Set new default font family and font color
-  Chart.defaults.global.defaultFontFamily = '"Poppins", -apple-system, system-ui, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
-  Chart.defaults.global.defaultFontColor = "#858796";
-  
-  // Function for number formatting
-  function number_format(number) {
-    var n = !isFinite(+number) ? 0 : +number,
-      dec = ".",
-      sep = " ",
-      s = "",
-      toFixedFix = function (n) {
-        return "" + Math.round(n);
-      };
-  
-    s = toFixedFix(n).split(".");
-  
-    if (s[0].length > 3) {
-      s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
-    }
-  
-    return s.join(dec);
-  }
-  
-  // Function to fetch data from the server (similar to your existing logic)
-  async function fetchDataFromServer(url, category) {
-    try {
-      const token = getTokenFromCookies("Login");
-  
-      if (!token) {
-        // Tangani kesalahan autentikasi jika tidak ada token
-        Swal.fire({
-          icon: "warning",
-          title: "Authentication Error",
-          text: "Kamu Belum Login!",
-        }).then(() => {
-          window.location.href = "https://portsafe-apps.github.io/";
-        });
-        return [];
-      }
-  
-      const myHeaders = new Headers();
-      myHeaders.append("Login", token);
-  
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        redirect: "follow",
-      };
-  
-      const response = await fetch(url, requestOptions);
-      const data = await response.json();
-      return {
-        category: category,
-        data: data.data || [],
-      };
-    } catch (error) {
-      console.error("Error fetching data:", error);
-      return [];
-    }
-  }
-  
-  // Function to update the line chart
-  async function updateLineChart() {
-    try {
-      console.log("Fetching unsafe data...");
-      const unsafeData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport", "Unsafe Action");
-      console.log("Unsafe data:", unsafeData);
-  
-      console.log("Fetching compromised data...");
-      const compromisedData = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
-      console.log("Compromised data:", compromisedData);
-  
-      // Additional logging
-      console.log("Unsafe data length:", unsafeData.data.length);
-      console.log("Compromised data length:", compromisedData.data.length);
-  
-      const config = {
-        type: 'line',
-        data: {
-          labels: [
-            "Jan",
-            "Feb",
-            "Mar",
-            "Apr",
-            "May",
-            "Jun",
-            "Jul",
-            "Aug",
-            "Sep",
-            "Oct",
-            "Nov",
-            "Dec",
-          ],
-          datasets: [
-            {
-              label: 'Unsafe Action',
-              data: unsafeData.data,
-              borderColor: 'rgba(255, 0, 0, 1)',
-              backgroundColor: 'rgba(255, 0, 0, 0.05)',
-              yAxisID: 'y',
-              lineTension: 0.3,
-            },
-            {
-              label: 'Compromised Action',
-              data: compromisedData.data,
-              borderColor: 'rgba(0, 97, 242, 1)',
-              backgroundColor: 'rgba(0, 97, 242, 0.05)',
-              yAxisID: 'y1',
-              lineTension: 0.3,
-            },
-          ],
-        },
-        options: {
-          responsive: true,
-          interaction: {
-            mode: 'index',
-            intersect: false,
+    },
+    scales: {
+      xAxes: [
+        {
+          time: {
+            unit: "date"
           },
-          stacked: false,
-          scales: {
-            y: {
-              type: 'linear',
-              display: true,
-              position: 'left',
-              ticks: {
-                beginAtZero: true,
-              },
-            },
-            y1: {
-              type: 'linear',
-              display: true,
-              position: 'right',
-              ticks: {
-                beginAtZero: true,
-              },
-              grid: {
-                drawOnChartArea: false,
-              },
-            },
+          gridLines: {
+            display: false,
+            drawBorder: false
           },
-        },
-      };
-  
-      const ctx = document.getElementById("myLineChart")?.getContext("2d");
-  
-      if (!ctx) {
-        console.error("Canvas context is null or undefined.");
-        return;
+          ticks: {
+            maxTicksLimit: 7
+          }
+        }
+      ],
+      yAxes: [
+        {
+          id: "y-axis-1",
+          position: "left",
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            callback: function(value, index, values) {
+              return number_format(value);
+            }
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2]
+          }
+        }
+      ]
+    },
+    legend: {
+      display: true,
+      position: "top"
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function(tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+        }
       }
-  
-      // Check if the chart already exists, and destroy it
-      if (window.myLineChart) {
-        window.myLineChart.destroy();
-      }
-  
-      const myLineChart = new Chart(ctx, config);
-      window.myLineChart = myLineChart; // Store the chart instance globally for future reference
-  
-      console.log("Chart initialized successfully!");
-    } catch (error) {
-      console.error("Error updating line chart:", error);
-      // Handle the error appropriately, e.g., show an error message to the user
     }
   }
-  
-  // Panggil fungsi updateLineChart setelah DOM telah dimuat
-  document.addEventListener("DOMContentLoaded", function () {
-    updateLineChart();
-  });
-  
+});
+
+// Usage: Update the datasets with new data from the specified URLs
+updateChartDatasets(
+  multiAxisLineChart,
+  'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised',
+  "Compromised", 
+  "rgba(0, 97, 242, 0.05)",
+  "rgba(0, 97, 242, 1)"
+);
+
+updateChartDatasets(
+  multiAxisLineChart,
+  'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport',
+  "Unsafe",  
+  "rgba(255, 99, 132, 0.05)",
+  "rgba(255, 99, 132, 1)"
+);
