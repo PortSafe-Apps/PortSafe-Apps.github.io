@@ -72,139 +72,134 @@ async function fetchDataFromServer(url, category) {
 
 // Function to update the line chart
 async function updateLineChart() {
-  try {
-    console.log("Fetching unsafe data...");
-    const unsafeData = await fetchDataFromServer(
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
-      "Unsafe Action"
-    );
-    console.log("Unsafe data:", unsafeData);
-
-    console.log("Fetching compromised data...");
-    const compromisedData = await fetchDataFromServer(
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-      "Compromised Action"
-    );
-    console.log("Compromised data:", compromisedData);
-
-    // Additional logging
-    console.log("Unsafe data length:", unsafeData.data.length);
-    console.log("Compromised data length:", compromisedData.data.length);
-
-    // Multi-axis Line Chart Example (Single Sided)
-    const ctx = document.getElementById("myMultiAxisLineChart");
-    const multiAxisLineChart = new Chart(ctx, {
-      type: "line",
-      data: {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        datasets: [
-          {
-            label: "Unsafe Action",
-            yAxisID: "y-axis-1",
-            borderColor: "rgba(78, 115, 223, 1)",
-            backgroundColor: "rgba(78, 115, 223, 0.05)",
-            data: unsafeData.data,
-          },
-          {
-            label: "Compromised Action",
-            yAxisID: "y-axis-1",
-            borderColor: "rgba(28, 200, 138, 1)",
-            backgroundColor: "rgba(28, 200, 138, 0.05)",
-            data: compromisedData.data,
-          },
-        ],
-      },
-      options: {
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            left: 10,
-            right: 10,
-            top: 0,
-            bottom: 0,
-          },
-        },
-        scales: {
-          xAxes: [
+    try {
+      console.log("Fetching unsafe data...");
+      const unsafeData = await fetchDataFromServer(
+        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
+        "Unsafe Action"
+      );
+      console.log("Unsafe data:", unsafeData);
+  
+      console.log("Fetching compromised data...");
+      const compromisedData = await fetchDataFromServer(
+        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+        "Compromised Action"
+      );
+      console.log("Compromised data:", compromisedData);
+  
+      // Dynamic labels based on the length of "Unsafe Action" data
+      const labels = Array.from({ length: unsafeData.data.length }, (_, index) => {
+        return "Label " + (index + 1);
+      });
+  
+      // Pad "Compromised Action" data with zeros to match the length of "Unsafe Action" data
+      const paddedCompromisedData = Array.from({ length: unsafeData.data.length }, (_, index) => {
+        return index < compromisedData.data.length ? compromisedData.data[index] : 0;
+      });
+  
+      // Multi-axis Line Chart Example (Single Sided)
+      const ctx = document.getElementById("myMultiAxisLineChart");
+      const multiAxisLineChart = new Chart(ctx, {
+        type: "line",
+        data: {
+          labels: labels,
+          datasets: [
             {
-              time: {
-                unit: "date",
-              },
-              gridLines: {
-                display: false,
-                drawBorder: false,
-              },
-              ticks: {
-                maxTicksLimit: 7,
-              },
+              label: "Unsafe Action",
+              yAxisID: "y-axis-1",
+              borderColor: "rgba(78, 115, 223, 1)",
+              backgroundColor: "rgba(78, 115, 223, 0.05)",
+              data: unsafeData.data,
+            },
+            {
+              label: "Compromised Action",
+              yAxisID: "y-axis-1",
+              borderColor: "rgba(28, 200, 138, 1)",
+              backgroundColor: "rgba(28, 200, 138, 0.05)",
+              data: paddedCompromisedData,
             },
           ],
-          yAxes: [
-            {
-              id: "y-axis-1",
-              position: "left",
-              ticks: {
-                maxTicksLimit: 5,
-                padding: 10,
-                callback: function (value) {
-                  return number_format(value);
+        },
+        options: {
+            maintainAspectRatio: false,
+            layout: {
+              padding: {
+                left: 10,
+                right: 10,
+                top: 0,
+                bottom: 0,
+              },
+            },
+            scales: {
+              xAxes: [
+                {
+                  time: {
+                    unit: "date",
+                  },
+                  gridLines: {
+                    display: false,
+                    drawBorder: false,
+                  },
+                  ticks: {
+                    maxTicksLimit: 7,
+                  },
+                },
+              ],
+              yAxes: [
+                {
+                  id: "y-axis-1",
+                  position: "left",
+                  ticks: {
+                    maxTicksLimit: 5,
+                    padding: 10,
+                    callback: function (value) {
+                      return number_format(value);
+                    },
+                  },
+                  gridLines: {
+                    color: "rgb(234, 236, 244)",
+                    zeroLineColor: "rgb(234, 236, 244)",
+                    drawBorder: false,
+                    borderDash: [2],
+                    zeroLineBorderDash: [2],
+                  },
+                },
+              ],
+            },
+            legend: {
+              display: true,
+              position: "top",
+            },
+            tooltips: {
+              backgroundColor: "rgb(255,255,255)",
+              bodyFontColor: "#858796",
+              titleMarginBottom: 10,
+              titleFontColor: "#6e707e",
+              titleFontSize: 14,
+              borderColor: "#dddfeb",
+              borderWidth: 1,
+              xPadding: 15,
+              yPadding: 15,
+              displayColors: false,
+              intersect: false,
+              mode: "index",
+              caretPadding: 10,
+              callbacks: {
+                label: function (tooltipItem, chart) {
+                  const datasetLabel =
+                    chart.datasets[tooltipItem.datasetIndex].label || "";
+                  return datasetLabel + ": " + number_format(tooltipItem.yLabel);
                 },
               },
-              gridLines: {
-                color: "rgb(234, 236, 244)",
-                zeroLineColor: "rgb(234, 236, 244)",
-                drawBorder: false,
-                borderDash: [2],
-                zeroLineBorderDash: [2],
-              },
-            },
-          ],
-        },
-        legend: {
-          display: true,
-          position: "top",
-        },
-        tooltips: {
-          backgroundColor: "rgb(255,255,255)",
-          bodyFontColor: "#858796",
-          titleMarginBottom: 10,
-          titleFontColor: "#6e707e",
-          titleFontSize: 14,
-          borderColor: "#dddfeb",
-          borderWidth: 1,
-          xPadding: 15,
-          yPadding: 15,
-          displayColors: false,
-          intersect: false,
-          mode: "index",
-          caretPadding: 10,
-          callbacks: {
-            label: function (tooltipItem, chart) {
-              const datasetLabel =
-                chart.datasets[tooltipItem.datasetIndex].label || "";
-              return datasetLabel + ": " + number_format(tooltipItem.yLabel);
             },
           },
-        },
-      },
-    });
-  } catch (error) {
-    console.error("Error updating line chart:", error);
+      });
+  
+      console.log("Chart initialized successfully!");
+    } catch (error) {
+      console.error("Error updating line chart:", error);
+    }
   }
-}
-
-// Call the function to update the line chart
-updateLineChart();
+  
+  // Call the function to update the line chart
+  updateLineChart();
