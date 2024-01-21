@@ -120,8 +120,13 @@ const getActiveUser = async () => {
     const compromisedResult = await compromisedResponse.json();
     const unsafeResult = await unsafeResponse.json();
 
+    console.log("Compromised Result:", compromisedResult);
+    console.log("Unsafe Result:", unsafeResult);
+
     // Check if sortedUsers is defined, otherwise use an empty array
     const sortedUsers = compromisedResult.sortedUsers || unsafeResult.sortedUsers || [];
+
+    console.log("Sorted Users:", sortedUsers);
 
     // Check if sortedUsers is an array and not empty before proceeding
     if (!Array.isArray(sortedUsers) || sortedUsers.length === 0) {
