@@ -11,8 +11,8 @@ function getTokenFromCookies(cookieName) {
   }
   
   // Set new default font family and font color
-  Chart.defaults.global.defaultFontFamily =
-    "Poppins, -apple-system, system-ui, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif";
+  (Chart.defaults.global.defaultFontFamily = "Poppins"),
+  '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
   Chart.defaults.global.defaultFontColor = "#858796";
   
   // Function for number formatting
