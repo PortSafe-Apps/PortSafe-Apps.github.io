@@ -108,6 +108,8 @@ const getActiveUser = async () => {
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
 
+  let compromisedResult, unsafeResult;
+
   try {
     const [compromisedResponse, unsafeResponse] = await Promise.all([
       fetch(compromised, { method: "POST", headers: myHeaders, redirect: "follow" }),
@@ -118,8 +120,8 @@ const getActiveUser = async () => {
       throw new Error("Failed to fetch data.");
     }
 
-    const compromisedResult = await compromisedResponse.json();
-    const unsafeResult = await unsafeResponse.json();
+    compromisedResult = await compromisedResponse.json();
+    unsafeResult = await unsafeResponse.json();
 
     console.log("Compromised Result:", compromisedResult);
     console.log("Unsafe Result:", unsafeResult);
@@ -134,7 +136,10 @@ const getActiveUser = async () => {
       console.error("Sorted users data is undefined, not an array, or an empty array.");
       return;
     }
-    
+
+    // Combine compromised and unsafe data
+    const mergedData = [...compromisedResult.data, ...unsafeResult.data];
+
     displayUserReports(mergedData, sortedUsers, "userActive");
     
   } catch (error) {
