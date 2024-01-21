@@ -94,6 +94,8 @@ const monthCountsCompromised = Array(12).fill(0);
 
 allReportData.forEach((report) => {
     const month = new Date(report.date).getMonth();
+    console.log("Report:", report); // Add this line to log the report data
+    console.log("Month:", month); // Add this line to log the calculated month
     if (report.category === "Unsafe Action") {
         monthCountsUnsafe[month] += 1;
     } else if (report.category === "Compromised Action") {
