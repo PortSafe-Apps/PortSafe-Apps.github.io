@@ -2,10 +2,10 @@
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
-      const [name, value] = cookie.trim().split("=");
-      if (name === cookieName) {
-          return value;
-      }
+    const [name, value] = cookie.trim().split("=");
+    if (name === cookieName) {
+      return value;
+    }
   }
   return null;
 }
@@ -23,9 +23,11 @@ const displayUserReports = (data, sortedUsers, containerId) => {
 
   const userReportsCount = {};
 
-  const dataArray = Array.isArray(data) ? data : [data];
+  // Menggabungkan laporan dari hasil 'compromised' dan 'unsafe'
+  const mergedData = [...compromisedResult.data, ...unsafeResult.data];
 
-  dataArray.forEach((report) => {
+  // Menghitung jumlah laporan untuk setiap 'nipp'
+  mergedData.forEach((report) => {
     const nipp = report.user.nipp;
 
     if (!userReportsCount[nipp]) {
@@ -42,7 +44,7 @@ const displayUserReports = (data, sortedUsers, containerId) => {
 
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
-    const userData = data.find((report) => report.user.nipp === nipp)?.user;
+    const userData = mergedData.find((report) => report.user.nipp === nipp)?.user;
 
     const userInfoContainer = document.createElement("div");
     userInfoContainer.classList.add(
@@ -86,7 +88,6 @@ const displayUserReports = (data, sortedUsers, containerId) => {
   });
 };
 
-
 const getActiveUser = async () => {
   const token = getTokenFromCookies('Login');
 
@@ -122,8 +123,6 @@ const getActiveUser = async () => {
 
     console.log("Compromised Result:", compromisedResult);
     console.log("Unsafe Result:", unsafeResult);
-
-    const mergedData = [...compromisedResult.data, ...unsafeResult.data];
 
     // Combine sortedUsers from both compromisedResult and unsafeResult
     const sortedUsers = [...(compromisedResult.sortedUsers || []), ...(unsafeResult.sortedUsers || [])];
