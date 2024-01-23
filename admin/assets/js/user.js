@@ -17,39 +17,40 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 const getUserWithToken = async () => {
-  document.addEventListener('DOMContentLoaded', async function () {
-      const token = getTokenFromCookies('Login');
+  const token = getTokenFromCookies('Login');
 
-      if (!token) {
-          showAlert("Token tidak ditemukan", 'error');
-          return;
+  if (!token) {
+      showAlert("Token tidak ditemukan", 'error');
+      return;
+  }
+
+  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
+
+  const myHeaders = new Headers();
+  myHeaders.append('Login', token);
+
+  const requestOptions = {
+      method: 'GET',
+      headers: myHeaders,
+      redirect: 'follow'
+  };
+
+  try {
+      const response = await fetch(targetURL, requestOptions);
+      const data = await response.json();
+
+      if (data.status === true) {
+          displayUserData(data.data);
+      } else {
+          showAlert(data.message, 'error');
       }
-
-      const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
-
-      const myHeaders = new Headers();
-      myHeaders.append('Login', token);
-
-      const requestOptions = {
-          method: 'GET',
-          headers: myHeaders,
-          redirect: 'follow'
-      };
-
-      try {
-          const response = await fetch(targetURL, requestOptions);
-          const data = await response.json();
-
-          if (data.status === true) {
-              displayUserData(data.data);
-          } else {
-              showAlert(data.message, 'error');
-          }
-      } catch (error) {
-          console.error('Error:', error);
-      }
-  });
+  } catch (error) {
+      console.error('Error:', error);
+  }
 };
+
+getUserWithToken();
+
 
 const deleteUser = async (nipp) => {
   const token = getTokenFromCookies('Login');
