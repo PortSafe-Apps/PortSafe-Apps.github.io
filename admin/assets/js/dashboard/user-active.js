@@ -37,12 +37,8 @@ const displayUserReports = (data, sortedUsers, containerId) => {
     }
   });
 
-  if (!sortedUsers || !Array.isArray(sortedUsers) || sortedUsers.length === 0) {
-    console.error(
-      "Sorted users data is undefined, not an array, or an empty array."
-    );
-    return;
-  }
+  // Sort sortedUsers based on the number of reports each user has
+  sortedUsers.sort((a, b) => userReportsCount[b] - userReportsCount[a]);
 
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
@@ -65,12 +61,12 @@ const displayUserReports = (data, sortedUsers, containerId) => {
       userData?.nama || "Nama Tidak Ditemukan"
     }`;
 
-    const percentageDiv = document.createElement("div");
-    percentageDiv.classList.add("small");
-    percentageDiv.innerText = `${reportsCount}%`;
+    const countDiv = document.createElement("div");
+    countDiv.classList.add("small");
+    countDiv.innerText = `${reportsCount} Laporan`;
 
     userInfoContainer.appendChild(titleDiv);
-    userInfoContainer.appendChild(percentageDiv);
+    userInfoContainer.appendChild(countDiv);
 
     const progressBarContainer = document.createElement("div");
     progressBarContainer.classList.add("progress", "mb-0");
@@ -78,7 +74,7 @@ const displayUserReports = (data, sortedUsers, containerId) => {
     const progressBar = document.createElement("div");
     progressBar.classList.add("progress-bar", "bg-dark");
     progressBar.setAttribute("role", "progressbar");
-    progressBar.setAttribute("style", `width: ${reportsCount}%`);
+    progressBar.setAttribute("style", `width: ${reportsCount}Laporan`);
     progressBar.setAttribute("aria-valuenow", reportsCount);
     progressBar.setAttribute("aria-valuemin", "0");
     progressBar.setAttribute("aria-valuemax", "100");
