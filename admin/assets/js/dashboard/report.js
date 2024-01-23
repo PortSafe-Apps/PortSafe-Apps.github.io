@@ -117,10 +117,10 @@ var multiAxisLineChart = new Chart(ctx, {
                 lineTension: 0.3,
                 backgroundColor: "rgba(0, 97, 242, 0.05)",
                 borderColor: "rgba(0, 97, 242, 1)",
-                pointRadius: 3,
+                pointRadius: 6, // Ukuran titik
                 pointBackgroundColor: "rgba(0, 97, 242, 1)",
                 pointBorderColor: "rgba(0, 97, 242, 1)",
-                pointHoverRadius: 3,
+                pointHoverRadius: 8, // Ukuran titik saat dihover
                 pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
                 pointHoverBorderColor: "rgba(0, 97, 242, 1)",
                 pointHitRadius: 10,
@@ -133,10 +133,10 @@ var multiAxisLineChart = new Chart(ctx, {
                 lineTension: 0.3,
                 backgroundColor: "rgba(255, 99, 132, 0.05)",
                 borderColor: "rgba(255, 99, 132, 1)",
-                pointRadius: 3,
+                pointRadius: 6, // Ukuran titik
                 pointBackgroundColor: "rgba(255, 99, 132, 1)",
                 pointBorderColor: "rgba(255, 99, 132, 1)",
-                pointHoverRadius: 3,
+                pointHoverRadius: 8, // Ukuran titik saat dihover
                 pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
                 pointHoverBorderColor: "rgba(255, 99, 132, 1)",
                 pointHitRadius: 10,
@@ -167,7 +167,7 @@ var multiAxisLineChart = new Chart(ctx, {
                     },
                     ticks: {
                         maxTicksLimit: 7,
-                        fontSize: 14 // Tambahkan ini untuk mengatur ukuran font
+                        fontSize: 14 // Ukuran font label sumbu x
                     }
                 }
             ],
@@ -182,7 +182,7 @@ var multiAxisLineChart = new Chart(ctx, {
                         callback: function (value, index, values) {
                             return number_format(value);
                         },
-                        fontSize: 14 // Tambahkan ini untuk mengatur ukuran font
+                        fontSize: 14 // Ukuran font label sumbu y
                     },
                     gridLines: {
                         color: "rgb(234, 236, 244)",
@@ -196,14 +196,18 @@ var multiAxisLineChart = new Chart(ctx, {
         },
         legend: {
             display: true,
-            position: "top"
+            position: "top",
+            labels: {
+                fontSize: 14 // Ukuran font label legenda
+            }
         },
         tooltips: {
             backgroundColor: "rgb(255,255,255)",
             bodyFontColor: "#858796",
             titleMarginBottom: 10,
             titleFontColor: "#6e707e",
-            titleFontSize: 14,
+            titleFontSize: 14, // Ukuran font title tooltip
+            bodyFontSize: 12, // Ukuran font body tooltip
             borderColor: "#dddfeb",
             borderWidth: 1,
             xPadding: 15,
