@@ -167,7 +167,7 @@ var multiAxisLineChart = new Chart(ctx, {
                     },
                     ticks: {
                         maxTicksLimit: 7,
-                        fontSize: 12 // Tambahkan ini untuk mengatur ukuran font
+                        fontSize: 14 // Tambahkan ini untuk mengatur ukuran font
                     }
                 }
             ],
@@ -177,12 +177,12 @@ var multiAxisLineChart = new Chart(ctx, {
                     position: "left",
                     ticks: {
                         beginAtZero: true,
-                        stepSize: 1,
+                        stepSize: 3,
                         padding: 10,
                         callback: function (value, index, values) {
                             return number_format(value);
                         },
-                        fontSize: 12 // Tambahkan ini untuk mengatur ukuran font
+                        fontSize: 14 // Tambahkan ini untuk mengatur ukuran font
                     },
                     gridLines: {
                         color: "rgb(234, 236, 244)",
