@@ -126,14 +126,20 @@ const getActiveUser = async () => {
     console.log("Compromised Result:", compromisedResult);
     console.log("Unsafe Result:", unsafeResult);
 
+    // Check if sortedUsers is an array and not empty before proceeding
+    if (!Array.isArray(compromisedResult.sortedUsers) || !Array.isArray(unsafeResult.sortedUsers)) {
+      console.error("Sorted users data is not an array.");
+      return;
+    }
+
     // Combine sortedUsers from both compromisedResult and unsafeResult
-    const sortedUsers = [...(compromisedResult.sortedUsers || []), ...(unsafeResult.sortedUsers || [])];
+    const sortedUsers = [...compromisedResult.sortedUsers, ...unsafeResult.sortedUsers];
     
     console.log("Sorted Users:", sortedUsers);
     
     // Check if sortedUsers is an array and not empty before proceeding
     if (!Array.isArray(sortedUsers) || sortedUsers.length === 0) {
-      console.error("Sorted users data is undefined, not an array, or an empty array.");
+      console.error("Combined sorted users data is undefined, not an array, or an empty array.");
       return;
     }
 
