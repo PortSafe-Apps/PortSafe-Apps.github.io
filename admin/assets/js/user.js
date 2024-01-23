@@ -93,10 +93,13 @@ const handleDeleteUser = (nipp) => {
 };
 
 const displayUserData = (userData) => {
-  const userDataBody = document.getElementById('datatablesSimple');
+  const userDataBody = document.getElementById('userDataBody');
 
   if (userDataBody) {
-      const tbody = userDataBody.getElementsByTagName('tbody')[0];
+      const tbody = userDataBody;
+
+      // Clear existing rows
+      tbody.innerHTML = '';
 
       if (userData && userData.length > 0) {
           userData.forEach(user => {
@@ -116,10 +119,12 @@ const displayUserData = (userData) => {
               tbody.appendChild(newRow);
           });
       } else {
-          tbody.innerHTML = '<tr><td colspan="7">No user data found.</td></tr>';
+          const noDataRow = document.createElement('tr');
+          noDataRow.innerHTML = '<td colspan="7">No user data found.</td>';
+          tbody.appendChild(noDataRow);
       }
   } else {
-      console.error('Element with id "datatablesSimple" not found');
+      console.error('Element with id "userDataBody" not found');
   }
 };
 
