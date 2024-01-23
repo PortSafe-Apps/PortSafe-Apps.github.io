@@ -74,7 +74,7 @@ const displayUserReports = (data, sortedUsers, containerId) => {
     const progressBar = document.createElement("div");
     progressBar.classList.add("progress-bar", "bg-dark");
     progressBar.setAttribute("role", "progressbar");
-    progressBar.setAttribute("style", `width: ${reportsCount}Laporan`);
+    progressBar.setAttribute("style", `width: ${reportsCount}%`);
     progressBar.setAttribute("aria-valuenow", reportsCount);
     progressBar.setAttribute("aria-valuemin", "0");
     progressBar.setAttribute("aria-valuemax", "100");

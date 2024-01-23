@@ -24,7 +24,7 @@ const showAlert = (message, type, additionalInfo = '', callback) => {
       return;
     }
   
-    const targetURL = 'https://asia-southeast2-gis-project-401902.cloudfunctions.net/GetUserWithToken';
+    const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
   
     const myHeaders = new Headers();
     myHeaders.append('Login', token);
