@@ -24,7 +24,7 @@ const displayUserReports = (data, sortedUsers, containerId) => {
   const userReportsCount = {};
 
   // Menggabungkan laporan dari hasil 'compromised' dan 'unsafe'
-  const mergedData = [...compromisedResult.data, ...unsafeResult.data];
+  const mergedData = [...data];
 
   // Menghitung jumlah laporan untuk setiap 'nipp'
   mergedData.forEach((report) => {
