@@ -176,7 +176,7 @@ var multiAxisLineChart = new Chart(ctx, {
                     position: "left",
                     ticks: {
                         beginAtZero: true,
-                        stepSize: 1,
+                        stepSize: 5, // Menjadikan angka berkelipatan 5
                         padding: 10,
                         callback: function (value, index, values) {
                             return number_format(value);
