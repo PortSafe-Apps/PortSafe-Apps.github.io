@@ -17,40 +17,39 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 const getUserWithToken = async () => {
-  const token = getTokenFromCookies('Login');
+  document.addEventListener('DOMContentLoaded', async function () {
+      const token = getTokenFromCookies('Login');
 
-  if (!token) {
-      showAlert("Token tidak ditemukan", 'error');
-      return;
-  }
-
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
-
-  const myHeaders = new Headers();
-  myHeaders.append('Login', token);
-
-  const requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-  };
-
-  try {
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
-
-      if (data.status === true) {
-          displayUserData(data.data);
-      } else {
-          showAlert(data.message, 'error');
+      if (!token) {
+          showAlert("Token tidak ditemukan", 'error');
+          return;
       }
-  } catch (error) {
-      console.error('Error:', error);
-  }
+
+      const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
+
+      const myHeaders = new Headers();
+      myHeaders.append('Login', token);
+
+      const requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+      };
+
+      try {
+          const response = await fetch(targetURL, requestOptions);
+          const data = await response.json();
+
+          if (data.status === true) {
+              displayUserData(data.data);
+          } else {
+              showAlert(data.message, 'error');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  });
 };
-
-getUserWithToken();
-
 
 const deleteUser = async (nipp) => {
   const token = getTokenFromCookies('Login');
@@ -93,39 +92,33 @@ const handleDeleteUser = (nipp) => {
   deleteUser(nipp);
 };
 
-const displayUserData = (userData) => {
-  const userDataBody = document.getElementById('userDataBody');
+const displayUserData = (userData, tableBodyId) => {
+  const userDataBody = document.getElementById(tableBodyId);
 
-  if (userDataBody) {
-      const tbody = userDataBody;
+  // Clear existing rows
+  userDataBody.innerHTML = '';
 
-      // Clear existing rows
-      tbody.innerHTML = '';
-
-      if (userData && userData.length > 0) {
-          userData.forEach(user => {
-              const newRow = document.createElement('tr');
-              newRow.innerHTML = `
-                  <td>${user.nipp}</td>
-                  <td>${user.nama}</td>
-                  <td>${user.jabatan}</td>
-                  <td>${user.location ? user.location.locationName : ''}</td>
-                  <td>${user.role}</td>
-                  <td>${user.timestamp ? new Date(user.timestamp).toLocaleDateString() : ''}</td>
-                  <td>
-                      <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
-                      <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
-                  </td>
-              `;
-              tbody.appendChild(newRow);
-          });
-      } else {
-          const noDataRow = document.createElement('tr');
-          noDataRow.innerHTML = '<td colspan="7">No user data found.</td>';
-          tbody.appendChild(noDataRow);
-      }
+  if (userData && userData.length > 0) {
+    userData.forEach(user => {
+      const newRow = document.createElement('tr');
+      newRow.innerHTML = `
+        <td>${user.nipp}</td>
+        <td>${user.nama}</td>
+        <td>${user.jabatan}</td>
+        <td>${user.location ? user.location.locationName : ''}</td>
+        <td>${user.role}</td>
+        <td>${user.timestamp ? new Date(user.timestamp).toLocaleDateString() : ''}</td>
+        <td>
+          <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
+          <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
+        </td>
+      `;
+      userDataBody.appendChild(newRow);
+    });
   } else {
-      console.error('Element with id "userDataBody" not found');
+    const noDataRow = document.createElement('tr');
+    noDataRow.innerHTML = '<td colspan="7">No user data found.</td>';
+    userDataBody.appendChild(noDataRow);
   }
 };
 
