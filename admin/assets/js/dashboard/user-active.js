@@ -38,13 +38,17 @@ const displayUserReports = (data, sortedUsers, containerId) => {
   });
 
   if (!sortedUsers || !Array.isArray(sortedUsers) || sortedUsers.length === 0) {
-    console.error("Sorted users data is undefined, not an array, or an empty array.");
+    console.error(
+      "Sorted users data is undefined, not an array, or an empty array."
+    );
     return;
   }
 
   sortedUsers.forEach((nipp) => {
     const reportsCount = userReportsCount[nipp];
-    const userData = mergedData.find((report) => report.user.nipp === nipp)?.user;
+    const userData = mergedData.find(
+      (report) => report.user.nipp === nipp
+    )?.user;
 
     const userInfoContainer = document.createElement("div");
     userInfoContainer.classList.add(
@@ -57,7 +61,9 @@ const displayUserReports = (data, sortedUsers, containerId) => {
 
     const titleDiv = document.createElement("div");
     titleDiv.classList.add("fw-bold");
-    titleDiv.innerText = `${nipp} - ${userData?.nama || "Nama Tidak Ditemukan"}`;
+    titleDiv.innerText = `${nipp} - ${
+      userData?.nama || "Nama Tidak Ditemukan"
+    }`;
 
     const percentageDiv = document.createElement("div");
     percentageDiv.classList.add("small");
@@ -89,21 +95,23 @@ const displayUserReports = (data, sortedUsers, containerId) => {
 };
 
 const getActiveUser = async () => {
-  const token = getTokenFromCookies('Login');
+  const token = getTokenFromCookies("Login");
 
   if (!token) {
     Swal.fire({
-      icon: 'warning',
-      title: 'Authentication Error',
-      text: 'Kamu Belum Login!',
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
     }).then(() => {
-      window.location.href = 'https://portsafe-apps.github.io/';
+      window.location.href = "https://portsafe-apps.github.io/";
     });
     return;
   }
 
-  const compromised = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised';
-  const unsafe = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport';
+  const compromised =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
+  const unsafe =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -112,8 +120,12 @@ const getActiveUser = async () => {
 
   try {
     const [compromisedResponse, unsafeResponse] = await Promise.all([
-      fetch(compromised, { method: "POST", headers: myHeaders, redirect: "follow" }),
-      fetch(unsafe, { method: "POST", headers: myHeaders, redirect: "follow" })
+      fetch(compromised, {
+        method: "POST",
+        headers: myHeaders,
+        redirect: "follow",
+      }),
+      fetch(unsafe, { method: "POST", headers: myHeaders, redirect: "follow" }),
     ]);
 
     if (!compromisedResponse.ok || !unsafeResponse.ok) {
@@ -126,28 +138,28 @@ const getActiveUser = async () => {
     console.log("Compromised Result:", compromisedResult);
     console.log("Unsafe Result:", unsafeResult);
 
-    // Check if sortedUsers is an array and not empty before proceeding
-    if (!Array.isArray(compromisedResult.sortedUsers) || !Array.isArray(unsafeResult.sortedUsers)) {
-      console.error("Sorted users data is not an array.");
-      return;
-    }
+    // Extracting unique 'nipp' values from both compromised and unsafe data
+    const compromisedUsers = compromisedResult.data.map(
+      (report) => report.user.nipp
+    );
+    const unsafeUsers = unsafeResult.data.map((report) => report.user.nipp);
 
-    // Combine sortedUsers from both compromisedResult and unsafeResult
-    const sortedUsers = [...compromisedResult.sortedUsers, ...unsafeResult.sortedUsers];
-    
+    // Combine unique 'nipp' values from both compromised and unsafe data
+    const sortedUsers = [...new Set([...compromisedUsers, ...unsafeUsers])];
+
     console.log("Sorted Users:", sortedUsers);
-    
+
     // Check if sortedUsers is an array and not empty before proceeding
     if (!Array.isArray(sortedUsers) || sortedUsers.length === 0) {
-      console.error("Combined sorted users data is undefined, not an array, or an empty array.");
+      console.error(
+        "Combined sorted users data is undefined, not an array, or an empty array."
+      );
       return;
     }
-
     // Combine compromised and unsafe data
     const mergedData = [...compromisedResult.data, ...unsafeResult.data];
 
     displayUserReports(mergedData, sortedUsers, "userActive");
-    
   } catch (error) {
     console.error("Error fetching data:", error);
   }
