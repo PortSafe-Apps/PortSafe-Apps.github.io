@@ -27,41 +27,43 @@
 
     <div id="page">
         <div class="page-content">
-            <div class="page-title page-title-small">
-                <h2><a href="index.html" data-back-button><i class="fa fa-arrow-left"></i></a>Sign In</h2>
-            </div>
+            <div class="page-title page-title-small"></div>
             <div class="card header-card shape-rounded" data-card-height="150">
                 <div class="card-overlay bg-highlight opacity-95"></div>
                 <div class="card-overlay dark-mode-tint"></div>
             </div>
+
             <div class="card card-style" data-card-height="cover-card">
                 <div class="card-center">
-                    <div class="ms-4 me-4 mb-0 mt-1">
-                        <center><img class="mt-1 mb-3" src="/user/assets/app/icons/icon-128x128.png" alt="img" width="190"></center>
-                        <form action="/login" id="loginForm">
-                            <div class="input-style no-borders has-icon validate-field">
-                                <i class="fa fa-user"></i>
-                                <input type="nipp" class="form-control validate-text" id="nipp" placeholder="NIPP">
-                                <label for="nipp" class="color-blue-dark font-10 mt-1">NIPP</label>
-                            </div>
-                            <div class="input-style no-borders has-icon validate-field mt-2">
-                                <i class="fa fa-lock"></i>
-                                <input type="password" class="form-control validate-text" id="password"
-                                    placeholder="Password">
-                                <label for="password" class="color-blue-dark font-10 mt-1">Password</label>
-                            </div>
-                            <button
-                                class="btn btn-m btn-full rounded-sm shadow-l bg-blue-dark text-uppercase font-900 w-100"
-                                type="submit" id="submit">Sign In</button>
-                        </form>
+                    <div class="ms-5 me-5">
+                        <h2 class="text-center color-blue-dark font-800 fa-4x">LOGIN</h2>
+                        <p class="color-highlight font-12 text-center ">Let's get you into your account</p>
+                        <div class="mt-2 mb-0">
+                            <form action="/login" id="loginForm">
+                                <div class="input-style no-borders has-icon validate-field">
+                                    <i class="fa fa-user"></i>
+                                    <input type="nipp" class="form-control validate-text" id="nipp" placeholder="NIPP">
+                                    <label for="nipp" class="color-blue-dark font-10 mt-1">NIPP</label>
+                                </div>
+                                <div class="input-style no-borders has-icon validate-field mt-2">
+                                    <i class="fa fa-lock"></i>
+                                    <input type="password" class="form-control validate-text" id="password"
+                                        placeholder="Password">
+                                    <label for="password" class="color-blue-dark font-10 mt-1">Password</label>
+                                </div>
+                                <button
+                                    class="btn btn-m btn-full rounded-sm shadow-l bg-blue-dark text-uppercase font-900 w-100"
+                                    type="submit" id="submit">Sign In</button>
+                            </form>
 
 
-                        <div class="divider mb-2"></div>
+                            <div class="divider mb-2"></div>
 
-                        <p class="text-center">
-                            <a href="register.html" class="color-highlight opacity-80 font-12">don't have an account
-                                yet? register here!</a>
-                        </p>
+                            <p class="text-center">
+                                <a href="register.html" class="color-highlight opacity-80 font-12">don't have an account
+                                    yet? register here!</a>
+                            </p>
+                        </div>
                     </div>
                 </div>
             </div>
