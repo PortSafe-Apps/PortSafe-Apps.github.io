@@ -41,7 +41,7 @@ const getUserWithToken = async () => {
           const data = await response.json();
 
           if (data.status === true) {
-              displayUserData(data.data);
+              displayUserData(data.data, 'userDataBody'); // Pass 'userDataBody' as the second argument
           } else {
               showAlert(data.message, 'error');
           }
@@ -50,6 +50,7 @@ const getUserWithToken = async () => {
       }
   });
 };
+
 
 const deleteUser = async (nipp) => {
   const token = getTokenFromCookies('Login');
