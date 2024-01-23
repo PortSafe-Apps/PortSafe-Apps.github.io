@@ -17,36 +17,38 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 const getUserWithToken = async () => {
-  const token = getTokenFromCookies('Login');
+  document.addEventListener('DOMContentLoaded', async function () {
+      const token = getTokenFromCookies('Login');
 
-  if (!token) {
-      showAlert("Token tidak ditemukan", 'error');
-      return;
-  }
-
-  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
-
-  const myHeaders = new Headers();
-  myHeaders.append('Login', token);
-
-  const requestOptions = {
-      method: 'GET',
-      headers: myHeaders,
-      redirect: 'follow'
-  };
-
-  try {
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
-
-      if (data.status === true) {
-          displayUserData(data.data);
-      } else {
-          showAlert(data.message, 'error');
+      if (!token) {
+          showAlert("Token tidak ditemukan", 'error');
+          return;
       }
-  } catch (error) {
-      console.error('Error:', error);
-  }
+
+      const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser';
+
+      const myHeaders = new Headers();
+      myHeaders.append('Login', token);
+
+      const requestOptions = {
+          method: 'GET',
+          headers: myHeaders,
+          redirect: 'follow'
+      };
+
+      try {
+          const response = await fetch(targetURL, requestOptions);
+          const data = await response.json();
+
+          if (data.status === true) {
+              displayUserData(data.data);
+          } else {
+              showAlert(data.message, 'error');
+          }
+      } catch (error) {
+          console.error('Error:', error);
+      }
+  });
 };
 
 const deleteUser = async (nipp) => {
@@ -91,27 +93,33 @@ const handleDeleteUser = (nipp) => {
 };
 
 const displayUserData = (userData) => {
-  const userDataBody = document.getElementById('datatablesSimple').getElementsByTagName('tbody')[0];
+  const userDataBody = document.getElementById('datatablesSimple');
 
-  if (userData && userData.length > 0) {
-      userData.forEach(user => {
-          const newRow = document.createElement('tr');
-          newRow.innerHTML = `
-              <td>${user.nipp}</td>
-              <td>${user.nama}</td>
-              <td>${user.jabatan}</td>
-              <td>${user.location ? user.location.unitKerja : ''}</td>
-              <td>${user.role}</td>
-              <td>${user.timestamp ? new Date(user.timestamp).toLocaleDateString() : ''}</td>
-              <td>
-                  <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
-                  <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
-              </td>
-          `;
-          userDataBody.appendChild(newRow);
-      });
+  if (userDataBody) {
+      const tbody = userDataBody.getElementsByTagName('tbody')[0];
+
+      if (userData && userData.length > 0) {
+          userData.forEach(user => {
+              const newRow = document.createElement('tr');
+              newRow.innerHTML = `
+                  <td>${user.nipp}</td>
+                  <td>${user.nama}</td>
+                  <td>${user.jabatan}</td>
+                  <td>${user.location ? user.location.locationName : ''}</td>
+                  <td>${user.role}</td>
+                  <td>${user.timestamp ? new Date(user.timestamp).toLocaleDateString() : ''}</td>
+                  <td>
+                      <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
+                      <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
+                  </td>
+              `;
+              tbody.appendChild(newRow);
+          });
+      } else {
+          tbody.innerHTML = '<tr><td colspan="7">No user data found.</td></tr>';
+      }
   } else {
-      userDataBody.innerHTML = '<tr><td colspan="7">No user data found.</td></tr>';
+      console.error('Element with id "datatablesSimple" not found');
   }
 };
 
