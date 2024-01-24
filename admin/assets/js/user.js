@@ -1,7 +1,7 @@
-// Wrap the code inside a window load event listener
-window.onload = function () {
+document.addEventListener('DOMContentLoaded', function () {
+  // Wrap the code inside a DOMContentLoaded event listener
   getUserWithToken();
-};
+});
 
 const showAlert = (message, type, additionalInfo = "", callback) => {
   console.log(message, type, additionalInfo);
@@ -22,34 +22,26 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 const getUserWithToken = async () => {
-  const token = getTokenFromCookies("Login");
-  // Use querySelector instead of getElementById
-  const userDataBody = document.querySelector("#datatablesSimple tbody");
-
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
-
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
-
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
   try {
+    const token = getTokenFromCookies("Login");
+    const userDataBody = document.querySelector("#datatablesSimple tbody");
+
+    if (!token) {
+      throw new Error("Authentication Error: Kamu Belum Login!");
+    }
+
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
@@ -59,39 +51,32 @@ const getUserWithToken = async () => {
       showAlert(data.message, "error");
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
   }
 };
 
 const deleteUser = async (nipp) => {
-  const token = getTokenFromCookies("Login");
-
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
-
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteUser";
-
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-  myHeaders.append("Content-Type", "application/json");
-
-  const requestOptions = {
-    method: "DELETE",
-    headers: myHeaders,
-    body: JSON.stringify({ nipp: nipp }),
-    redirect: "follow",
-  };
-
   try {
+    const token = getTokenFromCookies("Login");
+
+    if (!token) {
+      throw new Error("Authentication Error: Kamu Belum Login!");
+    }
+
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteUser";
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      body: JSON.stringify({ nipp: nipp }),
+      redirect: "follow",
+    };
+
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
@@ -103,7 +88,7 @@ const deleteUser = async (nipp) => {
       showAlert("Error", "error", data.message);
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error:", error.message);
   }
 };
 
@@ -112,33 +97,35 @@ const handleDeleteUser = (nipp) => {
 };
 
 const displayUserData = (userData, userDataBody) => {
-  // Clear existing rows
-  userDataBody.innerHTML = "";
+  try {
+    // Clear existing rows
+    userDataBody.innerHTML = "";
 
-  if (userData && userData.length > 0) {
-    userData.forEach((user) => {
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-        <td>${user.nipp}</td>
-        <td>${user.nama}</td>
-        <td>${user.jabatan}</td>
-        <td>${user.location}</td>
-        <td>${user.role}</td>
-        <td>${new Date(user.timestamp).toLocaleDateString()}</td>
-        <td>
-            <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
-            <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${
-              user.nipp
-            }')"><i data-feather="trash-2"></i></a>
-        </td>
-      `;
-      userDataBody.appendChild(newRow);
-    });
-  } else {
-    // Display a message if no user data found
-    const emptyRow = document.createElement("tr");
-    emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
-    userDataBody.appendChild(emptyRow);
+    if (userData && userData.length > 0) {
+      userData.forEach((user) => {
+        const newRow = document.createElement("tr");
+        newRow.innerHTML = `
+          <td>${user.nipp}</td>
+          <td>${user.nama}</td>
+          <td>${user.jabatan}</td>
+          <td>${user.location.locationName}</td>
+          <td>${user.role}</td>
+          <td>${new Date(user.timestamp).toLocaleDateString()}</td>
+          <td>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
+          </td>
+        `;
+        userDataBody.appendChild(newRow);
+      });
+    } else {
+      // Display a message if no user data found
+      const emptyRow = document.createElement("tr");
+      emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
+      userDataBody.appendChild(emptyRow);
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
   }
 };
 
