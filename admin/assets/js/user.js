@@ -85,7 +85,7 @@ const fetchAndDisplayEditUserData = async (nipp) => {
       return;
     }
 
-    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUserByNipp?nipp=${nipp}`;
+    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser?nipp=${nipp}`;
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
