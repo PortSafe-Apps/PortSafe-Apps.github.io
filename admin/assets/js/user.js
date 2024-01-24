@@ -9,6 +9,19 @@ document.addEventListener("DOMContentLoaded", function () {
     // If 'nipp' parameter is present, fetch and display user data for editing
     fetchAndDisplayEditUserData(nippParam);
   }
+
+  // Attach an event listener to the submit button
+  document
+    .querySelector('button[type="button"]')
+    .addEventListener("click", updateUserData);
+
+  // Attach event listener using event delegation
+  document.body.addEventListener("click", function (event) {
+    if (event.target.tagName.toLowerCase() === "a" && event.target.dataset.action === "deleteUser") {
+      event.preventDefault();
+      confirmDeleteUser(event.target.dataset.nipp);
+    }
+  });
 });
 
 const showAlert = (message, type, additionalInfo = "", callback) => {
@@ -201,9 +214,7 @@ const displayUserData = (userData, userDataBody) => {
               <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${
                 user.nipp
               }"><i data-feather="edit"></i></a>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${
-                user.nipp
-              }')"><i data-feather="trash-2"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></a>
           </td>
         `;
         userDataBody.appendChild(newRow);
@@ -268,7 +279,7 @@ const handleDeleteUser = async (nipp) => {
     if (data.status === true) {
       showAlert("Success", "success", "User deleted successfully!", () => {
         // You can perform additional actions or redirect after deletion
-      window.location.reload();
+        window.location.reload();
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -277,8 +288,3 @@ const handleDeleteUser = async (nipp) => {
     console.error("Error:", error.message);
   }
 };
-
-// Attach an event listener to the submit button
-document
-  .querySelector('button[type="button"]')
-  .addEventListener("click", updateUserData);
