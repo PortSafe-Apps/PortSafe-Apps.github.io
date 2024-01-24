@@ -1,6 +1,14 @@
 document.addEventListener("DOMContentLoaded", function () {
-  // Wrap the code inside a DOMContentLoaded event listener
   getUserWithToken();
+
+  // Check if the URL contains the 'nipp' parameter
+  const urlParams = new URLSearchParams(window.location.search);
+  const nippParam = urlParams.get('nipp');
+  
+  if (nippParam) {
+    // If 'nipp' parameter is present, fetch and display user data for editing
+    fetchAndDisplayEditUserData(nippParam);
+  }
 });
 
 const showAlert = (message, type, additionalInfo = "", callback) => {
@@ -62,6 +70,56 @@ const getUserWithToken = async () => {
   }
 };
 
+const fetchAndDisplayEditUserData = async (nipp) => {
+  try {
+    const token = getTokenFromCookies("Login");
+
+    if (!token) {
+      showAlert({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
+
+    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUserByNipp?nipp=${nipp}`;
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+
+    if (data.status === true) {
+      // Populate form fields with existing user data for editing
+      displayEditUserData(data.data);
+    } else {
+      showAlert("Error", "error", data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
+};
+
+const displayEditUserData = (userData) => {
+  // Populate form fields with existing user data
+  document.getElementById("nipp").value = userData.nipp;
+  document.getElementById("nama").value = userData.nama;
+  document.querySelector(`input[name="radioJabatan"][value="${userData.jabatan}"]`).checked = true;
+  document.querySelector("#unitKerja").value = userData.location.locationName;
+  document.querySelector("#role").value = userData.role;
+  document.getElementById("timestamp").innerText = new Date(userData.timestamp).toLocaleDateString();
+};
+
 const updateUserData = async () => {
   try {
     const token = getTokenFromCookies("Login");
@@ -82,8 +140,8 @@ const updateUserData = async () => {
 
     const nipp = document.getElementById("nipp").value;
     const nama = document.getElementById("nama").value;
-    const jabatan = document.querySelector( 'input[name="radioJabatan"]:checked' ).value;
-    const locationName = document.querySelector("#unitKerja").value; // Mengambil nilai dari elemen dengan id "unitKerja"
+    const jabatan = document.querySelector('input[name="radioJabatan"]:checked').value;
+    const locationName = document.querySelector("#unitKerja").value;
     const role = document.querySelector("#role").value;
     const password = document.getElementById("password").value;
 
@@ -92,7 +150,7 @@ const updateUserData = async () => {
       nama: nama,
       jabatan: jabatan,
       location: {
-        locationName: locationName, // Menyimpan nilai locationName dalam objek location
+        locationName: locationName,
       },
       role: role,
       password: password,
@@ -103,7 +161,7 @@ const updateUserData = async () => {
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
-      method: "PUT", // Assuming you are using PUT method for updating data
+      method: "PUT",
       headers: myHeaders,
       body: JSON.stringify(requestBody),
       redirect: "follow",
@@ -114,7 +172,6 @@ const updateUserData = async () => {
 
     if (data.status === true) {
       showAlert("Success", "success", "User data updated successfully!", () => {
-        // Optionally, you can redirect or perform other actions after successful update
         window.location.href =
           "https://portsafe-apps.github.io/admin/user-management-list.html";
       });
@@ -128,7 +185,6 @@ const updateUserData = async () => {
 
 const displayUserData = (userData, userDataBody) => {
   try {
-    // Clear existing rows
     userDataBody.innerHTML = "";
 
     if (userData && userData.length > 0) {
@@ -153,13 +209,11 @@ const displayUserData = (userData, userDataBody) => {
         userDataBody.appendChild(newRow);
       });
     } else {
-      // Display a message if no user data found
       const emptyRow = document.createElement("tr");
       emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
       userDataBody.appendChild(emptyRow);
     }
 
-    // Initialize Feather Icons after adding icons to the DOM
     feather.replace();
   } catch (error) {
     console.error("Error:", error.message);
@@ -180,6 +234,48 @@ const confirmDeleteUser = (nipp) => {
       handleDeleteUser(nipp);
     }
   });
+};
+
+const handleDeleteUser = async (nipp) => {
+  try {
+    const token = getTokenFromCookies("Login");
+
+    if (!token) {
+      showAlert({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
+
+    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/deleteUser?nipp=${nipp}`;
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+
+    if (data.status === true) {
+      showAlert("Success", "success", "User deleted successfully!", () => {
+        // You can perform additional actions or redirect after deletion
+      window.location.reload();
+      });
+    } else {
+      showAlert("Error", "error", data.message);
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
 };
 
 // Attach an event listener to the submit button
