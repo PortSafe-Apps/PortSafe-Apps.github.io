@@ -1,3 +1,8 @@
+// Wrap the code inside a window load event listener
+window.onload = function () {
+  getUserWithToken();
+};
+
 const showAlert = (message, type, additionalInfo = "", callback) => {
   console.log(message, type, additionalInfo);
   if (typeof callback === "function") {
@@ -18,6 +23,8 @@ const getTokenFromCookies = (cookieName) => {
 
 const getUserWithToken = async () => {
   const token = getTokenFromCookies("Login");
+  // Use querySelector instead of getElementById
+  const userDataBody = document.querySelector("#datatablesSimple tbody");
 
   if (!token) {
     Swal.fire({
@@ -47,7 +54,7 @@ const getUserWithToken = async () => {
     const data = await response.json();
 
     if (data.status === true) {
-      displayUserData(data.data);
+      displayUserData(data.data, userDataBody);
     } else {
       showAlert(data.message, "error");
     }
@@ -104,11 +111,7 @@ const handleDeleteUser = (nipp) => {
   deleteUser(nipp);
 };
 
-const displayUserData = (userData) => {
-  const userDataBody = document
-    .getElementById("datatablesSimple")
-    .getElementsByTagName("tbody")[0];
-
+const displayUserData = (userData, userDataBody) => {
   // Clear existing rows
   userDataBody.innerHTML = "";
 
@@ -154,5 +157,3 @@ const confirmDeleteUser = (nipp) => {
     }
   });
 };
-
-getUserWithToken();
