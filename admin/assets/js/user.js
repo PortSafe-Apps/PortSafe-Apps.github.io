@@ -1,4 +1,4 @@
-document.addEventListener('DOMContentLoaded', function () {
+document.addEventListener("DOMContentLoaded", function () {
   // Wrap the code inside a DOMContentLoaded event listener
   getUserWithToken();
 });
@@ -28,15 +28,15 @@ const getUserWithToken = async () => {
 
     if (!token) {
       Swal.fire({
-          icon: 'warning',
-          title: 'Authentication Error',
-          text: 'Kamu Belum Login!',
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
       }).then(() => {
-          window.location.href = 'https://portsafe-apps.github.io/';
+        window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
     }
-    
+
     const targetURL =
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
@@ -62,32 +62,50 @@ const getUserWithToken = async () => {
   }
 };
 
-const deleteUser = async (nipp) => {
+const updateUserData = async () => {
   try {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      Swal.fire({
-          icon: 'warning',
-          title: 'Authentication Error',
-          text: 'Kamu Belum Login!',
+      showAlert({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
       }).then(() => {
-          window.location.href = 'https://portsafe-apps.github.io/';
+        window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
     }
 
     const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteUser";
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/resetPassword";
+
+    const nipp = document.getElementById("nipp").value;
+    const nama = document.getElementById("nama").value;
+    const jabatan = document.querySelector( 'input[name="radioJabatan"]:checked' ).value;
+    const locationName = document.querySelector("#unitKerja").value; // Mengambil nilai dari elemen dengan id "unitKerja"
+    const role = document.querySelector("#role").value;
+    const password = document.getElementById("password").value;
+
+    const requestBody = {
+      nipp: nipp,
+      nama: nama,
+      jabatan: jabatan,
+      location: {
+        locationName: locationName, // Menyimpan nilai locationName dalam objek location
+      },
+      role: role,
+      password: password,
+    };
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
     myHeaders.append("Content-Type", "application/json");
 
     const requestOptions = {
-      method: "DELETE",
+      method: "PUT", // Assuming you are using PUT method for updating data
       headers: myHeaders,
-      body: JSON.stringify({ nipp: nipp }),
+      body: JSON.stringify(requestBody),
       redirect: "follow",
     };
 
@@ -95,8 +113,10 @@ const deleteUser = async (nipp) => {
     const data = await response.json();
 
     if (data.status === true) {
-      showAlert("Success", "success", "User deleted successfully!", () => {
-        getUserWithToken();
+      showAlert("Success", "success", "User data updated successfully!", () => {
+        // Optionally, you can redirect or perform other actions after successful update
+        window.location.href =
+          "https://portsafe-apps.github.io/admin/user-management-list.html";
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -104,10 +124,6 @@ const deleteUser = async (nipp) => {
   } catch (error) {
     console.error("Error:", error.message);
   }
-};
-
-const handleDeleteUser = (nipp) => {
-  deleteUser(nipp);
 };
 
 const displayUserData = (userData, userDataBody) => {
@@ -126,8 +142,12 @@ const displayUserData = (userData, userDataBody) => {
           <td>${user.role}</td>
           <td>${new Date(user.timestamp).toLocaleDateString()}</td>
           <td>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${user.nipp}"><i data-feather="edit"></i></a>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${
+                user.nipp
+              }"><i data-feather="edit"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${
+                user.nipp
+              }')"><i data-feather="trash-2"></i></a>
           </td>
         `;
         userDataBody.appendChild(newRow);
@@ -141,7 +161,6 @@ const displayUserData = (userData, userDataBody) => {
 
     // Initialize Feather Icons after adding icons to the DOM
     feather.replace();
-
   } catch (error) {
     console.error("Error:", error.message);
   }
@@ -163,5 +182,7 @@ const confirmDeleteUser = (nipp) => {
   });
 };
 
-// Call Feather Icons initialization when the script is loaded
-feather.replace();
+// Attach an event listener to the submit button
+document
+  .querySelector('button[type="button"]')
+  .addEventListener("click", updateUserData);
