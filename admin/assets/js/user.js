@@ -27,9 +27,15 @@ const getUserWithToken = async () => {
     const userDataBody = document.querySelector("#datatablesSimple tbody");
 
     if (!token) {
-      throw new Error("Authentication Error: Kamu Belum Login!");
-    }
-
+      Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Error',
+          text: 'Kamu Belum Login!',
+      }).then(() => {
+          window.location.href = 'https://portsafe-apps.github.io/';
+      });
+      return;
+  }
     const targetURL =
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
@@ -60,8 +66,15 @@ const deleteUser = async (nipp) => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      throw new Error("Authentication Error: Kamu Belum Login!");
-    }
+      Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Error',
+          text: 'Kamu Belum Login!',
+      }).then(() => {
+          window.location.href = 'https://portsafe-apps.github.io/';
+      });
+      return;
+  }
 
     const targetURL =
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteUser";
@@ -112,7 +125,7 @@ const displayUserData = (userData, userDataBody) => {
           <td>${user.role}</td>
           <td>${new Date(user.timestamp).toLocaleDateString()}</td>
           <td>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html"><i data-feather="edit"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${user.nipp}"><i data-feather="edit"></i></a>
               <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" onclick="confirmDeleteUser('${user.nipp}')"><i data-feather="trash-2"></i></a>
           </td>
         `;
