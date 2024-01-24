@@ -35,7 +35,8 @@ const getUserWithToken = async () => {
           window.location.href = 'https://portsafe-apps.github.io/';
       });
       return;
-  }
+    }
+    
     const targetURL =
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
@@ -74,7 +75,7 @@ const deleteUser = async (nipp) => {
           window.location.href = 'https://portsafe-apps.github.io/';
       });
       return;
-  }
+    }
 
     const targetURL =
       "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteUser";
@@ -137,6 +138,10 @@ const displayUserData = (userData, userDataBody) => {
       emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
       userDataBody.appendChild(emptyRow);
     }
+
+    // Initialize Feather Icons after adding icons to the DOM
+    feather.replace();
+
   } catch (error) {
     console.error("Error:", error.message);
   }
@@ -157,3 +162,6 @@ const confirmDeleteUser = (nipp) => {
     }
   });
 };
+
+// Call Feather Icons initialization when the script is loaded
+feather.replace();
