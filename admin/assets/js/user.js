@@ -120,15 +120,15 @@ const displayEditUserData = (userData) => {
       return;
     }
 
-    nippInput.value = userData.nipp;
-    namaInput.value = userData.nama;
-    jabatanRadio.value = userData.jabatan;
-    unitKerjaInput.value = userData.location.locationName;
-    roleInput.value = userData.role;
-    
+    nippInput.value = userData.nipp || "";
+    namaInput.value = userData.nama || "";
+    jabatanRadio.value = userData.jabatan || "";
+    unitKerjaInput.value = userData.location ? userData.location.locationName || "" : "";
+    roleInput.value = userData.role || "";
+
     const timestampElement = document.getElementById("timestamp");
     if (timestampElement) {
-      timestampElement.innerText = new Date(userData.timestamp).toLocaleDateString();
+      timestampElement.innerText = userData.timestamp ? new Date(userData.timestamp).toLocaleDateString() : "";
     }
   } catch (error) {
     console.error("Error:", error.message);
