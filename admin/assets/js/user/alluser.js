@@ -7,8 +7,6 @@ const getTokenFromCookies = (cookieName) => {
 
 // Function to display user data in the table
 const displayUserData = (userData, tableBodyId) => {
-  console.log(userData); // Check if user data is received
-
   const userDataBody = document.getElementById(tableBodyId);
 
   userDataBody.innerHTML = "";
@@ -153,7 +151,7 @@ document.getElementById("UserDataBody").addEventListener("click", (event) => {
     editUser(nipp);
   } else if (deleteLink) {
     const nipp = deleteLink.getAttribute("data-nipp");
-    deleteUserHandler(nipp);  // Call the delete confirmation handler
+    deleteUser(nipp);
   }
 });
 
