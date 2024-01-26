@@ -42,8 +42,8 @@ const getAllUser = async () => {
 
     console.log('Response Data:', data); // Add this line for debugging
 
-    if (data.status === 200) {
-      displayUserData(data.data, 'datatablesSimple');
+    if (data.status === true) {
+      displayUserData(data.data, 'datatablesSimple'); // Assuming 'datatablesSimple' is the correct ID
     } else {
       showAlert('error', 'Error', `Server Error: ${data.message}`);
     }
@@ -78,7 +78,7 @@ const deleteUserHandler = async (nipp) => {
 
     console.log('Response Data:', data); // Add this line for debugging
 
-    if (data.status === 200) {
+    if (data.status === true) {
       showAlert('success', 'Success', 'User deleted successfully!', getAllUser);
     } else {
       showAlert('error', 'Error', `Server Error: ${data.message}`);
