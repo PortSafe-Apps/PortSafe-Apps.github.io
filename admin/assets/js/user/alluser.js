@@ -41,7 +41,7 @@ const getAllUser = async () => {
     const data = await response.json();
 
     if (data.status === 200) {
-      displayUserData(data.data, 'UserDataBody');
+      displayUserData(data.data, 'datatablesSimple');
     } else {
       showAlert('error', 'Error', data.message);
     }
@@ -88,8 +88,8 @@ const editUser = (nipp) => {
   window.location.href = `https://portsafe-apps.github.io/admin/user-management-edit-user.html?nipp=${nipp}`;
 };
 
-const displayUserData = (userData, tableBodyId) => {
-  const userDataBody = document.querySelector(`#${tableBodyId} tbody`);
+const displayUserData = (userData, tableId) => {
+  const userDataBody = document.querySelector(`#${tableId} tbody`);
   userDataBody.innerHTML = '';
 
   if (userData && userData.length > 0) {
@@ -113,11 +113,11 @@ const displayUserData = (userData, tableBodyId) => {
     userDataBody.innerHTML = '<tr><td colspan="7">No user data found.</td></tr>';
   }
 
-  new simpleDatatables.DataTable(userDataBody.parentElement);
+  new simpleDatatables.DataTable(`#${tableId}`);
   feather.replace();
 };
 
-document.getElementById('UserDataBody').addEventListener('click', (event) => {
+document.getElementById('datatablesSimple').addEventListener('click', (event) => {
   const target = event.target;
   if (target.classList.contains('edit-link')) {
     const nipp = target.getAttribute('data-nipp');
