@@ -67,7 +67,7 @@ const getAllUser = async () => {
     const data = await response.json();
 
     if (data.status === 200) {
-      displayUserData(data.data, "UserDataBody");
+      displayUserData(data.data, "datatablesSimple");
 
       // Initialize DataTables here or at the end of your script
       new simpleDatatables.DataTable("#datatablesSimple");
@@ -141,7 +141,7 @@ const editUser = (nipp) => {
 };
 
 // Event delegation to handle clicks on edit and delete links
-document.getElementById("UserDataBody").addEventListener("click", (event) => {
+document.getElementById("datatablesSimple").addEventListener("click", (event) => {
   const target = event.target;
   const editLink = target.closest(".edit-link");
   const deleteLink = target.closest(".delete-link");
