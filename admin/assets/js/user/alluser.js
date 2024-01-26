@@ -1,11 +1,42 @@
+// Function to get the token from cookies
 const getTokenFromCookies = (cookieName) => {
-  const cookies = document.cookie
-    .split(";")
-    .map((cookie) => cookie.trim().split("="));
+  const cookies = document.cookie.split(";").map((cookie) => cookie.trim().split("="));
   const cookie = cookies.find(([name]) => name === cookieName);
   return cookie ? cookie[1] : null;
 };
 
+// Function to display user data in the table
+const displayUserData = (userData, tableBodyId) => {
+  const userDataBody = document.getElementById(tableBodyId);
+
+  userDataBody.innerHTML = "";
+
+  if (userData && userData.length > 0) {
+    userData.forEach((user) => {
+      const newRow = document.createElement("tr");
+      newRow.innerHTML = `
+        <td>${user.nipp}</td>
+        <td>${user.nama}</td>
+        <td>${user.jabatan}</td>
+        <td>${user.location.locationName}</td>
+        <td>${user.role}</td>
+        <td>${new Date(user.timestamp).toLocaleDateString()}</td>
+        <td>
+            <a class="btn btn-datatable btn-icon btn-transparent-dark me-2 edit-link" href="#!" data-nipp="${user.nipp}"><i data-feather="edit"></i></a>
+            <a class="btn btn-datatable btn-icon btn-transparent-dark delete-link" href="#!" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></a>
+        </td>
+      `;
+
+      userDataBody.appendChild(newRow);
+    });
+  } else {
+    userDataBody.innerHTML = `<tr><td colspan="7">No user data found.</td></tr>`;
+  }
+
+  feather.replace(); // Refresh Feather icons after adding new elements
+};
+
+// Function to get all users
 const getAllUser = async () => {
   const token = getTokenFromCookies("Login");
 
@@ -20,8 +51,7 @@ const getAllUser = async () => {
     return;
   }
 
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -50,6 +80,7 @@ const getAllUser = async () => {
   }
 };
 
+// Function to delete a user
 const deleteUser = async (nipp) => {
   const token = getTokenFromCookies("Login");
 
@@ -64,8 +95,7 @@ const deleteUser = async (nipp) => {
     return;
   }
 
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/deleteUser";
+  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/deleteUser";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -88,7 +118,7 @@ const deleteUser = async (nipp) => {
         title: "Success",
         text: "User deleted successfully!",
       }).then(() => {
-        getAllUser();
+        getAllUser(); // Refresh user data after deletion
       });
     } else {
       Swal.fire({
@@ -102,20 +132,27 @@ const deleteUser = async (nipp) => {
   }
 };
 
+// Function to edit a user
 const editUser = (nipp) => {
   window.location.href = `https://portsafe-apps.github.io/admin/user-management-edit-user.html?nipp=${nipp}`;
 };
 
+// Event delegation to handle clicks on edit and delete links
 document.getElementById("UserDataBody").addEventListener("click", (event) => {
   const target = event.target;
-  if (target.classList.contains("edit-link")) {
-    const nipp = target.getAttribute("data-nipp");
+  const editLink = target.closest(".edit-link");
+  const deleteLink = target.closest(".delete-link");
+
+  if (editLink) {
+    const nipp = editLink.getAttribute("data-nipp");
     editUser(nipp);
-  } else if (target.classList.contains("delete-link")) {
-    const nipp = target.getAttribute("data-nipp");
+  } else if (deleteLink) {
+    const nipp = deleteLink.getAttribute("data-nipp");
     deleteUserHandler(nipp);
   }
 });
+
+// Function to handle delete confirmation with SweetAlert
 const deleteUserHandler = (nipp) => {
   Swal.fire({
     title: "Are you sure?",
@@ -132,37 +169,5 @@ const deleteUserHandler = (nipp) => {
   });
 };
 
-const displayUserData = (userData, tableBodyId) => {
-  const userDataBody = document.getElementById(tableBodyId);
-
-  userDataBody.innerHTML = "";
-
-  if (userData && userData.length > 0) {
-    userData.forEach((user) => {
-      const newRow = document.createElement("tr");
-      newRow.innerHTML = `
-      <td>${user.nipp}</td>
-      <td>${user.nama}</td>
-      <td>${user.jabatan}</td>
-      <td>${user.location.locationName}</td>
-      <td>${user.role}</td>
-      <td>${new Date(user.timestamp).toLocaleDateString()}</td>
-      <td>
-          <a class="btn btn-datatable btn-icon btn-transparent-dark me-2 edit-link" href="#!" data-nipp="${
-            user.nipp
-          }"><i data-feather="edit"></i></a>
-          <a class="btn btn-datatable btn-icon btn-transparent-dark delete-link" href="#!" data-nipp="${
-            user.nipp
-          }" data-action="deleteUser"><i data-feather="trash-2"></i></a>
-      </td>
-    `;
-
-      userDataBody.appendChild(newRow);
-    });
-  } else {
-    userDataBody.innerHTML = `<tr><td colspan="9">No user data found.</td></tr>`;
-  }
-  feather.replace();
-};
-
+// Initial call to get all users when the page loads
 getAllUser();
