@@ -1,9 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+  const userDataBody = document.getElementById("datatablesSimple").querySelector("tbody");
+
+  if (!userDataBody) {
+    console.error("Error: userDataBody is null");
+    return;
+  }
+
   getUserWithToken();
 
   const urlParams = new URLSearchParams(window.location.search);
   const nippParam = urlParams.get('nipp');
-  
+
   if (nippParam) {
     fetchAndDisplayEditUserData(nippParam);
   }
