@@ -8,8 +8,6 @@ document.addEventListener("DOMContentLoaded", function () {
     fetchAndDisplayEditUserData(nippParam);
   }
 
-  document.querySelector('button[type="button"]').addEventListener("click", updateUserData);
-
   document.body.addEventListener("click", function (event) {
     if (event.target.tagName.toLowerCase() === "a" && event.target.dataset.action === "deleteUser") {
       event.preventDefault();
