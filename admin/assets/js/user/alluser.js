@@ -7,6 +7,8 @@ const getTokenFromCookies = (cookieName) => {
 
 // Function to display user data in the table
 const displayUserData = (userData, tableBodyId) => {
+  console.log(userData); // Check if user data is received
+
   const userDataBody = document.getElementById(tableBodyId);
 
   userDataBody.innerHTML = "";
@@ -68,6 +70,9 @@ const getAllUser = async () => {
 
     if (data.status === 200) {
       displayUserData(data.data, "UserDataBody");
+
+      // Initialize DataTables here or at the end of your script
+      new simpleDatatables.DataTable("#datatablesSimple");
     } else {
       Swal.fire({
         icon: "error",
@@ -148,7 +153,7 @@ document.getElementById("UserDataBody").addEventListener("click", (event) => {
     editUser(nipp);
   } else if (deleteLink) {
     const nipp = deleteLink.getAttribute("data-nipp");
-    deleteUser(nipp);  // Change this line
+    deleteUserHandler(nipp);  // Call the delete confirmation handler
   }
 });
 
