@@ -1,21 +1,15 @@
 document.addEventListener("DOMContentLoaded", function () {
   getUserWithToken();
 
-  // Check if the URL contains the 'nipp' parameter
   const urlParams = new URLSearchParams(window.location.search);
   const nippParam = urlParams.get('nipp');
   
   if (nippParam) {
-    // If 'nipp' parameter is present, fetch and display user data for editing
     fetchAndDisplayEditUserData(nippParam);
   }
 
-  // Attach an event listener to the submit button
-  document
-    .querySelector('button[type="button"]')
-    .addEventListener("click", updateUserData);
+  document.querySelector('button[type="button"]').addEventListener("click", updateUserData);
 
-  // Attach event listener using event delegation
   document.body.addEventListener("click", function (event) {
     if (event.target.tagName.toLowerCase() === "a" && event.target.dataset.action === "deleteUser") {
       event.preventDefault();
@@ -48,18 +42,13 @@ const getUserWithToken = async () => {
     const userDataBody = document.querySelector("#datatablesSimple tbody");
 
     if (!token) {
-      Swal.fire({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
+      showAlert("Kamu Belum Login!", "warning", "Authentication Error", () => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -88,11 +77,7 @@ const fetchAndDisplayEditUserData = async (nipp) => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
+      showAlert("Kamu Belum Login!", "warning", "Authentication Error", () => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
@@ -113,7 +98,6 @@ const fetchAndDisplayEditUserData = async (nipp) => {
     const data = await response.json();
 
     if (data.status === true) {
-      // Populate form fields with existing user data for editing
       displayEditUserData(data.data);
     } else {
       showAlert("Error", "error", data.message);
@@ -124,13 +108,31 @@ const fetchAndDisplayEditUserData = async (nipp) => {
 };
 
 const displayEditUserData = (userData) => {
-  // Populate form fields with existing user data
-  document.getElementById("nipp").value = userData.nipp;
-  document.getElementById("nama").value = userData.nama;
-  document.querySelector(`input[name="radioJabatan"][value="${userData.jabatan}"]`).checked = true;
-  document.querySelector("#unitKerja").value = userData.location.locationName;
-  document.querySelector("#role").value = userData.role;
-  document.getElementById("timestamp").innerText = new Date(userData.timestamp).toLocaleDateString();
+  try {
+    const nippInput = document.getElementById("nipp");
+    const namaInput = document.getElementById("nama");
+    const jabatanRadio = document.querySelector('input[name="radioJabatan"]');
+    const unitKerjaInput = document.querySelector("#unitKerja");
+    const roleInput = document.querySelector("#role");
+
+    if (!nippInput || !namaInput || !jabatanRadio || !unitKerjaInput || !roleInput) {
+      console.error("Error: One or more form elements are null");
+      return;
+    }
+
+    nippInput.value = userData.nipp;
+    namaInput.value = userData.nama;
+    jabatanRadio.value = userData.jabatan;
+    unitKerjaInput.value = userData.location.locationName;
+    roleInput.value = userData.role;
+    
+    const timestampElement = document.getElementById("timestamp");
+    if (timestampElement) {
+      timestampElement.innerText = new Date(userData.timestamp).toLocaleDateString();
+    }
+  } catch (error) {
+    console.error("Error:", error.message);
+  }
 };
 
 const updateUserData = async () => {
@@ -138,18 +140,13 @@ const updateUserData = async () => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
+      showAlert("Kamu Belum Login!", "warning", "Authentication Error", () => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/resetPassword";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/resetPassword";
 
     const nipp = document.getElementById("nipp").value;
     const nama = document.getElementById("nama").value;
@@ -185,8 +182,7 @@ const updateUserData = async () => {
 
     if (data.status === true) {
       showAlert("Success", "success", "User data updated successfully!", () => {
-        window.location.href =
-          "https://portsafe-apps.github.io/admin/user-management-list.html";
+        window.location.href = "https://portsafe-apps.github.io/admin/user-management-list.html";
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -198,6 +194,11 @@ const updateUserData = async () => {
 
 const displayUserData = (userData, userDataBody) => {
   try {
+    if (!userDataBody) {
+      console.error("Error: userDataBody is null");
+      return;
+    }
+
     userDataBody.innerHTML = "";
 
     if (userData && userData.length > 0) {
@@ -211,9 +212,7 @@ const displayUserData = (userData, userDataBody) => {
           <td>${user.role}</td>
           <td>${new Date(user.timestamp).toLocaleDateString()}</td>
           <td>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${
-                user.nipp
-              }"><i data-feather="edit"></i></a>
+              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${user.nipp}"><i data-feather="edit"></i></a>
               <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></a>
           </td>
         `;
@@ -252,11 +251,7 @@ const handleDeleteUser = async (nipp) => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
+      showAlert("Kamu Belum Login!", "warning", "Authentication Error", () => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
@@ -278,7 +273,6 @@ const handleDeleteUser = async (nipp) => {
 
     if (data.status === true) {
       showAlert("Success", "success", "User deleted successfully!", () => {
-        // You can perform additional actions or redirect after deletion
         window.location.reload();
       });
     } else {
