@@ -148,7 +148,7 @@ document.getElementById("UserDataBody").addEventListener("click", (event) => {
     editUser(nipp);
   } else if (deleteLink) {
     const nipp = deleteLink.getAttribute("data-nipp");
-    deleteUserHandler(nipp);
+    deleteUser(nipp);  // Change this line
   }
 });
 
