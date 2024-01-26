@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", function () {
-  const userDataBody = document.getElementById("datatablesSimple").querySelector("tbody");
+  const userDataBody = document.getElementById("datatablesSimple")?.querySelector("tbody");
 
   if (!userDataBody) {
     console.error("Error: userDataBody is null");
@@ -88,7 +88,7 @@ const fetchAndDisplayEditUserData = async (nipp) => {
       return;
     }
 
-    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser`;
+    const targetURL = `https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser?nipp=${nipp}`;
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -116,7 +116,7 @@ const displayEditUserData = (userData) => {
   try {
     const nippInput = document.getElementById("nipp");
     const namaInput = document.getElementById("nama");
-    const jabatanRadio = document.querySelector('input[name="radioJabatan"]');
+    const jabatanRadio = document.querySelector(`input[name="radioJabatan"][value="${userData.jabatan}"]`);
     const unitKerjaInput = document.querySelector("#unitKerja");
     const roleInput = document.querySelector("#role");
 
@@ -127,7 +127,11 @@ const displayEditUserData = (userData) => {
 
     nippInput.value = userData.nipp || "";
     namaInput.value = userData.nama || "";
-    jabatanRadio.value = userData.jabatan || "";
+
+    if (jabatanRadio) {
+      jabatanRadio.checked = true;
+    }
+
     unitKerjaInput.value = userData.location ? userData.location.locationName || "" : "";
     roleInput.value = userData.role || "";
 
