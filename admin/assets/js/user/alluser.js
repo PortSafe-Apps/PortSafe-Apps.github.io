@@ -40,13 +40,15 @@ const getAllUser = async () => {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
+    console.log('Response Data:', data); // Add this line for debugging
+
     if (data.status === 200) {
       displayUserData(data.data, 'datatablesSimple');
     } else {
-      showAlert('error', 'Error', data.message);
+      showAlert('error', 'Error', `Server Error: ${data.message}`);
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.message);
   }
 };
 
@@ -74,13 +76,15 @@ const deleteUserHandler = async (nipp) => {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
+    console.log('Response Data:', data); // Add this line for debugging
+
     if (data.status === 200) {
       showAlert('success', 'Success', 'User deleted successfully!', getAllUser);
     } else {
-      showAlert('error', 'Error', data.message);
+      showAlert('error', 'Error', `Server Error: ${data.message}`);
     }
   } catch (error) {
-    console.error('Error:', error);
+    console.error('Error:', error.message);
   }
 };
 
