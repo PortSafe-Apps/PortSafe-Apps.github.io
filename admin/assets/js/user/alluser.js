@@ -36,42 +36,51 @@ const displayUserData = (userData, tableBodyId) => {
   feather.replace(); // Refresh Feather icons after adding new elements
 };
 
-// Function to get all users
 const getAllUser = async () => {
-  const token = getTokenFromCookies("Login");
-
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "You are not logged in.",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
-
-  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
-
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-
-  const requestOptions = {
-    method: "GET",
-    headers: myHeaders,
-    redirect: "follow",
-  };
-
   try {
+    const token = getTokenFromCookies("Login");
+
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "You are not logged in.",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
+
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
     const response = await fetch(targetURL, requestOptions);
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch data. Status: ${response.status}`);
+    }
+
     const data = await response.json();
 
     if (data.status === 200) {
+      console.log("Data received from the server:", data.data);
+      
+      // Display user data
       displayUserData(data.data, "datatablesSimple");
 
       // Initialize DataTables here or at the end of your script
       new simpleDatatables.DataTable("#datatablesSimple");
     } else {
+      console.error("Server returned an error:", data.message);
+
       Swal.fire({
         icon: "error",
         title: "Error",
@@ -79,7 +88,14 @@ const getAllUser = async () => {
       });
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error("Error during data retrieval:", error);
+
+    // Handle the error gracefully, e.g., show a message to the user
+    Swal.fire({
+      icon: "error",
+      title: "Error",
+      text: "An error occurred while fetching data.",
+    });
   }
 };
 
