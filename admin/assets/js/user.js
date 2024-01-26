@@ -11,15 +11,26 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // Attach an event listener to the submit button
-  document
-    .querySelector('button[type="button"]')
-    .addEventListener("click", updateUserData);
+  const submitButton = document.querySelector('button[type="button"]');
+  if (submitButton) {
+    submitButton.addEventListener("click", updateUserData);
+  }
 
-  // Attach event listener using event delegation
-  document.body.addEventListener("click", function (event) {
-    if (event.target.tagName.toLowerCase() === "a" && event.target.dataset.action === "deleteUser") {
-      event.preventDefault();
-      confirmDeleteUser(event.target.dataset.nipp);
+  const userDataBody = document.querySelector("#datatablesSimple tbody");
+
+  // Attach event listener to handle edit and delete button clicks
+  userDataBody.addEventListener("click", function (event) {
+    if (event.target.tagName.toLowerCase() === "button") {
+      const action = event.target.dataset.action;
+      const nipp = event.target.dataset.nipp;
+
+      if (action === "deleteUser") {
+        event.preventDefault();
+        confirmDeleteUser(nipp);
+      } else if (action === "editUser") {
+        // Handle edit action as needed
+        // You might want to redirect or perform other actions for editing
+      }
     }
   });
 });
@@ -58,8 +69,7 @@ const getUserWithToken = async () => {
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -148,8 +158,7 @@ const updateUserData = async () => {
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/resetPassword";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/resetPassword";
 
     const nipp = document.getElementById("nipp").value;
     const nama = document.getElementById("nama").value;
@@ -185,8 +194,7 @@ const updateUserData = async () => {
 
     if (data.status === true) {
       showAlert("Success", "success", "User data updated successfully!", () => {
-        window.location.href =
-          "https://portsafe-apps.github.io/admin/user-management-list.html";
+        window.location.href = "https://portsafe-apps.github.io/admin/user-management-list.html";
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -198,34 +206,34 @@ const updateUserData = async () => {
 
 const displayUserData = (userData, userDataBody) => {
   try {
-    userDataBody.innerHTML = "";
+    if (userDataBody) {
+      userDataBody.innerHTML = "";
 
-    if (userData && userData.length > 0) {
-      userData.forEach((user) => {
-        const newRow = document.createElement("tr");
-        newRow.innerHTML = `
-          <td>${user.nipp}</td>
-          <td>${user.nama}</td>
-          <td>${user.jabatan}</td>
-          <td>${user.location.locationName}</td>
-          <td>${user.role}</td>
-          <td>${new Date(user.timestamp).toLocaleDateString()}</td>
-          <td>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark me-2" href="user-management-edit-user.html?nipp=${
-                user.nipp
-              }"><i data-feather="edit"></i></a>
-              <a class="btn btn-datatable btn-icon btn-transparent-dark" href="#!" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></a>
-          </td>
-        `;
-        userDataBody.appendChild(newRow);
-      });
-    } else {
-      const emptyRow = document.createElement("tr");
-      emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
-      userDataBody.appendChild(emptyRow);
+      if (userData && userData.length > 0) {
+        userData.forEach((user) => {
+          const newRow = document.createElement("tr");
+          newRow.innerHTML = `
+            <td>${user.nipp}</td>
+            <td>${user.nama}</td>
+            <td>${user.jabatan}</td>
+            <td>${user.location.locationName}</td>
+            <td>${user.role}</td>
+            <td>${new Date(user.timestamp).toLocaleDateString()}</td>
+            <td>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark" data-nipp="${user.nipp}" data-action="editUser"><i data-feather="edit"></i></button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></button>
+            </td>
+          `;
+          userDataBody.appendChild(newRow);
+        });
+      } else {
+        const emptyRow = document.createElement("tr");
+        emptyRow.innerHTML = '<td colspan="7">No user data found.</td>';
+        userDataBody.appendChild(emptyRow);
+      }
+
+      feather.replace();
     }
-
-    feather.replace();
   } catch (error) {
     console.error("Error:", error.message);
   }
