@@ -8,7 +8,6 @@ const showAlert = (message, type) => {
   });
 };
 
-
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {

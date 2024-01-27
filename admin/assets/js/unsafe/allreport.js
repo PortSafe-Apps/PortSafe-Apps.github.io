@@ -1,4 +1,4 @@
-const unsafeDataBody = document.querySelector("#datatablesSimple tbody");
+const reportDataBody = document.querySelector("#datatablesSimple tbody");
 
 const showAlert = (message, type) => {
     Swal.fire({
@@ -8,34 +8,34 @@ const showAlert = (message, type) => {
     });
   };
   
-const getTokenFromCookies = (cookieName) => {
-  const cookies = document.cookie.split(";");
-  for (const cookie of cookies) {
-    const [name, value] = cookie.trim().split("=");
-    if (name === cookieName) {
-      return value;
+  const getTokenFromCookies = (cookieName) => {
+    const cookies = document.cookie.split(";");
+    for (const cookie of cookies) {
+      const [name, value] = cookie.trim().split("=");
+      if (name === cookieName) {
+        return value;
+      }
     }
-  }
-  return null;
-};
+    return null;
+  };
 
-const getUnsafeWithToken = async () => {
+const getUnsafeReports = async () => {
   try {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-        // Tangani kesalahan autentikasi jika tidak ada token
-        Swal.fire({
-            icon: 'warning',
-            title: 'Authentication Error',
-            text: 'Kamu Belum Login!',
-        }).then(() => {
-            window.location.href = 'https://portsafe-apps.github.io/';
-        });
-        return;
+      Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Error',
+        text: 'Kamu Belum Login!',
+      }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/';
+      });
+      return;
     }
-    
-    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport"; // Adjust the API endpoint
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -50,7 +50,7 @@ const getUnsafeWithToken = async () => {
     const data = await response.json();
 
     if (data.status === true) {
-      displayUnsafeData(data.data, unsafeDataBody);
+      displayReportData(data.data, reportDataBody);
     } else {
       showAlert(data.message, "error");
     }
@@ -59,31 +59,35 @@ const getUnsafeWithToken = async () => {
   }
 };
 
-const displayUnsafeData = (unsafeData, unsafeDataBody) => {
+const displayReportData = (reportData, reportDataBody) => {
   try {
-    if (unsafeDataBody) {
-      unsafeDataBody.innerHTML = "";
+    if (reportDataBody) {
+      reportDataBody.innerHTML = "";
 
-      if (unsafeData && unsafeData.length > 0) {
-        unsafeData.forEach((unsafe) => {
+      if (reportData && reportData.length > 0) {
+        reportData.forEach((report) => {
           const newRow = document.createElement("tr");
           newRow.innerHTML = `
-            <td>${unsafe.reportid}</td>
-            <td>${unsafe.date}</td>
-            <td>${unsafe.time}</td>
-            <td>${unsafe.location.locationName}</td>
-            <td>${unsafe.area.areaName}</td>
+            <td>${report.reportid}</td>
+            <td>${report.date}</td>
+            <td>${report.time}</td>
+            <td>${report.location.locationName}</td>
+            <td>${report.area}</td>
             <td>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${unsafe.reportid}" data-action="detailUnsafe"><i data-feather="external-link"></i></button>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${unsafe.reportid}" data-action="deleteUnsafe"><i data-feather="trash-2"></i></button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${
+                  report.reportid
+                }" data-action="detailReport"><i data-feather="eye"></i> Detail</button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${
+                  report.reportid
+                }" data-action="deleteReport"><i data-feather="trash-2"></i> Delete</button>
             </td>
           `;
-          unsafeDataBody.appendChild(newRow);
+          reportDataBody.appendChild(newRow);
         });
       } else {
         const emptyRow = document.createElement("tr");
-        emptyRow.innerHTML = '<td colspan="7">Tidak ada data laporan ditemukan.</td>';
-        unsafeDataBody.appendChild(emptyRow);
+        emptyRow.innerHTML = '<td colspan="6">No report data found.</td>';
+        reportDataBody.appendChild(emptyRow);
       }
 
       feather.replace();
@@ -93,93 +97,95 @@ const displayUnsafeData = (unsafeData, unsafeDataBody) => {
   }
 };
 
-const deleteUnsafe = async (reportid) => {
-  const token = getTokenFromCookies("Login");
+const deleteReport = async (reportid) => {
+  try {
+    const token = getTokenFromCookies("Login");
 
-  if (!token) {
-    Swal.fire({
+    if (!token) {
+      Swal.fire({
         icon: 'warning',
         title: 'Authentication Error',
         text: 'Kamu Belum Login!',
-    }).then(() => {
+      }).then(() => {
         window.location.href = 'https://portsafe-apps.github.io/';
-    });
-    return;
-  }
+      });
+      return;
+    }
 
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe";
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe"; // Adjust the API endpoint
 
-  const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-  myHeaders.append("Content-Type", "application/json");
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+    myHeaders.append("Content-Type", "application/json");
 
-  const requestOptions = {
-    method: "DELETE",
-    headers: myHeaders,
-    body: JSON.stringify({ reportid: reportid }),
-    redirect: "follow",
-  };
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      body: JSON.stringify({ reportid: reportid }),
+      redirect: "follow",
+    };
 
-  try {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
     if (data.status === 200) {
-        Swal.fire({
-          title: "Success",
-          text: "Report deleted successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          GetAllReport();
-        });
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: data.message, 
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      }
+      Swal.fire({
+        title: "Success",
+        text: "Report deleted successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        getUnsafeReports();
+      });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: data.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
   } catch (error) {
     console.error("Error:", error);
   }
 };
 
-const detailUnsafe = (reportid) => {
-  window.location.href = `https://portsafe-apps.github.io/admin/detailreport.html?reportid=${reportid}`;
+const detailReport = (reportid) => {
+  window.location.href = `https://portsafe-apps.github.io/detail-report.html?reportid=${reportid}`;
 };
 
-const deleteUnsafeHandler = (reportid) => {
+const deleteReportHandler = (reportid) => {
   Swal.fire({
-    title: "Apakah Anda yakin?",
-    text: "Anda tidak dapat mengembalikannya!",
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Ya, hapus!",
+    confirmButtonText: "Yes, delete it!",
   }).then((result) => {
     if (result.isConfirmed) {
-      deleteUnsafe(reportid);
+      deleteReport(reportid);
     }
   });
 };
 
-document.getElementById("datatablesSimple").addEventListener("click", (event) => {
+document
+  .getElementById("datatablesSimple")
+  .addEventListener("click", (event) => {
     const target = event.target;
-    const detailButton = target.closest("[data-action='detailUnsafe']");
-    const deleteButton = target.closest("[data-action='deleteUnsafe']");
+    const detailButton = target.closest("[data-action='detailReport']");
+    const deleteButton = target.closest("[data-action='deleteReport']");
 
     if (detailButton) {
       const reportid = detailButton.getAttribute("data-reportid");
-      detailUnsafe(reportid);
+      detailReport(reportid);
     } else if (deleteButton) {
       const reportid = deleteButton.getAttribute("data-reportid");
-      deleteUnsafeHandler(reportid);
+      deleteReportHandler(reportid);
     }
   });
 
-
-getUnsafeWithToken();
+// Initial call to get all reports when the page loads
+getUnsafeReports();
