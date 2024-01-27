@@ -62,15 +62,6 @@ const searchCompromisedByReportid = async (reportid) => {
 };
 
 const populateForm = (data) => {
-  const setValue = (id, value) => {
-    const element = document.getElementById(id);
-    if (element) {
-      element.innerText = value;
-    } else {
-      console.error(`Element with ID "${id}" not found.`);
-    }
-  };
-
   setValue("noPelaporan", data.reportid);
   setValue("tanggal", data.date);
   setValue("waktu", data.time);
