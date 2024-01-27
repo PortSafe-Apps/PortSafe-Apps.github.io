@@ -1,10 +1,11 @@
 const compromisedDataBody = document.querySelector("#datatablesSimple tbody");
 
-const showAlert = (message, type, additionalInfo = "", callback) => {
-  console.log(message, type, additionalInfo);
-  if (typeof callback === "function") {
-    callback();
-  }
+const showAlert = (message, type) => {
+  Swal.fire({
+    icon: type,
+    title: 'Gagal',
+    text: message,
+  });
 };
 
 const getTokenFromCookies = (cookieName) => {
@@ -23,8 +24,12 @@ const getCompromisedWithToken = async () => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert("Kamu Belum Login!", "warning", "", () => {
-        window.location.href = "https://portsafe-apps.github.io/";
+      Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Error',
+          text: 'Kamu Belum Login!',
+      }).then(() => {
+          window.location.href = 'https://portsafe-apps.github.io/';
       });
       return;
     }
@@ -36,7 +41,7 @@ const getCompromisedWithToken = async () => {
     myHeaders.append("Login", token);
 
     const requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: myHeaders,
       redirect: "follow",
     };
@@ -94,15 +99,13 @@ const deleteCompromised = async (nipp) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    showAlert(
-      "Authentication Error",
-      "warning",
-      "You are not logged in.",
-      () => {
-        window.location.href =
-          "https://portsafe-apps.github.io/admin/compromisedreport.html";
-      }
-    );
+    Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Error',
+        text: 'Kamu Belum Login!',
+    }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/';
+    });
     return;
   }
 
@@ -116,7 +119,7 @@ const deleteCompromised = async (nipp) => {
   const requestOptions = {
     method: "DELETE",
     headers: myHeaders,
-    body: JSON.stringify({ nipp: nipp }),
+    body: JSON.stringify({ reportid: reportid }),
     redirect: "follow",
   };
 
@@ -126,7 +129,7 @@ const deleteCompromised = async (nipp) => {
 
     if (data.status === 200) {
       showAlert("Success", "success", "Report deleted successfully!", () => {
-        getAllCompromised(); //
+        GetAllReportCompromised(); //
       });
     } else {
       showAlert("Error", "error", data.message);
