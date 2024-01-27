@@ -29,7 +29,8 @@ const getUnsafeWithToken = async () => {
       return;
     }
 
-    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -72,12 +73,12 @@ const displayUnsafeData = (unsafeData, unsafeDataBody) => {
                 <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${unsafe.reportid}" data-action="deleteUnsafe"><i data-feather="trash-2"></i></button>
             </td>
           `;
-          compromisedDataBody.appendChild(newRow);
+          unsafeDataBody.appendChild(newRow);
         });
       } else {
         const emptyRow = document.createElement("tr");
         emptyRow.innerHTML = '<td colspan="7">No report data found.</td>';
-        compromisedDataBody.appendChild(emptyRow);
+        unsafeDataBody.appendChild(emptyRow);
       }
 
       feather.replace();
@@ -91,13 +92,20 @@ const deleteUnsafe = async (nipp) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    showAlert("Authentication Error", "warning", "You are not logged in.", () => {
-      window.location.href = "https://portsafe-apps.github.io/admin/unsafereport.html";
-    });
+    showAlert(
+      "Authentication Error",
+      "warning",
+      "You are not logged in.",
+      () => {
+        window.location.href =
+          "https://portsafe-apps.github.io/admin/unsafereport.html";
+      }
+    );
     return;
   }
 
-  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe";
+  const targetURL =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -106,7 +114,7 @@ const deleteUnsafe = async (nipp) => {
   const requestOptions = {
     method: "DELETE",
     headers: myHeaders,
-    body: JSON.stringify({ nipp: nipp }),
+    body: JSON.stringify({ reportid: reportid }),
     redirect: "follow",
   };
 
@@ -116,7 +124,7 @@ const deleteUnsafe = async (nipp) => {
 
     if (data.status === 200) {
       showAlert("Success", "success", "Report deleted successfully!", () => {
-        getAllUnsafe(); // 
+        getAllUnsafe(); 
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -147,18 +155,18 @@ const deleteUnsafeHandler = (reportid) => {
 };
 
 document.getElementById("datatablesSimple").addEventListener("click", (event) => {
-  const target = event.target;
-  const detailButton = target.closest("[data-action='detailUnsafe']");
-  const deleteButton = target.closest("[data-action='deleteUnsafe']");
+    const target = event.target;
+    const detailButton = target.closest("[data-action='detailUnsafe']");
+    const deleteButton = target.closest("[data-action='deleteUnsafe']");
 
-  if (detailButton) {
-    const reportid = detailButton.getAttribute("data-reportid");
-    detailUnsafe(reportid);
-  } else if (deleteButton) {
-    const reportid = deleteButton.getAttribute("data-reportid");
-    deleteUnsafeHandler(reportid);
-  }
-});
+    if (detailButton) {
+      const reportid = detailButton.getAttribute("data-reportid");
+      detailButton(reportid);
+    } else if (deleteButton) {
+      const reportid = deleteButton.getAttribute("data-reportid");
+      deleteUnsafeHandler(reportid);
+    }
+  });
 
-// Initial call to get all report when the page loads
+// Initial call to get all unsafe when the page loads
 getUnsafeWithToken();
