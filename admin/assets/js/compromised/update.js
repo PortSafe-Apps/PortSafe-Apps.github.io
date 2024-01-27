@@ -1,3 +1,25 @@
+document.addEventListener("DOMContentLoaded", function () {
+  const accordionBody = document.getElementById("accordionBody");
+  if (!accordionBody) {
+    console.error('Element with ID "accordionBody" not found.');
+    return;
+  }
+
+  const reportIdFromURL = new URLSearchParams(window.location.search).get(
+    "reportid"
+  );
+  if (reportIdFromURL) {
+    document.getElementById("noPelaporan").value = reportIdFromURL;
+    searchCompromisedByReportid(reportIdFromURL);
+  }
+
+  document
+    .getElementById("updateButton")
+    .addEventListener("click", (event) =>
+      updateCompromised(event, reportIdFromURL)
+    );
+});
+
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
@@ -63,7 +85,12 @@ const searchCompromisedByReportid = async (reportid) => {
 
 const populateForm = (data) => {
   const setValue = (id, value) => {
-    document.getElementById(id).innerText = value;
+    const element = document.getElementById(id);
+    if (element) {
+      element.innerText = value;
+    } else {
+      console.error(`Element with ID "${id}" not found.`);
+    }
   };
 
   setValue("noPelaporan", data.reportid);
@@ -75,43 +102,71 @@ const populateForm = (data) => {
   setValue("area", data.area.areaName);
 
   const descriptionElement = document.getElementById("deskripsiPengamatan");
-  descriptionElement.innerText = data.description;
+  if (descriptionElement) {
+    descriptionElement.innerText = data.description;
+  } else {
+    console.error('Element with ID "deskripsiPengamatan" not found.');
+  }
 
   const imageElement = document.getElementById("observasiPhoto");
-  imageElement.src = data.observationPhoto;
+  if (imageElement) {
+    imageElement.src = data.observationPhoto;
+  } else {
+    console.error('Element with ID "observasiPhoto" not found.');
+  }
 
   const accordionBody = document.getElementById("accordionBody");
-accordionBody.innerHTML = "";
-data.typeDangerousActions.forEach((type, index) => {
-    const subType = type.subTypes[0];
-    accordionBody.innerHTML += `<div class="accordion-item">
-                                      <h2 class="accordion-header" id="flush-heading${index}">
-                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${index}" aria-expanded="false" aria-controls="flush-collapse${index}">
-                                              ${type.typeName}
-                                          </button>
-                                      </h2>
-                                      <div id="flush-collapse${index}" class="accordion-collapse collapse" aria-labelledby="flush-heading${index}" data-bs-parent="#accordionFlushExample">
-                                          <div class="accordion-body"><span class="badge bg-danger">${subType}</span></div>
-                                      </div>
+  if (accordionBody) {
+    accordionBody.innerHTML = "";
+    data.typeDangerousActions.forEach((type, index) => {
+      const subType = type.subTypes[0];
+      accordionBody.innerHTML += `<div class="accordion-item">
+                                    <h2 class="accordion-header" id="flush-heading${index}">
+                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${index}" aria-expanded="false" aria-controls="flush-collapse${index}">
+                                        ${type.typeName}
+                                      </button>
+                                    </h2>
+                                    <div id="flush-collapse${index}" class="accordion-collapse collapse" aria-labelledby="flush-heading${index}" data-bs-parent="#accordionFlushExample">
+                                      <div class="accordion-body"><span class="badge bg-danger">${subType}</span></div>
+                                    </div>
                                   </div>`;
-});
+    });
+  } else {
+    console.error('Element with ID "accordionBody" not found.');
+  }
 
-  setValue("tindakanPerbaikanSegera", data.immediateAction);
+  const immediateElement = document.getElementById("tindakanPerbaikanSegera");
+  if (immediateElement) {
+    immediateElement.innerText = data.immediateAction;
+  } else {
+    console.error('Element with ID "Tindakan Pencegahan Segera" not found.');
+  }
 
-  const improvementPhotoElement = document.getElementById("improvementPhoto");
-  improvementPhotoElement.src = data.improvementPhoto;
+  const improvementElement = document.getElementById("improvementPhoto");
+  if (improvementElement) {
+    improvementElement.src = data.improvementPhoto;
+  } else {
+    console.error('Element with ID "improvementPhoto" not found.');
+  }
 
   const recomendationElement = document.getElementById("rekomendasi");
-  recomendationElement.innerText = data.recomendation;
+  if (recomendationElement) {
+    recomendationElement.innerText = data.recomendation;
+  } else {
+    console.error('Element with ID "rekomendasi" not found.');
+  }
 
-  const tindakLanjutTextarea = document.getElementById(
-    "exampleFormControlTextarea1"
-  );
-
+  const tindakLanjutTextarea = document.getElementById("TindakLanjut");
   if (tindakLanjutTextarea) {
     tindakLanjutTextarea.value = data.ActionDesc || "";
   } else {
-    console.error('Element with ID "exampleFormControlTextarea1" not found.');
+    console.error('Element with ID "TindakLanjut" not found.');
+  }
+  const hasilTindakLanjut = document.getElementById("hasilFotoTindakLanjut");
+  if (hasilTindakLanjut) {
+    hasilTindakLanjut.value = data.EvidencePhoto || "";
+  } else {
+    console.error('Element with ID "hasilTindakLanjut" not found.');
   }
 };
 
@@ -131,7 +186,10 @@ const updateCompromised = async (event, reportid) => {
     return;
   }
 
-  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/UpdateReportCompromised";
+  const EvidencePhotoUrl = document.getElementById("hasilFotoTindakLanjut").src;
+
+  const targetURL =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/UpdateReportCompromised";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -165,7 +223,8 @@ const updateCompromised = async (event, reportid) => {
         .innerText,
       improvementPhoto: document.getElementById("improvementPhoto").src,
       recomendation: document.getElementById("rekomendasiText").innerText,
-      ActionDesc: document.getElementById("exampleFormControlTextarea1").value,
+      ActionDesc: document.getElementById("TindakLanjut").value,
+      EvidencePhoto: EvidencePhotoUrl,
     }),
     redirect: "follow",
   };
@@ -187,12 +246,3 @@ const updateCompromised = async (event, reportid) => {
 };
 
 document.getElementById("compromisedForm").style.display = "block";
-
-const reportIdFromURL = new URLSearchParams(window.location.search).get("reportid");
-if (reportIdFromURL) {
-  document.getElementById("noPelaporan").value = reportIdFromURL;
-  searchCompromisedByReportid(reportIdFromURL);
-}
-
-document
-  .getElementById("updateButton").addEventListener("click", (event) => updateCompromised(event, compromisedIdFromURL));

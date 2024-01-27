@@ -191,18 +191,21 @@
 
                                     <!-- Tindakan Pencegahan Terulang Kembali Section -->
                                     <h3 class="text-primary">Tindakan Pencegahan Terulang Kembali</h3>
-                                    <h5 class="mb-2" id="rekomendasi">1. Rekomendasi</h5>
-                                    <p class="mb-3" id="rekomendasiText"></p>
+                                    <h5 class="mb-2">1. Rekomendasi</h5>
+                                    <p class="mb-3" id="rekomendasi"></p>
                                     <form id="compromisedForm">
                                         <div class="mb-3">
                                             <label class="h5 mb-1" for="tindakLanjutTextarea">2. Tindak Lanjut</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1"
+                                            <textarea class="form-control" id="TindakLanjut"
                                                 rows="3"></textarea>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="h5 mb-1" for="formFileMultiple" class="form-label">Bukti
+                                            <label class="h5 mb-1" for="fotoTindakLanjut" class="form-label">Bukti
                                                 Tindak Lanjut</label>
-                                            <input class="form-control" type="file" id="formFileMultiple" multiple>
+                                            <input class="form-control" type="file" id="fotoTindakLanjut" accept="image/*" data-jenis="tindaklanjut">
+                                        </div>
+                                        <div class="center">
+                                            <img id="hasilFotoTindakLanjut" src="" class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;">
                                         </div>
                                         <hr class="my-4" />
                                         <div class=" text-center">
@@ -234,6 +237,7 @@
         crossorigin="anonymous"></script>
     <script src="assets/js/scripts.js"></script>
     <script src="assets/js/compromised/update.js"></script>
+    <script src="assets/js/compromised/file-upload.js"></script>
     <!-- Logout Configuration -->
     <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
 
