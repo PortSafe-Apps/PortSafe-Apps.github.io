@@ -76,7 +76,7 @@ async function fetchDataFromServer(url, category) {
 
 // Unsafe Data Fetch
 const unsafeDataResponse = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport",
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
     "Unsafe Action"
 );
 

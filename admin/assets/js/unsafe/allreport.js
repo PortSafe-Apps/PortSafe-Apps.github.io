@@ -29,7 +29,7 @@ const getUnsafeReports = async () => {
         return;
       }
   
-      const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+      const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
   
       const myHeaders = new Headers();
       myHeaders.append("Login", token);
