@@ -131,108 +131,86 @@
                         <div class="card-body">
                             <div class="row justify-content-center">
                                 <div class="col-xxl-6 col-xl-8">
+                                    <!-- Detail Informasi Section -->
                                     <h3 class="text-primary">Detail Informasi</h3>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">No Pelaporan</div>
-                                        <div class="col">2023-K3-001</div>
+                                        <div class="col" id="noPelaporan"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Tanggal</div>
-                                        <div class="col">2024-01-15</div>
+                                        <div class="col" id="tanggal"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Waktu</div>
-                                        <div class="col">14:00 PM</div>
+                                        <div class="col" id="waktu"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Pengawas</div>
-                                        <div class="col">Fahira</div>
+                                        <div class="col" id="pengawas"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Jabatan</div>
-                                        <div class="col">Vice Precident</div>
+                                        <div class="col" id="jabatan"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Unit Kerja</div>
-                                        <div class="col">Branch Belawan</div>
+                                        <div class="col" id="unitKerja"></div>
                                     </div>
                                     <div class="row small text-dark">
                                         <div class="col-sm-3 text-truncate">Area</div>
-                                        <div class="col">Gudang</div>
+                                        <div class="col" id="area"></div>
                                     </div>
                                     <hr class="my-4" />
-                                </div>
-                                <div class="col-xxl-6 col-xl-8">
+                
+                                    <!-- Deskripsi Pengamatan Section -->
                                     <h3 class="text-primary">Deskripsi Pengamatan</h3>
-                                    <p class="mb-2 text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
-                                      <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
-                                          src="https://via.placeholder.com/150" alt="...">
-                                      </div>
+                                    <p class="mb-2 text-dark" id="deskripsiPengamatan"></p>
+                                    <div class="text-center">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="observasiPhoto"
+                                            src="" alt="Observation Photo">
+                                    </div>
                                     <hr class="my-4" />
-                                </div>
-                                <div class="col-xxl-6 col-xl-8">
+                
+                                    <!-- Jenis Tindakan Berbahaya Section -->
                                     <h3 class="text-primary">Jenis Tindakan Berbahaya</h3>
-                                    <div class="accordion accordion-flush" id="accordionFlushExample">
-                                        <div class="accordion-item">
-                                          <h2 class="accordion-header" id="flush-headingOne">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                                              Type 1
-                                            </button>
-                                          </h2>
-                                          <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                                            <div class="accordion-body"><span class="badge bg-danger">Subtype1</span></div>
-                                          </div>
-                                        </div>
-                                        <div class="accordion-item">
-                                          <h2 class="accordion-header" id="flush-headingTwo">
-                                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                                              Type 2
-                                            </button>
-                                          </h2>
-                                          <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                                            <div class="accordion-body"><span class="badge bg-danger">Subtype1</span></div>
-                                          </div>
-                                        </div>
-                                      </div>
+                                    <div class="accordion accordion-flush" id="accordionFlushExample" id="accordionBody">
+                                        <!-- Dynamically generated content from JavaScript will go here -->
+                                    </div>
                                     <hr class="my-4" />
-                                </div>
-                                <div class="col-xxl-6 col-xl-8">
+                
+                                    <!-- Tindakan Perbaikan Segera Section -->
                                     <h3 class="text-primary">Tindakan Perbaikan Segera</h3>
-                                    <p class="mb-3 text-dark">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                        incididunt ut labore et dolore magna aliqua.</p>
-                                      <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
-                                          src="https://via.placeholder.com/150" alt="...">
-                                      </div>
+                                    <p class="mb-3 text-dark" id="tindakanPerbaikanSegera"></p>
+                                    <div class="text-center">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="improvementPhoto"
+                                            src="" alt="Improvement Photo">
+                                    </div>
                                     <hr class="my-4" />
-                                </div>
-                                <div class="col-xxl-6 col-xl-8">
+                
+                                    <!-- Tindakan Pencegahan Terulang Kembali Section -->
                                     <h3 class="text-primary">Tindakan Pencegahan Terulang Kembali</h3>
-                                    <h5 class="mb-2">1. Rekomendasi</h5>
-                                    <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                                      incididunt ut labore et dolore magna aliqua.</p>
-                                    <form>
+                                    <h5 class="mb-2" id="rekomendasi">1. Rekomendasi</h5>
+                                    <p class="mb-3" id="rekomendasiText"></p>
+                                    <form id="compromisedForm">
                                         <div class="mb-3">
-                                            <label class="h5 mb-1" for="inputUsername">2. Tindak Lanjut</label>
+                                            <label class="h5 mb-1" for="tindakLanjutTextarea">2. Tindak Lanjut</label>
                                             <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
                                         </div>
                                         <div class="mb-3">
                                             <label class="h5 mb-1" for="formFileMultiple" class="form-label">Bukti Tindak Lanjut</label>
                                             <input class="form-control" type="file" id="formFileMultiple" multiple>
-                                          </div>
+                                        </div>
                                         <hr class="my-4" />
                                         <div class=" text-center">
-                                            <button class="btn btn-primary" type="button">Update</button>
+                                            <button class="btn btn-primary" type="button" id="updateButton">Update</button>
                                         </div>
                                     </form>
                                 </div>
-
                             </div>
                         </div>
                     </div>
-                </div>
+                </div> 
             </main>
             <footer class="footer-admin mt-auto footer-light">
                 <div class="container-xl px-4">
