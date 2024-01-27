@@ -130,7 +130,7 @@ const populateForm = (data) => {
     console.error('Element with ID "improvementPhoto" not found.');
   }
 
-  const recomendationElement = document.getElementById("rekomendasi");
+  const recomendationElement = document.getElementById("rekomendasiText");
   if (recomendationElement) {
     recomendationElement.innerText = data.recomendation;
   } else {

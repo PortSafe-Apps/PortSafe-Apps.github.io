@@ -77,10 +77,7 @@ function generateRandomID() {
   
     const fileName = files[0].name;
   
-    // Update elements directly without modified date, size, and type
-    const fileDataElement = event.target.closest('.file-data');
-    const uploadFileDataElement = fileDataElement.nextElementSibling;
-  
+
     uploadFileDataElement.classList.remove("disabled");
     document.querySelector(".upload-file-name").innerHTML = fileName;
   }
