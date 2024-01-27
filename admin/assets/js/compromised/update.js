@@ -74,7 +74,7 @@ const populateForm = (data) => {
   setValue("noPelaporan", data.reportid);
   setValue("tanggal", data.date);
   setValue("waktu", data.time);
-  setValue("pengawas", `${data.user.nama} - ${data.user.jabatan}`);
+  setValue("pengawas", `${data.user.nama}`);
   setValue("jabatan", data.user.jabatan);
   setValue("unitKerja", data.location.locationName);
   setValue("area", data.area.areaName);
@@ -94,20 +94,23 @@ const populateForm = (data) => {
   }
 
   const accordionBody = document.getElementById("accordionBody");
+
   if (accordionBody) {
     accordionBody.innerHTML = "";
+
     data.typeDangerousActions.forEach((type, index) => {
-      const subType = type.subTypes[0];
+      const subTypesHtml = type.subTypes.map((subType) => `<span class="badge bg-danger">${subType}</span>`).join("");
+
       accordionBody.innerHTML += `<div class="accordion-item">
-                                    <h2 class="accordion-header" id="flush-heading${index}">
-                                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${index}" aria-expanded="false" aria-controls="flush-collapse${index}">
-                                        ${type.typeName}
-                                      </button>
-                                    </h2>
-                                    <div id="flush-collapse${index}" class="accordion-collapse collapse" aria-labelledby="flush-heading${index}" data-bs-parent="#accordionFlushExample">
-                                      <div class="accordion-body"><span class="badge bg-danger">${subType}</span></div>
-                                    </div>
-                                  </div>`;
+                                  <h2 class="accordion-header" id="flush-heading${index}">
+                                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapse${index}" aria-expanded="false" aria-controls="flush-collapse${index}">
+                                      ${type.typeName}
+                                    </button>
+                                  </h2>
+                                  <div id="flush-collapse${index}" class="accordion-collapse collapse" aria-labelledby="flush-heading${index}" data-bs-parent="#accordionFlushExample">
+                                    <div class="accordion-body">${subTypesHtml}</div>
+                                  </div>
+                                </div>`;
     });
   } else {
     console.error('Element with ID "accordionBody" not found.');
@@ -224,21 +227,24 @@ const updateCompromised = async (event, reportid) => {
 };
 
 document.getElementById("compromisedForm").style.display = "block";
-  // const accordionBody = document.getElementById("accordionBody");
-  // console.log("Accordion Body:", accordionBody); // Add this line for debugging
+// const accordionBody = document.getElementById("accordionBody");
+// console.log("Accordion Body:", accordionBody); // Add this line for debugging
 
-  // if (!accordionBody) {
-  //   console.error('Element with ID "accordionBody" not found.');
-  //   return;
-  // }
+// if (!accordionBody) {
+//   console.error('Element with ID "accordionBody" not found.');
+//   return;
+// }
 
-  const reportIdFromURL = new URLSearchParams(window.location.search).get(
-    "reportid"
+const reportIdFromURL = new URLSearchParams(window.location.search).get(
+  "reportid"
+);
+if (reportIdFromURL) {
+  document.getElementById("noPelaporan").value = reportIdFromURL;
+  searchCompromisedByReportid(reportIdFromURL);
+}
+
+document
+  .getElementById("updateButton")
+  .addEventListener("click", (event) =>
+    updateCompromised(event, reportIdFromURL)
   );
-  if (reportIdFromURL) {
-    document.getElementById("noPelaporan").value = reportIdFromURL;
-    searchCompromisedByReportid(reportIdFromURL);
-  }
-
-  document.getElementById("updateButton").addEventListener("click", (event) =>updateCompromised(event, reportIdFromURL));
-
