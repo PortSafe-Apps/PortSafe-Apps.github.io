@@ -107,7 +107,7 @@ const getActiveUser = async () => {
   const compromised =
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
   const unsafe =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);

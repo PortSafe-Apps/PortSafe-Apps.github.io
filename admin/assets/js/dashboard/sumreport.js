@@ -145,7 +145,7 @@ const calculateAndDisplayTotalUnsafeCompromisedReports = async () => {
     }
 
     const compromised = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised';
-    const unsafe = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport';
+    const unsafe = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe';
 
     // Call the function for the first URL and get the number of compromised reports
     const totalReportsCompromised = await getCompromisedReports(token, compromised);
