@@ -222,7 +222,6 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
-
 // Process Data for Location Bar Chart
 function processDataForLocationBarChart(dataResponse) {
     const locationCounts = {};
@@ -240,32 +239,49 @@ function processDataForLocationBarChart(dataResponse) {
     return locationCounts;
 }
 
-// Unsafe Location Data Processing
 const locationCountsUnsafe = processDataForLocationBarChart(unsafeDataResponse);
 
-// Compromised Location Data Processing
 const locationCountsCompromised = processDataForLocationBarChart(compromisedDataResponse);
+
+const manualLocationNames = [
+    "Kantor Pusat SPMT",
+    "Branch Dumai",
+    "Branch Belawan",
+    "Branch Tanjung Intan",
+    "Branch Bumiharjo - Bagendang",
+    "Branch Tanjung Wangi",
+    "Branch Makassar",
+    "Branch Balikpapan",
+    "Branch Trisakti - Mekar Putih",
+    "Branch Jamrud Nilam Mirah",
+    "Branch Lembar - Badas",
+    "Branch Tanjung Emas",
+    "Branch ParePare - Garongkong",
+    "Branch Lhokseumawe",
+    "Branch Malahayati",
+    "Branch Gresik",
+];
 
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: Object.keys(locationCountsUnsafe), // or use Object.keys(locationCountsCompromised) for compromised data
+        labels: manualLocationNames,
         datasets: [
             {
                 label: "Unsafe",
                 backgroundColor: "rgba(0, 97, 242, 0.8)",
                 borderColor: "rgba(0, 97, 242, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsUnsafe),
+                data: manualLocationNames.map(name => locationCountsUnsafe[name] || 0),
             },
             {
                 label: "Compromised",
                 backgroundColor: "rgba(255, 99, 132, 0.8)",
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsCompromised),
+                data: manualLocationNames.map(name => locationCountsCompromised[name] || 0),
             },
         ],
     },
@@ -325,4 +341,3 @@ var horizontalBarChart = new Chart(ctxLocation, {
         },
     },
 });
-
