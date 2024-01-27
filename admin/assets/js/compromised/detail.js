@@ -166,14 +166,6 @@ const displayDetail = (data) => {
   }
 };
 
-// const accordionBody = document.getElementById("accordionBody");
-// console.log("Accordion Body:", accordionBody); // Add this line for debugging
-
-// if (!accordionBody) {
-//     console.error('Element with ID "accordionBody" not found.');
-//     return;
-// }
-
 const reportIdFromURL = new URLSearchParams(window.location.search).get(
   "reportid"
 );
