@@ -88,60 +88,59 @@ const getUnsafeReports = async () => {
     }
   };
 
-const deleteReport = async (reportid) => {
-  try {
-    const token = getTokenFromCookies("Login");
-
-    if (!token) {
-      Swal.fire({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
-        window.location.href = "https://portsafe-apps.github.io/";
-      });
-      return;
+  const deleteReport = async (reportid) => {
+    try {
+      const token = getTokenFromCookies("Login");
+  
+      if (!token) {
+        Swal.fire({
+          icon: "warning",
+          title: "Authentication Error",
+          text: "Kamu Belum Login!",
+        }).then(() => {
+          window.location.href = "https://portsafe-apps.github.io/";
+        });
+        return;
+      }
+  
+      const targetURL =
+        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe"; // Adjust the API endpoint
+  
+      const myHeaders = new Headers();
+      myHeaders.append("Login", token);
+      myHeaders.append("Content-Type", "application/json");
+  
+      const requestOptions = {
+        method: "DELETE",
+        headers: myHeaders,
+        body: JSON.stringify({ reportid: reportid }),
+        redirect: "follow",
+      };
+  
+      const response = await fetch(targetURL, requestOptions);
+      const data = await response.json();
+  
+      if (data.status === 200) {
+        await getUnsafeReports(); 
+        Swal.fire({
+          title: "Success",
+          text: "Report deleted successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: data.message,
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
+    } catch (error) {
+      console.error("Error:", error);
     }
-
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe"; // Adjust the API endpoint
-
-    const myHeaders = new Headers();
-    myHeaders.append("Login", token);
-    myHeaders.append("Content-Type", "application/json");
-
-    const requestOptions = {
-      method: "DELETE",
-      headers: myHeaders,
-      body: JSON.stringify({ reportid: reportid }),
-      redirect: "follow",
-    };
-
-    const response = await fetch(targetURL, requestOptions);
-    const data = await response.json();
-
-    if (data.status === 200) {
-      Swal.fire({
-        title: "Success",
-        text: "Report deleted successfully!",
-        icon: "success",
-        confirmButtonText: "OK",
-      }).then(() => {
-        getUnsafeReports();
-      });
-    } else {
-      Swal.fire({
-        title: "Error",
-        text: data.message,
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    }
-  } catch (error) {
-    console.error("Error:", error);
-  }
-};
-
+  };
+  
 const detailReport = (reportid) => {
   window.location.href = `https://portsafe-apps.github.io/detail-report.html?reportid=${reportid}`;
 };

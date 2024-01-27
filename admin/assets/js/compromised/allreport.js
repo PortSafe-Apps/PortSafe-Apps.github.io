@@ -19,7 +19,7 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const getCompromisedWithToken = async () => {
+const getCompromisedReports = async () => {
   try {
     const token = getTokenFromCookies("Login");
 
@@ -101,7 +101,7 @@ const displayCompromisedData = (data, compromisedDataBody) => {
   }
 };
 
-const deleteCompromised = async (nipp) => {
+const deleteCompromised = async (reportid) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -134,9 +134,9 @@ const deleteCompromised = async (nipp) => {
     const data = await response.json();
 
     if (data.status === 200) {
-      showAlert("Success", "success", "Report deleted successfully!", () => {
-        GetAllReportCompromised(); //
-      });
+      // Wait for the deletion to be completed before refreshing the data
+      await getCompromisedReports();
+      showAlert("Success", "success", "Report deleted successfully!");
     } else {
       showAlert("Error", "error", data.message);
     }
@@ -144,6 +144,7 @@ const deleteCompromised = async (nipp) => {
     console.error("Error:", error);
   }
 };
+
 
 const detailCompromised = (reportid) => {
   window.location.href = `https://portsafe-apps.github.io/admin/detailreport.html?reportid=${reportid}`;
@@ -190,4 +191,4 @@ document
   });
 
 // Initial call to get all report when the page loads
-getCompromisedWithToken();
+getCompromisedReports();
