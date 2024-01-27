@@ -77,7 +77,7 @@ const displayUnsafeData = (unsafeData, unsafeDataBody) => {
         });
       } else {
         const emptyRow = document.createElement("tr");
-        emptyRow.innerHTML = '<td colspan="7">No report data found.</td>';
+        emptyRow.innerHTML = '<td colspan="7">Tidak ada data laporan ditemukan.</td>';
         unsafeDataBody.appendChild(emptyRow);
       }
 
@@ -88,14 +88,14 @@ const displayUnsafeData = (unsafeData, unsafeDataBody) => {
   }
 };
 
-const deleteUnsafe = async (nipp) => {
+const deleteUnsafe = async (reportid) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
     showAlert(
-      "Authentication Error",
+      "Error Otentikasi",
       "warning",
-      "You are not logged in.",
+      "Anda belum login.",
       () => {
         window.location.href =
           "https://portsafe-apps.github.io/admin/unsafereport.html";
@@ -123,8 +123,8 @@ const deleteUnsafe = async (nipp) => {
     const data = await response.json();
 
     if (data.status === 200) {
-      showAlert("Success", "success", "Report deleted successfully!", () => {
-        getAllUnsafe(); 
+      showAlert("Berhasil", "success", "Laporan berhasil dihapus!", () => {
+        getUnsafeWithToken(); 
       });
     } else {
       showAlert("Error", "error", data.message);
@@ -140,13 +140,13 @@ const detailUnsafe = (reportid) => {
 
 const deleteUnsafeHandler = (reportid) => {
   Swal.fire({
-    title: "Are you sure?",
-    text: "You won't be able to revert this!",
+    title: "Apakah Anda yakin?",
+    text: "Anda tidak dapat mengembalikannya!",
     icon: "warning",
     showCancelButton: true,
     confirmButtonColor: "#3085d6",
     cancelButtonColor: "#d33",
-    confirmButtonText: "Yes, delete it!",
+    confirmButtonText: "Ya, hapus!",
   }).then((result) => {
     if (result.isConfirmed) {
       deleteUnsafe(reportid);
@@ -161,12 +161,12 @@ document.getElementById("datatablesSimple").addEventListener("click", (event) =>
 
     if (detailButton) {
       const reportid = detailButton.getAttribute("data-reportid");
-      detailButton(reportid);
+      detailUnsafe(reportid);
     } else if (deleteButton) {
       const reportid = deleteButton.getAttribute("data-reportid");
       deleteUnsafeHandler(reportid);
     }
   });
 
-// Initial call to get all unsafe when the page loads
+// Panggilan awal untuk mendapatkan semua data laporan ketika halaman dimuat
 getUnsafeWithToken();
