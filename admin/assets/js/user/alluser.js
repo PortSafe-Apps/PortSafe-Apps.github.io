@@ -1,12 +1,5 @@
 const userDataBody = document.querySelector("#datatablesSimple tbody");
 
-const showAlert = (message, type, additionalInfo = "", callback) => {
-  console.log(message, type, additionalInfo);
-  if (typeof callback === "function") {
-    callback();
-  }
-};
-
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
@@ -23,13 +16,18 @@ const getUserWithToken = async () => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert("Kamu Belum Login!", "warning", "", () => {
-        window.location.href = "https://portsafe-apps.github.io/";
+      Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Error',
+          text: 'Kamu Belum Login!',
+      }).then(() => {
+          window.location.href = 'https://portsafe-apps.github.io/';
       });
       return;
-    }
+  }
 
-    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getAllUser";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -69,8 +67,12 @@ const displayUserData = (userData, userDataBody) => {
             <td>${user.role}</td>
             <td>${new Date(user.timestamp).toLocaleDateString()}</td>
             <td>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark edit-link" data-nipp="${user.nipp}" data-action="editUser"><i data-feather="edit"></i></button>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark edit-link" data-nipp="${
+                  user.nipp
+                }" data-action="editUser"><i data-feather="edit"></i></button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-nipp="${
+                  user.nipp
+                }" data-action="deleteUser"><i data-feather="trash-2"></i></button>
             </td>
           `;
           userDataBody.appendChild(newRow);
@@ -92,13 +94,18 @@ const deleteUser = async (nipp) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    showAlert("Authentication Error", "warning", "You are not logged in.", () => {
-      window.location.href = "https://portsafe-apps.github.io/admin/user-management-list.html";
+    Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Error',
+        text: 'Kamu Belum Login!',
+    }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/';
     });
     return;
-  }
+}
 
-  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/deleteUser";
+  const targetURL =
+    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/deleteUser";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -116,11 +123,22 @@ const deleteUser = async (nipp) => {
     const data = await response.json();
 
     if (data.status === 200) {
-      showAlert("Success", "success", "User deleted successfully!", () => {
-        getAllUser(); // Assuming getAllUser is defined somewhere
+      Swal.fire({
+        title: "Success",
+        text: "User deleted successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        // Assuming getAllUser is defined somewhere
+        getAllUser();
       });
     } else {
-      showAlert("Error", "error", data.message);
+      Swal.fire({
+        title: "Error",
+        text: data.message, // Display the error message from the server
+        icon: "error",
+        confirmButtonText: "OK",
+      });
     }
   } catch (error) {
     console.error("Error:", error);
@@ -147,19 +165,21 @@ const deleteUserHandler = (nipp) => {
   });
 };
 
-document.getElementById("datatablesSimple").addEventListener("click", (event) => {
-  const target = event.target;
-  const editButton = target.closest("[data-action='editUser']");
-  const deleteButton = target.closest("[data-action='deleteUser']");
+document
+  .getElementById("datatablesSimple")
+  .addEventListener("click", (event) => {
+    const target = event.target;
+    const editButton = target.closest("[data-action='editUser']");
+    const deleteButton = target.closest("[data-action='deleteUser']");
 
-  if (editButton) {
-    const nipp = editButton.getAttribute("data-nipp");
-    editUser(nipp);
-  } else if (deleteButton) {
-    const nipp = deleteButton.getAttribute("data-nipp");
-    deleteUserHandler(nipp);
-  }
-});
+    if (editButton) {
+      const nipp = editButton.getAttribute("data-nipp");
+      editUser(nipp);
+    } else if (deleteButton) {
+      const nipp = deleteButton.getAttribute("data-nipp");
+      deleteUserHandler(nipp);
+    }
+  });
 
 // Initial call to get all users when the page loads
 getUserWithToken();

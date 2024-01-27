@@ -1,12 +1,5 @@
 const unsafeDataBody = document.querySelector("#datatablesSimple tbody");
 
-const showAlert = (message, type, additionalInfo = "", callback) => {
-  console.log(message, type, additionalInfo);
-  if (typeof callback === "function") {
-    callback();
-  }
-};
-
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
@@ -23,12 +16,17 @@ const getUnsafeWithToken = async () => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert("Kamu Belum Login!", "warning", "", () => {
-        window.location.href = "https://portsafe-apps.github.io/";
-      });
-      return;
+        // Tangani kesalahan autentikasi jika tidak ada token
+        Swal.fire({
+            icon: 'warning',
+            title: 'Authentication Error',
+            text: 'Kamu Belum Login!',
+        }).then(() => {
+            window.location.href = 'https://portsafe-apps.github.io/';
+        });
+        return;
     }
-
+    
     const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
     const myHeaders = new Headers();
@@ -91,15 +89,13 @@ const deleteUnsafe = async (reportid) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
-    showAlert(
-      "Error Otentikasi",
-      "warning",
-      "Anda belum login.",
-      () => {
-        window.location.href =
-          "https://portsafe-apps.github.io/admin/unsafereport.html";
-      }
-    );
+    Swal.fire({
+        icon: 'warning',
+        title: 'Authentication Error',
+        text: 'Kamu Belum Login!',
+    }).then(() => {
+        window.location.href = 'https://portsafe-apps.github.io/';
+    });
     return;
   }
 
@@ -122,12 +118,22 @@ const deleteUnsafe = async (reportid) => {
     const data = await response.json();
 
     if (data.status === 200) {
-      showAlert("Berhasil", "success", "Laporan berhasil dihapus!", () => {
-        getUnsafeWithToken(); 
-      });
-    } else {
-      showAlert("Error", "error", data.message);
-    }
+        Swal.fire({
+          title: "Success",
+          text: "Report deleted successfully!",
+          icon: "success",
+          confirmButtonText: "OK",
+        }).then(() => {
+          GetAllReport();
+        });
+      } else {
+        Swal.fire({
+          title: "Error",
+          text: data.message, 
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+      }
   } catch (error) {
     console.error("Error:", error);
   }
