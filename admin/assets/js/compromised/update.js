@@ -21,7 +21,7 @@ const showAlert = (message, type = "success") => {
   });
 };
 
-const searchCompromisedById = async (reportid) => {
+const searchCompromisedByReportid = async (reportid) => {
   const token = getTokenFromCookies("Login");
 
   if (!token) {
@@ -188,16 +188,11 @@ const updateCompromised = async (event, reportid) => {
 
 document.getElementById("compromisedForm").style.display = "block";
 
-const reportIdFromURL = new URLSearchParams(window.location.search).get(
-  "reportid"
-);
+const reportIdFromURL = new URLSearchParams(window.location.search).get("reportid");
 if (reportIdFromURL) {
   document.getElementById("reportIdInput").value = reportIdFromURL;
-  searchCompromisedById(reportIdFromURL);
+  searchCompromisedByReportid(reportIdFromURL);
 }
 
 document
-  .getElementById("updateButton")
-  .addEventListener("click", (event) =>
-    updateCompromised(event, compromisedIdFromURL)
-  );
+  .getElementById("updateButton").addEventListener("click", (event) => updateCompromised(event, compromisedIdFromURL));
