@@ -50,7 +50,7 @@ const getCompromisedWithToken = async () => {
     const data = await response.json();
 
     if (data.status === true) {
-      displayCompromisedData(data.data, compromisedDataBody);
+      displayCompromisedData(data, compromisedDataBody);
     } else {
       showAlert(data.message, "error");
     }

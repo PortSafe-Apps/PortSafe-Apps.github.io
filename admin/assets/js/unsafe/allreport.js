@@ -69,10 +69,10 @@ const getUnsafeReports = async () => {
               <td>${report.date}</td>
               <td>${report.time}</td>
               <td>${report.location.locationName}</td>
-              <td>${report.area}</td>
+              <td>${report.area.areaName}</td>
               <td>
-                  <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${report.reportid}" data-action="detailReport"><i data-feather="eye"></i> Detail</button>
-                  <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${report.reportid}" data-action="deleteReport"><i data-feather="trash-2"></i> Delete</button>
+                  <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${report.reportid}" data-action="detailReport"><i data-feather="eye"></i></button>
+                  <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${report.reportid}" data-action="deleteReport"><i data-feather="trash-2"></i></button>
               </td>
             `;
             reportDataBody.appendChild(newRow);
@@ -164,9 +164,7 @@ const deleteReportHandler = (reportid) => {
   });
 };
 
-document
-  .getElementById("datatablesSimple")
-  .addEventListener("click", (event) => {
+document.getElementById("datatablesSimple").addEventListener("click", (event) => {
     const target = event.target;
     const detailButton = target.closest("[data-action='detailReport']");
     const deleteButton = target.closest("[data-action='deleteReport']");
