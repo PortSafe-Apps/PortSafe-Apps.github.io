@@ -3,7 +3,7 @@ const compromisedDataBody = document.querySelector("#datatablesSimple tbody");
 const showAlert = (message, type) => {
   Swal.fire({
     icon: type,
-    title: 'Gagal',
+    title: "Gagal",
     text: message,
   });
 };
@@ -25,11 +25,11 @@ const getCompromisedWithToken = async () => {
 
     if (!token) {
       Swal.fire({
-          icon: 'warning',
-          title: 'Authentication Error',
-          text: 'Kamu Belum Login!',
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
       }).then(() => {
-          window.location.href = 'https://portsafe-apps.github.io/';
+        window.location.href = "https://portsafe-apps.github.io/";
       });
       return;
     }
@@ -67,19 +67,25 @@ const displayCompromisedData = (data, compromisedDataBody) => {
       if (data && data.length > 0) {
         data.forEach((compromised) => {
           const newRow = document.createElement("tr");
+
+          // Set badge background color based on status
+          const badgeBgColor =
+            compromised.status === "opened" ? "bg-danger" : "bg-success";
+
           newRow.innerHTML = `
             <td>${compromised.reportid}</td>
             <td>${compromised.date}</td>
             <td>${compromised.time}</td>
             <td>${compromised.location.locationName}</td>
             <td>${compromised.area.areaName}</td>
-            <td>${compromised.status}</td>
+            <td><div class="badge ${badgeBgColor} text-white rounded-pill">${compromised.status}</div></td>
             <td>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${compromised.reportid}" data-action="detailCompromised"><i data-feather="external-link"></i></button>
+                <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${compromised.reportid}" data-action="detailCompromised"><i data-feather="eye"></i></button>
                 <button class="btn btn-datatable btn-icon btn-transparent-dark edit-link" data-reportid="${compromised.reportid}" data-action="editCompromised"><i data-feather="edit"></i></button>
                 <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${compromised.reportid}" data-action="deleteCompromised"><i data-feather="trash-2"></i></button>
             </td>
           `;
+
           compromisedDataBody.appendChild(newRow);
         });
       } else {
@@ -100,11 +106,11 @@ const deleteCompromised = async (nipp) => {
 
   if (!token) {
     Swal.fire({
-        icon: 'warning',
-        title: 'Authentication Error',
-        text: 'Kamu Belum Login!',
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
     }).then(() => {
-        window.location.href = 'https://portsafe-apps.github.io/';
+      window.location.href = "https://portsafe-apps.github.io/";
     });
     return;
   }
@@ -163,23 +169,25 @@ const deleteCompromisedHandler = (reportid) => {
   });
 };
 
-document.getElementById("datatablesSimple").addEventListener("click", (event) => {
-  const target = event.target;
-  const detailButton = target.closest("[data-action='detailCompromised']");
-  const editButton = target.closest("[data-action='editCompromised']");
-  const deleteButton = target.closest("[data-action='deleteCompromised']");
+document
+  .getElementById("datatablesSimple")
+  .addEventListener("click", (event) => {
+    const target = event.target;
+    const detailButton = target.closest("[data-action='detailCompromised']");
+    const editButton = target.closest("[data-action='editCompromised']");
+    const deleteButton = target.closest("[data-action='deleteCompromised']");
 
-  if (detailButton) {
-    const reportid = detailButton.getAttribute("data-reportid");
-    detailCompromised(reportid);
-  } else if (editButton) {
-    const reportid = editButton.getAttribute("data-reportid");
-    editCompromised(reportid);
-  } else if (deleteButton) {
-    const reportid = deleteButton.getAttribute("data-reportid");
-    deleteCompromisedHandler(reportid);
-  }
-});
+    if (detailButton) {
+      const reportid = detailButton.getAttribute("data-reportid");
+      detailCompromised(reportid);
+    } else if (editButton) {
+      const reportid = editButton.getAttribute("data-reportid");
+      editCompromised(reportid);
+    } else if (deleteButton) {
+      const reportid = deleteButton.getAttribute("data-reportid");
+      deleteCompromisedHandler(reportid);
+    }
+  });
 
 // Initial call to get all report when the page loads
 getCompromisedWithToken();
