@@ -59,13 +59,13 @@ const getCompromisedWithToken = async () => {
   }
 };
 
-const displayCompromisedData = (compromisedData, compromisedDataBody) => {
+const displayCompromisedData = (data, compromisedDataBody) => {
   try {
     if (compromisedDataBody) {
       compromisedDataBody.innerHTML = "";
 
-      if (compromisedData && compromisedData.length > 0) {
-        compromisedData.forEach((compromised) => {
+      if (data && data.length > 0) {
+        data.forEach((compromised) => {
           const newRow = document.createElement("tr");
           newRow.innerHTML = `
             <td>${compromised.reportid}</td>

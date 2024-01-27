@@ -3,7 +3,7 @@ const reportDataBody = document.querySelector("#datatablesSimple tbody");
 const showAlert = (message, type) => {
   Swal.fire({
     icon: type,
-    title: 'Gagal',
+    title: "Gagal",
     text: message,
   });
 };
@@ -24,12 +24,13 @@ const getUnsafeReports = async () => {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      showAlert('Kamu Belum Login!', 'warning');
-      window.location.href = 'https://portsafe-apps.github.io/';
+      showAlert("Kamu Belum Login!", "warning");
+      window.location.href = "https://portsafe-apps.github.io/";
       return;
     }
 
-    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -43,9 +44,8 @@ const getUnsafeReports = async () => {
 
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
-    console.log("Received Data:", data); // Log the received data
 
-    if (data.status === 200) {
+    if (data.status === true) {
       displayReportData(data.data, reportDataBody);
     } else {
       showAlert(data.message, "error");
@@ -57,7 +57,6 @@ const getUnsafeReports = async () => {
 
 const displayReportData = (data, reportDataBody) => {
   try {
-    console.log("displayReportData - data:", data); // Log the data
     if (reportDataBody) {
       reportDataBody.innerHTML = "";
 
@@ -65,16 +64,16 @@ const displayReportData = (data, reportDataBody) => {
         data.forEach((report) => {
           const newRow = document.createElement("tr");
           newRow.innerHTML = `
-            <td>${report.reportid}</td>
-            <td>${report.date}</td>
-            <td>${report.time}</td>
-            <td>${report.location.locationName}</td>
-            <td>${report.area}</td>
-            <td>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${report.reportid}" data-action="detailReport"><i data-feather="eye"></i> Detail</button>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${report.reportid}" data-action="deleteReport"><i data-feather="trash-2"></i> Delete</button>
-            </td>
-          `;
+              <td>${report.reportid}</td>
+              <td>${report.date}</td>
+              <td>${report.time}</td>
+              <td>${report.location.locationName}</td>
+              <td>${report.area}</td>
+              <td>
+                  <button class="btn btn-datatable btn-icon btn-transparent-dark detail-link" data-reportid="${report.reportid}" data-action="detailReport"><i data-feather="eye"></i> Detail</button>
+                  <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-reportid="${report.reportid}" data-action="deleteReport"><i data-feather="trash-2"></i> Delete</button>
+              </td>
+            `;
           reportDataBody.appendChild(newRow);
         });
       } else {
@@ -91,94 +90,94 @@ const displayReportData = (data, reportDataBody) => {
 };
 
 const deleteReport = async (reportid) => {
-    try {
-      const token = getTokenFromCookies("Login");
-  
-      if (!token) {
-        Swal.fire({
-          icon: 'warning',
-          title: 'Authentication Error',
-          text: 'Kamu Belum Login!',
-        }).then(() => {
-          window.location.href = 'https://portsafe-apps.github.io/';
-        });
-        return;
-      }
-  
-      const targetURL =
-        "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe"; // Adjust the API endpoint
-  
-      const myHeaders = new Headers();
-      myHeaders.append("Login", token);
-      myHeaders.append("Content-Type", "application/json");
-  
-      const requestOptions = {
-        method: "DELETE",
-        headers: myHeaders,
-        body: JSON.stringify({ reportid: reportid }),
-        redirect: "follow",
-      };
-  
-      const response = await fetch(targetURL, requestOptions);
-      const data = await response.json();
-  
-      if (data.status === 200) {
-        Swal.fire({
-          title: "Success",
-          text: "Report deleted successfully!",
-          icon: "success",
-          confirmButtonText: "OK",
-        }).then(() => {
-          getUnsafeReports();
-        });
-      } else {
-        Swal.fire({
-          title: "Error",
-          text: data.message,
-          icon: "error",
-          confirmButtonText: "OK",
-        });
-      }
-    } catch (error) {
-      console.error("Error:", error);
-    }
-  };
-  
-  const detailReport = (reportid) => {
-    window.location.href = `https://portsafe-apps.github.io/detail-report.html?reportid=${reportid}`;
-  };
-  
-  const deleteReportHandler = (reportid) => {
-    Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#3085d6",
-      cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, delete it!",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        deleteReport(reportid);
-      }
-    });
-  };
-  
+  try {
+    const token = getTokenFromCookies("Login");
 
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
+
+    const targetURL =
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportUnsafe"; // Adjust the API endpoint
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+    myHeaders.append("Content-Type", "application/json");
+
+    const requestOptions = {
+      method: "DELETE",
+      headers: myHeaders,
+      body: JSON.stringify({ reportid: reportid }),
+      redirect: "follow",
+    };
+
+    const response = await fetch(targetURL, requestOptions);
+    const data = await response.json();
+
+    if (data.status === 200) {
+      Swal.fire({
+        title: "Success",
+        text: "Report deleted successfully!",
+        icon: "success",
+        confirmButtonText: "OK",
+      }).then(() => {
+        getUnsafeReports();
+      });
+    } else {
+      Swal.fire({
+        title: "Error",
+        text: data.message,
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  } catch (error) {
+    console.error("Error:", error);
+  }
+};
+
+const detailReport = (reportid) => {
+  window.location.href = `https://portsafe-apps.github.io/detail-report.html?reportid=${reportid}`;
+};
+
+const deleteReportHandler = (reportid) => {
+  Swal.fire({
+    title: "Are you sure?",
+    text: "You won't be able to revert this!",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonColor: "#3085d6",
+    cancelButtonColor: "#d33",
+    confirmButtonText: "Yes, delete it!",
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deleteReport(reportid);
+    }
+  });
+};
+
+document
+  .getElementById("datatablesSimple")
+  .addEventListener("click", (event) => {
+    const target = event.target;
+    const detailButton = target.closest("[data-action='detailReport']");
+    const deleteButton = target.closest("[data-action='deleteReport']");
+
+    if (detailButton) {
+      const reportid = detailButton.getAttribute("data-reportid");
+      detailReport(reportid);
+    } else if (deleteButton) {
+      const reportid = deleteButton.getAttribute("data-reportid");
+      deleteReportHandler(reportid);
+    }
+  });
 
 // Initial call to get all reports when the page loads
 getUnsafeReports();
-
-document.getElementById("datatablesSimple").addEventListener("click", (event) => {
-  const target = event.target;
-  const detailButton = target.closest("[data-action='detailReport']");
-  const deleteButton = target.closest("[data-action='deleteReport']");
-
-  if (detailButton) {
-    const reportid = detailButton.getAttribute("data-reportid");
-    detailReport(reportid);
-  } else if (deleteButton) {
-    const reportid = deleteButton.getAttribute("data-reportid");
-    deleteReportHandler(reportid);
-  }
-});
