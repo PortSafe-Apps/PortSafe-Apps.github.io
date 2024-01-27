@@ -153,7 +153,7 @@ const deleteCompromised = async (reportid) => {
 };
 
 const detailCompromised = (reportid) => {
-  window.location.href = `https://portsafe-apps.github.io/admin/detailreport.html?reportid=${reportid}`;
+  window.location.href = `https://portsafe-apps.github.io/admin/detailcompromised.html?reportid=${reportid}`;
 };
 
 const editCompromised = (reportid) => {

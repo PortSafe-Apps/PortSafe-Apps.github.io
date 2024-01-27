@@ -135,10 +135,13 @@
                   <h4 class="m-0 font-weight-bold text-primary">Detail Observasi</h4>
                 </div>
                 <div>
-                  <span class="badge bg-danger text-white">
-                    <i class="fa fa-exclamation-triangle"></i> Unsafe Action
+                  <span class="badge bg-warning text-white">
+                    <i class="fa fa-exclamation-triangle"></i> Compromised Action
                   </span>
                 </div>
+                <div>
+                  <span class="badge text-white" id="statusBadge"></span>
+              </div>
               </div>
               <div class="divider mt-3 mb-2"></div>
               <div class="row">
@@ -147,45 +150,45 @@
                   <p class="color-theme font-700">No. Pelaporan</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">RP2022001</p>
+                  <p class="font-400" id="noPelaporan"></p>
                 </div>
 
                 <div class="col-4">
                   <p class="color-theme font-700">Tanggal</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">2024-01-15</p>
+                  <p class="font-400" id="tanggal"></p>
                 </div>
 
                 <div class="col-4">
                   <p class="color-theme font-700">Waktu</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">14:00 PM</p>
+                  <p class="font-400" id="waktu"></p>
                 </div>
                 <div class="col-4">
                   <p class="color-theme font-700">Pengawas</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">Fahira</p>
+                  <p class="font-400" id="pengawas"></p>
                 </div>
                 <div class="col-4">
                   <p class="color-theme font-700">Jabatan</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">Vice Precident</p>
+                  <p class="font-400" id="jabatan"></p>
                 </div>
                 <div class="col-4">
                   <p class="color-theme font-700">Unit Kerja</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">Branch Belawan</p>
+                  <p class="font-400" id="unitKerja"></p>
                 </div>
                 <div class="col-4">
                   <p class="color-theme font-700">Area</p>
                 </div>
                 <div class="col-8">
-                  <p class="font-400">Gudang</p>
+                  <p class="font-400" id="area"></p>
                 </div>
               </div>
             </div>
@@ -200,15 +203,13 @@
                 </div>
               </div>
               <div class="divider mt-3 mb-2"></div>
-              <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.</p>
+              <p class="mb-3" id="deskripsiPengamatan"></p>
               <div class="text-center">
-                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
-                  src="https://via.placeholder.com/150" alt="...">
+                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="observasiPhoto" src=""
+                  alt="Observation Photo">
               </div>
             </div>
           </div>
-
 
           <!-- Jenis Tindakan Berbahaya Card -->
           <div class="card mb-4 py-1 border-left-primary">
@@ -219,27 +220,8 @@
                 </div>
               </div>
               <div class="divider mt-3 mb-2"></div>
-              <div class="accordion accordion-flush" id="accordionFlushExample">
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingOne">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseOne" aria-expanded="false" aria-controls="flush-collapseOne">
-                      Type 1
-                    </button>
-                  </h2>
-                  <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body"><span class="badge bg-danger">Subtype1</span></div>
-                  </div>
-                </div>
-                <div class="accordion-item">
-                  <h2 class="accordion-header" id="flush-headingTwo">
-                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#flush-collapseTwo" aria-expanded="false" aria-controls="flush-collapseTwo">
-                      Type 2
-                    </button>
-                  </h2>
-                  <div id="flush-collapseTwo" class="accordion-collapse collapse" aria-labelledby="flush-headingTwo" data-bs-parent="#accordionFlushExample">
-                    <div class="accordion-body"><span class="badge bg-danger">Subtype1</span></div>
-                  </div>
-                </div>
+              <div class="accordion accordion-flush" id="accordionFlushExample" id="accordionBody">
+                <!-- Dynamically generated content from JavaScript will go here -->
               </div>
             </div>
           </div>
@@ -253,11 +235,9 @@
                 </div>
               </div>
               <div class="divider mt-3 mb-2"></div>
-              <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.</p>
+              <p class="mb-3" id="tindakanPerbaikanSegera"></p>
               <div class="text-center">
-                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
-                  src="https://via.placeholder.com/150" alt="...">
+                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="improvementPhoto" src="" alt="Improvement Photo">
               </div>
             </div>
           </div>
@@ -272,15 +252,12 @@
               </div>
               <div class="divider mt-3 mb-2"></div>
               <h5 class="mb-2">1. Rekomendasi</h5>
-              <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.</p>
+              <p class="mb-3" id="rekomendasi"></p>
               <div class="divider bg-dark mt-3 mb-2"></div>
               <h5 class="mb-2">2. Tindak Lanjut</h5>
-              <p class="mb-3">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor
-                incididunt ut labore et dolore magna aliqua.</p>
+              <p class="mb-3" id="TindakLanjut"></p>
               <div class="text-center">
-                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
-                  src="https://via.placeholder.com/150" alt="...">
+                <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="evidencePhoto" src="" alt="Evidence Photo">
               </div>
             </div>
           </div>
@@ -306,6 +283,16 @@
   <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
     crossorigin="anonymous"></script>
   <script src="assets/js/datatables/datatables-simple-demo.js"></script>
+  <script src="assets/js/compromised/detail.js" type="module"></script>
+  <!-- Logout Configuration -->
+  <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
+
+  <!-- Sweet Alert -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+  <!-- Modal -->
+  <script src="/user/assets/scripts/config/modal.js" type="module"></script>
+</body>
 </body>
 
 </html>
