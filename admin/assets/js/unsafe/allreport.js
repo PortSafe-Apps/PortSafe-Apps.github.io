@@ -3,7 +3,7 @@ const reportDataBody = document.querySelector("#datatablesSimple tbody");
 const showAlert = (message, type) => {
     Swal.fire({
       icon: type,
-      title: 'Alert',
+      title: 'Gagal',
       text: message,
     });
   };
@@ -41,7 +41,7 @@ const getUnsafeReports = async () => {
     myHeaders.append("Login", token);
 
     const requestOptions = {
-      method: "GET",
+      method: "POST",
       headers: myHeaders,
       redirect: "follow",
     };
