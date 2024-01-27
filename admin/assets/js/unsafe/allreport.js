@@ -29,8 +29,7 @@ const getUnsafeWithToken = async () => {
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -168,5 +167,5 @@ document.getElementById("datatablesSimple").addEventListener("click", (event) =>
     }
   });
 
-// Panggilan awal untuk mendapatkan semua data laporan ketika halaman dimuat
+
 getUnsafeWithToken();
