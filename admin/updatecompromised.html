@@ -112,13 +112,13 @@
                                 <div class="col-auto mt-4">
                                     <h1 class="page-header-title">
                                         <div class="page-header-icon"><i data-feather="clipboard"></i></div>
-                                        Update Compromised Report  
+                                        Update Compromised Report
                                     </h1>
                                 </div>
                                 <div class="col-12 col-xl-auto mb-3">
-                                    <a class="btn btn-sm btn-light text-primary" href="user-management-list.html">
+                                    <a class="btn btn-sm btn-light text-primary" href="compromisedreport.html">
                                         <i class="me-1" data-feather="arrow-left"></i>
-                                        Back to Users List
+                                        Back to Report List
                                     </a>
                                 </div>
                             </div>
@@ -162,32 +162,33 @@
                                         <div class="col" id="area"></div>
                                     </div>
                                     <hr class="my-4" />
-                
+
                                     <!-- Deskripsi Pengamatan Section -->
                                     <h3 class="text-primary">Deskripsi Pengamatan</h3>
                                     <p class="mb-2 text-dark" id="deskripsiPengamatan"></p>
                                     <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="observasiPhoto"
-                                            src="" alt="Observation Photo">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
+                                            id="observasiPhoto" src="" alt="Observation Photo">
                                     </div>
                                     <hr class="my-4" />
-                
+
                                     <!-- Jenis Tindakan Berbahaya Section -->
                                     <h3 class="text-primary">Jenis Tindakan Berbahaya</h3>
-                                    <div class="accordion accordion-flush" id="accordionFlushExample" id="accordionBody">
+                                    <div class="accordion accordion-flush" id="accordionFlushExample"
+                                        id="accordionBody">
                                         <!-- Dynamically generated content from JavaScript will go here -->
                                     </div>
                                     <hr class="my-4" />
-                
+
                                     <!-- Tindakan Perbaikan Segera Section -->
                                     <h3 class="text-primary">Tindakan Perbaikan Segera</h3>
                                     <p class="mb-3 text-dark" id="tindakanPerbaikanSegera"></p>
                                     <div class="text-center">
-                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;" id="improvementPhoto"
-                                            src="" alt="Improvement Photo">
+                                        <img class="img-fluid px-3 px-sm-4 mt-3 mb-4" style="width: 21rem;"
+                                            id="improvementPhoto" src="" alt="Improvement Photo">
                                     </div>
                                     <hr class="my-4" />
-                
+
                                     <!-- Tindakan Pencegahan Terulang Kembali Section -->
                                     <h3 class="text-primary">Tindakan Pencegahan Terulang Kembali</h3>
                                     <h5 class="mb-2" id="rekomendasi">1. Rekomendasi</h5>
@@ -195,22 +196,25 @@
                                     <form id="compromisedForm">
                                         <div class="mb-3">
                                             <label class="h5 mb-1" for="tindakLanjutTextarea">2. Tindak Lanjut</label>
-                                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3"></textarea>
+                                            <textarea class="form-control" id="exampleFormControlTextarea1"
+                                                rows="3"></textarea>
                                         </div>
                                         <div class="mb-3">
-                                            <label class="h5 mb-1" for="formFileMultiple" class="form-label">Bukti Tindak Lanjut</label>
+                                            <label class="h5 mb-1" for="formFileMultiple" class="form-label">Bukti
+                                                Tindak Lanjut</label>
                                             <input class="form-control" type="file" id="formFileMultiple" multiple>
                                         </div>
                                         <hr class="my-4" />
                                         <div class=" text-center">
-                                            <button class="btn btn-primary" type="button" id="updateButton">Update</button>
+                                            <button class="btn btn-primary" type="button"
+                                                id="updateButton">Update</button>
                                         </div>
                                     </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div> 
+                </div>
             </main>
             <footer class="footer-admin mt-auto footer-light">
                 <div class="container-xl px-4">
@@ -229,9 +233,18 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         crossorigin="anonymous"></script>
     <script src="assets/js/scripts.js"></script>
+    <script src="assets/js/compromised/update.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
     <script src="assets/js/datatables/datatables-simple-demo.js"></script>
+    <!-- Logout Configuration -->
+    <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Modal -->
+    <script src="/user/assets/scripts/config/modal.js" type="module"></script>
 </body>
 
 </html>
