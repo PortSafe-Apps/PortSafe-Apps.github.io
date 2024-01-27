@@ -56,7 +56,7 @@ const getUnsafeReports = async () => {
 
 const displayReportData = (reportData, reportDataBody) => {
   try {
-    console.log("reportDataBody:", reportDataBody);
+    console.log("reportData:", reportData);
 
     if (reportDataBody) {
       reportDataBody.innerHTML = "";
