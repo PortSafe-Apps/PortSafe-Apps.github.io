@@ -221,3 +221,108 @@ var multiAxisLineChart = new Chart(ctx, {
         }
     }
 });
+
+
+// Process Data for Location Bar Chart
+function processDataForLocationBarChart(dataResponse) {
+    const locationCounts = {};
+
+    dataResponse.data.forEach((report) => {
+        const locationName = report.locationName;
+
+        if (!locationCounts[locationName]) {
+            locationCounts[locationName] = 1;
+        } else {
+            locationCounts[locationName]++;
+        }
+    });
+
+    return locationCounts;
+}
+
+// Unsafe Location Data Processing
+const locationCountsUnsafe = processDataForLocationBarChart(unsafeDataResponse);
+
+// Compromised Location Data Processing
+const locationCountsCompromised = processDataForLocationBarChart(compromisedDataResponse);
+
+// Horizontal Bar Chart Example
+var ctxLocation = document.getElementById("myHorizontalBarChart");
+var horizontalBarChart = new Chart(ctxLocation, {
+    type: "horizontalBar",
+    data: {
+        labels: Object.keys(locationCountsUnsafe), // or use Object.keys(locationCountsCompromised) for compromised data
+        datasets: [
+            {
+                label: "Unsafe",
+                backgroundColor: "rgba(0, 97, 242, 0.8)",
+                borderColor: "rgba(0, 97, 242, 1)",
+                borderWidth: 1,
+                data: Object.values(locationCountsUnsafe),
+            },
+            {
+                label: "Compromised",
+                backgroundColor: "rgba(255, 99, 132, 0.8)",
+                borderColor: "rgba(255, 99, 132, 1)",
+                borderWidth: 1,
+                data: Object.values(locationCountsCompromised),
+            },
+        ],
+    },
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 10,
+                top: 0,
+                bottom: 0,
+            },
+        },
+        scales: {
+            xAxes: [
+                {
+                    ticks: {
+                        beginAtZero: true,
+                        stepSize: 1,
+                        fontSize: 14,
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    ticks: {
+                        fontSize: 14,
+                    },
+                },
+            ],
+        },
+        legend: {
+            display: true,
+            position: "top",
+        },
+        tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: "#6e707e",
+            titleFontSize: 14,
+            borderColor: "#dddfeb",
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: "index",
+            caretPadding: 10,
+            callbacks: {
+                label: function (tooltipItem, chart) {
+                    var datasetLabel =
+                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                    return datasetLabel + ": " + tooltipItem.xLabel;
+                },
+            },
+        },
+    },
+});
+
