@@ -1,27 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const accordionBody = document.getElementById("accordionBody");
-  console.log("Accordion Body:", accordionBody); // Add this line for debugging
-
-  if (!accordionBody) {
-    console.error('Element with ID "accordionBody" not found.');
-    return;
-  }
-
-  const reportIdFromURL = new URLSearchParams(window.location.search).get(
-    "reportid"
-  );
-  if (reportIdFromURL) {
-    document.getElementById("noPelaporan").value = reportIdFromURL;
-    searchCompromisedByReportid(reportIdFromURL);
-  }
-
-  document
-    .getElementById("updateButton")
-    .addEventListener("click", (event) =>
-      updateCompromised(event, reportIdFromURL)
-    );
-});
-
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
@@ -248,3 +224,21 @@ const updateCompromised = async (event, reportid) => {
 };
 
 document.getElementById("compromisedForm").style.display = "block";
+  // const accordionBody = document.getElementById("accordionBody");
+  // console.log("Accordion Body:", accordionBody); // Add this line for debugging
+
+  // if (!accordionBody) {
+  //   console.error('Element with ID "accordionBody" not found.');
+  //   return;
+  // }
+
+  const reportIdFromURL = new URLSearchParams(window.location.search).get(
+    "reportid"
+  );
+  if (reportIdFromURL) {
+    document.getElementById("noPelaporan").value = reportIdFromURL;
+    searchCompromisedByReportid(reportIdFromURL);
+  }
+
+  document.getElementById("updateButton").addEventListener("click", (event) =>updateCompromised(event, reportIdFromURL));
+

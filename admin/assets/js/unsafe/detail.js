@@ -1,21 +1,3 @@
-document.addEventListener("DOMContentLoaded", function () {
-    const accordionBody = document.getElementById("accordionBody");
-    console.log("Accordion Body:", accordionBody); // Add this line for debugging
-
-    if (!accordionBody) {
-        console.error('Element with ID "accordionBody" not found.');
-        return;
-    }
-
-    const reportIdFromURL = new URLSearchParams(window.location.search).get(
-        "reportid"
-    );
-    if (reportIdFromURL) {
-        document.getElementById("noPelaporan").innerText = reportIdFromURL;
-        searchCompromisedByReportid(reportIdFromURL);
-    }
-});
-
 const getTokenFromCookies = (cookieName) => {
     const cookies = document.cookie.split(";");
     for (const cookie of cookies) {
@@ -143,3 +125,19 @@ const displayDetail = (data) => {
         console.error('Element with ID "improvementPhoto" not found.');
     }
 };
+
+    // const accordionBody = document.getElementById("accordionBody");
+    // console.log("Accordion Body:", accordionBody); // Add this line for debugging
+
+    // if (!accordionBody) {
+    //     console.error('Element with ID "accordionBody" not found.');
+    //     return;
+    // }
+
+    const reportIdFromURL = new URLSearchParams(window.location.search).get(
+        "reportid"
+    );
+    if (reportIdFromURL) {
+        document.getElementById("noPelaporan").innerText = reportIdFromURL;
+        searchCompromisedByReportid(reportIdFromURL);
+    }
