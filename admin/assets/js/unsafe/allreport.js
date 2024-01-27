@@ -29,8 +29,7 @@ const getUnsafeReports = async () => {
       return;
     }
 
-    const targetURL =
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
+    const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReport";
 
     const myHeaders = new Headers();
     myHeaders.append("Login", token);
@@ -57,7 +56,7 @@ const getUnsafeReports = async () => {
 
 const displayReportData = (reportData, reportDataBody) => {
   try {
-    console.log(reportDataBody); // Logging for debugging purposes
+    console.log("reportDataBody:", reportDataBody);
 
     if (reportDataBody) {
       reportDataBody.innerHTML = "";
