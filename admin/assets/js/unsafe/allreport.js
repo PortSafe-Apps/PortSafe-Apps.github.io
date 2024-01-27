@@ -45,7 +45,7 @@ const getUnsafeReports = async () => {
     const data = await response.json();
     console.log("Received Data:", data); // Log the received data
 
-    if (data.status === true) {
+    if (data.status === 200) {
       displayReportData(data.data, reportDataBody);
     } else {
       showAlert(data.message, "error");
@@ -55,14 +55,14 @@ const getUnsafeReports = async () => {
   }
 };
 
-const displayReportData = (reportData, reportDataBody) => {
+const displayReportData = (data, reportDataBody) => {
   try {
-    console.log("displayReportData - reportData:", reportData); // Log the reportData
+    console.log("displayReportData - data:", data); // Log the data
     if (reportDataBody) {
       reportDataBody.innerHTML = "";
 
-      if (reportData && reportData.length > 0) {
-        reportData.forEach((report) => {
+      if (data && data.length > 0) {
+        data.forEach((report) => {
           const newRow = document.createElement("tr");
           newRow.innerHTML = `
             <td>${report.reportid}</td>
@@ -165,6 +165,10 @@ const deleteReport = async (reportid) => {
   };
   
 
+
+// Initial call to get all reports when the page loads
+getUnsafeReports();
+
 document.getElementById("datatablesSimple").addEventListener("click", (event) => {
   const target = event.target;
   const detailButton = target.closest("[data-action='detailReport']");
@@ -178,8 +182,3 @@ document.getElementById("datatablesSimple").addEventListener("click", (event) =>
     deleteReportHandler(reportid);
   }
 });
-
-// Initial call to get all reports when the page loads
-getUnsafeReports();
-
-
