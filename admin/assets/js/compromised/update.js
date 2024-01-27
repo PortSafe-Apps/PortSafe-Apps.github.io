@@ -190,7 +190,7 @@ document.getElementById("compromisedForm").style.display = "block";
 
 const reportIdFromURL = new URLSearchParams(window.location.search).get("reportid");
 if (reportIdFromURL) {
-  document.getElementById("reportIdInput").value = reportIdFromURL;
+  document.getElementById("noPelaporan").value = reportIdFromURL;
   searchCompromisedByReportid(reportIdFromURL);
 }
 
