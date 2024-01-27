@@ -1,5 +1,13 @@
 const unsafeDataBody = document.querySelector("#datatablesSimple tbody");
 
+const showAlert = (message, type) => {
+    Swal.fire({
+      icon: type,
+      title: 'Alert',
+      text: message,
+    });
+  };
+  
 const getTokenFromCookies = (cookieName) => {
   const cookies = document.cookie.split(";");
   for (const cookie of cookies) {
