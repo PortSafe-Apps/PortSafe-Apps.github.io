@@ -66,29 +66,29 @@ function generateRandomID() {
     resultElement.innerHTML = url;
   }
   
+  // Fungsi untuk menyiapkan unggahan foto
   function prepareUpload(event, imgElement, resultElement) {
     const files = event.target.files;
-
+  
     if (files && files[0]) {
         tampilkanGambarDariUrl(URL.createObjectURL(files[0]), imgElement);
         ambilFoto(event.target, imgElement, resultElement);
     }
-
+  
     const fileName = files[0].name;
-
-    // Set the class and file name directly on the fileDataElement
+  
+    // Update elements directly without modified date, size, and type
     const fileDataElement = event.target.closest('.file-data');
+    const uploadFileDataElement = fileDataElement.nextElementSibling;
+  
+    uploadFileDataElement.classList.remove("disabled");
+    document.querySelector(".upload-file-name").innerHTML = fileName;
+  }
+  
 
-    if (fileDataElement) {
-        fileDataElement.classList.remove("disabled");
-        fileDataElement.querySelector(".upload-file-name").innerHTML = fileName;
-    } else {
-        console.error("File data element not found.");
-    }
-}
-
-// Attach event listener for file upload change - Tindak Lanjut
-const fotoTindakLanjutInput = document.getElementById("fotoTindakLanjut");
-fotoTindakLanjutInput.addEventListener("change", function (event) {
+  // Attach event listener for file upload change - Tindak Lanjut
+  const fotoTindakLanjutInput = document.getElementById("fotoTindakLanjut");
+  fotoTindakLanjutInput.addEventListener("change", function (event) {
     prepareUpload(event, document.getElementById("hasilFotoTindakLanjut"), document.getElementById("hasilFotoTindakLanjut"));
-});
+  });
+  

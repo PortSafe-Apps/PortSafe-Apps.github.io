@@ -183,14 +183,6 @@ const updateCompromised = async (event, reportid) => {
       reportid: reportid,
       date: document.getElementById("tanggal").innerText,
       time: document.getElementById("waktu").innerText,
-      user: {
-        nipp: document.getElementById("nipp").innerText,
-        nama: document.getElementById("pengawas").innerText,
-        jabatan: document.getElementById("jabatan").innerText,
-        location: {
-          locationName: document.getElementById("unitKerja").innerText,
-        },
-      },
       location: {
         locationName: document.getElementById("unitKerja").innerText,
       },
