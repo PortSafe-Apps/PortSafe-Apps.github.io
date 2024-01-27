@@ -9,15 +9,13 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const showAlert = (message, type = "success") => {
+const showAlert = (message, type) => {
   Swal.fire({
     icon: type,
+    title: "success",
     text: message,
     showConfirmButton: false,
     timer: 1500,
-  }).then(() => {
-    window.location.href =
-      "https://portsafe-apps.github.io/user/compromisedreport.html";
   });
 };
 
@@ -167,8 +165,16 @@ const updateCompromised = async (event, reportid) => {
     return;
   }
 
-  const EvidencePhotoUrl = document.getElementById("hasilFotoTindakLanjut").src;
+  const typeDangerousActions = [];
+  const accordionItems = document.querySelectorAll(".accordion-item");
+  accordionItems.forEach((accordionItem, index) => {
+    const typeName = accordionItem.querySelector(".accordion-button").innerText;
+    const subTypes = Array.from(accordionItem.querySelectorAll(".badge")).map((badge) => badge.innerText);
+    typeDangerousActions.push({ typeName, subTypes });
+  });
 
+  const EvidencePhotoUrl = document.getElementById("hasilFotoTindakLanjut").src;
+  
   const targetURL =
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/UpdateReportCompromised";
 
@@ -181,8 +187,8 @@ const updateCompromised = async (event, reportid) => {
     headers: myHeaders,
     body: JSON.stringify({
       reportid: reportid,
-      date: document.getElementById("tanggal").innerText,
-      time: document.getElementById("waktu").innerText,
+      date: date,
+      time: time,
       location: {
         locationName: document.getElementById("unitKerja").innerText,
       },
@@ -191,7 +197,7 @@ const updateCompromised = async (event, reportid) => {
       },
       description: document.getElementById("deskripsiPengamatan").innerText,
       observationPhoto: document.getElementById("observasiPhoto").src,
-      typeDangerousActions: [],
+      typeDangerousActions: typeDangerousActions,
       immediateAction: document.getElementById("tindakanPerbaikanSegera")
         .innerText,
       improvementPhoto: document.getElementById("improvementPhoto").src,

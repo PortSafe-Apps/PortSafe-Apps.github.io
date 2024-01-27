@@ -74,15 +74,9 @@ function generateRandomID() {
         tampilkanGambarDariUrl(URL.createObjectURL(files[0]), imgElement);
         ambilFoto(event.target, imgElement, resultElement);
     }
-  
-    const fileName = files[0].name;
-  
 
-    uploadFileDataElement.classList.remove("disabled");
-    document.querySelector(".upload-file-name").innerHTML = fileName;
   }
   
-
   // Attach event listener for file upload change - Tindak Lanjut
   const fotoTindakLanjutInput = document.getElementById("fotoTindakLanjut");
   fotoTindakLanjutInput.addEventListener("change", function (event) {
