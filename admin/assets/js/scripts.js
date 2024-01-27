@@ -68,32 +68,4 @@ window.addEventListener('DOMContentLoaded', event => {
         }
         targetAnchor.classList.add('active');
     });
-
-    const dynamicDateTimeElement = document.getElementById('dynamicDateTime');
-    // Fungsi untuk memperbarui tanggal dan waktu
-    function updateDateTime() {
-        // Mendapatkan waktu saat ini
-        const currentTime = new Date();
-
-        // Format tanggal dan waktu
-        const options = { 
-            weekday: 'long', 
-            year: 'numeric', 
-            month: 'long', 
-            day: 'numeric', 
-            hour: 'numeric', 
-            minute: 'numeric', 
-            second: 'numeric', 
-            timeZoneName: 'short' 
-        };
-
-        // Membuat string tanggal dan waktu
-        const dateTimeString = currentTime.toLocaleDateString('en-US', options);
-
-        // Menetapkan string tanggal dan waktu ke elemen span
-        dynamicDateTimeElement.innerHTML = dateTimeString;
-    }
-    updateDateTime();
-
-    setInterval(updateDateTime, 1000);
 });
