@@ -14,8 +14,6 @@ const showAlert = (message, type) => {
     icon: type,
     title: "success",
     text: message,
-    showConfirmButton: false,
-    timer: 1500,
   });
 };
 
@@ -175,8 +173,7 @@ const updateCompromised = async (event, reportid) => {
 
   const EvidencePhotoUrl = document.getElementById("hasilFotoTindakLanjut").src;
   
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/UpdateReportCompromised";
+  const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/UpdateReportCompromised";
 
   const myHeaders = new Headers();
   myHeaders.append("Login", token);
@@ -229,13 +226,8 @@ document.getElementById("compromisedForm").style.display = "block";
 const reportIdFromURL = new URLSearchParams(window.location.search).get(
   "reportid"
 );
-if (reportIdFromURL) {
-  document.getElementById("noPelaporan").value = reportIdFromURL;
+if (reportIdFromURL) { document.getElementById("noPelaporan").value = reportIdFromURL;
   searchCompromisedByReportid(reportIdFromURL);
 }
 
-document
-  .getElementById("updateButton")
-  .addEventListener("click", (event) =>
-    updateCompromised(event, reportIdFromURL)
-  );
+document.getElementById("updateButton").addEventListener("click", (event) => updateCompromised(event, reportIdFromURL));

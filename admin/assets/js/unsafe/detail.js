@@ -9,18 +9,6 @@ const getTokenFromCookies = (cookieName) => {
   return null;
 };
 
-const showAlert = (message, type = "success") => {
-  Swal.fire({
-    icon: type,
-    text: message,
-    showConfirmButton: false,
-    timer: 1500,
-  }).then(() => {
-    window.location.href =
-      "https://portsafe-apps.github.io/user/compromisedreport.html";
-  });
-};
-
 const searchCompromisedByReportid = async (reportid) => {
   const token = getTokenFromCookies("Login");
 
