@@ -102,49 +102,55 @@ const displayCompromisedData = (data, compromisedDataBody) => {
 };
 
 const deleteCompromised = async (reportid) => {
-  const token = getTokenFromCookies("Login");
+  const token = getTokenFromCookies('Login');
 
   if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
 
-  const targetURL =
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportCompromised";
+  const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/DeleteReportCompromised';
 
   const myHeaders = new Headers();
-  myHeaders.append("Login", token);
-  myHeaders.append("Content-Type", "application/json");
+  myHeaders.append('Login', token);
+  myHeaders.append('Content-Type', 'application/json');
 
   const requestOptions = {
-    method: "DELETE",
+    method: 'DELETE',
     headers: myHeaders,
     body: JSON.stringify({ reportid: reportid }),
-    redirect: "follow",
+    redirect: 'follow',
   };
 
   try {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
-    if (data.status === 200) {
-      // Wait for the deletion to be completed before refreshing the data
-      await getCompromisedReports();
-      showAlert("Success", "success", "Report deleted successfully!");
+    if (data.status === true) {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Report deleted successfully!',
+      }).then(() => {
+        getCompromisedReports();
+      });
     } else {
-      showAlert("Error", "error", data.message);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: data.message,
+      });
     }
   } catch (error) {
-    console.error("Error:", error);
+    console.error('Error:', error);
   }
 };
-
 
 const detailCompromised = (reportid) => {
   window.location.href = `https://portsafe-apps.github.io/admin/detailreport.html?reportid=${reportid}`;

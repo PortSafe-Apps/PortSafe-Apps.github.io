@@ -124,7 +124,7 @@ const getUnsafeReports = async () => {
       const response = await fetch(targetURL, requestOptions);
       const data = await response.json();
   
-      if (data.status === 200) {
+      if (data.status === true) {
         Swal.fire({
           icon: 'success',
           title: 'Success',
