@@ -86,7 +86,7 @@ const displayDetail = (data) => {
   displayValue("noPelaporan", data.reportid);
   displayValue("tanggal", data.date);
   displayValue("waktu", data.time);
-  displayValue("pengawas", `${data.user.nama} - ${data.user.jabatan}`);
+  displayValue("pengawas", `${data.user.nama}`);
   displayValue("jabatan", data.user.jabatan);
   displayValue("unitKerja", data.location.locationName);
   displayValue("area", data.area.areaName);

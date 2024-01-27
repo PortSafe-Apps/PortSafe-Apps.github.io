@@ -187,8 +187,8 @@ const updateCompromised = async (event, reportid) => {
     headers: myHeaders,
     body: JSON.stringify({
       reportid: reportid,
-      date: date,
-      time: time,
+      date: document.getElementById("tanggal").innerText,
+      time: document.getElementById("waktu").innerText,
       location: {
         locationName: document.getElementById("unitKerja").innerText,
       },
