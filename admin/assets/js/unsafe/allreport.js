@@ -145,7 +145,7 @@ const getUnsafeReports = async () => {
   };
   
 const detailUnsafe = (reportid) => {
-  window.location.href = `https://portsafe-apps.github.io/detailunsafe.html?reportid=${reportid}`;
+  window.location.href = `https://portsafe-apps.github.io/admin/detailunsafe.html?reportid=${reportid}`;
 };
 
 const deleteUnsafeHandler = (reportid) => {
