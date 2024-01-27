@@ -43,6 +43,7 @@ const getUnsafeReports = async () => {
 
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
+    console.log("Received Data:", data); // Log the received data
 
     if (data.status === true) {
       displayReportData(data.data, reportDataBody);
@@ -56,8 +57,7 @@ const getUnsafeReports = async () => {
 
 const displayReportData = (reportData, reportDataBody) => {
   try {
-    console.log("reportData:", reportData);
-
+    console.log("displayReportData - reportData:", reportData); // Log the reportData
     if (reportDataBody) {
       reportDataBody.innerHTML = "";
 
