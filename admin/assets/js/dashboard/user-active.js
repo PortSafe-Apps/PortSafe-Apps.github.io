@@ -131,10 +131,7 @@ const getActiveUser = async () => {
     compromisedResult = await compromisedResponse.json();
     unsafeResult = await unsafeResponse.json();
 
-    console.log("Compromised Result:", compromisedResult);
-    console.log("Unsafe Result:", unsafeResult);
-
-    // Extracting unique 'nipp' values from both compromised and unsafe data
+  
     const compromisedUsers = compromisedResult.data.map(
       (report) => report.user.nipp
     );
@@ -142,8 +139,6 @@ const getActiveUser = async () => {
 
     // Combine unique 'nipp' values from both compromised and unsafe data
     const sortedUsers = [...new Set([...compromisedUsers, ...unsafeUsers])];
-
-    console.log("Sorted Users:", sortedUsers);
 
     // Check if sortedUsers is an array and not empty before proceeding
     if (!Array.isArray(sortedUsers) || sortedUsers.length === 0) {

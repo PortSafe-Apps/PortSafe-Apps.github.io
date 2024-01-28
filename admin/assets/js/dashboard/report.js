@@ -269,6 +269,12 @@ function processDataForLocationBarChartAndSort(dataResponse) {
     const combinedDataUnsafe = locationLabels.map((location) => locationCountsUnsafe[location] || 0);
     const combinedDataCompromised = locationLabels.map((location) => locationCountsCompromised[location] || 0);
 
+    console.log("Combined Location Data:", {
+        labels: combinedLabels,
+        dataUnsafe: combinedDataUnsafe,
+        dataCompromised: combinedDataCompromised,
+    });
+
     return { labels: combinedLabels, dataUnsafe: combinedDataUnsafe, dataCompromised: combinedDataCompromised };
 }
 

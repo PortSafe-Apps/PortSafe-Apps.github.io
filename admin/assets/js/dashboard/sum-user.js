@@ -60,12 +60,10 @@ const getAllRegisteredUsers = async () => {
 
         if (response.ok) {
             const data = await response.json();
-            console.log('Data from Server:', data);
-
             if (data.status === true) {
                 displaySumUsers(data.data, 'total-users');
             } else {
-                console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+                console.error('Data tidak dapat ditemukan');
             }
         } else {
             console.error('Server response not ok:', response.status, response.statusText);
