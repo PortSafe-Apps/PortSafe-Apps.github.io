@@ -10,871 +10,806 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mengambil data dari server
-const targetURLs = [
-  {
-    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
-    category: "Unsafe Action",
-  },
-  {
-    url: "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
-    category: "Compromised Action",
-  },
-];
+// Set new default font family and font color to mimic Bootstrap's default styling
+Chart.defaults.global.defaultFontFamily =
+  "'Poppins', '-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif'";
+Chart.defaults.global.defaultFontColor = "#858796";
 
-async function fetchDataFromServer() {
+// Function for number formatting
+function number_format(number) {
+  const n = isFinite(+number) ? +number : 0;
+  const dec = ".";
+  const sep = " ";
+  const toFixedFix = function (n) {
+    return "" + Math.round(n);
+  };
+
+  const s = toFixedFix(n).split(".");
+  if (s[0].length > 3) {
+    s[0] = s[0].replace(/\B(?=(?:\d{3})+(?!\d))/g, sep);
+  }
+
+  return s.join(dec);
+}
+
+// Function to fetch data from the server (similar to your existing logic)
+async function fetchDataFromServer(url, category) {
   try {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      // Handle authentication error if no token is present
+      // Tangani kesalahan autentikasi jika tidak ada token
       Swal.fire({
         icon: "warning",
         title: "Authentication Error",
-        text: "You are not logged in!",
+        text: "Kamu Belum Login!",
       }).then(() => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
-      return [];
+      return { category, data: [] };
     }
 
-    const fetchDataPromises = targetURLs.map(async (target) => {
-      const myHeaders = new Headers();
-      myHeaders.append("Login", token);
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
 
-      const requestOptions = {
-        method: "POST",
-        headers: myHeaders,
-        redirect: "follow",
-      };
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
 
-      const response = await fetch(target.url, requestOptions);
-      const data = await response.json();
-      return {
-        category: target.category,
-        data: data.data || [],
-      };
-    });
+    const response = await fetch(url, requestOptions);
 
-    // Wait for all fetch requests to complete
-    const fetchedData = await Promise.all(fetchDataPromises);
+    // Add error logging to fetchDataFromServer function
+    if (!response.ok) {
+      console.error(
+        "Server responded with an error:",
+        response.status,
+        response.statusText
+      );
+      return { category, data: [] };
+    }
 
-    // Merge data from both target URLs
-    const allReportData = fetchedData.reduce((accumulator, current) => {
-      return accumulator.concat(current.data);
-    }, []);
-
-    return allReportData;
+    const data = await response.json();
+    return { category, data: data.data || [] };
   } catch (error) {
     console.error("Error fetching data:", error);
-    return [];
+    return { category, data: [] };
   }
 }
 
-// Fungsi untuk menggambar grafik
-const drawChart = async () => {
-  const reportData = await fetchDataFromServer();
+// Unsafe Data Fetch
+const unsafeDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportbyUser",
+  "Unsafe Action"
+);
 
-  if (reportData) {
-    // Menggambar Monthly Chart
-    const transformedMonthlyData = transformDataForChart(
-      reportData,
-      "monthChart"
-    );
-    const monthlyChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Bulan",
-      transformedMonthlyData,
-      "monthChart"
-    );
-    renderChart("#monthlyChart", monthlyChartConfig);
+// Compromised Data Fetch
+const compromisedDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+  "Compromised Action"
+);
 
-    // Menggambar Location Chart
-    const transformedLocationData = transformDataForChart(
-      reportData,
-      "locationChart"
-    );
-    const locationChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Lokasi",
-      transformedLocationData,
-      "locationChart"
-    );
-    renderChart("#locationChart", locationChartConfig);
+// Unsafe Data Processing
+const monthCountsUnsafe = Array(12).fill(0);
 
-    // Menggambar Area Chart
-    const transformedAreaData = transformDataForChart(reportData, "areaChart");
-    const areaChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Area",
-      transformedAreaData,
-      "areaChart"
-    );
-    renderChart("#areaChart", areaChartConfig);
+unsafeDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsUnsafe[month] += 1;
+});
 
-    // Menggambar Type Chart
-    const transformedTypeData = transformDataForChart(reportData, "typeChart");
-    const typeChartConfig = createChartConfig(
-      "Jumlah Laporan Berdasarkan Jenis Pelanggaran",
-      transformedTypeData,
-      "typeChart"
-    );
+// Compromised Data Processing
+const monthCountsCompromised = Array(12).fill(0);
 
-    typeChartConfig.chart.events = {
-      dataPointSelection: function (event, chartContext, config) {
-        const selectedTypeName = config.w.config.labels[config.dataPointIndex];
-        updateSubtypeChart(reportData, selectedTypeName);
+compromisedDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsCompromised[month] += 1;
+});
+
+// Multi-axis Line Chart Example
+var ctx = document.getElementById("myMultiAxisLineChart");
+var multiAxisLineChart = new Chart(ctx, {
+  type: "line",
+  data: {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+    datasets: [
+      {
+        label: "Unsafe",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(0, 97, 242, 0.05)",
+        borderColor: "rgba(0, 97, 242, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointBorderColor: "rgba(0, 97, 242, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: monthCountsUnsafe,
       },
-    };
+      {
+        label: "Compromised",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(255, 99, 132, 0.05)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointBorderColor: "rgba(255, 99, 132, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: monthCountsCompromised,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          time: {
+            unit: "date",
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          ticks: {
+            maxTicksLimit: 7,
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+          },
+        },
+      ],
+      yAxes: [
+        {
+          id: "y-axis-1",
+          position: "left",
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            callback: function (value, index, values) {
+              return number_format(value);
+            },
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2],
+          },
+        },
+      ],
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+        },
+      },
+    },
+  },
+});
 
-    renderChart("#typeChart", typeChartConfig);
-
-    // Menggambar Subtype Chart awal
-    updateSubtypeChart(reportData, transformedTypeData.labels[0]);
-  }
-};
-
-const updateSubtypeChart = (reportData, selectedTypeName) => {
-  // Panggil fungsi dengan menyediakan selectedTypeName
-  const transformedSubtypeData = transformDataForChart(
-    reportData,
-    "subtypeChart",
-    selectedTypeName
-  );
-
-  const subtypeChartConfig = createChartConfig(
-    "Jumlah Laporan Berdasarkan Subjenis Pelanggaran",
-    transformedSubtypeData,
-    "subtypeChart",
-    selectedTypeName
-  );
-
-  renderChart("#subtypeChart", subtypeChartConfig);
-};
-
-// Fungsi untuk mengubah data laporan menjadi format yang sesuai dengan grafik
-const transformDataForChart = (reportData, chartType, selectedTypeName) => {
-  if (!reportData || reportData.length === 0) {
-    return { labels: [], series: [] };
-  }
-
-  switch (chartType) {
-    case "monthChart":
-      const monthCounts = Array(12).fill(0);
-
-      reportData.forEach((report) => {
-        const month = new Date(report.date).getMonth();
-        monthCounts[month] += 1;
-      });
-
-      return {
-        labels: [
-          "Jan",
-          "Feb",
-          "Mar",
-          "Apr",
-          "May",
-          "Jun",
-          "Jul",
-          "Aug",
-          "Sep",
-          "Oct",
-          "Nov",
-          "Dec",
-        ],
-        series: monthCounts,
-      };
-    case "locationChart":
-      const locationCounts = {};
-      const locationLabels = [
-        "Kantor Pusat SPMT",
-        "Branch Dumai",
-        "Branch Belawan",
-        "Branch Tanjung Intan",
-        "Branch Bumiharjo - Bagendang",
-        "Branch Tanjung Wangi",
-        "Branch Makassar",
-        "Branch Balikpapan",
-        "Branch Trisakti - Mekar Putih",
-        "Branch Jamrud Nilam Mirah",
-        "Branch Lembar - Badas",
-        "Branch Tanjung Emas",
-        "Branch ParePare - Garongkong",
-        "Branch Lhokseumawe",
-        "Branch Malahayati",
-        "Branch Gresik",
-      ];
-
-      // Inisialisasi counts dengan 0
-      locationLabels.forEach((label) => {
-        locationCounts[label] = 0;
-      });
-
-      // Hitung jumlah laporan untuk setiap lokasi
-      reportData.forEach((report) => {
-        const locationName = report.location.locationName || "Unknown Location";
-        locationCounts[locationName]++;
-      });
-
-      // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
-      const sortedLabels = locationLabels.sort(
-        (a, b) => locationCounts[b] - locationCounts[a]
-      );
-      const sortedSeries = sortedLabels.map((label) => locationCounts[label]);
-
-      return {
-        labels: sortedLabels,
-        series: [sortedSeries], // Tetap dalam bentuk array
-      };
-
-    case "areaChart":
-      const areaCounts = {};
-      const areaLabels = [
-        "Kantor",
-        "Workshop",
-        "Gudang",
-        "Dermaga",
-        "Lapangan Penumpukan",
-        "Area kerja lainnya",
-      ];
-
-      // Inisialisasi counts dengan 0
-      areaLabels.forEach((label) => {
-        areaCounts[label] = 0;
-      });
-
-      // Hitung jumlah laporan untuk setiap area
-      reportData.forEach((report) => {
-        const areaName = report.area.areaName || "Unknown Area";
-        areaCounts[areaName]++;
-      });
-
-      // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
-      const sortedLabelsArea = areaLabels.sort(
-        (a, b) => areaCounts[b] - areaCounts[a]
-      );
-      const sortedSeriesArea = sortedLabelsArea.map(
-        (label) => areaCounts[label]
-      );
-
-      return {
-        labels: sortedLabelsArea,
-        series: [sortedSeriesArea], // Tetap dalam bentuk array
-      };
-
-    case "typeChart":
-      const typeCounts = {};
-      reportData.forEach((report) => {
-        report.typeDangerousActions.forEach((action) => {
-          const typeName = action.typeName;
-          typeCounts[typeName] = (typeCounts[typeName] || 0) + 1;
-        });
-      });
-
-      const sortedLabelsType = Object.keys(typeCounts).sort(
-        (a, b) => typeCounts[b] - typeCounts[a]
-      );
-
-      const sortedSeriesType = sortedLabelsType.map(
-        (label) => typeCounts[label]
-      );
-
-      return {
-        labels: sortedLabelsType,
-        series: [sortedSeriesType],
-      };
-
-    case "subtypeChart":
-      const subtypeCounts = {};
-
-      reportData.forEach((report) => {
-        report.typeDangerousActions.forEach((action) => {
-          if (action.typeName === selectedTypeName && action.subTypes) {
-            action.subTypes.forEach((subType) => {
-              const subtypeLabel = subType;
-              subtypeCounts[subtypeLabel] =
-                (subtypeCounts[subtypeLabel] || 0) + 1;
-            });
-          }
-        });
-      });
-
-      // Modifikasi bagian ini untuk menangani kasus ketika tidak ada subjenis yang ditemukan
-      const sortedLabelsSubtype = Object.keys(subtypeCounts).sort(
-        (a, b) => subtypeCounts[b] - subtypeCounts[a]
-      );
-
-      const sortedSeriesSubtype = sortedLabelsSubtype.map(
-        (label) => subtypeCounts[label]
-      );
-
-      // Jika tidak ada subjenis ditemukan, kembalikan data default
-      if (sortedLabelsSubtype.length === 0) {
-        return { labels: [], series: [[]] };
-      }
-
-      return {
-        labels: sortedLabelsSubtype,
-        series: [sortedSeriesSubtype],
-      };
-
-    default:
-      return {};
-  }
-};
-
-const colorPalette = [
-  "#4CAF50",
-  "#FFC107",
-  "#2196F3",
-  "#FF5722",
-  "#9C27B0",
-  "#00BCD4",
-  "#795548",
-  "#8BC34A",
-  "#607D8B",
-  "#FFEB3B",
-  "#673AB7",
-  "#FF9800",
-  "#03A9F4",
-  "#E91E63",
-  "#CDDC39",
-  "#9E9E9E",
-  "#F44336",
-  "#795548",
-  "#009688",
-  "#FF5722",
+const locationLabels = [
+  "Kantor Pusat SPMT",
+  "Branch Dumai",
+  "Branch Belawan",
+  "Branch Tanjung Intan",
+  "Branch Bumiharjo - Bagendang",
+  "Branch Tanjung Wangi",
+  "Branch Makassar",
+  "Branch Balikpapan",
+  "Branch Trisakti - Mekar Putih",
+  "Branch Jamrud Nilam Mirah",
+  "Branch Lembar - Badas",
+  "Branch Tanjung Emas",
+  "Branch ParePare - Garongkong",
+  "Branch Lhokseumawe",
+  "Branch Malahayati",
+  "Branch Gresik",
 ];
 
-// Fungsi untuk membuat konfigurasi grafik
-const createChartConfig = (chartTitle, data, chartType, selectedTypeName) => {
-  // Pengecekan keberadaan data.labels dan data.series
-  const xCategories = data.labels ? data.labels : [];
-  const seriesData = data.series ? data.series : [];
+// Process Data for Location Bar Chart and Sort
+function processDataForLocationBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  const locationCountsUnsafe = {};
+  const locationCountsCompromised = {};
 
-  // Pengecekan keberadaan chartTitle
-  const titleText = chartTitle || "";
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const locationName = report.location
+      ? report.location.locationName
+      : "Unknown";
+    if (!locationCountsUnsafe[locationName]) {
+      locationCountsUnsafe[locationName] = 1;
+    } else {
+      locationCountsUnsafe[locationName]++;
+    }
+  });
 
-  // Tambahkan subtitle berdasarkan tipe atau sub-tipe yang terpilih
-  const subtitleText = selectedTypeName
-    ? `Jenis Pelanggaran: ${selectedTypeName}`
-    : "";
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const locationName = report.location
+      ? report.location.locationName
+      : "Unknown";
+    if (!locationCountsCompromised[locationName]) {
+      locationCountsCompromised[locationName] = 1;
+    } else {
+      locationCountsCompromised[locationName]++;
+    }
+  });
 
-  switch (chartType) {
-    case "monthChart":
-      return {
-        chart: {
-          height: 240,
-          type: "area",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 1,
-            left: -5,
-            top: 5,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        colors: ["#02172C"],
-        dataLabels: {
-          enabled: false,
-        },
-        fill: {
-          type: "gradient",
-          gradient: {
-            type: "vertical",
-            shadeIntensity: 1,
-            inverseColors: true,
-            opacityFrom: 0.15,
-            opacityTo: 0.05,
-            stops: [40, 100],
-          },
-        },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          xaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          yaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
-        },
-        legend: {
-          position: "top",
-          horizontalAlign: "right",
-          offsetY: -60,
-          fontSize: "14px",
-          markers: {
-            width: 9,
-            height: 9,
-            strokeWidth: 0,
-            radius: 20,
-          },
-          itemMargin: {
-            horizontal: 5,
-            vertical: 0,
-          },
-        },
-        tooltip: {
-          theme: "dark",
-          marker: {
-            show: true,
-          },
-          x: {
-            show: false,
-          },
-        },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
-        },
-        stroke: {
-          show: true,
-          curve: "smooth",
-          width: 3,
-        },
-        xaxis: {
-          categories: xCategories,
-          crosshairs: {
-            show: true,
-          },
-          labels: {
-            offsetX: 0,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-          tooltip: {
-            enabled: false,
-          },
-        },
-        yaxis: {
-          labels: {
-            offsetX: -10,
-            offsetY: 0,
-            style: {
-              colors: "#8480ae",
-              fontSize: "12px",
-              fontFamily: "Poppins",
-            },
-          },
-        },
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData,
-          },
-        ],
-      };
+  // Combine labels and counts
+  const combinedLabels = locationLabels;
+  const combinedDataUnsafe = locationLabels.map(
+    (location) => locationCountsUnsafe[location] || 0
+  );
+  const combinedDataCompromised = locationLabels.map(
+    (location) => locationCountsCompromised[location] || 0
+  );
 
-    case "locationChart":
-      return {
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData[0],
-          },
-        ],
-        chart: {
-          type: "bar",
-          height: 495,
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
-          },
-        },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            columnWidth: "60%",
-            distributed: true,
-            horizontal: true,
-          },
-        },
-        colors: colorPalette,
-        dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
-          style: {
-            colors: ["#02172C"],
-            fontSize: "12px",
-            fontFamily: "Poppins",
-          },
-          formatter: function (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex];
-          },
-        },
-        xaxis: {
-          categories: xCategories,
-        },
-        yaxis: {
-          labels: {
-            show: false,
-            formatter: function (value) {
-              // Menggunakan parseInt untuk menghapus desimal
-              return parseInt(value);
-            },
-          },
-        },  
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          yaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          xaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
+  return {
+    labels: combinedLabels,
+    dataUnsafe: combinedDataUnsafe,
+    dataCompromised: combinedDataCompromised,
+  };
+}
+
+const combinedData = processDataForLocationBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+);
+
+var ctxLocation = document.getElementById("myHorizontalBarChart");
+var horizontalBarChart = new Chart(ctxLocation, {
+  type: "horizontalBar",
+  data: {
+    labels: combinedData.labels,
+    datasets: [
+      {
+        label: "Unsafe",
+        backgroundColor: "rgba(0, 97, 242, 0.8)",
+        borderColor: "rgba(0, 97, 242, 1)",
+        borderWidth: 1,
+        data: combinedData.dataUnsafe,
+      },
+      {
+        label: "Compromised",
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+        data: combinedData.dataCompromised,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1,
+            fontSize: 14,
           },
         },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
+      ],
+      yAxes: [
+        {
+          ticks: {
+            maxTicksLimit: locationLabels.length, // Menampilkan semua label
+            fontSize: 14,
           },
         },
-        tooltip: {
-          enabled: true,
-          x: {
-            show: false,
-          },
-          y: {
-            formatter: function (value) {
-              return parseInt(value);
-            },
+      ],
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + tooltipItem.xLabel;
+        },
+      },
+    },
+  },
+});
+
+const areaLabels = [
+  "Kantor",
+  "Workshop",
+  "Gudang",
+  "Dermaga",
+  "Lapangan Penumpukan",
+  "Area kerja lainnya",
+];
+
+// Process Data for Area Bar Chart and Sort
+function processDataForAreaBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  const areaCountsUnsafe = {};
+  const areaCountsCompromised = {};
+
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    if (!areaCountsUnsafe[areaName]) {
+      areaCountsUnsafe[areaName] = 1;
+    } else {
+      areaCountsUnsafe[areaName]++;
+    }
+  });
+
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    if (!areaCountsCompromised[areaName]) {
+      areaCountsCompromised[areaName] = 1;
+    } else {
+      areaCountsCompromised[areaName]++;
+    }
+  });
+
+  // Combine labels and counts
+  const combinedAreaLabels = areaLabels;
+  const combinedAreaDataUnsafe = areaLabels.map(
+    (area) => areaCountsUnsafe[area] || 0
+  );
+  const combinedAreaDataCompromised = areaLabels.map(
+    (area) => areaCountsCompromised[area] || 0
+  );
+
+  return {
+    labels: combinedAreaLabels,
+    dataUnsafe: combinedAreaDataUnsafe,
+    dataCompromised: combinedAreaDataCompromised,
+  };
+}
+
+const combinedAreaData = processDataForAreaBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+);
+
+var ctxArea = document.getElementById("myHorizontalBarChartForArea");
+var horizontalBarChartForArea = new Chart(ctxArea, {
+  type: "horizontalBar",
+  data: {
+    labels: combinedAreaData.labels,
+    datasets: [
+      {
+        label: "Unsafe",
+        backgroundColor: "rgba(0, 97, 242, 0.8)",
+        borderColor: "rgba(0, 97, 242, 1)",
+        borderWidth: 1,
+        data: combinedAreaData.dataUnsafe,
+      },
+      {
+        label: "Compromised",
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+        data: combinedAreaData.dataCompromised,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1,
+            fontSize: 14,
           },
         },
-      };
-    case "areaChart":
-      return {
-        series: [
-          {
-            name: "jumlah laporan",
-            data: seriesData[0],
-          },
-        ],
-        chart: {
-          height: 300,
-          type: "bar",
-          animations: {
-            enabled: true,
-            easing: "easeinout",
-            speed: 1000,
-          },
-          dropShadow: {
-            enabled: true,
-            opacity: 0.1,
-            blur: 2,
-            left: -1,
-            top: 5,
-          },
-          zoom: {
-            enabled: false,
-          },
-          toolbar: {
-            show: false,
+      ],
+      yAxes: [
+        {
+          ticks: {
+            maxTicksLimit: areaLabels.length, // Display all labels
+            fontSize: 14,
           },
         },
-        title: {
-          text: titleText,
-          align: "left",
-          margin: 0,
-          offsetX: 0,
-          offsetY: 0,
-          floating: false,
-          style: {
-            fontSize: "15px",
-            color: "text-dark",
-            fontWeight: "bold",
-            marginBottom: "10rem",
-            fontFamily: "Poppins",
-          },
+      ],
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + tooltipItem.xLabel;
         },
-        plotOptions: {
-          bar: {
-            borderRadius: 4,
-            columnWidth: "60%",
-            distributed: true,
-            horizontal: true,
-          },
+      },
+    },
+  },
+});
+
+const typeDangerousActionsLabels = [
+  "REAKSI ORANG",
+  "ALAT PELINDUNG DIRI",
+  "POSISI ORANG",
+  "ALAT DAN PERLENGKAPAN",
+  "PROSEDUR DAN CARA KERJA",
+];
+
+// Define colors for both series
+const colors = [
+  "rgba(255, 99, 132, 0.8)",
+  "rgba(255, 206, 86, 0.8)",
+  "rgba(75, 192, 192, 0.8)",
+  "rgba(54, 162, 235, 0.8)",
+  "rgba(153, 102, 255, 0.8)",
+];
+
+// Declare variables here in the appropriate scope
+const typeDangerousActionsCountsUnsafe = {};
+const typeDangerousActionsCountsCompromised = {};
+
+// Process Data for Type Dangerous Actions Pie Chart
+function processDataForTypeDangerousActionsPieChart(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsUnsafe[typeName]) {
+      typeDangerousActionsCountsUnsafe[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsUnsafe[typeName]++;
+    }
+  });
+
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsCompromised[typeName]) {
+      typeDangerousActionsCountsCompromised[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsCompromised[typeName]++;
+    }
+  });
+
+  // Combine labels and counts
+  const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
+  const combinedTypeDangerousActionsData = typeDangerousActionsLabels.map(
+    (type) => {
+      const unsafeCount = typeDangerousActionsCountsUnsafe[type] || 0;
+      const compromisedCount = typeDangerousActionsCountsCompromised[type] || 0;
+      return unsafeCount + compromisedCount;
+    }
+  );
+
+  return {
+    labels: combinedTypeDangerousActionsLabels,
+    data: combinedTypeDangerousActionsData,
+  };
+}
+
+const combinedTypeDangerousActionsData =
+  processDataForTypeDangerousActionsPieChart(
+    unsafeDataResponse,
+    compromisedDataResponse
+  );
+
+var ctxTypeDangerousActions = document.getElementById(
+  "myPieChartForTypeDangerousActions"
+);
+const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
+  type: "pie",
+  data: {
+    labels: combinedTypeDangerousActionsData.labels,
+    datasets: [
+      {
+        data: combinedTypeDangerousActionsData.data,
+        backgroundColor: colors,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleFontColor: "#6e707e",
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          const datasetLabel = data.datasets[0].label || "";
+          const unsafeValue =
+            typeDangerousActionsCountsUnsafe[data.labels[tooltipItem.index]] ||
+            0;
+          const compromisedValue =
+            typeDangerousActionsCountsCompromised[
+              data.labels[tooltipItem.index]
+            ] || 0;
+          return `${datasetLabel}: Unsafe ${unsafeValue}, Compromised ${compromisedValue}`;
         },
-        colors: colorPalette,
-        dataLabels: {
-          enabled: true,
-          textAnchor: "start",
-          offsetY: 0, // Sesuaikan offset sesuai kebutuhan
-          style: {
-            colors: "#8480ae",
-            fontSize: "12px",
-            fontFamily: "Poppins",
-          },
-          formatter: function (val, opt) {
-            return opt.w.globals.labels[opt.dataPointIndex];
-          },
+        title: function (tooltipItem, data) {
+          return data.labels[tooltipItem[0].index];
         },
-        grid: {
-          borderColor: "#dbeaea",
-          strokeDashArray: 4,
-          yaxis: {
-            lines: {
-              show: true,
-            },
-          },
-          xaxis: {
-            lines: {
-              show: false,
-            },
-          },
-          padding: {
-            top: 0,
-            right: 0,
-            bottom: 0,
-            left: 0,
-          },
+      },
+    },
+    plugins: {
+      datalabels: {
+        formatter: (value) => {
+          return `Total: ${value}`;
         },
-        xaxis: {
-          categories: xCategories,
-        },
-        yaxis: {
-          labels: {
-            show: false,
-          },
-        },
-        tooltip: {
-          enabled: true,
-          x: {
-            show: true,
-          },
-        },
-      };
-      case "typeChart":
-        return {
-          series: seriesData[0],
-          chart: {
-            type: "pie",
-            height: 280,
-            toolbar: {
-              show: false,
-            },
-          },
-          labels: xCategories,
-          colors: colorPalette,
-          title: {
-            text: titleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "12px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-          },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  height: 300,
-                },
-                legend: {
-                  show: true,
-                  position: "bottom",
-                  horizontalAlign: "center",
-                  fontSize: "12px",
-                  markers: {
-                    width: 9,
-                    height: 9,
-                    strokeWidth: 0,
-                    radius: 20,
-                  },
-                },
-              },
-            },
-          ],
-          tooltip: {
-            enabled: true,
-            y: {
-              formatter: function (val) {
-                // Format nilai tooltip di sini jika perlu
-                return val;
-              },
-            },
-            style: {
-              fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
-              fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
-            },
-            marker: {
-              show: true,
-            },
-            item: {
-              fontSize: "12px",
-            },
-            fixed: {
-              enabled: true,
-              position: "topRight", // Sesuaikan posisi tooltip jika perlu
-            },
-          },
-          
-        };
-      case "subtypeChart":
-        return {
-          series: seriesData[0],
-          chart: {
-            type: "donut",
-            height: 300,
-            toolbar: {
-              show: false,
-            },
-          },
-          labels: xCategories,
-          colors: colorPalette,
-          title: {
-            text: titleText,
-            align: "left",
-            margin: 0,
-            offsetX: 0,
-            offsetY: 0,
-            floating: false,
-            style: {
-              fontSize: "12px",
-              color: "text-dark",
-              fontWeight: "bold",
-              marginBottom: "10rem",
-              fontFamily: "Poppins",
-            },
-          },
-          subtitle: {
-            text: subtitleText || "",
-            align: "left",
-            margin: 5,
-            offsetY: 30,
-            style: {
-              fontSize: '12px',
-              color: "text-dark",
-              fontWeight: "bold",
-              fontFamily: "Poppins",
-            },
-          },
-          responsive: [
-            {
-              breakpoint: 480,
-              options: {
-                chart: {
-                  height: 300,
-                },
-                legend: {
-                  show: true,
-                  position: "bottom",
-                  horizontalAlign: "center",
-                  fontSize: "12px",
-                  markers: {
-                    width: 9,
-                    height: 9,
-                    strokeWidth: 0,
-                    radius: 20,
-                  },
-                },
-              },
-            },
-          ],
-          tooltip: {
-            enabled: true,
-            y: {
-              formatter: function (val) {
-                // Format nilai tooltip di sini jika perlu
-                return val;
-              },
-            },
-            style: {
-              fontSize: "12px", // Sesuaikan ukuran font sesuai kebutuhan
-              fontFamily: "Poppins", // Sesuaikan jenis font sesuai kebutuhan
-            },
-            marker: {
-              show: true,
-            },
-            item: {
-              fontSize: "12px",
-            },
-            fixed: {
-              enabled: true,
-              position: "topRight", // Sesuaikan posisi tooltip jika perlu
-            },
-          },
-          
-        };
-    default:
-      return {};
+        color: "#fff",
+        anchor: "end",
+        align: "start",
+      },
+    },
+  },
+});
+
+// Add click event listener to the pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener(
+  "click",
+  function (event) {
+    const activeElements =
+      pieChartForTypeDangerousActions.getElementsAtEvent(event);
+    if (activeElements.length > 0) {
+      const clickedIndex = activeElements[0]._index;
+      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+      // Get subtypes and counts for the clicked type
+      const subtypesData = getSubtypesData(clickedType);
+
+      // Find the subtype with the highest count
+      const maxSubtype = findMaxSubtype(subtypesData);
+
+      // Create and display a new pie chart for subtypes
+      createSubtypesPieChart(subtypesData, maxSubtype);
+    }
   }
-};
+);
 
-// Fungsi untuk merender grafik
-const renderChart = (chartId, chartConfig) => {
-  const chart = new ApexCharts(document.querySelector(chartId), chartConfig);
-  chart.render();
-};
+// Function to find the subtype with the highest count
+function findMaxSubtype(subtypesData) {
+  let maxCount = 0;
+  let maxSubtype = null;
 
-// Panggil fungsi untuk menggambar grafik
-drawChart();
+  for (const subtype in subtypesData) {
+    if (subtypesData[subtype] > maxCount) {
+      maxCount = subtypesData[subtype];
+      maxSubtype = subtype;
+    }
+  }
+
+  return maxSubtype;
+}
+
+// Function to get subtypes and counts for a given type
+function getSubtypesData(type) {
+  const subtypesCounts = {};
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (typeName === type && typeDangerousAction.subTypes) {
+      typeDangerousAction.subTypes.forEach((subtype) => {
+        if (!subtypesCounts[subtype]) {
+          subtypesCounts[subtype] = 1;
+        } else {
+          subtypesCounts[subtype]++;
+        }
+      });
+    }
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (typeName === type && typeDangerousAction.subTypes) {
+      typeDangerousAction.subTypes.forEach((subtype) => {
+        if (!subtypesCounts[subtype]) {
+          subtypesCounts[subtype] = 1;
+        } else {
+          subtypesCounts[subtype]++;
+        }
+      });
+    }
+  });
+
+  const subtypesLabels = Object.keys(subtypesCounts);
+  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype]);
+
+  return {
+    labels: subtypesLabels,
+    data: subtypesData,
+  };
+}
+
+// Function to create and display a pie chart for subtypes
+function createSubtypesPieChart(subtypesData) {
+  var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
+  const pieChartForSubtypes = new Chart(ctxSubtypes, {
+    type: "pie",
+    data: {
+      labels: subtypesData.labels,
+      datasets: [
+        {
+          data: subtypesData.data,
+          backgroundColor: colors,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleFontColor: "#6e707e",
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        callbacks: {
+          label: function (tooltipItem, data) {
+            const datasetLabel = data.datasets[0].label || "";
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${
+              data.datasets[0].data[tooltipItem.index]
+            }`;
+          },
+          title: function (tooltipItem, data) {
+            return data.labels[tooltipItem[0].index];
+          },
+        },
+      },
+      plugins: {
+        datalabels: {
+          formatter: (value) => {
+            return `Total: ${value}`;
+          },
+          color: "#fff",
+          anchor: "end",
+          align: "start",
+        },
+      },
+    },
+  });
+}
