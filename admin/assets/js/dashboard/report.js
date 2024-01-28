@@ -389,88 +389,238 @@ var horizontalBarChart = new Chart(ctxLocation, {
   },
 });
 
-
 const areaLabels = [
-    "Kantor",
-    "Workshop",
-    "Gudang",
-    "Dermaga",
-    "Lapangan Penumpukan",
-    "Area kerja lainnya",
+  "Kantor",
+  "Workshop",
+  "Gudang",
+  "Dermaga",
+  "Lapangan Penumpukan",
+  "Area kerja lainnya",
+];
+
+// Process Data for Area Bar Chart and Sort
+function processDataForAreaBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  const areaCountsUnsafe = {};
+  const areaCountsCompromised = {};
+
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    if (!areaCountsUnsafe[areaName]) {
+      areaCountsUnsafe[areaName] = 1;
+    } else {
+      areaCountsUnsafe[areaName]++;
+    }
+  });
+
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    if (!areaCountsCompromised[areaName]) {
+      areaCountsCompromised[areaName] = 1;
+    } else {
+      areaCountsCompromised[areaName]++;
+    }
+  });
+
+  // Combine labels and counts
+  const combinedAreaLabels = areaLabels;
+  const combinedAreaDataUnsafe = areaLabels.map(
+    (area) => areaCountsUnsafe[area] || 0
+  );
+  const combinedAreaDataCompromised = areaLabels.map(
+    (area) => areaCountsCompromised[area] || 0
+  );
+
+  return {
+    labels: combinedAreaLabels,
+    dataUnsafe: combinedAreaDataUnsafe,
+    dataCompromised: combinedAreaDataCompromised,
+  };
+}
+
+const combinedAreaData = processDataForAreaBarChartAndSort(
+  unsafeDataResponse,
+  compromisedDataResponse
+);
+
+var ctxArea = document.getElementById("myHorizontalBarChartForArea");
+var horizontalBarChartForArea = new Chart(ctxArea, {
+  type: "horizontalBar",
+  data: {
+    labels: combinedAreaData.labels,
+    datasets: [
+      {
+        label: "Unsafe",
+        backgroundColor: "rgba(0, 97, 242, 0.8)",
+        borderColor: "rgba(0, 97, 242, 1)",
+        borderWidth: 1,
+        data: combinedAreaData.dataUnsafe,
+      },
+      {
+        label: "Compromised",
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+        borderColor: "rgba(255, 99, 132, 1)",
+        borderWidth: 1,
+        data: combinedAreaData.dataCompromised,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    scales: {
+      xAxes: [
+        {
+          ticks: {
+            beginAtZero: true,
+            stepSize: 1,
+            fontSize: 14,
+          },
+        },
+      ],
+      yAxes: [
+        {
+          ticks: {
+            maxTicksLimit: areaLabels.length, // Display all labels
+            fontSize: 14,
+          },
+        },
+      ],
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + tooltipItem.xLabel;
+        },
+      },
+    },
+  },
+});
+
+const typeDangerousActionsLabels = [
+    "REAKSI ORANG", 
+    "ALAT PELINDUNG DIRI",
+    "POSISI ORANG",
+    "ALAT DAN PERLENGKAPAN",
+    "PROSEDUR DAN CARA KERJA",
   ];
   
-  // Process Data for Area Bar Chart and Sort
-  function processDataForAreaBarChartAndSort(
-    unsafeDataResponse,
-    compromisedDataResponse
-  ) {
-    const areaCountsUnsafe = {};
-    const areaCountsCompromised = {};
+  // Process Data for Type Dangerous Actions Multi-Series Pie Chart
+  function processDataForMultiSeriesPieChart(unsafeDataResponse, compromisedDataResponse) {
+    const typeDangerousActionsCountsUnsafe = {};
+    const typeDangerousActionsCountsCompromised = {};
   
     // Process Unsafe Data
     unsafeDataResponse.data.forEach((report) => {
-      const areaName = report.area
-        ? report.area.areaName
-        : "Unknown";
-      if (!areaCountsUnsafe[areaName]) {
-        areaCountsUnsafe[areaName] = 1;
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (!typeDangerousActionsCountsUnsafe[typeName]) {
+        typeDangerousActionsCountsUnsafe[typeName] = 1;
       } else {
-        areaCountsUnsafe[areaName]++;
+        typeDangerousActionsCountsUnsafe[typeName]++;
       }
     });
   
     // Process Compromised Data
     compromisedDataResponse.data.forEach((report) => {
-      const areaName = report.area
-        ? report.area.areaName
-        : "Unknown";
-      if (!areaCountsCompromised[areaName]) {
-        areaCountsCompromised[areaName] = 1;
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (!typeDangerousActionsCountsCompromised[typeName]) {
+        typeDangerousActionsCountsCompromised[typeName] = 1;
       } else {
-        areaCountsCompromised[areaName]++;
+        typeDangerousActionsCountsCompromised[typeName]++;
       }
     });
   
     // Combine labels and counts
-    const combinedAreaLabels = areaLabels;
-    const combinedAreaDataUnsafe = areaLabels.map(
-      (area) => areaCountsUnsafe[area] || 0
+    const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
+    const combinedTypeDangerousActionsDataUnsafe = typeDangerousActionsLabels.map(
+      (type) => typeDangerousActionsCountsUnsafe[type] || 0
     );
-    const combinedAreaDataCompromised = areaLabels.map(
-      (area) => areaCountsCompromised[area] || 0
+    const combinedTypeDangerousActionsDataCompromised = typeDangerousActionsLabels.map(
+      (type) => typeDangerousActionsCountsCompromised[type] || 0
     );
   
     return {
-      labels: combinedAreaLabels,
-      dataUnsafe: combinedAreaDataUnsafe,
-      dataCompromised: combinedAreaDataCompromised,
+      labels: combinedTypeDangerousActionsLabels,
+      dataUnsafe: combinedTypeDangerousActionsDataUnsafe,
+      dataCompromised: combinedTypeDangerousActionsDataCompromised,
     };
   }
   
-  const combinedAreaData = processDataForAreaBarChartAndSort(
-    unsafeDataResponse,
-    compromisedDataResponse
-  );
+  const combinedTypeDangerousActionsData =
+    processDataForMultiSeriesPieChart(unsafeDataResponse, compromisedDataResponse);
   
-  var ctxArea = document.getElementById("myHorizontalBarChartForArea");
-  var horizontalBarChartForArea = new Chart(ctxArea, {
-    type: "horizontalBar",
+  // Define colors for each series
+  const colorsUnsafe = [
+    "rgba(255, 99, 132, 0.8)",
+    "rgba(255, 206, 86, 0.8)",
+    "rgba(75, 192, 192, 0.8)",
+    "rgba(54, 162, 235, 0.8)",
+    "rgba(153, 102, 255, 0.8)",
+  ];
+  
+  const colorsCompromised = [
+    "rgba(255, 0, 0, 0.8)",
+    "rgba(255, 165, 0, 0.8)",
+    "rgba(255, 255, 0, 0.8)",
+    "rgba(0, 128, 0, 0.8)",
+    "rgba(0, 0, 255, 0.8)",
+  ];
+  
+  var ctxTypeDangerousActionsMultiSeries = document.getElementById(
+    "myMultiSeriesPieChartForTypeDangerousActions"
+  );
+  var multiSeriesPieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActionsMultiSeries, {
+    type: "pie",
     data: {
-      labels: combinedAreaData.labels,
+      labels: combinedTypeDangerousActionsData.labels,
       datasets: [
         {
-          label: "Unsafe",
-          backgroundColor: "rgba(0, 97, 242, 0.8)",
-          borderColor: "rgba(0, 97, 242, 1)",
-          borderWidth: 1,
-          data: combinedAreaData.dataUnsafe,
+          data: combinedTypeDangerousActionsData.dataUnsafe,
+          backgroundColor: colorsUnsafe,
+          label: 'Unsafe',
         },
         {
-          label: "Compromised",
-          backgroundColor: "rgba(255, 99, 132, 0.8)",
-          borderColor: "rgba(255, 99, 132, 1)",
-          borderWidth: 1,
-          data: combinedAreaData.dataCompromised,
+          data: combinedTypeDangerousActionsData.dataCompromised,
+          backgroundColor: colorsCompromised,
+          label: 'Compromised',
         },
       ],
     },
@@ -483,25 +633,6 @@ const areaLabels = [
           top: 0,
           bottom: 0,
         },
-      },
-      scales: {
-        xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              stepSize: 1,
-              fontSize: 14,
-            },
-          },
-        ],
-        yAxes: [
-          {
-            ticks: {
-              maxTicksLimit: areaLabels.length, // Display all labels
-              fontSize: 14,
-            },
-          },
-        ],
       },
       legend: {
         display: true,
@@ -523,9 +654,9 @@ const areaLabels = [
         caretPadding: 10,
         callbacks: {
           label: function (tooltipItem, chart) {
-            var datasetLabel =
-              chart.datasets[tooltipItem.datasetIndex].label || "";
-            return datasetLabel + ": " + tooltipItem.xLabel;
+            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+            var value = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            return datasetLabel + ": " + value;
           },
         },
       },
