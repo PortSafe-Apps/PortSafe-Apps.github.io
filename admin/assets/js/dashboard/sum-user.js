@@ -56,8 +56,6 @@ const getAllRegisteredUsers = async () => {
 
     try {
         const response = await fetch(targetURL, requestOptions);
-        console.log('Server Response:', response.status, response.statusText);
-
         if (response.ok) {
             const data = await response.json();
             if (data.status === true) {
