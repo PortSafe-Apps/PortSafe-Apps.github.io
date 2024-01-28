@@ -254,7 +254,6 @@ function processDataForLocationBarChart(reportData) {
             locationCounts[locationName]++;
         });
     } else {
-
         console.error("reportData tidak valid. Harap berikan array.");
         return null;
     }
@@ -266,18 +265,20 @@ function processDataForLocationBarChart(reportData) {
 
     return {
         labels: sortedLabels,
-        series: [sortedSeries], 
+        series: [sortedSeries],
+        locationLabels: locationLabels, // Add locationLabels to the returned object
     };
 }
 
 const unsafeChartData = processDataForLocationBarChart(unsafeDataResponse);
 const compromisedChartData = processDataForLocationBarChart(compromisedDataResponse);
+
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: locationLabels,
+        labels: unsafeChartData.locationLabels, // Use locationLabels from the processed data
         datasets: [
             {
                 label: "Unsafe",
