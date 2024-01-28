@@ -641,8 +641,14 @@ var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
       callbacks: {
         label: function (tooltipItem, data) {
           const datasetLabel = data.datasets[0].label || "";
-          const value = data.datasets[0].data[tooltipItem.index];
-          return `${datasetLabel}: ${value} (Unsafe and Compromised)`;
+          const unsafeValue =
+            typeDangerousActionsCountsUnsafe[data.labels[tooltipItem.index]] ||
+            0;
+          const compromisedValue =
+            typeDangerousActionsCountsCompromised[
+              data.labels[tooltipItem.index]
+            ] || 0;
+          return `${datasetLabel}: Unsafe ${unsafeValue}, Compromised ${compromisedValue}`;
         },
         title: function (tooltipItem, data) {
           return data.labels[tooltipItem[0].index];
