@@ -604,6 +604,13 @@ const typeDangerousActionsLabels = [
     "rgba(0, 0, 255, 0.8)",
   ];
   
+  // Calculate percentages for each data point
+  const totalUnsafe = combinedTypeDangerousActionsData.dataUnsafe.reduce((acc, val) => acc + val, 0);
+  const totalCompromised = combinedTypeDangerousActionsData.dataCompromised.reduce((acc, val) => acc + val, 0);
+  
+  const percentagesUnsafe = combinedTypeDangerousActionsData.dataUnsafe.map(val => ((val / totalUnsafe) * 100).toFixed(2));
+  const percentagesCompromised = combinedTypeDangerousActionsData.dataCompromised.map(val => ((val / totalCompromised) * 100).toFixed(2));
+  
   var ctxTypeDangerousActionsMultiSeries = document.getElementById(
     "myMultiSeriesPieChartForTypeDangerousActions"
   );
@@ -654,9 +661,10 @@ const typeDangerousActionsLabels = [
         caretPadding: 10,
         callbacks: {
           label: function (tooltipItem, chart) {
-            var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-            var value = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-            return datasetLabel + ": " + value;
+            const datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+            const value = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+            const percentage = chart.datasets[tooltipItem.datasetIndex].label === 'Unsafe' ? percentagesUnsafe[tooltipItem.index] : percentagesCompromised[tooltipItem.index];
+            return `${datasetLabel}: ${value} (${percentage}%)`;
           },
         },
       },
