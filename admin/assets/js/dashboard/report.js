@@ -222,7 +222,6 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
-// Ganti label lokasi
 const locationLabels = [
     "Kantor Pusat SPMT",
     "Branch Dumai",
@@ -248,7 +247,7 @@ function processDataForLocationBarChartAndSort(dataResponse) {
     const locationCountsCompromised = {};
 
     dataResponse.data.forEach((report) => {
-        const locationName = report.locationName;
+        const locationName = report.location ? report.location.locationName : "Unknown";
 
         if (report.category === "Unsafe") {
             if (!locationCountsUnsafe[locationName]) {
