@@ -222,77 +222,80 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
-function processDataForLocationBarChart(reportData) {
-    const locationCounts = {};
+// Ganti label lokasi
+const locationLabels = [
+    "Kantor Pusat SPMT",
+    "Branch Dumai",
+    "Branch Belawan",
+    "Branch Tanjung Intan",
+    "Branch Bumiharjo - Bagendang",
+    "Branch Tanjung Wangi",
+    "Branch Makassar",
+    "Branch Balikpapan",
+    "Branch Trisakti - Mekar Putih",
+    "Branch Jamrud Nilam Mirah",
+    "Branch Lembar - Badas",
+    "Branch Tanjung Emas",
+    "Branch ParePare - Garongkong",
+    "Branch Lhokseumawe",
+    "Branch Malahayati",
+    "Branch Gresik",
+];
 
-    const locationLabels = [
-        "Kantor Pusat SPMT",
-        "Branch Dumai",
-        "Branch Belawan",
-        "Branch Tanjung Intan",
-        "Branch Bumiharjo - Bagendang",
-        "Branch Tanjung Wangi",
-        "Branch Makassar",
-        "Branch Balikpapan",
-        "Branch Trisakti - Mekar Putih",
-        "Branch Jamrud Nilam Mirah",
-        "Branch Lembar - Badas",
-        "Branch Tanjung Emas",
-        "Branch ParePare - Garongkong",
-        "Branch Lhokseumawe",
-        "Branch Malahayati",
-        "Branch Gresik",
-    ];
+// Process Data for Location Bar Chart and Sort
+function processDataForLocationBarChartAndSort(dataResponse) {
+    const locationCountsUnsafe = {};
+    const locationCountsCompromised = {};
 
-    locationLabels.forEach((label) => {
-        locationCounts[label] = 0;
+    dataResponse.data.forEach((report) => {
+        const locationName = report.locationName;
+
+        if (report.category === "Unsafe") {
+            if (!locationCountsUnsafe[locationName]) {
+                locationCountsUnsafe[locationName] = 1;
+            } else {
+                locationCountsUnsafe[locationName]++;
+            }
+        } else if (report.category === "Compromised") {
+            if (!locationCountsCompromised[locationName]) {
+                locationCountsCompromised[locationName] = 1;
+            } else {
+                locationCountsCompromised[locationName]++;
+            }
+        }
     });
 
-    if (Array.isArray(reportData)) {
-        reportData.forEach((report) => {
-            const locationName = report.location.locationName || "Lokasi Tidak Dikenal";
-            locationCounts[locationName]++;
-        });
-    } else {
-        console.error("reportData tidak valid. Harap berikan array.");
-        return null;
-    }
+    // Combine labels and counts
+    const combinedLabels = locationLabels;
+    const combinedDataUnsafe = locationLabels.map((location) => locationCountsUnsafe[location] || 0);
+    const combinedDataCompromised = locationLabels.map((location) => locationCountsCompromised[location] || 0);
 
-    const sortedLabels = locationLabels.sort(
-        (a, b) => locationCounts[b] - locationCounts[a]
-    );
-    const sortedSeries = sortedLabels.map((label) => locationCounts[label]);
-
-    return {
-        labels: sortedLabels,
-        series: [sortedSeries],
-        locationLabels: locationLabels, // Add locationLabels to the returned object
-    };
+    return { labels: combinedLabels, dataUnsafe: combinedDataUnsafe, dataCompromised: combinedDataCompromised };
 }
 
-const unsafeChartData = processDataForLocationBarChart(unsafeDataResponse);
-const compromisedChartData = processDataForLocationBarChart(compromisedDataResponse);
+// Unsafe and Compromised Location Data Processing and Sorting
+const combinedData = processDataForLocationBarChartAndSort(unsafeDataResponse);
 
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: unsafeChartData.locationLabels, // Use locationLabels from the processed data
+        labels: combinedData.labels,
         datasets: [
             {
                 label: "Unsafe",
                 backgroundColor: "rgba(0, 97, 242, 0.8)",
                 borderColor: "rgba(0, 97, 242, 1)",
                 borderWidth: 1,
-                data: unsafeChartData.series[0],
+                data: combinedData.dataUnsafe,
             },
             {
                 label: "Compromised",
                 backgroundColor: "rgba(255, 99, 132, 0.8)",
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderWidth: 1,
-                data: compromisedChartData.series[0],
+                data: combinedData.dataCompromised,
             },
         ],
     },
