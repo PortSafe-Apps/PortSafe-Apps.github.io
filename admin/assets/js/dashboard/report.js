@@ -245,26 +245,29 @@ const locationCountsUnsafe = processDataForLocationBarChart(unsafeDataResponse);
 // Compromised Location Data Processing
 const locationCountsCompromised = processDataForLocationBarChart(compromisedDataResponse);
 
+// Combine all unique location names
+const allLocationNames = Array.from(new Set([...Object.keys(locationCountsUnsafe), ...Object.keys(locationCountsCompromised)]));
+
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: Object.keys(locationCountsUnsafe),
+        labels: allLocationNames,
         datasets: [
             {
                 label: "Unsafe",
                 backgroundColor: "rgba(0, 97, 242, 0.8)",
                 borderColor: "rgba(0, 97, 242, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsUnsafe),
+                data: allLocationNames.map(name => locationCountsUnsafe[name] || 0),
             },
             {
                 label: "Compromised",
                 backgroundColor: "rgba(255, 99, 132, 0.8)",
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsCompromised),
+                data: allLocationNames.map(name => locationCountsCompromised[name] || 0),
             },
         ],
     },
