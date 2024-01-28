@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", function () {
   let targetURL =
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/register";
 
+  let token = 'token';
+
   // You can add an input field or configuration logic to set the endpoint dynamically if needed
 
   form.addEventListener("submit", async function (event) {
