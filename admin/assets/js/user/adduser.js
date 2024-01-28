@@ -86,7 +86,7 @@ const addUser = async (event) => {
         showAlert(data.message, 'error');
       } else {
         showAlert("User added successfully!", 'success');
-        window.location.href = 'user-management-list.html';
+        window.location.href = 'user-management-list-user.html';
       }
     } catch (error) {
       console.error('Error:', error);
