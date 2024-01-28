@@ -222,67 +222,77 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
-
 // Process Data for Location Bar Chart
-function processDataForLocationBarChart(dataResponse) {
+function processDataForLocationBarChart(reportData) {
     const locationCounts = {};
+    const locationLabels = [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+    ];
 
-    dataResponse.data.forEach((report) => {
-        const locationName = report.locationName;
-
-        if (!locationCounts[locationName]) {
-            locationCounts[locationName] = 1;
-        } else {
-            locationCounts[locationName]++;
-        }
+    // Inisialisasi counts dengan 0
+    locationLabels.forEach((label) => {
+        locationCounts[label] = 0;
     });
 
-    return locationCounts;
+    // Hitung jumlah laporan untuk setiap lokasi
+    reportData.forEach((report) => {
+        const locationName = report.location.locationName || "Unknown Location";
+        locationCounts[locationName]++;
+    });
+
+    // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
+    const sortedLabels = locationLabels.sort(
+        (a, b) => locationCounts[b] - locationCounts[a]
+    );
+    const sortedSeries = sortedLabels.map((label) => locationCounts[label]);
+
+    return {
+        labels: sortedLabels,
+        series: [sortedSeries], // Tetap dalam bentuk array
+    };
 }
 
 // Unsafe Location Data Processing
-const locationCountsUnsafe = processDataForLocationBarChart(unsafeDataResponse);
+const unsafeChartData = processDataForLocationBarChart(unsafeDataResponse);
 
 // Compromised Location Data Processing
-const locationCountsCompromised = processDataForLocationBarChart(compromisedDataResponse);
+const compromisedChartData = processDataForLocationBarChart(compromisedDataResponse);
 
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: [
-            "Kantor Pusat SPMT",
-            "Branch Dumai",
-            "Branch Belawan",
-            "Branch Tanjung Intan",
-            "Branch Bumiharjo - Bagendang",
-            "Branch Tanjung Wangi",
-            "Branch Makassar",
-            "Branch Balikpapan",
-            "Branch Trisakti - Mekar Putih",
-            "Branch Jamrud Nilam Mirah",
-            "Branch Lembar - Badas",
-            "Branch Tanjung Emas",
-            "Branch ParePare - Garongkong",
-            "Branch Lhokseumawe",
-            "Branch Malahayati",
-            "Branch Gresik"
-        ],
+        labels: unsafeChartData.labels, // Use either Unsafe or Compromised labels since they should be the same
         datasets: [
             {
                 label: "Unsafe",
                 backgroundColor: "rgba(0, 97, 242, 0.8)",
                 borderColor: "rgba(0, 97, 242, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsUnsafe),
+                data: unsafeChartData.series[0],
             },
             {
                 label: "Compromised",
                 backgroundColor: "rgba(255, 99, 132, 0.8)",
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderWidth: 1,
-                data: Object.values(locationCountsCompromised),
+                data: compromisedChartData.series[0],
             },
         ],
     },
