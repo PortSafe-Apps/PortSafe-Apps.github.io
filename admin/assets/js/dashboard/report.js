@@ -528,130 +528,126 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
 });
 
 const typeDangerousActionsLabels = [
-    "REAKSI ORANG",
-    "ALAT PELINDUNG DIRI",
-    "POSISI ORANG",
-    "ALAT DAN PERLENGKAPAN",
-    "PROSEDUR DAN CARA KERJA",
-  ];
-  
-  // Process Data for Type Dangerous Actions Pie Chart
-  function processDataForTypeDangerousActionsPieChart(
+  "REAKSI ORANG",
+  "ALAT PELINDUNG DIRI",
+  "POSISI ORANG",
+  "ALAT DAN PERLENGKAPAN",
+  "PROSEDUR DAN CARA KERJA",
+];
+
+// Process Data for Type Dangerous Actions Pie Chart
+function processDataForTypeDangerousActionsPieChart(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  const typeDangerousActionsCountsUnsafe = {};
+  const typeDangerousActionsCountsCompromised = {};
+
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsUnsafe[typeName]) {
+      typeDangerousActionsCountsUnsafe[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsUnsafe[typeName]++;
+    }
+  });
+
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsCompromised[typeName]) {
+      typeDangerousActionsCountsCompromised[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsCompromised[typeName]++;
+    }
+  });
+
+  // Combine labels and counts
+  const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
+  const combinedTypeDangerousActionsData = typeDangerousActionsLabels.map(
+    (type) => {
+      const unsafeCount = typeDangerousActionsCountsUnsafe[type] || 0;
+      const compromisedCount = typeDangerousActionsCountsCompromised[type] || 0;
+      return unsafeCount + compromisedCount;
+    }
+  );
+
+  return {
+    labels: combinedTypeDangerousActionsLabels,
+    data: combinedTypeDangerousActionsData,
+  };
+}
+
+const combinedTypeDangerousActionsData =
+  processDataForTypeDangerousActionsPieChart(
     unsafeDataResponse,
     compromisedDataResponse
-  ) {
-    const typeDangerousActionsCountsUnsafe = {};
-    const typeDangerousActionsCountsCompromised = {};
-  
-    // Process Unsafe Data
-    unsafeDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (!typeDangerousActionsCountsUnsafe[typeName]) {
-        typeDangerousActionsCountsUnsafe[typeName] = 1;
-      } else {
-        typeDangerousActionsCountsUnsafe[typeName]++;
-      }
-    });
-  
-    // Process Compromised Data
-    compromisedDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (!typeDangerousActionsCountsCompromised[typeName]) {
-        typeDangerousActionsCountsCompromised[typeName] = 1;
-      } else {
-        typeDangerousActionsCountsCompromised[typeName]++;
-      }
-    });
-  
-    // Combine labels and counts
-    const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
-    const combinedTypeDangerousActionsData = typeDangerousActionsLabels.map(
-      (type) => {
-        const unsafeCount = typeDangerousActionsCountsUnsafe[type] || 0;
-        const compromisedCount = typeDangerousActionsCountsCompromised[type] || 0;
-        return unsafeCount + compromisedCount;
-      }
-    );
-  
-    return {
-      labels: combinedTypeDangerousActionsLabels,
-      data: combinedTypeDangerousActionsData,
-    };
-  }
-  
-  const combinedTypeDangerousActionsData =
-    processDataForTypeDangerousActionsPieChart(
-      unsafeDataResponse,
-      compromisedDataResponse
-    );
-  
-  // Define colors for both series
-  const colors = [
-    "rgba(255, 99, 132, 0.8)",
-    "rgba(255, 206, 86, 0.8)",
-    "rgba(75, 192, 192, 0.8)",
-    "rgba(54, 162, 235, 0.8)",
-    "rgba(153, 102, 255, 0.8)",
-  ];
-  
-  var ctxTypeDangerousActions = document.getElementById(
-    "myPieChartForTypeDangerousActions"
   );
-  var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
-    type: "pie",
-    data: {
-      labels: combinedTypeDangerousActionsData.labels,
-      datasets: [
-        {
-          data: combinedTypeDangerousActionsData.data,
-          backgroundColor: colors,
-        },
-      ],
-    },
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 10,
-          right: 10,
-          top: 0,
-          bottom: 0,
-        },
+
+// Define colors for both series
+const colors = [
+  "rgba(255, 99, 132, 0.8)",
+  "rgba(255, 206, 86, 0.8)",
+  "rgba(75, 192, 192, 0.8)",
+  "rgba(54, 162, 235, 0.8)",
+  "rgba(153, 102, 255, 0.8)",
+];
+
+var ctxTypeDangerousActions = document.getElementById(
+  "myPieChartForTypeDangerousActions"
+);
+var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
+  type: "pie",
+  data: {
+    labels: combinedTypeDangerousActionsData.labels,
+    datasets: [
+      {
+        data: combinedTypeDangerousActionsData.data,
+        backgroundColor: colors,
       },
-      legend: {
-        display: true,
-        position: "top",
-      },
-      tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleMarginBottom: 10,
-        titleFontColor: "#6e707e",
-        titleFontSize: 14,
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        displayColors: false,
-        intersect: false,
-        mode: "index",
-        caretPadding: 10,
-        callbacks: {
-          label: function (tooltipItem, chart) {
-            const typeName = chart.data.labels[tooltipItem.index];
-            const value = chart.data.datasets[0].data[tooltipItem.index];
-            return `${typeName}: ${value} (Unsafe and Compromised)`;
-          },
-        },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
       },
     },
-  });
-  
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleFontColor: "#6e707e",
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          const datasetLabel = data.datasets[0].label || "";
+          const value = data.datasets[0].data[tooltipItem.index];
+          return `${datasetLabel}: ${value} (Unsafe and Compromised)`;
+        },
+        title: function (tooltipItem, data) {
+          return data.labels[tooltipItem[0].index];
+        },
+      },
+    },
+  },
+});
