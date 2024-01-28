@@ -535,18 +535,28 @@ const typeDangerousActionsLabels = [
   "PROSEDUR DAN CARA KERJA",
 ];
 
+// Define colors for both series
+const colors = [
+  "rgba(255, 99, 132, 0.8)",
+  "rgba(255, 206, 86, 0.8)",
+  "rgba(75, 192, 192, 0.8)",
+  "rgba(54, 162, 235, 0.8)",
+  "rgba(153, 102, 255, 0.8)",
+];
+
+// Declare variables here in the appropriate scope
+const typeDangerousActionsCountsUnsafe = {};
+const typeDangerousActionsCountsCompromised = {};
+
 // Process Data for Type Dangerous Actions Pie Chart
 function processDataForTypeDangerousActionsPieChart(
   unsafeDataResponse,
   compromisedDataResponse
 ) {
-  const typeDangerousActionsCountsUnsafe = {};
-  const typeDangerousActionsCountsCompromised = {};
-
   // Process Unsafe Data
   unsafeDataResponse.data.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
 
     const typeName = typeDangerousAction.typeName;
@@ -560,7 +570,7 @@ function processDataForTypeDangerousActionsPieChart(
   // Process Compromised Data
   compromisedDataResponse.data.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
 
     const typeName = typeDangerousAction.typeName;
@@ -592,15 +602,6 @@ const combinedTypeDangerousActionsData =
     unsafeDataResponse,
     compromisedDataResponse
   );
-
-// Define colors for both series
-const colors = [
-  "rgba(255, 99, 132, 0.8)",
-  "rgba(255, 206, 86, 0.8)",
-  "rgba(75, 192, 192, 0.8)",
-  "rgba(54, 162, 235, 0.8)",
-  "rgba(153, 102, 255, 0.8)",
-];
 
 var ctxTypeDangerousActions = document.getElementById(
   "myPieChartForTypeDangerousActions"
