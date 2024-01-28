@@ -673,16 +673,34 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
 pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
     const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
     if (activeElements.length > 0) {
-      const clickedIndex = activeElements[0]._index;
-      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
-  
-      // Get subtypes and counts for the clicked type
-      const subtypesData = getSubtypesData(clickedType);
-  
-      // Create and display a new pie chart for subtypes
-      createSubtypesPieChart(subtypesData);
+        const clickedIndex = activeElements[0]._index;
+        const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+        // Get subtypes and counts for the clicked type
+        const subtypesData = getSubtypesData(clickedType);
+
+        // Find the subtype with the highest count
+        const maxSubtype = findMaxSubtype(subtypesData);
+
+        // Create and display a new pie chart for subtypes
+        createSubtypesPieChart(subtypesData, maxSubtype);
     }
-  });
+});
+
+// Function to find the subtype with the highest count
+function findMaxSubtype(subtypesData) {
+    let maxCount = 0;
+    let maxSubtype = null;
+
+    for (const subtype in subtypesData) {
+        if (subtypesData[subtype] > maxCount) {
+            maxCount = subtypesData[subtype];
+            maxSubtype = subtype;
+        }
+    }
+
+    return maxSubtype;
+}
   
   // Function to get subtypes and counts for a given type
   function getSubtypesData(type) {
@@ -732,60 +750,60 @@ pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event
   
   // Function to create and display a pie chart for subtypes
 function createSubtypesPieChart(subtypesData) {
-    var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
-    const pieChartForSubtypes = new Chart(ctxSubtypes, {
-      type: "pie",
-      data: {
-        labels: subtypesData.labels,
-        datasets: [
-          {
-            data: subtypesData.data,
-            backgroundColor: colors,
-          },
-        ],
+  var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
+  const pieChartForSubtypes = new Chart(ctxSubtypes, {
+    type: "pie",
+    data: {
+      labels: subtypesData.labels,
+      datasets: [
+        {
+          data: subtypesData.data,
+          backgroundColor: colors,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
       },
-      options: {
-        maintainAspectRatio: false,
-        layout: {
-          padding: {
-            left: 10,
-            right: 10,
-            top: 0,
-            bottom: 0,
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleFontColor: "#6e707e",
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        callbacks: {
+          label: function (tooltipItem, data) {
+            const datasetLabel = data.datasets[0].label || "";
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
-        },
-        legend: {
-          display: true,
-          position: "top",
-        },
-        tooltips: {
-          backgroundColor: "rgb(255,255,255)",
-          bodyFontColor: "#858796",
-          titleFontColor: "#6e707e",
-          borderColor: "#dddfeb",
-          borderWidth: 1,
-          xPadding: 15,
-          yPadding: 15,
-          callbacks: {
-            label: function (tooltipItem, data) {
-              const datasetLabel = data.datasets[0].label || "";
-              return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
-            },
-            title: function (tooltipItem, data) {
-              return data.labels[tooltipItem[0].index];
-            },
-          },
-        },
-        plugins: {
-          datalabels: {
-            formatter: (value) => {
-              return `Total: ${value}`;
-            },
-            color: "#fff",
-            anchor: "end",
-            align: "start",
+          title: function (tooltipItem, data) {
+            return data.labels[tooltipItem[0].index];
           },
         },
       },
-    });
-  }
+      plugins: {
+        datalabels: {
+          formatter: (value) => {
+            return `Total: ${value}`;
+          },
+          color: "#fff",
+          anchor: "end",
+          align: "start",
+        },
+      },
+    },
+  });
+}
