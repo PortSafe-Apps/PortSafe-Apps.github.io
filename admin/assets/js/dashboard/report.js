@@ -528,146 +528,146 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
 });
 
 const typeDangerousActionsLabels = [
-    "REAKSI ORANG", 
-    "ALAT PELINDUNG DIRI",
-    "POSISI ORANG",
-    "ALAT DAN PERLENGKAPAN",
-    "PROSEDUR DAN CARA KERJA",
-  ];
-  
-  // Process Data for Type Dangerous Actions Multi-Series Pie Chart
-  function processDataForMultiSeriesPieChart(unsafeDataResponse, compromisedDataResponse) {
-    const typeDangerousActionsCountsUnsafe = {};
-    const typeDangerousActionsCountsCompromised = {};
-  
-    // Process Unsafe Data
-    unsafeDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (!typeDangerousActionsCountsUnsafe[typeName]) {
-        typeDangerousActionsCountsUnsafe[typeName] = 1;
-      } else {
-        typeDangerousActionsCountsUnsafe[typeName]++;
-      }
-    });
-  
-    // Process Compromised Data
-    compromisedDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (!typeDangerousActionsCountsCompromised[typeName]) {
-        typeDangerousActionsCountsCompromised[typeName] = 1;
-      } else {
-        typeDangerousActionsCountsCompromised[typeName]++;
-      }
-    });
-  
-    // Combine labels and counts
-    const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
-    const combinedTypeDangerousActionsDataUnsafe = typeDangerousActionsLabels.map(
-      (type) => typeDangerousActionsCountsUnsafe[type] || 0
-    );
-    const combinedTypeDangerousActionsDataCompromised = typeDangerousActionsLabels.map(
+  "REAKSI ORANG",
+  "ALAT PELINDUNG DIRI",
+  "POSISI ORANG",
+  "ALAT DAN PERLENGKAPAN",
+  "PROSEDUR DAN CARA KERJA",
+];
+
+// Process Data for Type Dangerous Actions Pie Chart
+function processDataForTypeDangerousActionsPieChart(
+  unsafeDataResponse,
+  compromisedDataResponse
+) {
+  const typeDangerousActionsCountsUnsafe = {};
+  const typeDangerousActionsCountsCompromised = {};
+
+  // Process Unsafe Data
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsUnsafe[typeName]) {
+      typeDangerousActionsCountsUnsafe[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsUnsafe[typeName]++;
+    }
+  });
+
+  // Process Compromised Data
+  compromisedDataResponse.data.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0] // Assuming only one type is associated with each report
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (!typeDangerousActionsCountsCompromised[typeName]) {
+      typeDangerousActionsCountsCompromised[typeName] = 1;
+    } else {
+      typeDangerousActionsCountsCompromised[typeName]++;
+    }
+  });
+
+  // Combine labels and counts
+  const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
+  const combinedTypeDangerousActionsDataUnsafe = typeDangerousActionsLabels.map(
+    (type) => typeDangerousActionsCountsUnsafe[type] || 0
+  );
+  const combinedTypeDangerousActionsDataCompromised =
+    typeDangerousActionsLabels.map(
       (type) => typeDangerousActionsCountsCompromised[type] || 0
     );
-  
-    return {
-      labels: combinedTypeDangerousActionsLabels,
-      dataUnsafe: combinedTypeDangerousActionsDataUnsafe,
-      dataCompromised: combinedTypeDangerousActionsDataCompromised,
-    };
-  }
-  
-  const combinedTypeDangerousActionsData =
-    processDataForMultiSeriesPieChart(unsafeDataResponse, compromisedDataResponse);
-  
-  // Define colors for each series
-  const colorsUnsafe = [
-    "rgba(255, 99, 132, 0.8)",
-    "rgba(255, 206, 86, 0.8)",
-    "rgba(75, 192, 192, 0.8)",
-    "rgba(54, 162, 235, 0.8)",
-    "rgba(153, 102, 255, 0.8)",
-  ];
-  
-  const colorsCompromised = [
-    "rgba(255, 0, 0, 0.8)",
-    "rgba(255, 165, 0, 0.8)",
-    "rgba(255, 255, 0, 0.8)",
-    "rgba(0, 128, 0, 0.8)",
-    "rgba(0, 0, 255, 0.8)",
-  ];
-  
-  // Calculate percentages for each data point
-  const totalUnsafe = combinedTypeDangerousActionsData.dataUnsafe.reduce((acc, val) => acc + val, 0);
-  const totalCompromised = combinedTypeDangerousActionsData.dataCompromised.reduce((acc, val) => acc + val, 0);
-  
-  const percentagesUnsafe = combinedTypeDangerousActionsData.dataUnsafe.map(val => ((val / totalUnsafe) * 100).toFixed(2));
-  const percentagesCompromised = combinedTypeDangerousActionsData.dataCompromised.map(val => ((val / totalCompromised) * 100).toFixed(2));
-  
-  var ctxTypeDangerousActionsMultiSeries = document.getElementById(
-    "myMultiSeriesPieChartForTypeDangerousActions"
+
+  return {
+    labels: combinedTypeDangerousActionsLabels,
+    dataUnsafe: combinedTypeDangerousActionsDataUnsafe,
+    dataCompromised: combinedTypeDangerousActionsDataCompromised,
+  };
+}
+
+const combinedTypeDangerousActionsData =
+  processDataForTypeDangerousActionsPieChart(
+    unsafeDataResponse,
+    compromisedDataResponse
   );
-  var multiSeriesPieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActionsMultiSeries, {
-    type: "pie",
-    data: {
-      labels: combinedTypeDangerousActionsData.labels,
-      datasets: [
-        {
-          data: combinedTypeDangerousActionsData.dataUnsafe,
-          backgroundColor: colorsUnsafe,
-          label: 'Unsafe',
-        },
-        {
-          data: combinedTypeDangerousActionsData.dataCompromised,
-          backgroundColor: colorsCompromised,
-          label: 'Compromised',
-        },
-      ],
-    },
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 10,
-          right: 10,
-          top: 0,
-          bottom: 0,
-        },
+
+// Define colors for each series
+const colorsUnsafe = [
+  "rgba(255, 99, 132, 0.8)",
+  "rgba(255, 206, 86, 0.8)",
+  "rgba(75, 192, 192, 0.8)",
+  "rgba(54, 162, 235, 0.8)",
+  "rgba(153, 102, 255, 0.8)",
+];
+
+const colorsCompromised = [
+  "rgba(255, 0, 0, 0.8)",
+  "rgba(255, 165, 0, 0.8)",
+  "rgba(255, 255, 0, 0.8)",
+  "rgba(0, 128, 0, 0.8)",
+  "rgba(0, 0, 255, 0.8)",
+];
+
+var ctxTypeDangerousActions = document.getElementById(
+  "myPieChartForTypeDangerousActions"
+);
+var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
+  type: "pie",
+  data: {
+    labels: combinedTypeDangerousActionsData.labels,
+    datasets: [
+      {
+        data: combinedTypeDangerousActionsData.dataUnsafe,
+        backgroundColor: colorsUnsafe,
+        label: "Unsafe",
       },
-      legend: {
-        display: true,
-        position: "top",
+      {
+        data: combinedTypeDangerousActionsData.dataCompromised,
+        backgroundColor: colorsCompromised,
+        label: "Compromised",
       },
-      tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleMarginBottom: 10,
-        titleFontColor: "#6e707e",
-        titleFontSize: 14,
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        displayColors: false,
-        intersect: false,
-        mode: "index",
-        caretPadding: 10,
-        callbacks: {
-          label: function (tooltipItem, chart) {
-            const datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
-            const value = chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
-            const percentage = chart.datasets[tooltipItem.datasetIndex].label === 'Unsafe' ? percentagesUnsafe[tooltipItem.index] : percentagesCompromised[tooltipItem.index];
-            return `${datasetLabel}: ${value} (${percentage}%)`;
-          },
-        },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
       },
     },
-  });
-  
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          const datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          const value =
+            chart.datasets[tooltipItem.datasetIndex].data[tooltipItem.index];
+          return `${datasetLabel}: ${value}`;
+        },
+      },
+    },
+  },
+});
