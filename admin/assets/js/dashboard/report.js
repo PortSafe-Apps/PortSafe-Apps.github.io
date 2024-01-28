@@ -11,9 +11,9 @@ function getTokenFromCookies(cookieName) {
 }
 
 // Set new default font family and font color to mimic Bootstrap's default styling
-Chart.defaults.font.family =
+Chart.defaults.font.defaultFontFamily =
   "'Poppins', '-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif'";
-Chart.defaults.font.color = "#858796";
+Chart.defaults.font.defaultFontColor = "#858796";
 
 // Function for number formatting
 function number_format(number) {
