@@ -668,3 +668,124 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
     },
   },
 });
+
+// Add click event listener to the pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+    if (activeElements.length > 0) {
+      const clickedIndex = activeElements[0]._index;
+      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+  
+      // Get subtypes and counts for the clicked type
+      const subtypesData = getSubtypesData(clickedType);
+  
+      // Create and display a new pie chart for subtypes
+      createSubtypesPieChart(subtypesData);
+    }
+  });
+  
+  // Function to get subtypes and counts for a given type
+  function getSubtypesData(type) {
+    const subtypesCounts = {};
+    unsafeDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    compromisedDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    const subtypesLabels = Object.keys(subtypesCounts);
+    const subtypesData = subtypesLabels.map(subtype => subtypesCounts[subtype]);
+  
+    return {
+      labels: subtypesLabels,
+      data: subtypesData,
+    };
+  }
+  
+  // Function to create and display a pie chart for subtypes
+function createSubtypesPieChart(subtypesData) {
+    var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
+    const pieChartForSubtypes = new Chart(ctxSubtypes, {
+      type: "pie",
+      data: {
+        labels: subtypesData.labels,
+        datasets: [
+          {
+            data: subtypesData.data,
+            backgroundColor: colors,
+          },
+        ],
+      },
+      options: {
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 10,
+            right: 10,
+            top: 0,
+            bottom: 0,
+          },
+        },
+        legend: {
+          display: true,
+          position: "top",
+        },
+        tooltips: {
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          titleFontColor: "#6e707e",
+          borderColor: "#dddfeb",
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          callbacks: {
+            label: function (tooltipItem, data) {
+              const datasetLabel = data.datasets[0].label || "";
+              return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
+            },
+            title: function (tooltipItem, data) {
+              return data.labels[tooltipItem[0].index];
+            },
+          },
+        },
+        plugins: {
+          datalabels: {
+            formatter: (value) => {
+              return `Total: ${value}`;
+            },
+            color: "#fff",
+            anchor: "end",
+            align: "start",
+          },
+        },
+      },
+    });
+  }
