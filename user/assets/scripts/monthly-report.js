@@ -86,7 +86,7 @@ const unsafeDataResponse = await fetchDataFromServer(
 
 // Compromised Data Fetch
 const compromisedDataResponse = await fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromisedbyUser",
   "Compromised Action"
 );
 
@@ -182,7 +182,7 @@ var multiAxisLineChart = new Chart(ctx, {
           },
           ticks: {
             maxTicksLimit: 7,
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+            fontSize: 14, 
           },
         },
       ],
