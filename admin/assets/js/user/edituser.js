@@ -24,10 +24,16 @@ const searchUserByNipp = async (nipp) => {
     const token = getTokenFromCookies('Login');
 
     if (!token) {
-        showAlert("Anda Belum Login", 'error');
+        Swal.fire({
+            icon: 'warning',
+            title: 'Authentication Error',
+            text: 'Kamu Belum Login!',
+        }).then(() => {
+            window.location.href = 'https://portsafe-apps.github.io/';
+        });
         return;
     }
-
+  
     const targetURL = 'https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/getUser';
 
     const myHeaders = new Headers();

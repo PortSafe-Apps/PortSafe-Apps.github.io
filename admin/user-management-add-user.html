@@ -130,7 +130,7 @@
                <div class="container-xl px-4 mt-n10">
                 <div class="card">
                     <div class="card-body">
-                        <form>
+                        <form id="userForm">
                             <!-- Form Row-->
                             <div class="row gx-3 mb-3">
                                 <!-- Form Group (nipp)-->
@@ -213,7 +213,7 @@
                                 <input class="form-control" id="password" type="text" placeholder="Masukkan Password" value="" />
                             </div>
                             <!-- Submit button-->
-                            <button class="btn btn-primary" type="button">Add user</button>
+                            <button class="btn btn-primary" type="submit">Add user</button>
                         </form>
                     </div>
                 </div>
@@ -239,6 +239,15 @@
     <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
         crossorigin="anonymous"></script>
     <script src="assets/js/datatables/datatables-simple-demo.js"></script>
+    <script src="assets/js/user/adduser.js" type="module"></script>
+    <!-- Logout Configuration -->
+    <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Modal -->
+    <script src="/user/assets/scripts/config/modal.js" type="module"></script>
 </body>
 
 </html>
