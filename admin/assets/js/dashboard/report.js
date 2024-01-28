@@ -251,7 +251,24 @@ var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: Object.keys(locationCountsUnsafe), // or use Object.keys(locationCountsCompromised) for compromised data
+        labels: [
+            "Kantor Pusat SPMT",
+            "Branch Dumai",
+            "Branch Belawan",
+            "Branch Tanjung Intan",
+            "Branch Bumiharjo - Bagendang",
+            "Branch Tanjung Wangi",
+            "Branch Makassar",
+            "Branch Balikpapan",
+            "Branch Trisakti - Mekar Putih",
+            "Branch Jamrud Nilam Mirah",
+            "Branch Lembar - Badas",
+            "Branch Tanjung Emas",
+            "Branch ParePare - Garongkong",
+            "Branch Lhokseumawe",
+            "Branch Malahayati",
+            "Branch Gresik"
+        ],
         datasets: [
             {
                 label: "Unsafe",
@@ -325,4 +342,3 @@ var horizontalBarChart = new Chart(ctxLocation, {
         },
     },
 });
-
