@@ -606,7 +606,7 @@ const combinedTypeDangerousActionsData =
 var ctxTypeDangerousActions = document.getElementById(
   "myPieChartForTypeDangerousActions"
 );
-var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
+const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
   type: "pie",
   data: {
     labels: combinedTypeDangerousActionsData.labels,
@@ -654,6 +654,15 @@ var pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
         title: function (tooltipItem, data) {
           return data.labels[tooltipItem[0].index];
         },
+      },
+    },
+    // Add custom label on the pie chart
+    plugins: {
+      datalabels: {
+        formatter: (value, context) => {
+          return value; // Display only the combined count
+        },
+        color: "#fff", // label text color
       },
     },
   },
