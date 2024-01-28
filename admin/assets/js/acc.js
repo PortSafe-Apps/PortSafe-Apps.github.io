@@ -54,14 +54,17 @@ function getTokenFromCookies(cookieName) {
   function displayUserDataProfile(userData) {
     const namaProfil = document.getElementById("nama-profil");
     const jabatanProfil = document.getElementById("Jabatan-profil");
+    const namaProfil2 = document.getElementById("nama-profil2");
   
     if (userData && userData.length > 0) {
         const user = userData[0];
         namaProfil.textContent = user.nama;
         jabatanProfil.textContent = user.jabatan;
+        namaProfil2.textContent = user.nama;
     } else {
         namaProfil.textContent = 'No user data found';
         jabatanProfil.textContent = '';
+        namaProfil2.textContent = 'No user data found';
     }
   }
   

@@ -6,14 +6,15 @@ const showAlert = (message, type) => {
   });
 };
 
+// Define the token variable outside the callback function
+let token = "token";
+
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.querySelector("form");
 
   // Define a default endpoint
   let targetURL =
     "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/register";
-
-  let token = 'token';
 
   // You can add an input field or configuration logic to set the endpoint dynamically if needed
 
