@@ -48,9 +48,9 @@ const addUser = async (event) => {
     const nipp = document.getElementById('nipp').value;
     const nama = document.getElementById('nama').value;
     const selectedJabatan = document.querySelector('input[name="radioJabatan"]:checked');
+    const unitKerja = document.querySelector("#location").value
     const jabatan = selectedJabatan ? selectedJabatan.value : null;
-    const unitKerja = document.querySelector('select[name="unitKerja"]').value;
-    const role = document.querySelector('select[name="role"]').value;
+    const role = document.querySelector("#role").value
     const password = document.getElementById('password').value;
   
     // Check for empty values
