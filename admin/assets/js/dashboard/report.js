@@ -316,14 +316,14 @@ var horizontalBarChart = new Chart(ctxLocation, {
     labels: combinedData.labels,
     datasets: [
       {
-        label: "Tidak Aman",
+        label: "Unsafe",
         backgroundColor: "rgba(0, 97, 242, 0.8)",
         borderColor: "rgba(0, 97, 242, 1)",
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
-        label: "Terompah",
+        label: "Compromised",
         backgroundColor: "rgba(255, 99, 132, 0.8)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
@@ -382,21 +382,6 @@ var horizontalBarChart = new Chart(ctxLocation, {
           var datasetLabel =
             chart.datasets[tooltipItem.datasetIndex].label || "";
           return datasetLabel + ": " + tooltipItem.xLabel;
-        },
-      },
-    },
-    // Tampilkan semua label pada sumbu y
-    plugins: {
-      datalabels: {
-        display: true,
-        anchor: 'end',
-        align: 'end',
-        color: 'black',
-        font: {
-          size: 14,
-        },
-        formatter: function (value, context) {
-          return context.chart.data.labels[context.dataIndex];
         },
       },
     },
