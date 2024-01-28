@@ -222,9 +222,9 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
-// Process Data for Location Bar Chart
 function processDataForLocationBarChart(reportData) {
     const locationCounts = {};
+
     const locationLabels = [
         "Kantor Pusat SPMT",
         "Branch Dumai",
@@ -244,18 +244,21 @@ function processDataForLocationBarChart(reportData) {
         "Branch Gresik",
     ];
 
-    // Inisialisasi counts dengan 0
     locationLabels.forEach((label) => {
         locationCounts[label] = 0;
     });
 
-    // Hitung jumlah laporan untuk setiap lokasi
-    reportData.forEach((report) => {
-        const locationName = report.location.locationName || "Unknown Location";
-        locationCounts[locationName]++;
-    });
+    if (Array.isArray(reportData)) {
+        reportData.forEach((report) => {
+            const locationName = report.location.locationName || "Lokasi Tidak Dikenal";
+            locationCounts[locationName]++;
+        });
+    } else {
 
-    // Mendapatkan labels dan series sesuai urutan dari yang paling banyak
+        console.error("reportData tidak valid. Harap berikan array.");
+        return null;
+    }
+
     const sortedLabels = locationLabels.sort(
         (a, b) => locationCounts[b] - locationCounts[a]
     );
@@ -263,22 +266,18 @@ function processDataForLocationBarChart(reportData) {
 
     return {
         labels: sortedLabels,
-        series: [sortedSeries], // Tetap dalam bentuk array
+        series: [sortedSeries], 
     };
 }
 
-// Unsafe Location Data Processing
 const unsafeChartData = processDataForLocationBarChart(unsafeDataResponse);
-
-// Compromised Location Data Processing
 const compromisedChartData = processDataForLocationBarChart(compromisedDataResponse);
-
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: unsafeChartData.labels, // Use either Unsafe or Compromised labels since they should be the same
+        labels: locationLabels,
         datasets: [
             {
                 label: "Unsafe",
