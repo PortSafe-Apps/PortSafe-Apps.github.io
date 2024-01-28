@@ -61,13 +61,15 @@ const addUser = async (event) => {
   
     // Prepare the request body
     const requestBody = {
-      nipp,
-      nama,
-      jabatan,
-      unitKerja,
-      role,
-      password,
-    };
+        nipp,
+        nama,
+        jabatan,
+        Location: {
+          LocationName: unitKerja, 
+        },
+        password,
+        role,
+      };
   
     const requestOptions = {
       method: 'POST',
