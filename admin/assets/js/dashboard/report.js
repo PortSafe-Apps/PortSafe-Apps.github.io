@@ -388,3 +388,147 @@ var horizontalBarChart = new Chart(ctxLocation, {
     },
   },
 });
+
+
+const areaLabels = [
+    "Kantor",
+    "Workshop",
+    "Gudang",
+    "Dermaga",
+    "Lapangan Penumpukan",
+    "Area kerja lainnya",
+  ];
+  
+  // Process Data for Area Bar Chart and Sort
+  function processDataForAreaBarChartAndSort(
+    unsafeDataResponse,
+    compromisedDataResponse
+  ) {
+    const areaCountsUnsafe = {};
+    const areaCountsCompromised = {};
+  
+    // Process Unsafe Data
+    unsafeDataResponse.data.forEach((report) => {
+      const areaName = report.area
+        ? report.area.areaName
+        : "Unknown";
+      if (!areaCountsUnsafe[areaName]) {
+        areaCountsUnsafe[areaName] = 1;
+      } else {
+        areaCountsUnsafe[areaName]++;
+      }
+    });
+  
+    // Process Compromised Data
+    compromisedDataResponse.data.forEach((report) => {
+      const areaName = report.area
+        ? report.area.areaName
+        : "Unknown";
+      if (!areaCountsCompromised[areaName]) {
+        areaCountsCompromised[areaName] = 1;
+      } else {
+        areaCountsCompromised[areaName]++;
+      }
+    });
+  
+    // Combine labels and counts
+    const combinedAreaLabels = areaLabels;
+    const combinedAreaDataUnsafe = areaLabels.map(
+      (area) => areaCountsUnsafe[area] || 0
+    );
+    const combinedAreaDataCompromised = areaLabels.map(
+      (area) => areaCountsCompromised[area] || 0
+    );
+  
+    return {
+      labels: combinedAreaLabels,
+      dataUnsafe: combinedAreaDataUnsafe,
+      dataCompromised: combinedAreaDataCompromised,
+    };
+  }
+  
+  const combinedAreaData = processDataForAreaBarChartAndSort(
+    unsafeDataResponse,
+    compromisedDataResponse
+  );
+  
+  var ctxArea = document.getElementById("myHorizontalBarChartForArea");
+  var horizontalBarChartForArea = new Chart(ctxArea, {
+    type: "horizontalBar",
+    data: {
+      labels: combinedAreaData.labels,
+      datasets: [
+        {
+          label: "Unsafe",
+          backgroundColor: "rgba(0, 97, 242, 0.8)",
+          borderColor: "rgba(0, 97, 242, 1)",
+          borderWidth: 1,
+          data: combinedAreaData.dataUnsafe,
+        },
+        {
+          label: "Compromised",
+          backgroundColor: "rgba(255, 99, 132, 0.8)",
+          borderColor: "rgba(255, 99, 132, 1)",
+          borderWidth: 1,
+          data: combinedAreaData.dataCompromised,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              maxTicksLimit: areaLabels.length, // Display all labels
+              fontSize: 14,
+            },
+          },
+        ],
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: "#6e707e",
+        titleFontSize: 14,
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: "index",
+        caretPadding: 10,
+        callbacks: {
+          label: function (tooltipItem, chart) {
+            var datasetLabel =
+              chart.datasets[tooltipItem.datasetIndex].label || "";
+            return datasetLabel + ": " + tooltipItem.xLabel;
+          },
+        },
+      },
+    },
+  });
+  
