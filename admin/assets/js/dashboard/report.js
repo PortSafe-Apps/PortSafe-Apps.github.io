@@ -354,6 +354,7 @@ var horizontalBarChart = new Chart(ctxLocation, {
       yAxes: [
         {
           ticks: {
+            maxTicksLimit: locationLabels.length, // Menampilkan semua label
             fontSize: 14,
           },
         },
