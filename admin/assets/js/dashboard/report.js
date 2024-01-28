@@ -327,3 +327,4 @@ var horizontalBarChart = new Chart(ctxLocation, {
         },
     },
 });
+
