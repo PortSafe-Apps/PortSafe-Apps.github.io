@@ -68,7 +68,7 @@ const getAllUserReportsForYear = async (token, targetURL, year) => {
         if (data.status === 200) {
             return data.data.length; // Return the number of reports for this URL
         } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+            console.error('Data tidak dapat ditemukan');
             return 0; // Return 0 if there is an error
         }
     } catch (error) {
@@ -96,7 +96,7 @@ const getUnsafeReportsForYear = async (token, targetURL, year) => {
         if (data.status === 200) {
             return data.data.length; // Return the number of reports for this URL
         } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+            console.error('Data tidak dapat ditemukan');
             return 0; // Return 0 if there is an error
         }
     } catch (error) {
@@ -124,7 +124,7 @@ const getCompromisedReportsForYear = async (token, targetURL, year) => {
         if (data.status === 200) {
             return data.data.length; // Return the number of reports for this URL
         } else {
-            console.error('Server response:', data.message || 'Data tidak dapat ditemukan');
+            console.error('Data tidak dapat ditemukan');
             return 0; // Return 0 if there is an error
         }
     } catch (error) {

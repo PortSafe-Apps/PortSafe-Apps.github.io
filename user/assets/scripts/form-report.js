@@ -39,7 +39,6 @@ async function getUserWithToken() {
   try {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
-    console.log("API Response:", data);
   
     if (data.status === true) {
       displayUserData(data.data);

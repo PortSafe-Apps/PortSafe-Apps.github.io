@@ -147,8 +147,7 @@ const getLatestReport = async () => {
       reportUrls.map(async ({ url, category }) => {
         const response = await fetch(url, requestOptions);
         const responseData = await response.json();
-        console.log(`Category: ${category}, Data:`, responseData);
-
+    
         const data = responseData.data; // Akses data laporan dengan benar
 
         if (Array.isArray(data) && data.length > 0) {

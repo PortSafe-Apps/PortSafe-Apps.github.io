@@ -297,15 +297,6 @@ function processDataForLocationBarChartAndSort(
     (location) => locationCountsCompromised[location] || 0
   );
 
-  console.log("Location Counts Unsafe:", locationCountsUnsafe);
-  console.log("Location Counts Compromised:", locationCountsCompromised);
-
-  console.log("Combined Location Data:", {
-    labels: combinedLabels,
-    dataUnsafe: combinedDataUnsafe,
-    dataCompromised: combinedDataCompromised,
-  });
-
   return {
     labels: combinedLabels,
     dataUnsafe: combinedDataUnsafe,
@@ -313,13 +304,11 @@ function processDataForLocationBarChartAndSort(
   };
 }
 
-// Unsafe and Compromised Location Data Processing and Sorting
 const combinedData = processDataForLocationBarChartAndSort(
   unsafeDataResponse,
   compromisedDataResponse
 );
 
-// Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
   type: "horizontalBar",
@@ -327,14 +316,14 @@ var horizontalBarChart = new Chart(ctxLocation, {
     labels: combinedData.labels,
     datasets: [
       {
-        label: "Unsafe",
+        label: "Tidak Aman",
         backgroundColor: "rgba(0, 97, 242, 0.8)",
         borderColor: "rgba(0, 97, 242, 1)",
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
-        label: "Compromised",
+        label: "Terompah",
         backgroundColor: "rgba(255, 99, 132, 0.8)",
         borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
@@ -396,10 +385,20 @@ var horizontalBarChart = new Chart(ctxLocation, {
         },
       },
     },
+    // Tampilkan semua label pada sumbu y
+    plugins: {
+      datalabels: {
+        display: true,
+        anchor: 'end',
+        align: 'end',
+        color: 'black',
+        font: {
+          size: 14,
+        },
+        formatter: function (value, context) {
+          return context.chart.data.labels[context.dataIndex];
+        },
+      },
+    },
   },
 });
-
-// Log the Unsafe Data Response and Combined Data for further inspection
-console.log("Unsafe Data Response:", unsafeDataResponse);
-console.log("Compromised Data Response:", compromisedDataResponse);
-console.log("Combined Data:", combinedData);
