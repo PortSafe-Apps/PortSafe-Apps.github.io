@@ -289,10 +289,10 @@ var horizontalBarChart = new Chart(ctxLocation, {
         maintainAspectRatio: false,
         layout: {
             padding: {
-                left: 20,
-                right: 20,
-                top: 20,
-                bottom: 20,
+                left: 0,
+                right: 10,
+                top: 5,
+                bottom: 0,
             },
         },
         scales: {
