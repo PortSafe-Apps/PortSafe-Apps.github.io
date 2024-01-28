@@ -222,6 +222,7 @@ var multiAxisLineChart = new Chart(ctx, {
     }
 });
 
+
 // Process Data for Location Bar Chart
 function processDataForLocationBarChart(dataResponse) {
     const locationCounts = {};
@@ -245,29 +246,26 @@ const locationCountsUnsafe = processDataForLocationBarChart(unsafeDataResponse);
 // Compromised Location Data Processing
 const locationCountsCompromised = processDataForLocationBarChart(compromisedDataResponse);
 
-// Combine all unique location names
-const allLocationNames = Array.from(new Set([...Object.keys(locationCountsUnsafe), ...Object.keys(locationCountsCompromised)]));
-
 // Horizontal Bar Chart Example
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-        labels: allLocationNames,
+        labels: Object.keys(locationCountsUnsafe), // or use Object.keys(locationCountsCompromised) for compromised data
         datasets: [
             {
                 label: "Unsafe",
                 backgroundColor: "rgba(0, 97, 242, 0.8)",
                 borderColor: "rgba(0, 97, 242, 1)",
                 borderWidth: 1,
-                data: allLocationNames.map(name => locationCountsUnsafe[name] || 0),
+                data: Object.values(locationCountsUnsafe),
             },
             {
                 label: "Compromised",
                 backgroundColor: "rgba(255, 99, 132, 0.8)",
                 borderColor: "rgba(255, 99, 132, 1)",
                 borderWidth: 1,
-                data: allLocationNames.map(name => locationCountsCompromised[name] || 0),
+                data: Object.values(locationCountsCompromised),
             },
         ],
     },
