@@ -656,13 +656,14 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
         },
       },
     },
-    // Add custom label on the pie chart
     plugins: {
       datalabels: {
-        formatter: (value, context) => {
-          return value; // Display only the combined count
+        formatter: (value) => {
+          return `Total: ${value}`;
         },
-        color: "#fff", // label text color
+        color: "#fff", 
+        anchor: "end", 
+        align: "start", 
       },
     },
   },
