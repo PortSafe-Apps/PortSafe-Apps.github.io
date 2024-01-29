@@ -74,10 +74,6 @@ const displayUserData = (userData, userDataBody) => {
             <td>${user.location.locationName}</td>
             <td>${user.role}</td>
             <td>${new Date(user.timestamp).toLocaleDateString()}</td>
-            <td>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark edit-link" data-nipp="${user.nipp}" data-action="editUser"><i data-feather="edit"></i></button>
-                <button class="btn btn-datatable btn-icon btn-transparent-dark delete-link" data-nipp="${user.nipp}" data-action="deleteUser"><i data-feather="trash-2"></i></button>
-            </td>
           `;
           userDataBody.appendChild(newRow);
         });
