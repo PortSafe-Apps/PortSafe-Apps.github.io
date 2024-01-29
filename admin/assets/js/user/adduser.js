@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", function () {
         showAlert(data.message, "error");
       } else {
         showAlert("User added successfully!", "success");
-        window.location.href = "user-management-list-user.html";
+        window.location.href = "user-management-list.html";
       }
     } catch (error) {
       console.error("Error:", error);
