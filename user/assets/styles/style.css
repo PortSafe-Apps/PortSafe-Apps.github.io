@@ -2530,6 +2530,33 @@ body {
   bottom: calc(10px + env(safe-area-inset-bottom)) !important;
 }
 
+#password-visibility {
+  top: 8.5px;
+  right: 0.625rem;
+  z-index: 10;
+  width: 1.5rem;
+  height: 1.5rem;
+  text-align: center;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+#password-visibility i {
+  line-height: 1.5rem;
+}
+
+#password-visibility i.fa-eye-slash {
+  display: none;
+}
+
+#password-visibility.active i.fa-eye-slash {
+  display: block;
+}
+
+#password-visibility.active i.fa-eye {
+  display: none;
+}
+
 /*Utility / Secondary Classes*/
 /*Rounded Borders*/
 .rounded-0 {

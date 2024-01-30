@@ -19,6 +19,26 @@ document.addEventListener("DOMContentLoaded", () => {
   var pwaScope = "/";
   var pwaLocation = "/service-worker.js";
 
+  //Password Visibility - Azures 3.9
+  let passWord = document.getElementById("password-visibility");
+
+  if (passWord) {
+    passWord.addEventListener("click", passwordFunction);
+  }
+
+  function passwordFunction() {
+    let passInput = document.getElementById("password");
+    if (passInput) {
+      passWord.classList.toggle("active");
+
+      if (passInput.type === "password") {
+        passInput.type = "text";
+      } else {
+        passInput.type = "password";
+      }
+    }
+  }
+
   //Place all your custom Javascript functions and plugin calls below this line
   function init_template() {
     //Caching Global Variables
@@ -88,52 +108,65 @@ document.addEventListener("DOMContentLoaded", () => {
       var textValidator = /[A-Za-z]{2}[A-Za-z]*[ ]?[A-Za-z]*/;
 
       function valid(el) {
-        el.parentElement
-          .querySelectorAll(".valid")[0]
-          .classList.remove("disabled");
-        el.parentElement
-          .querySelectorAll(".invalid")[0]
-          .classList.add("disabled");
+        var validElement = el.parentElement.querySelectorAll(".valid")[0];
+        var invalidElement = el.parentElement.querySelectorAll(".invalid")[0];
+
+        if (validElement && invalidElement) {
+          validElement.classList.remove("disabled");
+          invalidElement.classList.add("disabled");
+        }
       }
+
       function invalid(el) {
-        el.parentElement
-          .querySelectorAll(".valid")[0]
-          .classList.add("disabled");
-        el.parentElement
-          .querySelectorAll(".invalid")[0]
-          .classList.remove("disabled");
+        var validElement = el.parentElement.querySelectorAll(".valid")[0];
+        var invalidElement = el.parentElement.querySelectorAll(".invalid")[0];
+
+        if (validElement && invalidElement) {
+          validElement.classList.add("disabled");
+          invalidElement.classList.remove("disabled");
+        }
       }
+
       function unfilled(el) {
-        el.parentElement.querySelectorAll("em")[0].classList.remove("disabled");
-        el.parentElement
-          .querySelectorAll(".valid")[0]
-          .classList.add("disabled");
-        el.parentElement
-          .querySelectorAll(".invalid")[0]
-          .classList.add("disabled");
+        var emElements = el.parentElement.querySelectorAll("em");
+      
+        if (emElements.length > 0) {
+          emElements[0].classList.remove("disabled");
+        }
+      
+        var validElements = el.parentElement.querySelectorAll(".valid");
+        var invalidElements = el.parentElement.querySelectorAll(".invalid");
+      
+        if (validElements.length > 0) {
+          validElements[0].classList.add("disabled");
+        }
+      
+        if (invalidElements.length > 0) {
+          invalidElements[0].classList.add("disabled");
+        }
       }
+      
 
-      var regularField = document.querySelectorAll(
-        '.input-style input:not([type="date"])'
-      );
-      regularField.forEach((el) =>
+      var regularField = document.querySelectorAll('.input-style input:not([type="date"])');
+      regularField.forEach((el) => {
         el.addEventListener("keyup", (e) => {
-          if (!el.value == "") {
-            el.parentElement.classList.add("input-style-active");
-            el.parentElement.querySelector("em").classList.add("disabled");
-          } else {
-            el.parentElement
-              .querySelectorAll(".valid")[0]
-              .classList.add("disabled");
-            el.parentElement
-              .querySelectorAll(".invalid")[0]
-              .classList.add("disabled");
-            el.parentElement.classList.remove("input-style-active");
-            el.parentElement.querySelector("em").classList.remove("disabled");
+          var parentElement = el.parentElement;
+          var emElement = parentElement.querySelector("em");
+      
+          if (emElement) {
+            if (!el.value == "") {
+              parentElement.classList.add("input-style-active");
+              emElement.classList.add("disabled");
+            } else {
+              parentElement.querySelectorAll(".valid")[0].classList.add("disabled");
+              parentElement.querySelectorAll(".invalid")[0].classList.add("disabled");
+              parentElement.classList.remove("input-style-active");
+              emElement.classList.remove("disabled");
+            }
           }
-        })
-      );
-
+        });
+      });
+      
       var regularTextarea = document.querySelectorAll(".input-style textarea");
       regularTextarea.forEach((el) =>
         el.addEventListener("keyup", (e) => {
@@ -148,28 +181,26 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
       var selectField = document.querySelectorAll(".input-style select");
-      selectField.forEach((el) =>
+      selectField.forEach((el) => {
         el.addEventListener("change", (e) => {
-          if (el.value !== "default") {
-            el.parentElement.classList.add("input-style-active");
-            el.parentElement
-              .querySelectorAll(".valid")[0]
-              .classList.remove("disabled");
-            el.parentElement
-              .querySelectorAll(".invalid, em, span")[0]
-              .classList.add("disabled");
+          var parentElement = el.parentElement;
+          var validElement = parentElement.querySelectorAll(".valid")[0];
+          var invalidElement = parentElement.querySelectorAll(".invalid, em, span")[0];
+      
+          if (parentElement && validElement && invalidElement) {
+            if (el.value !== "default") {
+              parentElement.classList.add("input-style-active");
+              validElement.classList.remove("disabled");
+              invalidElement.classList.add("disabled");
+            } else {
+              invalidElement.classList.remove("disabled");
+              validElement.classList.add("disabled");
+              parentElement.classList.add("input-style-active");
+            }
           }
-          if (el.value == "default") {
-            el.parentElement
-              .querySelectorAll("span, .valid, em")[0]
-              .classList.add("disabled");
-            el.parentElement
-              .querySelectorAll(".invalid")[0]
-              .classList.remove("disabled");
-            el.parentElement.classList.add("input-style-active");
-          }
-        })
-      );
+        });
+      });
+      
 
       var dateField = document.querySelectorAll(
         '.input-style input[type="date"]'
@@ -190,7 +221,7 @@ document.addEventListener("DOMContentLoaded", () => {
         ".validate-field input, .validator-field textarea"
       );
       if (validateField.length) {
-        validateField.forEach((el) =>
+        validateField.forEach((el) => {
           el.addEventListener("keyup", (e) => {
             var getAttribute = el.getAttribute("type");
             switch (getAttribute) {
@@ -219,26 +250,8 @@ document.addEventListener("DOMContentLoaded", () => {
             if (el.value === "") {
               unfilled(el);
             }
-          })
-        );
-      }
-    }
-
-    //Password Visibility - Azures 3.9
-    let passWord = document.getElementById("password-visibility");
-
-    if (passWord) {
-      passWord.addEventListener("click", passwordFunction);
-    }
-
-    function passwordFunction() {
-      let passInput = document.getElementById("psw-input");
-      passWord.classList.toggle("active");
-
-      if (passInput.type === "password") {
-        passInput.type = "text";
-      } else {
-        passInput.type = "password";
+          });
+        });
       }
     }
 
