@@ -22,7 +22,7 @@ document.addEventListener("DOMContentLoaded", () => {
   //Place all your custom Javascript functions and plugin calls below this line
   function init_template() {
     //Caching Global Variables
-    var i, e, el; 
+    var i, e, el;
 
     //Greetig Heading
     var pageTitle = document.querySelectorAll(
@@ -221,6 +221,24 @@ document.addEventListener("DOMContentLoaded", () => {
             }
           })
         );
+      }
+    }
+
+    //Password Visibility - Azures 3.9
+    let passWord = document.getElementById("password-visibility");
+
+    if (passWord) {
+      passWord.addEventListener("click", passwordFunction);
+    }
+
+    function passwordFunction() {
+      let passInput = document.getElementById("psw-input");
+      passWord.classList.toggle("active");
+
+      if (passInput.type === "password") {
+        passInput.type = "text";
+      } else {
+        passInput.type = "password";
       }
     }
 
@@ -1387,7 +1405,7 @@ document.addEventListener("DOMContentLoaded", () => {
           }, 500);
         });
     });
-    
+
     //Detecting Mobile OS
     let isMobile = {
       Android: function () {
@@ -1707,7 +1725,6 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    
     //Lazy Loading
     var lazyLoad = new LazyLoad();
 
@@ -1838,7 +1855,6 @@ document.addEventListener("DOMContentLoaded", () => {
   //Fix Scroll for AJAX pages.
   if ("scrollRestoration" in window.history)
     window.history.scrollRestoration = "manual";
-
 
   init_template();
 });
