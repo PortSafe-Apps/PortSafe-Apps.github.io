@@ -125,7 +125,7 @@ const deleteUser = async (nipp) => {
     const response = await fetch(targetURL, requestOptions);
     const data = await response.json();
 
-    if (data.status === 200) {
+    if (data.status === true) {
       Swal.fire({
         title: "Success",
         text: "User deleted successfully!",
