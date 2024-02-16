@@ -29,6 +29,10 @@ async function fetchDataFromServer(url, startDate, endDate) {
   }
 }
 
+// Define global variables for month counts
+const monthCountsUnsafe = Array(12).fill(0);
+const monthCountsCompromised = Array(12).fill(0);
+
 // Fungsi untuk memperbarui chart berdasarkan data yang diterima dari server
 async function updateChart(startDate, endDate) {
   if (!startDate || !endDate) return; // Tidak melakukan apa-apa jika tanggal tidak valid
@@ -45,10 +49,11 @@ async function updateChart(startDate, endDate) {
     endDate
   );
 
-  // Proses data
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
+  // Mengatur ulang nilai variabel monthCountsUnsafe dan monthCountsCompromised menjadi 0
+  monthCountsUnsafe.fill(0);
+  monthCountsCompromised.fill(0);
 
+  // Proses data
   unsafeDataResponse.forEach((report) => {
     const month = new Date(report.date).getMonth();
     monthCountsUnsafe[month] += 1;
@@ -66,6 +71,9 @@ async function updateChart(startDate, endDate) {
   // Perbarui grafik
   multiAxisLineChart.update();
 }
+
+// Panggil fungsi updateChart dengan rentang tanggal awal saat halaman dimuat
+updateChart(null, null);
 
 // Inisialisasi Litepicker
 const litepickerRangePlugin = document.getElementById("litepickerRangePlugin");
@@ -91,9 +99,6 @@ if (litepickerRangePlugin) {
     updateChart(startDate, endDate);
   });
 }
-
-// Panggil fungsi updateChart dengan rentang tanggal awal saat halaman dimuat
-updateChart(null, null);
 
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily =
