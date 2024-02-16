@@ -151,82 +151,99 @@ var multiAxisLineChart = new Chart(ctx, {
         pointHoverBorderColor: "rgba(0, 97, 242, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [],
+        data: monthCountsUnsafe,
       },
       {
         label: "Compromised",
-        yAxisID: "y-axis-2",
+        yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 193, 7, 0.05)",
-        borderColor: "rgba(255, 193, 7, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.05)",
+        borderColor: "rgba(255, 99, 132, 1)",
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 193, 7, 1)",
-        pointBorderColor: "rgba(255, 193, 7, 1)",
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointBorderColor: "rgba(255, 99, 132, 1)",
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 193, 7, 1)",
-        pointHoverBorderColor: "rgba(255, 193, 7, 1)",
+        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [],
+        data: monthCountsCompromised,
       },
     ],
   },
   options: {
-    responsive: true,
     maintainAspectRatio: false,
-    tooltips: {
-      mode: "index",
-      intersect: false,
-      callbacks: {
-        label: function (tooltipItem, data) {
-          var label = data.datasets[tooltipItem.datasetIndex].label || "";
-          if (label) {
-            label += ": ";
-          }
-          label += number_format(tooltipItem.yLabel);
-          return label;
-        },
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
       },
-    },
-    hover: {
-      mode: "nearest",
-      intersect: true,
     },
     scales: {
       xAxes: [
         {
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: "Month",
+          time: {
+            unit: "date",
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          ticks: {
+            maxTicksLimit: 7,
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
           },
         },
       ],
       yAxes: [
         {
-          type: "linear",
-          display: true,
-          position: "left",
           id: "y-axis-1",
-          scaleLabel: {
-            display: true,
-            labelString: "Number of Reports",
-          },
-        },
-        {
-          type: "linear",
-          display: true,
-          position: "right",
-          id: "y-axis-2",
-          scaleLabel: {
-            display: true,
-            labelString: "Number of Compromised Reports",
+          position: "left",
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            callback: function (value, index, values) {
+              return number_format(value);
+            },
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
           },
           gridLines: {
-            drawOnChartArea: false,
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2],
           },
         },
       ],
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+        },
+      },
     },
   },
 });
