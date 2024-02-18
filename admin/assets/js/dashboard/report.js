@@ -10,96 +10,6 @@ function getTokenFromCookies(cookieName) {
   return null;
 }
 
-// Fungsi untuk mengambil data dari server berdasarkan rentang tanggal
-async function fetchDataFromServer(url, startDate, endDate) {
-  try {
-    const response = await fetch(
-      `${url}?startDate=${startDate}&endDate=${endDate}`
-    );
-    if (!response.ok) {
-      throw new Error(
-        `Server responded with an error: ${response.status} ${response.statusText}`
-      );
-    }
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error fetching data:", error);
-    return null;
-  }
-}
-
-// Define global variables for month counts
-const monthCountsUnsafe = Array(12).fill(0);
-const monthCountsCompromised = Array(12).fill(0);
-
-// Fungsi untuk memperbarui chart berdasarkan data yang diterima dari server
-async function updateChart(startDate, endDate) {
-  if (!startDate || !endDate) return; // Tidak melakukan apa-apa jika tanggal tidak valid
-
-  // Mengambil data dari server dengan rentang tanggal tertentu
-  const unsafeDataResponse = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
-    startDate,
-    endDate
-  );
-  const compromisedDataResponse = await fetchDataFromServer(
-    "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-    startDate,
-    endDate
-  );
-
-  // Mengatur ulang nilai variabel monthCountsUnsafe dan monthCountsCompromised menjadi 0
-  monthCountsUnsafe.fill(0);
-  monthCountsCompromised.fill(0);
-
-  // Proses data
-  unsafeDataResponse.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsUnsafe[month] += 1;
-  });
-
-  compromisedDataResponse.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsCompromised[month] += 1;
-  });
-
-  // Update data grafik
-  multiAxisLineChart.data.datasets[0].data = monthCountsUnsafe;
-  multiAxisLineChart.data.datasets[1].data = monthCountsCompromised;
-
-  // Perbarui grafik
-  multiAxisLineChart.update();
-}
-
-// Panggil fungsi updateChart dengan rentang tanggal awal saat halaman dimuat
-updateChart(null, null);
-
-// Inisialisasi Litepicker
-const litepickerRangePlugin = document.getElementById("litepickerRangePlugin");
-if (litepickerRangePlugin) {
-  const picker = new Litepicker({
-    element: litepickerRangePlugin,
-    startDate: new Date(),
-    endDate: new Date(),
-    singleMode: false,
-    numberOfMonths: 2,
-    numberOfColumns: 2,
-    format: "MMM DD, YYYY",
-    plugins: ["ranges"],
-  });
-
-  // Event listener untuk perubahan rentang tanggal pada picker
-  picker.on("selected", (date1, date2) => {
-    // Format tanggal menjadi YYYY-MM-DD
-    const startDate = date1 ? date1.format("YYYY-MM-DD") : null;
-    const endDate = date2 ? date2.format("YYYY-MM-DD") : null;
-
-    // Perbarui chart dengan rentang tanggal yang dipilih
-    updateChart(startDate, endDate);
-  });
-}
-
 // Set new default font family and font color to mimic Bootstrap's default styling
 Chart.defaults.global.defaultFontFamily =
   "'Poppins', '-apple-system,system-ui,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif'";
@@ -121,6 +31,80 @@ function number_format(number) {
 
   return s.join(dec);
 }
+
+// Function to fetch data from the server (similar to your existing logic)
+async function fetchDataFromServer(url, category) {
+  try {
+    const token = getTokenFromCookies("Login");
+
+    if (!token) {
+      // Tangani kesalahan autentikasi jika tidak ada token
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return { category, data: [] };
+    }
+
+    const myHeaders = new Headers();
+    myHeaders.append("Login", token);
+
+    const requestOptions = {
+      method: "POST",
+      headers: myHeaders,
+      redirect: "follow",
+    };
+
+    const response = await fetch(url, requestOptions);
+
+    // Add error logging to fetchDataFromServer function
+    if (!response.ok) {
+      console.error(
+        "Server responded with an error:",
+        response.status,
+        response.statusText
+      );
+      return { category, data: [] };
+    }
+
+    const data = await response.json();
+    return { category, data: data.data || [] };
+  } catch (error) {
+    console.error("Error fetching data:", error);
+    return { category, data: [] };
+  }
+}
+
+// Unsafe Data Fetch
+const unsafeDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
+  "Unsafe Action"
+);
+
+// Compromised Data Fetch
+const compromisedDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+  "Compromised Action"
+);
+
+// Unsafe Data Processing
+const monthCountsUnsafe = Array(12).fill(0);
+
+unsafeDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsUnsafe[month] += 1;
+});
+
+// Compromised Data Processing
+const monthCountsCompromised = Array(12).fill(0);
+
+compromisedDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsCompromised[month] += 1;
+});
 
 // Multi-axis Line Chart Example
 var ctx = document.getElementById("myMultiAxisLineChart");
@@ -677,98 +661,94 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
         formatter: (value) => {
           return `Total: ${value}`;
         },
-        color: "#fff",
-        anchor: "end",
-        align: "start",
+        color: "#fff", 
+        anchor: "end", 
+        align: "start", 
       },
     },
   },
 });
 
 // Add click event listener to the pie chart
-pieChartForTypeDangerousActions.canvas.addEventListener(
-  "click",
-  function (event) {
-    const activeElements =
-      pieChartForTypeDangerousActions.getElementsAtEvent(event);
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
     if (activeElements.length > 0) {
-      const clickedIndex = activeElements[0]._index;
-      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+        const clickedIndex = activeElements[0]._index;
+        const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
 
-      // Get subtypes and counts for the clicked type
-      const subtypesData = getSubtypesData(clickedType);
+        // Get subtypes and counts for the clicked type
+        const subtypesData = getSubtypesData(clickedType);
 
-      // Find the subtype with the highest count
-      const maxSubtype = findMaxSubtype(subtypesData);
+        // Find the subtype with the highest count
+        const maxSubtype = findMaxSubtype(subtypesData);
 
-      // Create and display a new pie chart for subtypes
-      createSubtypesPieChart(subtypesData, maxSubtype);
+        // Create and display a new pie chart for subtypes
+        createSubtypesPieChart(subtypesData, maxSubtype);
     }
-  }
-);
+});
 
 // Function to find the subtype with the highest count
 function findMaxSubtype(subtypesData) {
-  let maxCount = 0;
-  let maxSubtype = null;
+    let maxCount = 0;
+    let maxSubtype = null;
 
-  for (const subtype in subtypesData) {
-    if (subtypesData[subtype] > maxCount) {
-      maxCount = subtypesData[subtype];
-      maxSubtype = subtype;
+    for (const subtype in subtypesData) {
+        if (subtypesData[subtype] > maxCount) {
+            maxCount = subtypesData[subtype];
+            maxSubtype = subtype;
+        }
     }
+
+    return maxSubtype;
+}
+  
+  // Function to get subtypes and counts for a given type
+  function getSubtypesData(type) {
+    const subtypesCounts = {};
+    unsafeDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    compromisedDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    const subtypesLabels = Object.keys(subtypesCounts);
+    const subtypesData = subtypesLabels.map(subtype => subtypesCounts[subtype]);
+  
+    return {
+      labels: subtypesLabels,
+      data: subtypesData,
+    };
   }
-
-  return maxSubtype;
-}
-
-// Function to get subtypes and counts for a given type
-function getSubtypesData(type) {
-  const subtypesCounts = {};
-  unsafeDataResponse.data.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
-      typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = 1;
-        } else {
-          subtypesCounts[subtype]++;
-        }
-      });
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
-      typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = 1;
-        } else {
-          subtypesCounts[subtype]++;
-        }
-      });
-    }
-  });
-
-  const subtypesLabels = Object.keys(subtypesCounts);
-  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype]);
-
-  return {
-    labels: subtypesLabels,
-    data: subtypesData,
-  };
-}
-
-// Function to create and display a pie chart for subtypes
+  
+  // Function to create and display a pie chart for subtypes
 function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
@@ -807,9 +787,7 @@ function createSubtypesPieChart(subtypesData) {
         callbacks: {
           label: function (tooltipItem, data) {
             const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${
-              data.datasets[0].data[tooltipItem.index]
-            }`;
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
             return data.labels[tooltipItem[0].index];
@@ -829,3 +807,12 @@ function createSubtypesPieChart(subtypesData) {
     },
   });
 }
+
+
+
+
+
+
+
+
+
