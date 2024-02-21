@@ -38,11 +38,11 @@ async function fetchDataFromServer(url, category) {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      // Tangani kesalahan autentikasi jika tidak ada token
+      // Handle authentication error if no token
       Swal.fire({
         icon: "warning",
         title: "Authentication Error",
-        text: "Kamu Belum Login!",
+        text: "You are not logged in!",
       }).then(() => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
@@ -78,33 +78,99 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-// Unsafe Data Fetch
-const unsafeDataResponse = await fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
-  "Unsafe Action"
-);
+// Tambahkan event listener ke pemilih tanggal
+const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+if (litepickerRangePlugin) {
+    const litepicker = new Litepicker({
+        element: litepickerRangePlugin,
+        startDate: new Date(),
+        endDate: new Date(),
+        singleMode: false,
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: 'MMM DD, YYYY',
+        plugins: ['ranges']
+    });
 
-// Compromised Data Fetch
-const compromisedDataResponse = await fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-  "Compromised Action"
-);
+    litepicker.on('selected', (date1, date2) => {
+        // Perbarui grafik setiap kali tanggal dipilih
+        updateCharts(date1, date2);
+    });
+}
 
-// Unsafe Data Processing
-const monthCountsUnsafe = Array(12).fill(0);
+async function updateCharts(startDate, endDate) {
+    // Unsafe Data Fetch
+    const unsafeDataResponse = await fetchDataFromServer(
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
+      "Unsafe Action"
+    );
 
-unsafeDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsUnsafe[month] += 1;
-});
+    // Compromised Data Fetch
+    const compromisedDataResponse = await fetchDataFromServer(
+      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+      "Compromised Action"
+    );
 
-// Compromised Data Processing
-const monthCountsCompromised = Array(12).fill(0);
+    // Filter data berdasarkan tanggal yang dipilih
+    const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= startDate && reportDate <= endDate;
+    });
 
-compromisedDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsCompromised[month] += 1;
-});
+    const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= startDate && reportDate <= endDate;
+    });
+
+    // Process and update charts with filtered data
+    updateMultiAxisLineChart(filteredUnsafeData, filteredCompromisedData);
+    updateHorizontalBarCharts(filteredUnsafeData, filteredCompromisedData);
+    updatePieChart(filteredUnsafeData, filteredCompromisedData);
+}
+
+function updateMultiAxisLineChart(filteredUnsafeData, filteredCompromisedData) {
+    // Process data
+    const monthCountsUnsafe = processDataForMonths(filteredUnsafeData);
+    const monthCountsCompromised = processDataForMonths(filteredCompromisedData);
+
+    // Update chart data
+    multiAxisLineChart.data.datasets[0].data = monthCountsUnsafe;
+    multiAxisLineChart.data.datasets[1].data = monthCountsCompromised;
+    multiAxisLineChart.update();
+}
+
+function updateHorizontalBarCharts(filteredUnsafeData, filteredCompromisedData) {
+    const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+    horizontalBarChart.data.labels = combinedLocationData.labels;
+    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
+    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
+    horizontalBarChart.update();
+
+    const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+    horizontalBarChartForArea.data.labels = combinedAreaData.labels;
+    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
+    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
+    horizontalBarChartForArea.update();
+}
+
+function updatePieChart(filteredUnsafeData, filteredCompromisedData) {
+    const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
+    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
+    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
+    pieChartForTypeDangerousActions.update();
+}
+
+// Process Data for Months
+function processDataForMonths(data) {
+    const monthCounts = Array(12).fill(0);
+
+    data.forEach(report => {
+        const month = new Date(report.date).getMonth();
+        monthCounts[month]++;
+    });
+
+    return monthCounts;
+}
 
 // Multi-axis Line Chart Example
 var ctx = document.getElementById("myMultiAxisLineChart");
@@ -807,12 +873,4 @@ function createSubtypesPieChart(subtypesData) {
     },
   });
 }
-
-
-
-
-
-
-
-
 
