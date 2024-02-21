@@ -38,11 +38,11 @@ async function fetchDataFromServer(url, category) {
     const token = getTokenFromCookies("Login");
 
     if (!token) {
-      // Handle authentication error if no token
+      // Tangani kesalahan autentikasi jika tidak ada token
       Swal.fire({
         icon: "warning",
         title: "Authentication Error",
-        text: "You are not logged in!",
+        text: "Kamu Belum Login!",
       }).then(() => {
         window.location.href = "https://portsafe-apps.github.io/";
       });
@@ -78,230 +78,91 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-// Tambahkan event listener ke pemilih tanggal
-const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-if (litepickerRangePlugin) {
-    const litepicker = new Litepicker({
-        element: litepickerRangePlugin,
-        startDate: new Date(),
-        endDate: new Date(),
-        singleMode: false,
-        numberOfMonths: 2,
-        numberOfColumns: 2,
-        format: 'MMM DD, YYYY',
-        plugins: ['ranges']
-    });
+// Unsafe Data Fetch
+const unsafeDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
+  "Unsafe Action"
+);
 
-    litepicker.on('selected', (date1, date2) => {
-        // Perbarui grafik setiap kali tanggal dipilih
-        updateCharts(date1, date2);
-    });
-}
+// Compromised Data Fetch
+const compromisedDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+  "Compromised Action"
+);
 
-async function updateCharts(startDate, endDate) {
-    // Unsafe Data Fetch
-    const unsafeDataResponse = await fetchDataFromServer(
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
-      "Unsafe Action"
-    );
 
-    // Compromised Data Fetch
-    const compromisedDataResponse = await fetchDataFromServer(
-      "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-      "Compromised Action"
-    );
-
-    // Filter data berdasarkan tanggal yang dipilih
-    const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
-        const reportDate = new Date(report.date);
-        return reportDate >= startDate && reportDate <= endDate;
-    });
-
-    const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
-        const reportDate = new Date(report.date);
-        return reportDate >= startDate && reportDate <= endDate;
-    });
-
-    // Process and update charts with filtered data
-    updateMultiAxisLineChart(filteredUnsafeData, filteredCompromisedData);
-    updateHorizontalBarCharts(filteredUnsafeData, filteredCompromisedData);
-    updatePieChart(filteredUnsafeData, filteredCompromisedData);
-}
-
-function updateMultiAxisLineChart(filteredUnsafeData, filteredCompromisedData) {
-    // Process data
-    const monthCountsUnsafe = processDataForMonths(filteredUnsafeData);
-    const monthCountsCompromised = processDataForMonths(filteredCompromisedData);
-
-    // Update chart data
-    multiAxisLineChart.data.datasets[0].data = monthCountsUnsafe;
-    multiAxisLineChart.data.datasets[1].data = monthCountsCompromised;
-    multiAxisLineChart.update();
-}
-
-function updateHorizontalBarCharts(filteredUnsafeData, filteredCompromisedData) {
-    const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-    horizontalBarChart.data.labels = combinedLocationData.labels;
-    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
-    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
-    horizontalBarChart.update();
-
-    const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-    horizontalBarChartForArea.data.labels = combinedAreaData.labels;
-    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
-    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
-    horizontalBarChartForArea.update();
-}
-
-function updatePieChart(filteredUnsafeData, filteredCompromisedData) {
-    const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
-    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
-    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
-    pieChartForTypeDangerousActions.update();
-}
-
-// Process Data for Months
-function processDataForMonths(data) {
-    const monthCounts = Array(12).fill(0);
-
-    data.forEach(report => {
-        const month = new Date(report.date).getMonth();
-        monthCounts[month]++;
-    });
-
-    return monthCounts;
-}
-
-// Multi-axis Line Chart Example
-var ctx = document.getElementById("myMultiAxisLineChart");
-var multiAxisLineChart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
-    datasets: [
-      {
-        label: "Unsafe",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(0, 97, 242, 0.05)",
-        borderColor: "rgba(0, 97, 242, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointBorderColor: "rgba(0, 97, 242, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: monthCountsUnsafe,
-      },
-      {
-        label: "Compromised",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(255, 99, 132, 0.05)",
-        borderColor: "rgba(255, 99, 132, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointBorderColor: "rgba(255, 99, 132, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: monthCountsCompromised,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          time: {
-            unit: "date",
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          ticks: {
-            maxTicksLimit: 7,
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-          },
-        },
-      ],
-      yAxes: [
-        {
-          id: "y-axis-1",
-          position: "left",
-          ticks: {
-            maxTicksLimit: 5,
-            padding: 10,
-            callback: function (value, index, values) {
-              return number_format(value);
-            },
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-          },
-          gridLines: {
-            color: "rgb(234, 236, 244)",
-            zeroLineColor: "rgb(234, 236, 244)",
-            drawBorder: false,
-            borderDash: [2],
-            zeroLineBorderDash: [2],
-          },
-        },
-      ],
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      callbacks: {
-        label: function (tooltipItem, chart) {
-          var datasetLabel =
-            chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
-        },
-      },
-    },
-  },
+// Tambahkan event listener untuk setiap opsi dropdown
+document.getElementById("last12Months").addEventListener("click", function () {
+  updateChart("last12Months");
 });
+
+document.getElementById("last30Days").addEventListener("click", function () {
+  updateChart("last30Days");
+});
+
+document.getElementById("last7Days").addEventListener("click", function () {
+  updateChart("last7Days");
+});
+
+document.getElementById("thisMonth").addEventListener("click", function () {
+  updateChart("thisMonth");
+});
+
+// Fungsi untuk memperbarui grafik berdasarkan opsi dropdown yang dipilih
+function updateChart(option) {
+  // Buat array untuk menyimpan jumlah pelanggaran per bulan
+  const monthCountsUnsafe = Array(12).fill(0);
+  const monthCountsCompromised = Array(12).fill(0);
+
+  // Tentukan rentang tanggal berdasarkan opsi dropdown yang dipilih
+  let startDate, endDate;
+  const currentDate = new Date();
+  switch (option) {
+    case "last12Months":
+      startDate = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1);
+      endDate = currentDate;
+      break;
+    case "last30Days":
+      startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 30);
+      endDate = currentDate;
+      break;
+    case "last7Days":
+      startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), currentDate.getDate() - 7);
+      endDate = currentDate;
+      break;
+    case "thisMonth":
+      startDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+      endDate = currentDate;
+      break;
+    default:
+      startDate = new Date(currentDate.getFullYear() - 1, currentDate.getMonth(), 1);
+      endDate = currentDate;
+  }
+
+  // Filter data yang sesuai dengan rentang tanggal
+  unsafeDataResponse.data.forEach((report) => {
+    const reportDate = new Date(report.date);
+    if (reportDate >= startDate && reportDate <= endDate) {
+      const month = reportDate.getMonth();
+      monthCountsUnsafe[month]++;
+    }
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const reportDate = new Date(report.date);
+    if (reportDate >= startDate && reportDate <= endDate) {
+      const month = reportDate.getMonth();
+      monthCountsCompromised[month]++;
+    }
+  });
+
+  // Perbarui data dalam grafik
+  multiAxisLineChart.data.datasets[0].data = monthCountsUnsafe;
+  multiAxisLineChart.data.datasets[1].data = monthCountsCompromised;
+
+  // Muat ulang grafik
+  multiAxisLineChart.update();
+}
 
 const locationLabels = [
   "Kantor Pusat SPMT",
@@ -873,4 +734,5 @@ function createSubtypesPieChart(subtypesData) {
     },
   });
 }
+
 
