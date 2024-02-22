@@ -121,7 +121,7 @@ function updateChart(selectedFilter) {
       newData = getDataThisYear();
       break;
     default:
-      newData = getDataThisYear(); // Default to this year if no valid filter selected
+      newData = getDataThisYear(); 
   }
 
   // Memperbarui label chart berdasarkan filter yang dipilih
