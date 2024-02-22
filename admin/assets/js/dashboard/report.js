@@ -946,7 +946,8 @@ function createSubtypesPieChart(subtypesData) {
             return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
-            return data.labels[tooltipItem[0].index];
+            const datasetLabel = data.datasets[tooltipItem[0].datasetIndex].label || "";
+            return datasetLabel;
           },
         },
       },
