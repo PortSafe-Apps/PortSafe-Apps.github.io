@@ -904,8 +904,8 @@ function findMaxSubtype(subtypesData) {
     };
   }
   
-  // Function to create and display a pie chart for subtypes
-function createSubtypesPieChart(subtypesData) {
+ // Function to create and display a pie chart for subtypes
+function createSubtypesPieChart(subtypesData, dataType) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
     type: "pie",
@@ -946,8 +946,7 @@ function createSubtypesPieChart(subtypesData) {
             return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
-            const datasetLabel = data.datasets[tooltipItem[0].datasetIndex].label || "";
-            return datasetLabel;
+            return dataType; // Menggunakan tipe data dari parameter
           },
         },
       },
@@ -965,4 +964,7 @@ function createSubtypesPieChart(subtypesData) {
   });
 }
 
+// Menggunakan fungsi createSubtypesPieChart dengan data yang sesuai dan judul yang berbeda
+createSubtypesPieChart(subtypesData(unsafeDataResponse.data), "Unsafe");
+createSubtypesPieChart(subtypesData(compromisedDataResponse.data), "Compromised");
 
