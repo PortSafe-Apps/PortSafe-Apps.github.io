@@ -99,6 +99,9 @@ $(document).ready(function () {
     // Memperbarui chart berdasarkan filter yang dipilih
     updateChart(selectedFilter);
   });
+
+  // Memperbarui chart saat dokumen siap
+  updateChart("thisYear");
 });
 
 function updateChart(selectedFilter) {
@@ -114,12 +117,15 @@ function updateChart(selectedFilter) {
     case "last7Days":
       newData = getDataLast7Days();
       break;
-    case "thisMonth":
-      newData = getDataThisMonth();
+    case "thisYear":
+      newData = getDataThisYear();
       break;
     default:
-      newData = getDataLast12Months(); // Default to last 12 months if no valid filter selected
+      newData = getDataThisYear(); // Default to this year if no valid filter selected
   }
+
+  // Memperbarui label chart berdasarkan filter yang dipilih
+  multiAxisLineChart.data.labels = getLabels(selectedFilter);
 
   // Memperbarui data chart dengan data baru
   multiAxisLineChart.data.datasets[0].data = newData.monthCountsUnsafe;
@@ -127,7 +133,52 @@ function updateChart(selectedFilter) {
   multiAxisLineChart.update();
 }
 
-// Fungsi untuk mendapatkan data berdasarkan filter yang dipilih
+function getLabels(selectedFilter) {
+  switch (selectedFilter) {
+    case "last12Months":
+      return [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+    case "last30Days":
+      return Array.from({ length: 30 }, (_, i) => i + 1).map(day =>
+        day.toString()
+      );
+    case "last7Days":
+      return Array.from({ length: 7 }, (_, i) => i + 1).map(day =>
+        day.toString()
+      );
+    case "thisYear":
+      return [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec",
+      ];
+    default:
+      return [];
+  }
+}
+
+// Fungsi untuk mendapatkan data untuk 12 bulan terakhir
 function getDataLast12Months() {
   // Implementasi Anda untuk mendapatkan data untuk 12 bulan terakhir
   const monthCountsUnsafe = Array(12).fill(0);
@@ -150,6 +201,7 @@ function getDataLast12Months() {
   };
 }
 
+// Fungsi untuk mendapatkan data untuk 30 hari terakhir
 function getDataLast30Days() {
   // Implementasi Anda untuk mendapatkan data untuk 30 hari terakhir
   const monthCountsUnsafe = Array(30).fill(0);
@@ -182,6 +234,7 @@ function getDataLast30Days() {
   };
 }
 
+// Fungsi untuk mendapatkan data untuk 7 hari terakhir
 function getDataLast7Days() {
   // Implementasi Anda untuk mendapatkan data untuk 7 hari terakhir
   const monthCountsUnsafe = Array(7).fill(0);
@@ -214,33 +267,27 @@ function getDataLast7Days() {
   };
 }
 
-function getDataThisMonth() {
-  // Implementasi Anda untuk mendapatkan data untuk bulan ini
-  const currentDate = new Date();
-  const currentMonth = currentDate.getMonth() + 1; // Januari dimulai dari 0
-  const numDaysInMonth = new Date(
-    currentDate.getFullYear(),
-    currentMonth,
-    0
-  ).getDate();
-
-  const monthCountsUnsafe = Array(numDaysInMonth).fill(0);
-  const monthCountsCompromised = Array(numDaysInMonth).fill(0);
+// Fungsi untuk mendapatkan data untuk bulan ini
+function getDataThisYear() {
+  // Implementasi Anda untuk mendapatkan data untuk tahun ini
+  const currentYear = new Date().getFullYear();
+  const monthCountsUnsafe = Array(12).fill(0);
+  const monthCountsCompromised = Array(12).fill(0);
 
   // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
   unsafeDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    if (date.getMonth() === currentMonth - 1) {
-      const dayIndex = date.getDate() - 1;
-      monthCountsUnsafe[dayIndex] += 1;
+    const year = new Date(report.date).getFullYear();
+    if (year === currentYear) {
+      const month = new Date(report.date).getMonth();
+      monthCountsUnsafe[month] += 1;
     }
   });
 
   compromisedDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    if (date.getMonth() === currentMonth - 1) {
-      const dayIndex = date.getDate() - 1;
-      monthCountsCompromised[dayIndex] += 1;
+    const year = new Date(report.date).getFullYear();
+    if (year === currentYear) {
+      const month = new Date(report.date).getMonth();
+      monthCountsCompromised[month] += 1;
     }
   });
 
@@ -250,41 +297,12 @@ function getDataThisMonth() {
   };
 }
 
-// Unsafe Data Processing
-const monthCountsUnsafe = Array(12).fill(0);
-
-unsafeDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsUnsafe[month] += 1;
-});
-
-// Compromised Data Processing
-const monthCountsCompromised = Array(12).fill(0);
-
-compromisedDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsCompromised[month] += 1;
-});
-
 // Multi-axis Line Chart Example
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
   type: "line",
   data: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    labels: getLabels("thisYear"), // Set default labels to this year
     datasets: [
       {
         label: "Unsafe",
@@ -300,7 +318,7 @@ var multiAxisLineChart = new Chart(ctx, {
         pointHoverBorderColor: "rgba(255, 0, 0, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: monthCountsUnsafe,
+        data: [],
       },
       {
         label: "Compromised",
@@ -316,7 +334,7 @@ var multiAxisLineChart = new Chart(ctx, {
         pointHoverBorderColor: "rgba(255, 255, 0, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: monthCountsCompromised,
+        data: [],
       },
     ],
   },
