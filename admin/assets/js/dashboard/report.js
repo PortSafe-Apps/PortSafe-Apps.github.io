@@ -473,19 +473,19 @@ var horizontalBarChart = new Chart(ctxLocation, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.05)", 
-        borderColor: "rgba(255, 0, 0, 1)", 
+        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
+        borderColor: "rgba(255, 0, 0, 1)", // Merah
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.05)", 
-        borderColor: "rgba(255, 255, 0, 1)", 
+        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
+        borderColor: "rgba(255, 255, 0, 1)", // Kuning
         borderWidth: 1,
         data: combinedData.dataCompromised,
       },
-    ],
+    ],    
   },
   options: {
     maintainAspectRatio: false,
@@ -611,19 +611,19 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.05)", 
-        borderColor: "rgba(255, 0, 0, 1)", 
+        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
+        borderColor: "rgba(255, 0, 0, 1)", // Merah
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.05)", 
-        borderColor: "rgba(255, 255, 0, 1)", 
+        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
+        borderColor: "rgba(255, 255, 0, 1)", // Kuning
         borderWidth: 1,
         data: combinedData.dataCompromised,
       },
-    ],
+    ],    
   },
   options: {
     maintainAspectRatio: false,
