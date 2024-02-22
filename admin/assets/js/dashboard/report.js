@@ -473,15 +473,15 @@ var horizontalBarChart = new Chart(ctxLocation, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(0, 97, 242, 0.8)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.05)", 
+        borderColor: "rgba(255, 0, 0, 1)", 
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 99, 132, 0.8)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.05)", 
+        borderColor: "rgba(255, 255, 0, 1)", 
         borderWidth: 1,
         data: combinedData.dataCompromised,
       },
@@ -611,17 +611,17 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(0, 97, 242, 0.8)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.05)", 
+        borderColor: "rgba(255, 0, 0, 1)", 
         borderWidth: 1,
-        data: combinedAreaData.dataUnsafe,
+        data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 99, 132, 0.8)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.05)", 
+        borderColor: "rgba(255, 255, 0, 1)", 
         borderWidth: 1,
-        data: combinedAreaData.dataCompromised,
+        data: combinedData.dataCompromised,
       },
     ],
   },
