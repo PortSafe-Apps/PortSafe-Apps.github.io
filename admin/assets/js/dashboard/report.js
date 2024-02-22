@@ -879,9 +879,12 @@ function getSubtypesData(type) {
     if (typeName === type && typeDangerousAction.subTypes) {
       typeDangerousAction.subTypes.forEach((subtype) => {
         if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = 1;
+          subtypesCounts[subtype] = {
+            count: 1,
+            dataResponse: "Unsafe"
+          };
         } else {
-          subtypesCounts[subtype]++;
+          subtypesCounts[subtype].count++;
         }
       });
     }
@@ -896,20 +899,24 @@ function getSubtypesData(type) {
     if (typeName === type && typeDangerousAction.subTypes) {
       typeDangerousAction.subTypes.forEach((subtype) => {
         if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = 1;
+          subtypesCounts[subtype] = {
+            count: 1,
+            dataResponse: "Compromised"
+          };
         } else {
-          subtypesCounts[subtype]++;
+          subtypesCounts[subtype].count++;
         }
       });
     }
   });
 
   const subtypesLabels = Object.keys(subtypesCounts);
-  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype]);
+  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype].count);
 
   return {
     labels: subtypesLabels,
     data: subtypesData,
+    dataResponse: subtypesCounts
   };
 }
 
@@ -957,12 +964,9 @@ function createSubtypesPieChart(subtypesData) {
             }`;
           },
           title: function (tooltipItem, data) {
-            // Determine the source of data response
-            const dataType = subtypesData.labels[tooltipItem[0].index];
-            const dataResponse = dataType.includes("unsafe")
-              ? "Unsafe"
-              : "Compromised";
-            return `${dataResponse}: ${data.labels[tooltipItem[0].index]}`;
+            const subtypeLabel = data.labels[tooltipItem[0].index];
+            const dataResponse = subtypesData.dataResponse[subtypeLabel].dataResponse;
+            return `${dataResponse}`;
           },
         },
       },
