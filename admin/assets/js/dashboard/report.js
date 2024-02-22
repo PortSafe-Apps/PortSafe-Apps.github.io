@@ -90,6 +90,162 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
+$(document).ready(function () {
+  // Mendengarkan perubahan dalam dropdown
+  $('#areaChartDropdownExample').on('click', '.dropdown-item', function () {
+    // Mengambil ID dari dropdown item yang dipilih
+    var selectedFilter = $(this).attr('id');
+
+    // Memperbarui chart berdasarkan filter yang dipilih
+    updateChart(selectedFilter);
+  });
+});
+
+function updateChart(selectedFilter) {
+  // Menentukan data yang akan digunakan berdasarkan filter yang dipilih
+  var newData;
+  switch (selectedFilter) {
+    case 'last12Months':
+      newData = getDataLast12Months();
+      break;
+    case 'last30Days':
+      newData = getDataLast30Days();
+      break;
+    case 'last7Days':
+      newData = getDataLast7Days();
+      break;
+    case 'thisMonth':
+      newData = getDataThisMonth();
+      break;
+    default:
+      newData = getDataLast12Months(); // Default to last 12 months if no valid filter selected
+  }
+
+  // Memperbarui data chart dengan data baru
+  multiAxisLineChart.data.datasets[0].data = newData.monthCountsUnsafe;
+  multiAxisLineChart.data.datasets[1].data = newData.monthCountsCompromised;
+  multiAxisLineChart.update();
+}
+
+// Fungsi untuk mendapatkan data berdasarkan filter yang dipilih
+function getDataLast12Months() {
+  // Implementasi Anda untuk mendapatkan data untuk 12 bulan terakhir
+  const monthCountsUnsafe = Array(12).fill(0);
+  const monthCountsCompromised = Array(12).fill(0);
+
+  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
+  unsafeDataResponse.data.forEach((report) => {
+    const month = new Date(report.date).getMonth();
+    monthCountsUnsafe[month] += 1;
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const month = new Date(report.date).getMonth();
+    monthCountsCompromised[month] += 1;
+  });
+
+  return {
+    monthCountsUnsafe: monthCountsUnsafe,
+    monthCountsCompromised: monthCountsCompromised
+  };
+}
+
+function getDataLast30Days() {
+  // Implementasi Anda untuk mendapatkan data untuk 30 hari terakhir
+  const monthCountsUnsafe = Array(30).fill(0);
+  const monthCountsCompromised = Array(30).fill(0);
+
+  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
+  unsafeDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    const diffTime = Math.abs(new Date() - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 30) {
+      const dayIndex = diffDays - 1;
+      monthCountsUnsafe[dayIndex] += 1;
+    }
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    const diffTime = Math.abs(new Date() - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 30) {
+      const dayIndex = diffDays - 1;
+      monthCountsCompromised[dayIndex] += 1;
+    }
+  });
+
+  return {
+    monthCountsUnsafe: monthCountsUnsafe,
+    monthCountsCompromised: monthCountsCompromised
+  };
+}
+
+function getDataLast7Days() {
+  // Implementasi Anda untuk mendapatkan data untuk 7 hari terakhir
+  const monthCountsUnsafe = Array(7).fill(0);
+  const monthCountsCompromised = Array(7).fill(0);
+
+  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
+  unsafeDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    const diffTime = Math.abs(new Date() - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 7) {
+      const dayIndex = diffDays - 1;
+      monthCountsUnsafe[dayIndex] += 1;
+    }
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    const diffTime = Math.abs(new Date() - date);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    if (diffDays <= 7) {
+      const dayIndex = diffDays - 1;
+      monthCountsCompromised[dayIndex] += 1;
+    }
+  });
+
+  return {
+    monthCountsUnsafe: monthCountsUnsafe,
+    monthCountsCompromised: monthCountsCompromised
+  };
+}
+
+function getDataThisMonth() {
+  // Implementasi Anda untuk mendapatkan data untuk bulan ini
+  const currentDate = new Date();
+  const currentMonth = currentDate.getMonth() + 1; // Januari dimulai dari 0
+  const numDaysInMonth = new Date(currentDate.getFullYear(), currentMonth, 0).getDate();
+
+  const monthCountsUnsafe = Array(numDaysInMonth).fill(0);
+  const monthCountsCompromised = Array(numDaysInMonth).fill(0);
+
+  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
+  unsafeDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    if (date.getMonth() === currentMonth - 1) {
+      const dayIndex = date.getDate() - 1;
+      monthCountsUnsafe[dayIndex] += 1;
+    }
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const date = new Date(report.date);
+    if (date.getMonth() === currentMonth - 1) {
+      const dayIndex = date.getDate() - 1;
+      monthCountsCompromised[dayIndex] += 1;
+    }
+  });
+
+  return {
+    monthCountsUnsafe: monthCountsUnsafe,
+    monthCountsCompromised: monthCountsCompromised
+  };
+}
+
 // Unsafe Data Processing
 const monthCountsUnsafe = Array(12).fill(0);
 
@@ -130,14 +286,14 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Unsafe",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(0, 97, 242, 0.05)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.05)", 
+        borderColor: "rgba(255, 0, 0, 1)", 
         pointRadius: 3,
-        pointBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointBorderColor: "rgba(0, 97, 242, 1)",
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", 
+        pointBorderColor: "rgba(255, 0, 0, 1)", 
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)", 
+        pointHoverBorderColor: "rgba(255, 0, 0, 1)", 
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: monthCountsUnsafe,
@@ -146,19 +302,19 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 99, 132, 0.05)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.05)", 
+        borderColor: "rgba(255, 255, 0, 1)", 
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointBorderColor: "rgba(255, 99, 132, 1)",
+        pointBackgroundColor: "rgba(255, 255, 0, 1)", 
+        pointBorderColor: "rgba(255, 255, 0, 1)", 
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)", 
+        pointHoverBorderColor: "rgba(255, 255, 0, 1)", 
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: monthCountsCompromised,
       },
-    ],
+    ],    
   },
   options: {
     maintainAspectRatio: false,
