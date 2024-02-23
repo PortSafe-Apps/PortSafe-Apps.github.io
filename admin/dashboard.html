@@ -105,7 +105,12 @@
                             <h1 class="mb-0">Dashboard</h1>
                             <div class="small">
                                 <span id="dynamicDateTime" class="fw-500 text-primary"></span>
-                            </div>
+                            </div>                        
+                        </div>
+                         <!-- Date range picker example-->
+                         <div class="input-group input-group-joined border-0 shadow" style="width: 16.5rem">
+                            <span class="input-group-text"><i data-feather="calendar"></i></span>
+                            <input class="form-control ps-0 pointer" id="litepickerRangePlugin" placeholder="Select date range..." />
                         </div>
                     </div>
                     <div class="row">
@@ -168,19 +173,6 @@
                             <div class="card card-header-actions h-100">
                                 <div class="card-header">
                                     Tren Laporan Pelanggaran Berdasarkan Aksi
-                                    <div class="dropdown no-caret">
-                                        <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                            id="areaChartDropdownExample" type="button" data-bs-toggle="dropdown"
-                                            aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                data-feather="more-vertical"></i></button>
-                                        <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                            aria-labelledby="areaChartDropdownExample">
-                                            <a id="last12Months" class="dropdown-item" href="#!">Last 12 Months</a>
-                                            <a id="last30Days" class="dropdown-item" href="#!">Last 30 Days</a>
-                                            <a id="last7Days" class="dropdown-item" href="#!">Last 7 Days</a>
-                                            <a id="thisMonth" class="dropdown-item" href="#!">This Month</a>
-                                        </div>
-                                    </div>
                                 </div>
                                 <div class="card-body">
                                     <div class="chart-area"><canvas id="myMultiAxisLineChart" width="100%"
@@ -202,19 +194,6 @@
                                 <div class="card card-header-actions h-100">
                                     <div class="card-header">
                                         Laporan Pelanggaran Berdasarkan Unit Kerja
-                                        <div class="dropdown no-caret">
-                                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                                id="areaChartDropdownExample" type="button" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                    data-feather="more-vertical"></i></button>
-                                            <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                                aria-labelledby="areaChartDropdownExample">
-                                                <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                                <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                                <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                                <a class="dropdown-item" href="#!">This Month</a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-bar"><canvas id="myHorizontalBarChart" width="600"
@@ -227,19 +206,6 @@
                                 <div class="card card-header-actions h-100">
                                     <div class="card-header">
                                         Laporan Pelanggaran Berdasarkan Area Kerja
-                                        <div class="dropdown no-caret">
-                                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                                id="areaChartDropdownExample" type="button" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                    data-feather="more-vertical"></i></button>
-                                            <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                                aria-labelledby="areaChartDropdownExample">
-                                                <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                                <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                                <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                                <a class="dropdown-item" href="#!">This Month</a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-pie"><canvas id="myHorizontalBarChartForArea" width="600"
@@ -255,19 +221,6 @@
                                 <div class="card card-header-actions h-100">
                                     <div class="card-header">
                                         Laporan Pelanggaran Berdasarkan Tipe
-                                        <div class="dropdown no-caret">
-                                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                                id="areaChartDropdownExample" type="button" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                    data-feather="more-vertical"></i></button>
-                                            <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                                aria-labelledby="areaChartDropdownExample">
-                                                <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                                <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                                <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                                <a class="dropdown-item" href="#!">This Month</a>
-                                            </div>
-                                        </div>
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-pie"><canvas id="myPieChartForTypeDangerousActions"
@@ -279,20 +232,7 @@
                             <div class="col-lg-6 mb-4">
                                 <div class="card card-header-actions h-100">
                                     <div class="card-header">
-                                        Laporan Pelanggaran Berdasarkan SubTipe
-                                        <div class="dropdown no-caret">
-                                            <button class="btn btn-transparent-dark btn-icon dropdown-toggle"
-                                                id="areaChartDropdownExample" type="button" data-bs-toggle="dropdown"
-                                                aria-haspopup="true" aria-expanded="false"><i class="text-gray-500"
-                                                    data-feather="more-vertical"></i></button>
-                                            <div class="dropdown-menu dropdown-menu-end animated--fade-in-up"
-                                                aria-labelledby="areaChartDropdownExample">
-                                                <a class="dropdown-item" href="#!">Last 12 Months</a>
-                                                <a class="dropdown-item" href="#!">Last 30 Days</a>
-                                                <a class="dropdown-item" href="#!">Last 7 Days</a>
-                                                <a class="dropdown-item" href="#!">This Month</a>
-                                            </div>
-                                        </div>
+                                        Laporan Pelanggaran Berdasarkan Subtipe
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-pie"><canvas id="myPieChartForSubtypes" width="100%"
