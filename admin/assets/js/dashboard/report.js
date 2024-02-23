@@ -90,238 +90,73 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
+// Unsafe Data Processing
+const monthCountsUnsafe = Array(12).fill(0);
 
-function updateChart(selectedFilter) {
-  // Menentukan data yang akan digunakan berdasarkan filter yang dipilih
-  var newData;
-  switch (selectedFilter) {
-    case "last12Months":
-      newData = getDataLast12Months();
-      break;
-    case "last30Days":
-      newData = getDataLast30Days();
-      break;
-    case "last7Days":
-      newData = getDataLast7Days();
-      break;
-    case "thisYear":
-      newData = getDataThisYear();
-      break;
-    default:
-      newData = getDataThisYear(); 
-  }
+unsafeDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsUnsafe[month] += 1;
+});
 
-  // Memperbarui label chart berdasarkan filter yang dipilih
-  multiAxisLineChart.data.labels = getLabels(selectedFilter);
+// Compromised Data Processing
+const monthCountsCompromised = Array(12).fill(0);
 
-  // Memperbarui data chart dengan data baru
-  multiAxisLineChart.data.datasets[0].data = newData.monthCountsUnsafe;
-  multiAxisLineChart.data.datasets[1].data = newData.monthCountsCompromised;
-  multiAxisLineChart.update();
-}
-
-function getLabels(selectedFilter) {
-  switch (selectedFilter) {
-    case "last12Months":
-      return [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-    case "last30Days":
-      return Array.from({ length: 30 }, (_, i) => i + 1).map(day =>
-        day.toString()
-      );
-    case "last7Days":
-      return Array.from({ length: 7 }, (_, i) => i + 1).map(day =>
-        day.toString()
-      );
-    case "thisYear":
-      return [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-    default:
-      return [];
-  }
-}
-
-// Fungsi untuk mendapatkan data untuk 12 bulan terakhir
-function getDataLast12Months() {
-  // Implementasi Anda untuk mendapatkan data untuk 12 bulan terakhir
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsUnsafe[month] += 1;
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsCompromised[month] += 1;
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk 30 hari terakhir
-function getDataLast30Days() {
-  // Implementasi Anda untuk mendapatkan data untuk 30 hari terakhir
-  const monthCountsUnsafe = Array(30).fill(0);
-  const monthCountsCompromised = Array(30).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) {
-      const dayIndex = diffDays - 1;
-      monthCountsUnsafe[dayIndex] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) {
-      const dayIndex = diffDays - 1;
-      monthCountsCompromised[dayIndex] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk 7 hari terakhir
-function getDataLast7Days() {
-  // Implementasi Anda untuk mendapatkan data untuk 7 hari terakhir
-  const monthCountsUnsafe = Array(7).fill(0);
-  const monthCountsCompromised = Array(7).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 7) {
-      const dayIndex = diffDays - 1;
-      monthCountsUnsafe[dayIndex] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 7) {
-      const dayIndex = diffDays - 1;
-      monthCountsCompromised[dayIndex] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk bulan ini
-function getDataThisYear() {
-  // Implementasi Anda untuk mendapatkan data untuk tahun ini
-  const currentYear = new Date().getFullYear();
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const year = new Date(report.date).getFullYear();
-    if (year === currentYear) {
-      const month = new Date(report.date).getMonth();
-      monthCountsUnsafe[month] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const year = new Date(report.date).getFullYear();
-    if (year === currentYear) {
-      const month = new Date(report.date).getMonth();
-      monthCountsCompromised[month] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
+compromisedDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsCompromised[month] += 1;
+});
 
 // Multi-axis Line Chart Example
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
   type: "line",
   data: {
-    labels: getLabels("thisYear"), // Set default labels to this year
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
     datasets: [
       {
         label: "Unsafe",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 0, 0, 0.05)",
-        borderColor: "rgba(255, 0, 0, 1)",
+        backgroundColor: "rgba(0, 97, 242, 0.05)",
+        borderColor: "rgba(0, 97, 242, 1)",
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointBorderColor: "rgba(255, 0, 0, 1)",
+        pointBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointBorderColor: "rgba(0, 97, 242, 1)",
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointHoverBorderColor: "rgba(255, 0, 0, 1)",
+        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
+        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [],
+        data: monthCountsUnsafe,
       },
       {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 255, 0, 0.05)",
-        borderColor: "rgba(255, 255, 0, 1)",
+        backgroundColor: "rgba(255, 99, 132, 0.05)",
+        borderColor: "rgba(255, 99, 132, 1)",
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 255, 0, 1)",
-        pointBorderColor: "rgba(255, 255, 0, 1)",
+        pointBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointBorderColor: "rgba(255, 99, 132, 1)",
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)",
-        pointHoverBorderColor: "rgba(255, 255, 0, 1)",
+        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
+        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: [],
+        data: monthCountsCompromised,
       },
     ],
   },
@@ -482,15 +317,15 @@ var horizontalBarChart = new Chart(ctxLocation, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
-        borderColor: "rgba(255, 0, 0, 1)", // Merah
+        backgroundColor: "rgba(0, 97, 242, 0.8)",
+        borderColor: "rgba(0, 97, 242, 1)",
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
-        borderColor: "rgba(255, 255, 0, 1)", // Kuning
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+        borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
         data: combinedData.dataCompromised,
       },
@@ -620,17 +455,17 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
-        borderColor: "rgba(255, 0, 0, 1)", // Merah
+        backgroundColor: "rgba(0, 97, 242, 0.8)",
+        borderColor: "rgba(0, 97, 242, 1)",
         borderWidth: 1,
-        data: combinedData.dataUnsafe,
+        data: combinedAreaData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
-        borderColor: "rgba(255, 255, 0, 1)", // Kuning
+        backgroundColor: "rgba(255, 99, 132, 0.8)",
+        borderColor: "rgba(255, 99, 132, 1)",
         borderWidth: 1,
-        data: combinedData.dataCompromised,
+        data: combinedAreaData.dataCompromised,
       },
     ],
   },
@@ -826,106 +661,94 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
         formatter: (value) => {
           return `Total: ${value}`;
         },
-        color: "#fff",
-        anchor: "end",
-        align: "start",
+        color: "#fff", 
+        anchor: "end", 
+        align: "start", 
       },
     },
   },
 });
 
 // Add click event listener to the pie chart
-pieChartForTypeDangerousActions.canvas.addEventListener(
-  "click",
-  function (event) {
-    const activeElements =
-      pieChartForTypeDangerousActions.getElementsAtEvent(event);
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
     if (activeElements.length > 0) {
-      const clickedIndex = activeElements[0]._index;
-      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+        const clickedIndex = activeElements[0]._index;
+        const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
 
-      // Get subtypes and counts for the clicked type
-      const subtypesData = getSubtypesData(clickedType);
+        // Get subtypes and counts for the clicked type
+        const subtypesData = getSubtypesData(clickedType);
 
-      // Find the subtype with the highest count
-      const maxSubtype = findMaxSubtype(subtypesData);
+        // Find the subtype with the highest count
+        const maxSubtype = findMaxSubtype(subtypesData);
 
-      // Create and display a new pie chart for subtypes
-      createSubtypesPieChart(subtypesData, maxSubtype);
+        // Create and display a new pie chart for subtypes
+        createSubtypesPieChart(subtypesData, maxSubtype);
     }
-  }
-);
+});
 
 // Function to find the subtype with the highest count
 function findMaxSubtype(subtypesData) {
-  let maxCount = 0;
-  let maxSubtype = null;
+    let maxCount = 0;
+    let maxSubtype = null;
 
-  for (const subtype in subtypesData) {
-    if (subtypesData[subtype] > maxCount) {
-      maxCount = subtypesData[subtype];
-      maxSubtype = subtype;
+    for (const subtype in subtypesData) {
+        if (subtypesData[subtype] > maxCount) {
+            maxCount = subtypesData[subtype];
+            maxSubtype = subtype;
+        }
     }
+
+    return maxSubtype;
+}
+  
+  // Function to get subtypes and counts for a given type
+  function getSubtypesData(type) {
+    const subtypesCounts = {};
+    unsafeDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    compromisedDataResponse.data.forEach((report) => {
+      const typeDangerousAction = report.typeDangerousActions
+        ? report.typeDangerousActions[0]
+        : { typeName: "Unknown" };
+  
+      const typeName = typeDangerousAction.typeName;
+      if (typeName === type && typeDangerousAction.subTypes) {
+        typeDangerousAction.subTypes.forEach((subtype) => {
+          if (!subtypesCounts[subtype]) {
+            subtypesCounts[subtype] = 1;
+          } else {
+            subtypesCounts[subtype]++;
+          }
+        });
+      }
+    });
+  
+    const subtypesLabels = Object.keys(subtypesCounts);
+    const subtypesData = subtypesLabels.map(subtype => subtypesCounts[subtype]);
+  
+    return {
+      labels: subtypesLabels,
+      data: subtypesData,
+    };
   }
-
-  return maxSubtype;
-}
-
-// Function to get subtypes and counts for a given type
-function getSubtypesData(type) {
-  const subtypesCounts = {};
-
-  unsafeDataResponse.data.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
-      typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = {
-            count: 1,
-            dataResponse: "Unsafe"
-          };
-        } else {
-          subtypesCounts[subtype].count++;
-        }
-      });
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
-      typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = {
-            count: 1,
-            dataResponse: "Compromised"
-          };
-        } else {
-          subtypesCounts[subtype].count++;
-        }
-      });
-    }
-  });
-
-  const subtypesLabels = Object.keys(subtypesCounts);
-  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype].count);
-
-  return {
-    labels: subtypesLabels,
-    data: subtypesData,
-    dataResponse: subtypesCounts
-  };
-}
-
-// Function to create and display a pie chart for subtypes
+  
+  // Function to create and display a pie chart for subtypes
 function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
@@ -964,18 +787,13 @@ function createSubtypesPieChart(subtypesData) {
         callbacks: {
           label: function (tooltipItem, data) {
             const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${
-              data.datasets[0].data[tooltipItem.index]
-            }`;
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
-            const subtypeLabel = data.labels[tooltipItem[0].index];
-            const dataResponse = subtypesData.dataResponse[subtypeLabel].dataResponse;
-            return `${dataResponse}`;
+            return data.labels[tooltipItem[0].index];
           },
         },
       },
-
       plugins: {
         datalabels: {
           formatter: (value) => {
@@ -989,3 +807,5 @@ function createSubtypesPieChart(subtypesData) {
     },
   });
 }
+
+
