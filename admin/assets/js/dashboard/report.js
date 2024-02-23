@@ -318,8 +318,8 @@ var horizontalBarChart = new Chart(ctxLocation, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
-        borderColor: "rgba(255, 0, 0, 1)", // Merah
+        backgroundColor: "rgba(255, 0, 0, 0.8)", 
+        borderColor: "rgba(255, 0, 0, 1)", 
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
