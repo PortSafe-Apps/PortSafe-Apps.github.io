@@ -90,159 +90,152 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
-// Inisialisasi Litepicker
-const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-if (litepickerRangePlugin) {
-    new Litepicker({
-        element: litepickerRangePlugin,
-        startDate: new Date(),
-        endDate: new Date(),
-        singleMode: false,
-        numberOfMonths: 2,
-        numberOfColumns: 2,
-        format: 'MMM DD, YYYY',
-        plugins: ['ranges']
-    });
-}
+// Unsafe Data Processing
+const monthCountsUnsafe = Array(12).fill(0);
 
-// Menambahkan fungsi filterData untuk memfilter data sesuai dengan tanggal yang dipilih
-function filterData() {
-    // Mendapatkan tanggal awal dan akhir dari litepickerRangePlugin
-    const startDate = litepickerRangePlugin.getStartDate();
-    const endDate = litepickerRangePlugin.getEndDate();
-    
-    // Menyaring data yang sesuai dengan rentang tanggal yang dipilih
-    const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
-        const reportDate = new Date(report.date);
-        return reportDate >= startDate && reportDate <= endDate;
-    });
-    
-    const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
-        const reportDate = new Date(report.date);
-        return reportDate >= startDate && reportDate <= endDate;
-    });
-    
-    // Memperbarui data pada chart dengan data yang disaring
-    multiAxisLineChart.data.datasets[0].data = filteredUnsafeData;
-    multiAxisLineChart.data.datasets[1].data = filteredCompromisedData;
-    multiAxisLineChart.update();
-}
+unsafeDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsUnsafe[month] += 1;
+});
 
-// Inisialisasi Chart
+// Compromised Data Processing
+const monthCountsCompromised = Array(12).fill(0);
+
+compromisedDataResponse.data.forEach((report) => {
+  const month = new Date(report.date).getMonth();
+  monthCountsCompromised[month] += 1;
+});
+
+// Multi-axis Line Chart Example
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
-    type: "line",
-    data: {
-        datasets: [
-            {
-                label: "Unsafe",
-                yAxisID: "y-axis-1",
-                lineTension: 0.3,
-                backgroundColor: "rgba(255, 0, 0, 0.05)",
-                borderColor: "rgba(255, 0, 0, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(255, 0, 0, 1)",
-                pointBorderColor: "rgba(255, 0, 0, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-                pointHoverBorderColor: "rgba(255, 0, 0, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: [],
-            },
-            {
-                label: "Compromised",
-                yAxisID: "y-axis-1",
-                lineTension: 0.3,
-                backgroundColor: "rgba(255, 255, 0, 0.05)",
-                borderColor: "rgba(255, 255, 0, 1)",
-                pointRadius: 3,
-                pointBackgroundColor: "rgba(255, 255, 0, 1)",
-                pointBorderColor: "rgba(255, 255, 0, 1)",
-                pointHoverRadius: 3,
-                pointHoverBackgroundColor: "rgba(255, 255, 0, 1)",
-                pointHoverBorderColor: "rgba(255, 255, 0, 1)",
-                pointHitRadius: 10,
-                pointBorderWidth: 2,
-                data: [],
-            },
-        ],
+  type: "line",
+  data: {
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+
+    datasets: [
+      {
+        label: "Unsafe",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(255, 0, 0, 0.05)",
+        borderColor: "rgba(255, 0, 0, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(255, 0, 0, 1)",
+        pointBorderColor: "rgba(255, 0, 0, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+        pointHoverBorderColor: "rgba(255, 0, 0, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [],
+      },
+      {
+        label: "Compromised",
+        yAxisID: "y-axis-1",
+        lineTension: 0.3,
+        backgroundColor: "rgba(255, 255, 0, 0.05)",
+        borderColor: "rgba(255, 255, 0, 1)",
+        pointRadius: 3,
+        pointBackgroundColor: "rgba(255, 255, 0, 1)",
+        pointBorderColor: "rgba(255, 255, 0, 1)",
+        pointHoverRadius: 3,
+        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)",
+        pointHoverBorderColor: "rgba(255, 255, 0, 1)",
+        pointHitRadius: 10,
+        pointBorderWidth: 2,
+        data: [],
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
     },
-    options: {
-        maintainAspectRatio: false,
-        layout: {
-            padding: {
-                left: 10,
-                right: 10,
-                top: 0,
-                bottom: 0,
+    scales: {
+      xAxes: [
+        {
+          time: {
+            unit: "date",
+          },
+          gridLines: {
+            display: false,
+            drawBorder: false,
+          },
+          ticks: {
+            maxTicksLimit: 7,
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+          },
+        },
+      ],
+      yAxes: [
+        {
+          id: "y-axis-1",
+          position: "left",
+          ticks: {
+            maxTicksLimit: 5,
+            padding: 10,
+            callback: function (value, index, values) {
+              return number_format(value);
             },
+            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+          },
+          gridLines: {
+            color: "rgb(234, 236, 244)",
+            zeroLineColor: "rgb(234, 236, 244)",
+            drawBorder: false,
+            borderDash: [2],
+            zeroLineBorderDash: [2],
+          },
         },
-        scales: {
-            xAxes: [
-                {
-                    time: {
-                        unit: "date",
-                    },
-                    gridLines: {
-                        display: false,
-                        drawBorder: false,
-                    },
-                    ticks: {
-                        maxTicksLimit: 7,
-                        fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-                    },
-                },
-            ],
-            yAxes: [
-                {
-                    id: "y-axis-1",
-                    position: "left",
-                    ticks: {
-                        maxTicksLimit: 5,
-                        padding: 10,
-                        callback: function (value, index, values) {
-                            return number_format(value);
-                        },
-                        fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-                    },
-                    gridLines: {
-                        color: "rgb(234, 236, 244)",
-                        zeroLineColor: "rgb(234, 236, 244)",
-                        drawBorder: false,
-                        borderDash: [2],
-                        zeroLineBorderDash: [2],
-                    },
-                },
-            ],
-        },
-        legend: {
-            display: true,
-            position: "top",
-        },
-        tooltips: {
-            backgroundColor: "rgb(255,255,255)",
-            bodyFontColor: "#858796",
-            titleMarginBottom: 10,
-            titleFontColor: "#6e707e",
-            titleFontSize: 14,
-            borderColor: "#dddfeb",
-            borderWidth: 1,
-            xPadding: 15,
-            yPadding: 15,
-            displayColors: false,
-            intersect: false,
-            mode: "index",
-            caretPadding: 10,
-            callbacks: {
-                label: function (tooltipItem, chart) {
-                    var datasetLabel =
-                        chart.datasets[tooltipItem.datasetIndex].label || "";
-                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
-                },
-            },
-        },
+      ],
     },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleMarginBottom: 10,
+      titleFontColor: "#6e707e",
+      titleFontSize: 14,
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      displayColors: false,
+      intersect: false,
+      mode: "index",
+      caretPadding: 10,
+      callbacks: {
+        label: function (tooltipItem, chart) {
+          var datasetLabel =
+            chart.datasets[tooltipItem.datasetIndex].label || "";
+          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+        },
+      },
+    },
+  },
 });
 
 const locationLabels = [
