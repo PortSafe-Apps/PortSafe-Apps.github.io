@@ -90,329 +90,159 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
-$(document).ready(function () {
-  // Mendengarkan perubahan dalam dropdown
-  $("#areaChartDropdownExample").on("click", ".dropdown-item", function () {
-    // Mengambil ID dari dropdown item yang dipilih
-    var selectedFilter = $(this).attr("id");
-
-    // Memperbarui chart berdasarkan filter yang dipilih
-    updateChart(selectedFilter);
-  });
-
-  // Memperbarui chart saat dokumen siap
-  updateChart("thisYear");
-});
-
-function updateChart(selectedFilter) {
-  // Menentukan data yang akan digunakan berdasarkan filter yang dipilih
-  var newData;
-  switch (selectedFilter) {
-    case "last12Months":
-      newData = getDataLast12Months();
-      break;
-    case "last30Days":
-      newData = getDataLast30Days();
-      break;
-    case "last7Days":
-      newData = getDataLast7Days();
-      break;
-    case "thisYear":
-      newData = getDataThisYear();
-      break;
-    default:
-      newData = getDataThisYear(); 
-  }
-
-  // Memperbarui label chart berdasarkan filter yang dipilih
-  multiAxisLineChart.data.labels = getLabels(selectedFilter);
-
-  // Memperbarui data chart dengan data baru
-  multiAxisLineChart.data.datasets[0].data = newData.monthCountsUnsafe;
-  multiAxisLineChart.data.datasets[1].data = newData.monthCountsCompromised;
-  multiAxisLineChart.update();
+// Inisialisasi Litepicker
+const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+if (litepickerRangePlugin) {
+    new Litepicker({
+        element: litepickerRangePlugin,
+        startDate: new Date(),
+        endDate: new Date(),
+        singleMode: false,
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: 'MMM DD, YYYY',
+        plugins: ['ranges']
+    });
 }
 
-function getLabels(selectedFilter) {
-  switch (selectedFilter) {
-    case "last12Months":
-      return [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-    case "last30Days":
-      return Array.from({ length: 30 }, (_, i) => i + 1).map(day =>
-        day.toString()
-      );
-    case "last7Days":
-      return Array.from({ length: 7 }, (_, i) => i + 1).map(day =>
-        day.toString()
-      );
-    case "thisYear":
-      return [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec",
-      ];
-    default:
-      return [];
-  }
+// Menambahkan fungsi filterData untuk memfilter data sesuai dengan tanggal yang dipilih
+function filterData() {
+    // Mendapatkan tanggal awal dan akhir dari litepickerRangePlugin
+    const startDate = litepickerRangePlugin.getStartDate();
+    const endDate = litepickerRangePlugin.getEndDate();
+    
+    // Menyaring data yang sesuai dengan rentang tanggal yang dipilih
+    const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= startDate && reportDate <= endDate;
+    });
+    
+    const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= startDate && reportDate <= endDate;
+    });
+    
+    // Memperbarui data pada chart dengan data yang disaring
+    multiAxisLineChart.data.datasets[0].data = filteredUnsafeData;
+    multiAxisLineChart.data.datasets[1].data = filteredCompromisedData;
+    multiAxisLineChart.update();
 }
 
-// Fungsi untuk mendapatkan data untuk 12 bulan terakhir
-function getDataLast12Months() {
-  // Implementasi Anda untuk mendapatkan data untuk 12 bulan terakhir
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsUnsafe[month] += 1;
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const month = new Date(report.date).getMonth();
-    monthCountsCompromised[month] += 1;
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk 30 hari terakhir
-function getDataLast30Days() {
-  // Implementasi Anda untuk mendapatkan data untuk 30 hari terakhir
-  const monthCountsUnsafe = Array(30).fill(0);
-  const monthCountsCompromised = Array(30).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) {
-      const dayIndex = diffDays - 1;
-      monthCountsUnsafe[dayIndex] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 30) {
-      const dayIndex = diffDays - 1;
-      monthCountsCompromised[dayIndex] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk 7 hari terakhir
-function getDataLast7Days() {
-  // Implementasi Anda untuk mendapatkan data untuk 7 hari terakhir
-  const monthCountsUnsafe = Array(7).fill(0);
-  const monthCountsCompromised = Array(7).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 7) {
-      const dayIndex = diffDays - 1;
-      monthCountsUnsafe[dayIndex] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const date = new Date(report.date);
-    const diffTime = Math.abs(new Date() - date);
-    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-    if (diffDays <= 7) {
-      const dayIndex = diffDays - 1;
-      monthCountsCompromised[dayIndex] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Fungsi untuk mendapatkan data untuk bulan ini
-function getDataThisYear() {
-  // Implementasi Anda untuk mendapatkan data untuk tahun ini
-  const currentYear = new Date().getFullYear();
-  const monthCountsUnsafe = Array(12).fill(0);
-  const monthCountsCompromised = Array(12).fill(0);
-
-  // Implementasi Anda untuk mengisi data monthCountsUnsafe dan monthCountsCompromised
-  unsafeDataResponse.data.forEach((report) => {
-    const year = new Date(report.date).getFullYear();
-    if (year === currentYear) {
-      const month = new Date(report.date).getMonth();
-      monthCountsUnsafe[month] += 1;
-    }
-  });
-
-  compromisedDataResponse.data.forEach((report) => {
-    const year = new Date(report.date).getFullYear();
-    if (year === currentYear) {
-      const month = new Date(report.date).getMonth();
-      monthCountsCompromised[month] += 1;
-    }
-  });
-
-  return {
-    monthCountsUnsafe: monthCountsUnsafe,
-    monthCountsCompromised: monthCountsCompromised,
-  };
-}
-
-// Multi-axis Line Chart Example
+// Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: getLabels("thisYear"), // Set default labels to this year
-    datasets: [
-      {
-        label: "Unsafe",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(255, 0, 0, 0.05)",
-        borderColor: "rgba(255, 0, 0, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointBorderColor: "rgba(255, 0, 0, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointHoverBorderColor: "rgba(255, 0, 0, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [],
-      },
-      {
-        label: "Compromised",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(255, 255, 0, 0.05)",
-        borderColor: "rgba(255, 255, 0, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 255, 0, 1)",
-        pointBorderColor: "rgba(255, 255, 0, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)",
-        pointHoverBorderColor: "rgba(255, 255, 0, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [],
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          time: {
-            unit: "date",
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false,
-          },
-          ticks: {
-            maxTicksLimit: 7,
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-          },
-        },
-      ],
-      yAxes: [
-        {
-          id: "y-axis-1",
-          position: "left",
-          ticks: {
-            maxTicksLimit: 5,
-            padding: 10,
-            callback: function (value, index, values) {
-              return number_format(value);
+    type: "line",
+    data: {
+        datasets: [
+            {
+                label: "Unsafe",
+                yAxisID: "y-axis-1",
+                lineTension: 0.3,
+                backgroundColor: "rgba(255, 0, 0, 0.05)",
+                borderColor: "rgba(255, 0, 0, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(255, 0, 0, 1)",
+                pointBorderColor: "rgba(255, 0, 0, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+                pointHoverBorderColor: "rgba(255, 0, 0, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
             },
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
-          },
-          gridLines: {
-            color: "rgb(234, 236, 244)",
-            zeroLineColor: "rgb(234, 236, 244)",
-            drawBorder: false,
-            borderDash: [2],
-            zeroLineBorderDash: [2],
-          },
+            {
+                label: "Compromised",
+                yAxisID: "y-axis-1",
+                lineTension: 0.3,
+                backgroundColor: "rgba(255, 255, 0, 0.05)",
+                borderColor: "rgba(255, 255, 0, 1)",
+                pointRadius: 3,
+                pointBackgroundColor: "rgba(255, 255, 0, 1)",
+                pointBorderColor: "rgba(255, 255, 0, 1)",
+                pointHoverRadius: 3,
+                pointHoverBackgroundColor: "rgba(255, 255, 0, 1)",
+                pointHoverBorderColor: "rgba(255, 255, 0, 1)",
+                pointHitRadius: 10,
+                pointBorderWidth: 2,
+                data: [],
+            },
+        ],
+    },
+    options: {
+        maintainAspectRatio: false,
+        layout: {
+            padding: {
+                left: 10,
+                right: 10,
+                top: 0,
+                bottom: 0,
+            },
         },
-      ],
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      callbacks: {
-        label: function (tooltipItem, chart) {
-          var datasetLabel =
-            chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+        scales: {
+            xAxes: [
+                {
+                    time: {
+                        unit: "date",
+                    },
+                    gridLines: {
+                        display: false,
+                        drawBorder: false,
+                    },
+                    ticks: {
+                        maxTicksLimit: 7,
+                        fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+                    },
+                },
+            ],
+            yAxes: [
+                {
+                    id: "y-axis-1",
+                    position: "left",
+                    ticks: {
+                        maxTicksLimit: 5,
+                        padding: 10,
+                        callback: function (value, index, values) {
+                            return number_format(value);
+                        },
+                        fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+                    },
+                    gridLines: {
+                        color: "rgb(234, 236, 244)",
+                        zeroLineColor: "rgb(234, 236, 244)",
+                        drawBorder: false,
+                        borderDash: [2],
+                        zeroLineBorderDash: [2],
+                    },
+                },
+            ],
         },
-      },
+        legend: {
+            display: true,
+            position: "top",
+        },
+        tooltips: {
+            backgroundColor: "rgb(255,255,255)",
+            bodyFontColor: "#858796",
+            titleMarginBottom: 10,
+            titleFontColor: "#6e707e",
+            titleFontSize: 14,
+            borderColor: "#dddfeb",
+            borderWidth: 1,
+            xPadding: 15,
+            yPadding: 15,
+            displayColors: false,
+            intersect: false,
+            mode: "index",
+            caretPadding: 10,
+            callbacks: {
+                label: function (tooltipItem, chart) {
+                    var datasetLabel =
+                        chart.datasets[tooltipItem.datasetIndex].label || "";
+                    return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+                },
+            },
+        },
     },
-  },
 });
 
 const locationLabels = [
