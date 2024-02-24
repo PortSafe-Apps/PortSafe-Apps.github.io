@@ -130,14 +130,14 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Unsafe",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(0, 97, 242, 0.05)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.05)", // Merah dengan opacity 0.05
+        borderColor: "rgba(255, 0, 0, 1)", // Merah solid
         pointRadius: 3,
-        pointBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointBorderColor: "rgba(0, 97, 242, 1)",
+        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Merah solid
+        pointBorderColor: "rgba(255, 0, 0, 1)", // Merah solid
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(0, 97, 242, 1)",
-        pointHoverBorderColor: "rgba(0, 97, 242, 1)",
+        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)", // Merah solid
+        pointHoverBorderColor: "rgba(255, 0, 0, 1)", // Merah solid
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: monthCountsUnsafe,
@@ -146,14 +146,14 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 99, 132, 0.05)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.05)", // Kuning dengan opacity 0.05
+        borderColor: "rgba(255, 255, 0, 1)", // Kuning solid
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointBorderColor: "rgba(255, 99, 132, 1)",
+        pointBackgroundColor: "rgba(255, 255, 0, 1)", // Kuning solid
+        pointBorderColor: "rgba(255, 255, 0, 1)", // Kuning solid
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 99, 132, 1)",
-        pointHoverBorderColor: "rgba(255, 99, 132, 1)",
+        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)", // Kuning solid
+        pointHoverBorderColor: "rgba(255, 255, 0, 1)", // Kuning solid
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: monthCountsCompromised,
@@ -317,15 +317,15 @@ var horizontalBarChart = new Chart(ctxLocation, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(0, 97, 242, 0.8)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
+        borderColor: "rgba(255, 0, 0, 1)", // Merah
         borderWidth: 1,
         data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 99, 132, 0.8)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
+        borderColor: "rgba(255, 255, 0, 1)", // Kuning
         borderWidth: 1,
         data: combinedData.dataCompromised,
       },
@@ -455,17 +455,17 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
     datasets: [
       {
         label: "Unsafe",
-        backgroundColor: "rgba(0, 97, 242, 0.8)",
-        borderColor: "rgba(0, 97, 242, 1)",
+        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
+        borderColor: "rgba(255, 0, 0, 1)", // Merah
         borderWidth: 1,
-        data: combinedAreaData.dataUnsafe,
+        data: combinedData.dataUnsafe,
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 99, 132, 0.8)",
-        borderColor: "rgba(255, 99, 132, 1)",
+        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
+        borderColor: "rgba(255, 255, 0, 1)", // Kuning
         borderWidth: 1,
-        data: combinedAreaData.dataCompromised,
+        data: combinedData.dataCompromised,
       },
     ],
   },
