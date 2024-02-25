@@ -1,0 +1,277 @@
+// Data Unsafe 
+{
+    "status": 200,
+    "message": "data unsafe action berhasil diambil",
+    "data": [
+        {
+            "reportid": "2024-K3-263",
+            "date": "2024-01-13",
+            "time": "2:51 PM",
+            "user": {
+                "nipp": "1204044",
+                "nama": "Fahira",
+                "jabatan": "Project Manager",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "2",
+                "locationName": "Branch Dumai"
+            },
+            "description": "Bsbsbd",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi380_image.jpg",
+            "typeDangerousActions": [
+                {
+                    "typeId": "1",
+                    "typeName": "REAKSI ORANG",
+                    "subTypes": [
+                        "Merubah Cara Kerja"
+                    ]
+                }
+            ],
+            "area": {
+                "areaId": "2",
+                "areaName": "Workshop"
+            },
+            "immediateAction": "Bdnsjd",
+            "improvementPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/perbaikan516_image.jpg"
+        },
+        {
+            "reportid": "2024-K3-570",
+            "date": "2024-01-24",
+            "time": "11:00 AM",
+            "user": {
+                "nipp": "1204044",
+                "nama": "Fahira",
+                "jabatan": "Project Manager",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "2",
+                "locationName": "Branch Dumai"
+            },
+            "description": "telah terjadi pelanggaran kerja",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi554_Logo%!p(MISSING)ng",
+            "typeDangerousActions": [
+                {
+                    "typeId": "1",
+                    "typeName": "REAKSI ORANG",
+                    "subTypes": [
+                        "Merubah Fungsi Alat Pelindung Diri"
+                    ]
+                }
+            ],
+            "area": {
+                "areaId": "4",
+                "areaName": "Dermaga"
+            },
+            "immediateAction": "eewewewew",
+            "improvementPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/perbaikan162_Group.png"
+        }
+    ]
+}
+
+
+
+// Data Compromised
+
+{
+    "status": 200,
+    "message": "Data compromised action berhasil diambil",
+    "data": [
+        {
+            "reportid": "2024-K3-533",
+            "date": "2024-01-28",
+            "time": "2:45 AM",
+            "user": {
+                "nipp": "1204044",
+                "nama": "Fahira",
+                "jabatan": "Project Manager",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "",
+                "locationName": "Branch Dumai"
+            },
+            "area": {
+                "areaId": "",
+                "areaName": "Workshop"
+            },
+            "description": "ddfdf",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi529_Group.png",
+            "typeDangerousActions": [
+                {
+                    "typeId": "",
+                    "typeName": "ALAT PELINDUNG DIRI",
+                    "subTypes": [
+                        "Kepala"
+                    ]
+                },
+                {
+                    "typeId": "",
+                    "typeName": "ALAT PELINDUNG DIRI",
+                    "subTypes": [
+                        "Mata dan Wajah"
+                    ]
+                }
+            ],
+            "immediateAction": "dfdfd",
+            "improvementPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/perbaikan175_FAHIRA-removebg-preview.png",
+            "recomendation": "dsdsdsds",
+            "ActionDesc": "dfdfdfd",
+            "EvidencePhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/tindaklanjut719_Group.png",
+            "status": "Closed"
+        },
+        {
+            "reportid": "2024-K3-103",
+            "date": "2024-01-28",
+            "time": "3:25 AM",
+            "user": {
+                "nipp": "1204044",
+                "nama": "Fahira",
+                "jabatan": "Project Manager",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "",
+                "locationName": "Branch Dumai"
+            },
+            "area": {
+                "areaId": "",
+                "areaName": "Workshop"
+            },
+            "description": "ghghgh",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi646_Group%!!(MISSING)p(MISSING)ng",
+            "typeDangerousActions": [
+                {
+                    "typeId": "",
+                    "typeName": "REAKSI ORANG",
+                    "subTypes": [
+                        "Merubah Posisi"
+                    ]
+                }
+            ],
+            "immediateAction": "ghghg",
+            "improvementPhoto": "blob:https://portsafe-apps.github.io/1c0372f9-c39e-4636-b051-11293702f062",
+            "recomendation": "hghghg",
+            "ActionDesc": "dfdfdf",
+            "EvidencePhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/tindaklanjut181_d4uuqroe.png",
+            "status": "Closed"
+        },
+        {
+            "reportid": "2024-K3-166",
+            "date": "2024-01-28",
+            "time": "4:20 PM",
+            "user": {
+                "nipp": "1204044",
+                "nama": "Fahira",
+                "jabatan": "Project Manager",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "",
+                "locationName": "Branch Dumai"
+            },
+            "area": {
+                "areaId": "",
+                "areaName": "Kantor"
+            },
+            "description": "Ada kejadian yang tidak biasa",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi311_office-hazard-patra.jpg",
+            "typeDangerousActions": [
+                {
+                    "typeId": "",
+                    "typeName": "REAKSI ORANG",
+                    "subTypes": [
+                        "Jatuh ke Lantai"
+                    ]
+                },
+                {
+                    "typeId": "",
+                    "typeName": "POSISI ORANG",
+                    "subTypes": [
+                        "Terjatuh"
+                    ]
+                },
+                {
+                    "typeId": "",
+                    "typeName": "ALAT DAN PERLENGKAPAN",
+                    "subTypes": [
+                        "Tidak Sesuai Dengan Jenis Pekerjaan"
+                    ]
+                }
+            ],
+            "immediateAction": "Harus melakukan lap pada lantai yang licin",
+            "improvementPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/perbaikan681_tips-mengepel-lantai.jpg",
+            "recomendation": "Office Boy harus lebih di ingatkan untuk kerja lebih baik",
+            "ActionDesc": "Telah di berikan pengarahan terhadap office boy ",
+            "EvidencePhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/tindaklanjut353_download.jpg",
+            "status": "Closed"
+        },
+        {
+            "reportid": "2024-K3-242",
+            "date": "2024-02-20",
+            "time": "1:36 PM",
+            "user": {
+                "nipp": "101219",
+                "nama": "Zulhendri",
+                "jabatan": "Vice Precident",
+                "location": {
+                    "locationId": "",
+                    "locationName": ""
+                },
+                "password": "",
+                "timestamp": "0001-01-01T00:00:00Z"
+            },
+            "location": {
+                "locationId": "7",
+                "locationName": "Branch Makassar"
+            },
+            "area": {
+                "areaId": "4",
+                "areaName": "Dermaga"
+            },
+            "description": "Operator JT tidakemggunalam. APD",
+            "observationPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/observasi470_17084111601588232204228037098497.jpg",
+            "typeDangerousActions": [
+                {
+                    "typeId": "2",
+                    "typeName": "ALAT PELINDUNG DIRI",
+                    "subTypes": [
+                        "Kepala"
+                    ]
+                }
+            ],
+            "immediateAction": "Meminta yg bersangkutan utk menggunakan APD ",
+            "improvementPhoto": "https://pub-8272743a4e6c405bae724a6a667159a2.r2.dev/perbaikan209_17084115801408478377280996141023.jpg",
+            "recomendation": "S",
+            "ActionDesc": "",
+            "EvidencePhoto": "",
+            "status": "Opened"
+        }
+    ]
+}
