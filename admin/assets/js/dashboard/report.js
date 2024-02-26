@@ -90,10 +90,6 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
-// Fungsi untuk mengambil bulan dari tanggal
-function getMonthFromDate(date) {
-  return new Date(date).getMonth();
-}
 
 // Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
 function processData(data, startDate, endDate) {
@@ -122,6 +118,11 @@ function processData(data, startDate, endDate) {
   // Mengonversi objek dateCounts menjadi array untuk digunakan sebagai data dalam chart
   const countsArray = Object.values(dateCounts);
   return countsArray;
+}
+
+// Fungsi untuk mengambil bulan dari tanggal
+function getMonthFromDate(date) {
+  return new Date(date).getMonth();
 }
 
 // Fungsi untuk menghasilkan label berdasarkan rentang tanggal yang dipilih
@@ -218,14 +219,14 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 165, 0, 0.05)", // Ubah ke warna orange
-        borderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
+        backgroundColor: "rgba(255, 165, 0, 0.05)", 
+        borderColor: "rgba(255, 165, 0, 1)", 
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
-        pointBorderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
+        pointBackgroundColor: "rgba(255, 165, 0, 1)", 
+        pointBorderColor: "rgba(255, 165, 0, 1)", 
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
-        pointHoverBorderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
+        pointHoverBackgroundColor: "rgba(255, 165, 0, 1)", 
+        pointHoverBorderColor: "rgba(255, 165, 0, 1)", 
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: [],
