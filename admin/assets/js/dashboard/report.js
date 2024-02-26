@@ -90,74 +90,125 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
-// Unsafe Data Processing
-const monthCountsUnsafe = Array(12).fill(0);
+// Fungsi untuk mengambil bulan dari tanggal
+function getMonthFromDate(date) {
+  return new Date(date).getMonth();
+}
 
-unsafeDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsUnsafe[month] += 1;
-});
+// Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
+function processData(data, startDate, endDate) {
+  const monthCounts = Array(12).fill(0);
+  data.forEach((report) => {
+    const reportDate = new Date(report.date);
+    if (reportDate >= startDate && reportDate <= endDate) {
+      const month = getMonthFromDate(report.date);
+      monthCounts[month] += 1;
+    }
+  });
+  return monthCounts;
+}
 
-// Compromised Data Processing
-const monthCountsCompromised = Array(12).fill(0);
+// Fungsi untuk menghasilkan label berdasarkan rentang tanggal yang dipilih
+function generateLabels(startDate, endDate) {
+  const labels = [];
+  const tempDate = new Date(startDate);
+  const oneDay = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
+  const daysDifference = Math.round(Math.abs((endDate - startDate) / oneDay));
+  
+  if (daysDifference >= 365) {
+    // Rentang lebih dari 1 tahun, gunakan label bulan dan tahun
+    while (tempDate <= endDate) {
+      labels.push(tempDate.toLocaleString('default', { month: 'short', year: 'numeric' }));
+      tempDate.setMonth(tempDate.getMonth() + 1);
+    }
+  } else if (daysDifference >= 30) {
+    // Rentang antara 1 bulan hingga 1 tahun, gunakan label bulan
+    while (tempDate <= endDate) {
+      labels.push(tempDate.toLocaleString('default', { month: 'short' }));
+      tempDate.setMonth(tempDate.getMonth() + 1);
+    }
+  } else {
+    // Rentang kurang dari 1 bulan, gunakan label tanggal
+    while (tempDate <= endDate) {
+      labels.push(tempDate.toLocaleString('default', { day: '2-digit' }));
+      tempDate.setDate(tempDate.getDate() + 1);
+    }
+  }
+  
+  return labels;
+}
 
-compromisedDataResponse.data.forEach((report) => {
-  const month = new Date(report.date).getMonth();
-  monthCountsCompromised[month] += 1;
-});
+// Fungsi untuk mengupdate chart dengan data baru
+function updateChart(chart, unsafeData, compromisedData, labels) {
+  chart.data.datasets[0].data = unsafeData;
+  chart.data.datasets[1].data = compromisedData;
+  chart.data.labels = labels;
+  chart.update();
+}
 
-// Multi-axis Line Chart Example
+// Inisialisasi Litepicker
+const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+if (litepickerRangePlugin) {
+  const litepicker = new litepicker({
+    element: litepickerRangePlugin,
+    startDate: new Date(),
+    endDate: new Date(),
+    singleMode: false,
+    numberOfMonths: 2,
+    numberOfColumns: 2,
+    format: 'MMM DD, YYYY',
+    plugins: ['ranges'],
+    onSelect: function (startDate, endDate) {
+      // Ambil data baru berdasarkan rentang tanggal yang dipilih
+      const newUnsafeData = processData(unsafeDataResponse.data, startDate, endDate);
+      const newCompromisedData = processData(compromisedDataResponse.data, startDate, endDate);
+      // Buat label baru berdasarkan rentang tanggal yang dipilih
+      const newLabels = generateLabels(startDate, endDate);
+      // Perbarui chart dengan data baru
+      updateChart(multiAxisLineChart, newUnsafeData, newCompromisedData, newLabels);
+    }
+  });
+}
+
+// Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
   type: "line",
   data: {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "Apr",
-      "May",
-      "Jun",
-      "Jul",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Dec",
-    ],
+    labels: [],
     datasets: [
       {
         label: "Unsafe",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 0, 0, 0.05)", // Merah dengan opacity 0.05
-        borderColor: "rgba(255, 0, 0, 1)", // Merah solid
+        backgroundColor: "rgba(255, 0, 0, 0.05)",
+        borderColor: "rgba(255, 0, 0, 1)",
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 0, 0, 1)", // Merah solid
-        pointBorderColor: "rgba(255, 0, 0, 1)", // Merah solid
+        pointBackgroundColor: "rgba(255, 0, 0, 1)",
+        pointBorderColor: "rgba(255, 0, 0, 1)",
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)", // Merah solid
-        pointHoverBorderColor: "rgba(255, 0, 0, 1)", // Merah solid
+        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
+        pointHoverBorderColor: "rgba(255, 0, 0, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: monthCountsUnsafe,
+        data: [],
       },
       {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 255, 0, 0.05)", // Kuning dengan opacity 0.05
-        borderColor: "rgba(255, 255, 0, 1)", // Kuning solid
+        backgroundColor: "rgba(255, 165, 0, 0.05)", // Ubah ke warna orange
+        borderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 255, 0, 1)", // Kuning solid
-        pointBorderColor: "rgba(255, 255, 0, 1)", // Kuning solid
+        pointBackgroundColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
+        pointBorderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 255, 0, 1)", // Kuning solid
-        pointHoverBorderColor: "rgba(255, 255, 0, 1)", // Kuning solid
+        pointHoverBackgroundColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
+        pointHoverBorderColor: "rgba(255, 165, 0, 1)", // Ubah ke warna orange
         pointHitRadius: 10,
         pointBorderWidth: 2,
-        data: monthCountsCompromised,
-      },
+        data: [],
+      }      
     ],
   },
   options: {
@@ -182,7 +233,7 @@ var multiAxisLineChart = new Chart(ctx, {
           },
           ticks: {
             maxTicksLimit: 7,
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+            fontSize: 14,
           },
         },
       ],
@@ -196,7 +247,7 @@ var multiAxisLineChart = new Chart(ctx, {
             callback: function (value, index, values) {
               return number_format(value);
             },
-            fontSize: 14, // Tambahkan ini untuk mengatur ukuran font
+            fontSize: 14,
           },
           gridLines: {
             color: "rgb(234, 236, 244)",
@@ -324,11 +375,11 @@ var horizontalBarChart = new Chart(ctxLocation, {
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
-        borderColor: "rgba(255, 255, 0, 1)", // Kuning
+        backgroundColor: "rgba(255, 165, 0, 0.8)", // Oranye dengan transparansi 0.8
+        borderColor: "rgba(255, 165, 0, 1)", // Oranye
         borderWidth: 1,
         data: combinedData.dataCompromised,
-      },
+      },     
     ],
   },
   options: {
@@ -462,11 +513,11 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
       },
       {
         label: "Compromised",
-        backgroundColor: "rgba(255, 255, 0, 0.8)", // Kuning
-        borderColor: "rgba(255, 255, 0, 1)", // Kuning
+        backgroundColor: "rgba(255, 165, 0, 0.8)", // Oranye dengan transparansi 0.8
+        borderColor: "rgba(255, 165, 0, 1)", // Oranye
         borderWidth: 1,
         data: combinedData.dataCompromised,
-      },
+      },      
     ],
   },
   options: {
