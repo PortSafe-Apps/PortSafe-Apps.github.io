@@ -149,7 +149,7 @@ function updateChart(chart, unsafeData, compromisedData, labels) {
 // Inisialisasi Litepicker
 const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
 if (litepickerRangePlugin) {
-  const litepicker = new litepicker({
+  const litepicker = new Litepicker({
     element: litepickerRangePlugin,
     startDate: new Date(),
     endDate: new Date(),
@@ -169,6 +169,7 @@ if (litepickerRangePlugin) {
     }
   });
 }
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
