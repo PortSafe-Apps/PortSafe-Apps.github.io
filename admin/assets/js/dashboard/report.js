@@ -97,23 +97,38 @@ function getMonthFromDate(date) {
 
 // Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
 function processData(data, startDate, endDate) {
-  const monthCounts = Array(12).fill(0);
+  // Menginisialisasi array untuk menyimpan jumlah data dalam rentang tanggal
+  const dateCounts = {};
+
+  // Loop melalui setiap data
   data.forEach((report) => {
+    // Parsing tanggal dari data
     const reportDate = new Date(report.date);
+
+    // Memeriksa apakah tanggal data berada dalam rentang yang dipilih
     if (reportDate >= startDate && reportDate <= endDate) {
-      const month = getMonthFromDate(report.date);
-      monthCounts[month] += 1;
+      // Format tanggal sebagai string untuk digunakan sebagai kunci dalam objek dateCounts
+      const dateString = reportDate.toISOString().split('T')[0];
+
+      // Menambahkan jumlah data pada tanggal tertentu dalam rentang ke objek dateCounts
+      if (dateCounts[dateString]) {
+        dateCounts[dateString]++;
+      } else {
+        dateCounts[dateString] = 1;
+      }
     }
   });
-  return monthCounts;
+
+  // Mengonversi objek dateCounts menjadi array untuk digunakan sebagai data dalam chart
+  const countsArray = Object.values(dateCounts);
+  return countsArray;
 }
 
 // Fungsi untuk menghasilkan label berdasarkan rentang tanggal yang dipilih
 function generateLabels(startDate, endDate) {
   const labels = [];
   const tempDate = new Date(startDate);
-  const oneDay = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
-  const daysDifference = Math.round(Math.abs((endDate - startDate) / oneDay));
+  const daysDifference = daysBetween(startDate, endDate);
   
   if (daysDifference >= 365) {
     // Rentang lebih dari 1 tahun, gunakan label bulan dan tahun
@@ -146,6 +161,12 @@ function updateChart(chart, unsafeData, compromisedData, labels) {
   chart.update();
 }
 
+// Fungsi untuk menghitung jumlah hari antara dua tanggal
+function daysBetween(startDate, endDate) {
+  const oneDay = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
+  return Math.round(Math.abs((endDate - startDate) / oneDay));
+}
+
 // Inisialisasi Litepicker
 const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
 if (litepickerRangePlugin) {
@@ -169,7 +190,6 @@ if (litepickerRangePlugin) {
     }
   });
 }
-
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
