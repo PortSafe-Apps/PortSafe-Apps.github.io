@@ -98,13 +98,13 @@ function processData(data, startDate, endDate) {
 
   // Loop melalui setiap data
   data.forEach((report) => {
-    // Parsing tanggal dari data
-    const reportDate = new Date(report.date);
+    // Parsing tanggal dan waktu dari data
+    const reportDateTime = new Date(report.date + 'T' + report.time);
 
     // Memeriksa apakah tanggal data berada dalam rentang yang dipilih
-    if (reportDate >= startDate && reportDate <= endDate) {
+    if (reportDateTime >= startDate && reportDateTime <= endDate) {
       // Format tanggal sebagai string untuk digunakan sebagai kunci dalam objek dateCounts
-      const dateString = reportDate.toISOString().split('T')[0];
+      const dateString = reportDateTime.toISOString().split('T')[0];
 
       // Menambahkan jumlah data pada tanggal tertentu dalam rentang ke objek dateCounts
       if (dateCounts[dateString]) {
@@ -120,37 +120,16 @@ function processData(data, startDate, endDate) {
   return countsArray;
 }
 
-// Fungsi untuk mengambil bulan dari tanggal
-function getMonthFromDate(date) {
-  return new Date(date).getMonth();
-}
-
 // Fungsi untuk menghasilkan label berdasarkan rentang tanggal yang dipilih
 function generateLabels(startDate, endDate) {
   const labels = [];
   const tempDate = new Date(startDate);
-  const daysDifference = daysBetween(startDate, endDate);
-  
-  if (daysDifference >= 365) {
-    // Rentang lebih dari 1 tahun, gunakan label bulan dan tahun
-    while (tempDate <= endDate) {
-      labels.push(tempDate.toLocaleString('default', { month: 'short', year: 'numeric' }));
-      tempDate.setMonth(tempDate.getMonth() + 1);
-    }
-  } else if (daysDifference >= 30) {
-    // Rentang antara 1 bulan hingga 1 tahun, gunakan label bulan
-    while (tempDate <= endDate) {
-      labels.push(tempDate.toLocaleString('default', { month: 'short' }));
-      tempDate.setMonth(tempDate.getMonth() + 1);
-    }
-  } else {
-    // Rentang kurang dari 1 bulan, gunakan label tanggal
-    while (tempDate <= endDate) {
-      labels.push(tempDate.toLocaleString('default', { day: '2-digit' }));
-      tempDate.setDate(tempDate.getDate() + 1);
-    }
+
+  while (tempDate <= endDate) {
+    labels.push(tempDate.toLocaleString('default', { day: '2-digit', month: 'short', year: 'numeric' }));
+    tempDate.setDate(tempDate.getDate() + 1);
   }
-  
+
   return labels;
 }
 
@@ -160,12 +139,6 @@ function updateChart(chart, unsafeData, compromisedData, labels) {
   chart.data.datasets[1].data = compromisedData;
   chart.data.labels = labels;
   chart.update();
-}
-
-// Fungsi untuk menghitung jumlah hari antara dua tanggal
-function daysBetween(startDate, endDate) {
-  const oneDay = 24 * 60 * 60 * 1000; // Satu hari dalam milidetik
-  return Math.round(Math.abs((endDate - startDate) / oneDay));
 }
 
 // Inisialisasi Litepicker
@@ -246,8 +219,9 @@ var multiAxisLineChart = new Chart(ctx, {
     scales: {
       xAxes: [
         {
+          type: 'time',
           time: {
-            unit: "date",
+            unit: 'day'
           },
           gridLines: {
             display: false,
@@ -266,9 +240,6 @@ var multiAxisLineChart = new Chart(ctx, {
           ticks: {
             maxTicksLimit: 5,
             padding: 10,
-            callback: function (value, index, values) {
-              return number_format(value);
-            },
             fontSize: 14,
           },
           gridLines: {
@@ -303,12 +274,13 @@ var multiAxisLineChart = new Chart(ctx, {
         label: function (tooltipItem, chart) {
           var datasetLabel =
             chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + number_format(tooltipItem.yLabel);
+          return datasetLabel + ": " + tooltipItem.yLabel;
         },
       },
     },
   },
 });
+
 
 const locationLabels = [
   "Kantor Pusat SPMT",
