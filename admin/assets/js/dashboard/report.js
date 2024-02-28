@@ -192,91 +192,75 @@ var multiAxisLineChart = new Chart(ctx, {
         label: "Compromised",
         yAxisID: "y-axis-1",
         lineTension: 0.3,
-        backgroundColor: "rgba(255, 165, 0, 0.05)", 
-        borderColor: "rgba(255, 165, 0, 1)", 
+        backgroundColor: "rgba(0, 0, 255, 0.05)",
+        borderColor: "rgba(0, 0, 255, 1)",
         pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 165, 0, 1)", 
-        pointBorderColor: "rgba(255, 165, 0, 1)", 
+        pointBackgroundColor: "rgba(0, 0, 255, 1)",
+        pointBorderColor: "rgba(0, 0, 255, 1)",
         pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 165, 0, 1)", 
-        pointHoverBorderColor: "rgba(255, 165, 0, 1)", 
+        pointHoverBackgroundColor: "rgba(0, 0, 255, 1)",
+        pointHoverBorderColor: "rgba(0, 0, 255, 1)",
         pointHitRadius: 10,
         pointBorderWidth: 2,
         data: [],
-      }      
+      },
     ],
   },
   options: {
+    responsive: true,
     maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
+    tooltips: {
+      mode: "index",
+      intersect: false,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          var label = data.datasets[tooltipItem.datasetIndex].label || "";
+          if (label) {
+            label += ": ";
+          }
+          label += number_format(tooltipItem.yLabel);
+          return label;
+        },
       },
+    },
+    hover: {
+      mode: "nearest",
+      intersect: true,
     },
     scales: {
       xAxes: [
         {
-          type: 'time',
-          time: {
-            unit: 'day'
+          display: true,
+          scaleLabel: {
+            display: true,
+            labelString: "Date",
           },
           gridLines: {
             display: false,
-            drawBorder: false,
           },
           ticks: {
-            maxTicksLimit: 7,
-            fontSize: 14,
+            maxTicksLimit: 10,
           },
         },
       ],
       yAxes: [
         {
-          id: "y-axis-1",
+          type: "linear",
+          display: true,
           position: "left",
-          ticks: {
-            maxTicksLimit: 5,
-            padding: 10,
-            fontSize: 14,
+          id: "y-axis-1",
+          scaleLabel: {
+            display: true,
+            labelString: "Number of Reports",
           },
-          gridLines: {
-            color: "rgb(234, 236, 244)",
-            zeroLineColor: "rgb(234, 236, 244)",
-            drawBorder: false,
-            borderDash: [2],
-            zeroLineBorderDash: [2],
+          ticks: {
+            beginAtZero: true,
+            callback: function (value, index, values) {
+              return number_format(value);
+            },
           },
         },
       ],
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      callbacks: {
-        label: function (tooltipItem, chart) {
-          var datasetLabel =
-            chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + tooltipItem.yLabel;
-        },
-      },
     },
   },
 });
@@ -732,69 +716,38 @@ pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event
     }
 });
 
-// Function to find the subtype with the highest count
-function findMaxSubtype(subtypesData) {
-    let maxCount = 0;
-    let maxSubtype = null;
+// Function to find the maximum type from combined data
+function findMaxType(data) {
+  let maxType = '';
+  let maxCount = 0;
 
-    for (const subtype in subtypesData) {
-        if (subtypesData[subtype] > maxCount) {
-            maxCount = subtypesData[subtype];
-            maxSubtype = subtype;
-        }
+  for (const type in data) {
+    if (data[type] > maxCount) {
+      maxCount = data[type];
+      maxType = type;
     }
-
-    return maxSubtype;
-}
-  
-  // Function to get subtypes and counts for a given type
-  function getSubtypesData(type) {
-    const subtypesCounts = {};
-    unsafeDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0]
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (typeName === type && typeDangerousAction.subTypes) {
-        typeDangerousAction.subTypes.forEach((subtype) => {
-          if (!subtypesCounts[subtype]) {
-            subtypesCounts[subtype] = 1;
-          } else {
-            subtypesCounts[subtype]++;
-          }
-        });
-      }
-    });
-  
-    compromisedDataResponse.data.forEach((report) => {
-      const typeDangerousAction = report.typeDangerousActions
-        ? report.typeDangerousActions[0]
-        : { typeName: "Unknown" };
-  
-      const typeName = typeDangerousAction.typeName;
-      if (typeName === type && typeDangerousAction.subTypes) {
-        typeDangerousAction.subTypes.forEach((subtype) => {
-          if (!subtypesCounts[subtype]) {
-            subtypesCounts[subtype] = 1;
-          } else {
-            subtypesCounts[subtype]++;
-          }
-        });
-      }
-    });
-  
-    const subtypesLabels = Object.keys(subtypesCounts);
-    const subtypesData = subtypesLabels.map(subtype => subtypesCounts[subtype]);
-  
-    return {
-      labels: subtypesLabels,
-      data: subtypesData,
-    };
   }
-  
-  // Function to create and display a pie chart for subtypes
-function createSubtypesPieChart(subtypesData) {
+
+  return maxType;
+}
+
+// Function to process data for subtypes
+function processDataForSubtypes(type) {
+  const subtypesData = {
+    labels: [],
+    data: [],
+  };
+
+  for (const subtype in subtypes[type]) {
+    subtypesData.labels.push(subtype);
+    subtypesData.data.push(subtypes[type][subtype]);
+  }
+
+  return subtypesData;
+}
+
+ // Function to create and display a pie chart for subtypes
+ function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
     type: "pie",
@@ -853,4 +806,30 @@ function createSubtypesPieChart(subtypesData) {
   });
 }
 
+// Function to show default subtype pie chart with the highest type
+function showDefaultSubtypePieChart() {
+  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
+  const subtypesData = processDataForSubtypes(maxType);
+  createSubtypesPieChart(subtypesData);
+}
+
+// Show default subtype pie chart on page load
+showDefaultSubtypePieChart();
+
+// Event listener for dangerous actions pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+  if (activeElements.length > 0) {
+    const clickedIndex = activeElements[0]._index;
+    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+    // Get subtypes data for the clicked type
+    const subtypesData = processDataForSubtypes(clickedType);
+
+    // Create and display subtypes pie chart
+    createSubtypesPieChart(subtypesData);
+  }
+});
+  
+ 
 
