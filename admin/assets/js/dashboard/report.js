@@ -646,7 +646,73 @@ function findMaxType(data) {
 
   return maxType;
 }
+var ctxTypeDangerousActions = document.getElementById(
+  "myPieChartForTypeDangerousActions"
+);
+const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
+  type: "pie",
+  data: {
+    labels: combinedTypeDangerousActionsData.labels,
+    datasets: [
+      {
+        data: combinedTypeDangerousActionsData.data,
+        backgroundColor: colors,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
+    },
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleFontColor: "#6e707e",
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          const datasetLabel = data.datasets[0].label || "";
+          const unsafeValue =
+            typeDangerousActionsCountsUnsafe[data.labels[tooltipItem.index]] ||
+            0;
+          const compromisedValue =
+            typeDangerousActionsCountsCompromised[
+              data.labels[tooltipItem.index]
+            ] || 0;
+          return `${datasetLabel}: Unsafe ${unsafeValue}, Compromised ${compromisedValue}`;
+        },
+        title: function (tooltipItem, data) {
+          return data.labels[tooltipItem[0].index];
+        },
+      },
+    },
+    plugins: {
+      datalabels: {
+        formatter: (value) => {
+          return `Total: ${value}`;
+        },
+        color: "#fff", 
+        anchor: "end", 
+        align: "start", 
+      },
+    },
+  },
+});
 
+// Process Data for SubType Dangerous Actions Pie Chart
 function getSubtypesData(type) {
   const subtypesCounts = {};
 
