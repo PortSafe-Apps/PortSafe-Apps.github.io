@@ -738,10 +738,39 @@ function processDataForSubtypes(type) {
     data: [],
   };
 
-  for (const subtype in subtypes[type]) {
-    subtypesData.labels.push(subtype);
-    subtypesData.data.push(subtypes[type][subtype]);
-  }
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousActions = report.typeDangerousActions || [];
+    typeDangerousActions.forEach((action) => {
+      if (action.typeName === type && action.subTypes) {
+        action.subTypes.forEach((subtype) => {
+          if (!subtypesData.labels.includes(subtype)) {
+            subtypesData.labels.push(subtype);
+            subtypesData.data.push(1);
+          } else {
+            const index = subtypesData.labels.indexOf(subtype);
+            subtypesData.data[index]++;
+          }
+        });
+      }
+    });
+  });
+
+  compromisedDataResponse.data.forEach((report) => {
+    const typeDangerousActions = report.typeDangerousActions || [];
+    typeDangerousActions.forEach((action) => {
+      if (action.typeName === type && action.subTypes) {
+        action.subTypes.forEach((subtype) => {
+          if (!subtypesData.labels.includes(subtype)) {
+            subtypesData.labels.push(subtype);
+            subtypesData.data.push(1);
+          } else {
+            const index = subtypesData.labels.indexOf(subtype);
+            subtypesData.data[index]++;
+          }
+        });
+      }
+    });
+  });
 
   return subtypesData;
 }
