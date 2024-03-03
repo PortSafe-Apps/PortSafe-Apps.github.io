@@ -38,11 +38,11 @@ async function fetchDataFromServer(url, category) {
       const token = getTokenFromCookies("Login");
 
       if (!token) {
-          // Tangani kesalahan autentikasi jika tidak ada token
+          // Handle authentication error if no token
           Swal.fire({
               icon: "warning",
               title: "Authentication Error",
-              text: "Kamu Belum Login!",
+              text: "You are not logged in!",
           }).then(() => {
               window.location.href = "https://portsafe-apps.github.io/";
           });
@@ -138,7 +138,6 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(re
       });
   }
 });
-
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
