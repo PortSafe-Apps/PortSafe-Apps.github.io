@@ -698,6 +698,24 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
   },
 });
 
+// Add click event listener to the pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+    if (activeElements.length > 0) {
+        const clickedIndex = activeElements[0]._index;
+        const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+        // Get subtypes and counts for the clicked type
+        const subtypesData = getSubtypesData(clickedType);
+
+        // Find the subtype with the highest count
+        const maxSubtype = findMaxSubtype(subtypesData);
+
+        // Create and display a new pie chart for subtypes
+        createSubtypesPieChart(subtypesData, maxSubtype);
+    }
+});
+
 // Function to find the maximum type from combined data
 function findMaxType(data) {
   let maxType = '';
@@ -723,7 +741,7 @@ function showDefaultSubtypePieChart() {
 // Show default subtype pie chart on page load
 showDefaultSubtypePieChart();
 
-function processDataForSubtypes(type) {
+function getSubtypesData(type) {
   const subtypesCounts = {};
 
   unsafeDataResponse.data.forEach((report) => {
@@ -776,7 +794,8 @@ function processDataForSubtypes(type) {
   };
 }
 
-function createSubtypesPieChart(subtypesData) {
+// Function to create and display a pie chart for subtypes
+function createSubtypesPieChart(subtypesData, maxSubtype) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
     type: "pie",
