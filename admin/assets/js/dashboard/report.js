@@ -732,15 +732,30 @@ function findMaxType(data) {
 }
 
 // Function to process data for subtypes
-function processDataForSubtypes(type, category) {
+function processDataForSubtypes(type) {
   const subtypesData = {
     labels: [],
     data: [],
   };
 
-  const dataToProcess = category === 'unsafe' ? unsafeDataResponse.data : compromisedDataResponse.data;
+  unsafeDataResponse.data.forEach((report) => {
+    const typeDangerousActions = report.typeDangerousActions || [];
+    typeDangerousActions.forEach((action) => {
+      if (action.typeName === type && action.subTypes) {
+        action.subTypes.forEach((subtype) => {
+          if (!subtypesData.labels.includes(subtype)) {
+            subtypesData.labels.push(subtype);
+            subtypesData.data.push(1);
+          } else {
+            const index = subtypesData.labels.indexOf(subtype);
+            subtypesData.data[index]++;
+          }
+        });
+      }
+    });
+  });
 
-  dataToProcess.forEach((report) => {
+  compromisedDataResponse.data.forEach((report) => {
     const typeDangerousActions = report.typeDangerousActions || [];
     typeDangerousActions.forEach((action) => {
       if (action.typeName === type && action.subTypes) {
@@ -802,7 +817,10 @@ function processDataForSubtypes(type, category) {
             return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
-            return data.labels[tooltipItem[0].index];
+            // Determine the source of data response
+            const dataType = subtypesData.labels[tooltipItem[0].index];
+            const dataResponse = dataType.includes("unsafe") ? "Unsafe" : "Compromised";
+            return `${dataResponse}: ${data.labels[tooltipItem[0].index]}`;
           },
         },
       },
@@ -822,19 +840,9 @@ function processDataForSubtypes(type, category) {
 
 // Function to show default subtype pie chart with the highest type
 function showDefaultSubtypePieChart() {
-  const maxTypeUnsafe = findMaxType(typeDangerousActionsCountsUnsafe);
-  const subtypesDataUnsafe = processDataForSubtypes(maxTypeUnsafe, 'unsafe');
-
-  const maxTypeCompromised = findMaxType(typeDangerousActionsCountsCompromised);
-  const subtypesDataCompromised = processDataForSubtypes(maxTypeCompromised, 'compromised');
-
-  const maxSubtypeUnsafe = findMaxSubtype(subtypesDataUnsafe);
-  const maxSubtypeCompromised = findMaxSubtype(subtypesDataCompromised);
-
-  // Use whichever subtype has the higher count
-  const defaultSubtypeData = maxSubtypeUnsafe.data > maxSubtypeCompromised.data ? subtypesDataUnsafe : subtypesDataCompromised;
-
-  createSubtypesPieChart(defaultSubtypeData);
+  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
+  const subtypesData = processDataForSubtypes(maxType);
+  createSubtypesPieChart(subtypesData);
 }
 
 // Show default subtype pie chart on page load
