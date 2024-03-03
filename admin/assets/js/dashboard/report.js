@@ -731,16 +731,6 @@ function findMaxType(data) {
   return maxType;
 }
 
-// Function to show default subtype pie chart with the highest type
-function showDefaultSubtypePieChart() {
-  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
-  const subtypesData = processDataForSubtypes(maxType);
-  createSubtypesPieChart(subtypesData);
-}
-
-// Show default subtype pie chart on page load
-showDefaultSubtypePieChart();
-
 function getSubtypesData(type) {
   const subtypesCounts = {};
 
@@ -795,7 +785,7 @@ function getSubtypesData(type) {
 }
 
 // Function to create and display a pie chart for subtypes
-function createSubtypesPieChart(subtypesData, maxSubtype) {
+function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
     type: "pie",
@@ -858,3 +848,28 @@ function createSubtypesPieChart(subtypesData, maxSubtype) {
     },
   });
 }
+
+// Function to show default subtype pie chart with the highest type
+function showDefaultSubtypePieChart() {
+  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
+  const subtypesData = processDataForSubtypes(maxType);
+  createSubtypesPieChart(subtypesData);
+}
+
+// Show default subtype pie chart on page load
+showDefaultSubtypePieChart();
+
+// Event listener for dangerous actions pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+  if (activeElements.length > 0) {
+    const clickedIndex = activeElements[0]._index;
+    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+    // Get subtypes data for the clicked type
+    const subtypesData = processDataForSubtypes(clickedType);
+
+    // Create and display subtypes pie chart
+    createSubtypesPieChart(subtypesData);
+  }
+});
