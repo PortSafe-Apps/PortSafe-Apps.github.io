@@ -78,37 +78,8 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-// Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
-function processData(data, startDate, endDate) {
-  // Menginisialisasi array untuk menyimpan jumlah data dalam rentang tanggal
-  const dateCounts = {};
-
-  // Loop melalui setiap data
-  data.forEach((report) => {
-      // Parsing tanggal dan waktu dari data
-      const reportDateTime = new Date(report.date + 'T' + report.time);
-
-      // Memeriksa apakah tanggal data berada dalam rentang yang dipilih
-      if (reportDateTime >= startDate && reportDateTime <= endDate) {
-          // Format tanggal sebagai string untuk digunakan sebagai kunci dalam objek dateCounts
-          const dateString = reportDateTime.toISOString().split('T')[0];
-
-          // Menambahkan jumlah data pada tanggal tertentu dalam rentang ke objek dateCounts
-          if (dateCounts[dateString]) {
-              dateCounts[dateString]++;
-          } else {
-              dateCounts[dateString] = 1;
-          }
-      }
-  });
-
-  // Mengonversi objek dateCounts menjadi array untuk digunakan sebagai data dalam chart
-  const countsArray = Object.values(dateCounts);
-  return countsArray;
-}
-
 // Function to process data based on selected date range
-function processDataBasedOnRange(startDate, endDate) {
+function processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse) {
   // Filter data according to selected date range
   const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
       const reportDateTime = new Date(report.date + 'T' + report.time);
@@ -130,38 +101,43 @@ function processDataBasedOnRange(startDate, endDate) {
 }
 
 // Unsafe Data Fetch
-const unsafeDataResponse = await fetchDataFromServer(
+const unsafeDataResponsePromise = fetchDataFromServer(
   "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
   "Unsafe Action"
 );
 
 // Compromised Data Fetch
-const compromisedDataResponse = await fetchDataFromServer(
+const compromisedDataResponsePromise = fetchDataFromServer(
   "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
   "Compromised Action"
 );
 
-const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-if (litepickerRangePlugin) {
-  const picker = new Litepicker({
-      element: litepickerRangePlugin,
-      startDate: new Date(),
-      endDate: new Date(),
-      singleMode: false,
-      numberOfMonths: 2,
-      numberOfColumns: 2,
-      format: 'MMM DD, YYYY',
-      plugins: ['ranges'],
-      onSelect: function(start, end) {
-          // Process data when date range is selected
-          const startDate = start instanceof Date ? start : new Date(start);
-          const endDate = end instanceof Date ? end : new Date(end);
+Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(responses => {
+  const unsafeDataResponse = responses[0];
+  const compromisedDataResponse = responses[1];
 
-          // Process data based on selected date range
-          processDataBasedOnRange(startDate, endDate);
-      }
-  });
-}
+  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+  if (litepickerRangePlugin) {
+      const picker = new Litepicker({
+          element: litepickerRangePlugin,
+          startDate: new Date(),
+          endDate: new Date(),
+          singleMode: false,
+          numberOfMonths: 2,
+          numberOfColumns: 2,
+          format: 'MMM DD, YYYY',
+          plugins: ['ranges'],
+          onSelect: function(start, end) {
+              // Process data when date range is selected
+              const startDate = start instanceof Date ? start : new Date(start);
+              const endDate = end instanceof Date ? end : new Date(end);
+
+              // Process data based on selected date range
+              processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse);
+          }
+      });
+  }
+});
 
 
 // Inisialisasi Chart
