@@ -731,52 +731,86 @@ function findMaxType(data) {
   return maxType;
 }
 
-// Function to process data for subtypes
-function processDataForSubtypes(type) {
-  const subtypesData = {
-    labels: [],
-    data: [],
-  };
+// Function to show default subtype pie chart with the highest type
+function showDefaultSubtypePieChart() {
+  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
+  const subtypesData = processDataForSubtypes(maxType);
+  createSubtypesPieChart(subtypesData);
+}
+
+// Show default subtype pie chart on page load
+showDefaultSubtypePieChart();
+
+// Event listener for dangerous actions pie chart
+pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+  if (activeElements.length > 0) {
+    const clickedIndex = activeElements[0]._index;
+    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+
+    // Get subtypes data for the clicked type
+    const subtypesData = processDataForSubtypes(clickedType);
+
+    // Create and display subtypes pie chart
+    createSubtypesPieChart(subtypesData);
+  }
+});
+
+function getSubtypesData(type) {
+  const subtypesCounts = {};
 
   unsafeDataResponse.data.forEach((report) => {
-    const typeDangerousActions = report.typeDangerousActions || [];
-    typeDangerousActions.forEach((action) => {
-      if (action.typeName === type && action.subTypes) {
-        action.subTypes.forEach((subtype) => {
-          if (!subtypesData.labels.includes(subtype)) {
-            subtypesData.labels.push(subtype);
-            subtypesData.data.push(1);
-          } else {
-            const index = subtypesData.labels.indexOf(subtype);
-            subtypesData.data[index]++;
-          }
-        });
-      }
-    });
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (typeName === type && typeDangerousAction.subTypes) {
+      typeDangerousAction.subTypes.forEach((subtype) => {
+        if (!subtypesCounts[subtype]) {
+          subtypesCounts[subtype] = {
+            count: 1,
+            dataResponse: "Unsafe"
+          };
+        } else {
+          subtypesCounts[subtype].count++;
+        }
+      });
+    }
   });
 
   compromisedDataResponse.data.forEach((report) => {
-    const typeDangerousActions = report.typeDangerousActions || [];
-    typeDangerousActions.forEach((action) => {
-      if (action.typeName === type && action.subTypes) {
-        action.subTypes.forEach((subtype) => {
-          if (!subtypesData.labels.includes(subtype)) {
-            subtypesData.labels.push(subtype);
-            subtypesData.data.push(1);
-          } else {
-            const index = subtypesData.labels.indexOf(subtype);
-            subtypesData.data[index]++;
-          }
-        });
-      }
-    });
+    const typeDangerousAction = report.typeDangerousActions
+      ? report.typeDangerousActions[0]
+      : { typeName: "Unknown" };
+
+    const typeName = typeDangerousAction.typeName;
+    if (typeName === type && typeDangerousAction.subTypes) {
+      typeDangerousAction.subTypes.forEach((subtype) => {
+        if (!subtypesCounts[subtype]) {
+          subtypesCounts[subtype] = {
+            count: 1,
+            dataResponse: "Compromised"
+          };
+        } else {
+          subtypesCounts[subtype].count++;
+        }
+      });
+    }
   });
 
-  return subtypesData;
+  const subtypesLabels = Object.keys(subtypesCounts);
+  const subtypesData = subtypesLabels.map((subtype) => subtypesCounts[subtype].count);
+
+  return {
+    labels: subtypesLabels,
+    data: subtypesData,
+    dataResponse: subtypesCounts
+  };
 }
 
- // Function to create and display a pie chart for subtypes
- function createSubtypesPieChart(subtypesData) {
+// Function to create and display a pie chart for subtypes
+function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
     type: "pie",
@@ -814,16 +848,18 @@ function processDataForSubtypes(type) {
         callbacks: {
           label: function (tooltipItem, data) {
             const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${
+              data.datasets[0].data[tooltipItem.index]
+            }`;
           },
           title: function (tooltipItem, data) {
-            // Determine the source of data response
-            const dataType = subtypesData.labels[tooltipItem[0].index];
-            const dataResponse = dataType.includes("unsafe") ? "Unsafe" : "Compromised";
-            return `${dataResponse}: ${data.labels[tooltipItem[0].index]}`;
+            const subtypeLabel = data.labels[tooltipItem[0].index];
+            const dataResponse = subtypesData.dataResponse[subtypeLabel].dataResponse;
+            return `${dataResponse}`;
           },
         },
       },
+
       plugins: {
         datalabels: {
           formatter: (value) => {
@@ -838,30 +874,5 @@ function processDataForSubtypes(type) {
   });
 }
 
-// Function to show default subtype pie chart with the highest type
-function showDefaultSubtypePieChart() {
-  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
-  const subtypesData = processDataForSubtypes(maxType);
-  createSubtypesPieChart(subtypesData);
-}
 
-// Show default subtype pie chart on page load
-showDefaultSubtypePieChart();
-
-// Event listener for dangerous actions pie chart
-pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
-  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
-  if (activeElements.length > 0) {
-    const clickedIndex = activeElements[0]._index;
-    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
-
-    // Get subtypes data for the clicked type
-    const subtypesData = processDataForSubtypes(clickedType);
-
-    // Create and display subtypes pie chart
-    createSubtypesPieChart(subtypesData);
-  }
-});
-  
- 
 
