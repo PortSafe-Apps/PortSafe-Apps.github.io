@@ -698,24 +698,6 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
   },
 });
 
-// Add click event listener to the pie chart
-pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
-    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
-    if (activeElements.length > 0) {
-        const clickedIndex = activeElements[0]._index;
-        const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
-
-        // Get subtypes and counts for the clicked type
-        const subtypesData = getSubtypesData(clickedType);
-
-        // Find the subtype with the highest count
-        const maxSubtype = findMaxSubtype(subtypesData);
-
-        // Create and display a new pie chart for subtypes
-        createSubtypesPieChart(subtypesData, maxSubtype);
-    }
-});
-
 // Function to find the maximum type from combined data
 function findMaxType(data) {
   let maxType = '';
@@ -741,22 +723,7 @@ function showDefaultSubtypePieChart() {
 // Show default subtype pie chart on page load
 showDefaultSubtypePieChart();
 
-// Event listener for dangerous actions pie chart
-pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
-  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
-  if (activeElements.length > 0) {
-    const clickedIndex = activeElements[0]._index;
-    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
-
-    // Get subtypes data for the clicked type
-    const subtypesData = processDataForSubtypes(clickedType);
-
-    // Create and display subtypes pie chart
-    createSubtypesPieChart(subtypesData);
-  }
-});
-
-function getSubtypesData(type) {
+function processDataForSubtypes(type) {
   const subtypesCounts = {};
 
   unsafeDataResponse.data.forEach((report) => {
@@ -809,7 +776,6 @@ function getSubtypesData(type) {
   };
 }
 
-// Function to create and display a pie chart for subtypes
 function createSubtypesPieChart(subtypesData) {
   var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
   const pieChartForSubtypes = new Chart(ctxSubtypes, {
@@ -873,6 +839,3 @@ function createSubtypesPieChart(subtypesData) {
     },
   });
 }
-
-
-
