@@ -78,18 +78,6 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-// Unsafe Data Fetch
-const unsafeDataResponse = await fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
-  "Unsafe Action"
-);
-
-// Compromised Data Fetch
-const compromisedDataResponse = await fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-  "Compromised Action"
-);
-
 // Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
 function processData(data, startDate, endDate) {
   // Menginisialisasi array untuk menyimpan jumlah data dalam rentang tanggal
@@ -136,10 +124,22 @@ function processDataBasedOnRange(startDate, endDate) {
   const processedUnsafeData = processData(filteredUnsafeData, startDate, endDate);
   const processedCompromisedData = processData(filteredCompromisedData, startDate, endDate);
 
-
+  // Do whatever you need to do with the filtered and processed data
   console.log("Unsafe Data:", processedUnsafeData);
   console.log("Compromised Data:", processedCompromisedData);
 }
+
+// Unsafe Data Fetch
+const unsafeDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
+  "Unsafe Action"
+);
+
+// Compromised Data Fetch
+const compromisedDataResponse = await fetchDataFromServer(
+  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
+  "Compromised Action"
+);
 
 const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
 if (litepickerRangePlugin) {
