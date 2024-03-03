@@ -35,46 +35,46 @@ function number_format(number) {
 // Function to fetch data from the server (similar to your existing logic)
 async function fetchDataFromServer(url, category) {
   try {
-    const token = getTokenFromCookies("Login");
+      const token = getTokenFromCookies("Login");
 
-    if (!token) {
-      // Tangani kesalahan autentikasi jika tidak ada token
-      Swal.fire({
-        icon: "warning",
-        title: "Authentication Error",
-        text: "Kamu Belum Login!",
-      }).then(() => {
-        window.location.href = "https://portsafe-apps.github.io/";
-      });
-      return { category, data: [] };
-    }
+      if (!token) {
+          // Tangani kesalahan autentikasi jika tidak ada token
+          Swal.fire({
+              icon: "warning",
+              title: "Authentication Error",
+              text: "Kamu Belum Login!",
+          }).then(() => {
+              window.location.href = "https://portsafe-apps.github.io/";
+          });
+          return { category, data: [] };
+      }
 
-    const myHeaders = new Headers();
-    myHeaders.append("Login", token);
+      const myHeaders = new Headers();
+      myHeaders.append("Login", token);
 
-    const requestOptions = {
-      method: "POST",
-      headers: myHeaders,
-      redirect: "follow",
-    };
+      const requestOptions = {
+          method: "POST",
+          headers: myHeaders,
+          redirect: "follow",
+      };
 
-    const response = await fetch(url, requestOptions);
+      const response = await fetch(url, requestOptions);
 
-    // Add error logging to fetchDataFromServer function
-    if (!response.ok) {
-      console.error(
-        "Server responded with an error:",
-        response.status,
-        response.statusText
-      );
-      return { category, data: [] };
-    }
+      // Add error logging to fetchDataFromServer function
+      if (!response.ok) {
+          console.error(
+              "Server responded with an error:",
+              response.status,
+              response.statusText
+          );
+          return { category, data: [] };
+      }
 
-    const data = await response.json();
-    return { category, data: data.data || [] };
+      const data = await response.json();
+      return { category, data: data.data || [] };
   } catch (error) {
-    console.error("Error fetching data:", error);
-    return { category, data: [] };
+      console.error("Error fetching data:", error);
+      return { category, data: [] };
   }
 }
 
@@ -90,7 +90,6 @@ const compromisedDataResponse = await fetchDataFromServer(
   "Compromised Action"
 );
 
-
 // Fungsi untuk menghitung laporan berdasarkan rentang tanggal yang dipilih
 function processData(data, startDate, endDate) {
   // Menginisialisasi array untuk menyimpan jumlah data dalam rentang tanggal
@@ -98,21 +97,21 @@ function processData(data, startDate, endDate) {
 
   // Loop melalui setiap data
   data.forEach((report) => {
-    // Parsing tanggal dan waktu dari data
-    const reportDateTime = new Date(report.date + 'T' + report.time);
+      // Parsing tanggal dan waktu dari data
+      const reportDateTime = new Date(report.date + 'T' + report.time);
 
-    // Memeriksa apakah tanggal data berada dalam rentang yang dipilih
-    if (reportDateTime >= startDate && reportDateTime <= endDate) {
-      // Format tanggal sebagai string untuk digunakan sebagai kunci dalam objek dateCounts
-      const dateString = reportDateTime.toISOString().split('T')[0];
+      // Memeriksa apakah tanggal data berada dalam rentang yang dipilih
+      if (reportDateTime >= startDate && reportDateTime <= endDate) {
+          // Format tanggal sebagai string untuk digunakan sebagai kunci dalam objek dateCounts
+          const dateString = reportDateTime.toISOString().split('T')[0];
 
-      // Menambahkan jumlah data pada tanggal tertentu dalam rentang ke objek dateCounts
-      if (dateCounts[dateString]) {
-        dateCounts[dateString]++;
-      } else {
-        dateCounts[dateString] = 1;
+          // Menambahkan jumlah data pada tanggal tertentu dalam rentang ke objek dateCounts
+          if (dateCounts[dateString]) {
+              dateCounts[dateString]++;
+          } else {
+              dateCounts[dateString] = 1;
+          }
       }
-    }
   });
 
   // Mengonversi objek dateCounts menjadi array untuk digunakan sebagai data dalam chart
@@ -120,50 +119,50 @@ function processData(data, startDate, endDate) {
   return countsArray;
 }
 
-// Fungsi untuk menghasilkan label berdasarkan rentang tanggal yang dipilih
-function generateLabels(startDate, endDate) {
-  const labels = [];
-  const tempDate = new Date(startDate);
+// Function to process data based on selected date range
+function processDataBasedOnRange(startDate, endDate) {
+  // Filter data according to selected date range
+  const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
+      const reportDateTime = new Date(report.date + 'T' + report.time);
+      return reportDateTime >= startDate && reportDateTime <= endDate;
+  });
 
-  while (tempDate <= endDate) {
-    labels.push(tempDate.toLocaleString('default', { day: '2-digit', month: 'short', year: 'numeric' }));
-    tempDate.setDate(tempDate.getDate() + 1);
-  }
+  const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
+      const reportDateTime = new Date(report.date + 'T' + report.time);
+      return reportDateTime >= startDate && reportDateTime <= endDate;
+  });
 
-  return labels;
+  // Process filtered data
+  const processedUnsafeData = processData(filteredUnsafeData, startDate, endDate);
+  const processedCompromisedData = processData(filteredCompromisedData, startDate, endDate);
+
+
+  console.log("Unsafe Data:", processedUnsafeData);
+  console.log("Compromised Data:", processedCompromisedData);
 }
 
-// Fungsi untuk mengupdate chart dengan data baru
-function updateChart(chart, unsafeData, compromisedData, labels) {
-  chart.data.datasets[0].data = unsafeData;
-  chart.data.datasets[1].data = compromisedData;
-  chart.data.labels = labels;
-  chart.update();
-}
-
-// Inisialisasi Litepicker
 const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
 if (litepickerRangePlugin) {
-  const litepicker = new Litepicker({
-    element: litepickerRangePlugin,
-    startDate: new Date(),
-    endDate: new Date(),
-    singleMode: false,
-    numberOfMonths: 2,
-    numberOfColumns: 2,
-    format: 'MMM DD, YYYY',
-    plugins: ['ranges'],
-    onSelect: function (startDate, endDate) {
-      // Ambil data baru berdasarkan rentang tanggal yang dipilih
-      const newUnsafeData = processData(unsafeDataResponse.data, startDate, endDate);
-      const newCompromisedData = processData(compromisedDataResponse.data, startDate, endDate);
-      // Buat label baru berdasarkan rentang tanggal yang dipilih
-      const newLabels = generateLabels(startDate, endDate);
-      // Perbarui chart dengan data baru
-      updateChart(multiAxisLineChart, newUnsafeData, newCompromisedData, newLabels);
-    }
+  const picker = new Litepicker({
+      element: litepickerRangePlugin,
+      startDate: new Date(),
+      endDate: new Date(),
+      singleMode: false,
+      numberOfMonths: 2,
+      numberOfColumns: 2,
+      format: 'MMM DD, YYYY',
+      plugins: ['ranges'],
+      onSelect: function(start, end) {
+          // Process data when date range is selected
+          const startDate = start instanceof Date ? start : new Date(start);
+          const endDate = end instanceof Date ? end : new Date(end);
+
+          // Process data based on selected date range
+          processDataBasedOnRange(startDate, endDate);
+      }
   });
 }
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
@@ -832,10 +831,12 @@ function createSubtypesPieChart(subtypesData) {
 
 // Function to show default subtype pie chart with the highest type
 function showDefaultSubtypePieChart() {
-  const maxType = findMaxType(combinedTypeDangerousActionsData.data);
+  const maxIndex = combinedTypeDangerousActionsData.data.indexOf(Math.max(...combinedTypeDangerousActionsData.data));
+  const maxType = combinedTypeDangerousActionsData.labels[maxIndex];
   const subtypesData = getSubtypesData(maxType);
   createSubtypesPieChart(subtypesData);
 }
+
 
 // Show default subtype pie chart on page load
 showDefaultSubtypePieChart();
