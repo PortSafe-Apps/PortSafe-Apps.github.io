@@ -139,6 +139,7 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(re
   }
 });
 
+
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
