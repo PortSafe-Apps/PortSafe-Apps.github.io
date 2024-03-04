@@ -75,12 +75,12 @@ function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData
   // Memfilter data berdasarkan rentang tanggal yang dipilih
   const filteredUnsafeData = unsafeData.filter(report => {
     const reportDate = new Date(report.date);
-    return reportDate >= startDate && reportDate <= endDate;
+    return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
   });
 
   const filteredCompromisedData = compromisedData.filter(report => {
     const reportDate = new Date(report.date);
-    return reportDate >= startDate && reportDate <= endDate;
+    return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
   });
 
   // Menampilkan data yang telah difilter
@@ -137,7 +137,6 @@ async function initializeProcess() {
 
 // Memulai proses
 initializeProcess();
-
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
