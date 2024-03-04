@@ -136,6 +136,11 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(re
               processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse);
           }
       });
+      
+      // Process data based on default date range
+      const startDate = picker.getStartDate();
+      const endDate = picker.getEndDate();
+      processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse);
   }
 });
 
