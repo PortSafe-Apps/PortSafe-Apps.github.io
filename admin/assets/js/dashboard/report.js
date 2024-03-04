@@ -88,8 +88,8 @@ async function initializeProcess() {
   const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
 
   // Mengambil data tidak aman dan terompah dari server
-  unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
-  compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+  const unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
+  const compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
   // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
   function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
@@ -117,45 +117,45 @@ async function initializeProcess() {
   }
 
   // Mendaftarkan elemen Litepicker
-const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-if (litepickerRangePlugin) {
-  // Inisialisasi Litepicker
-  const picker = new Litepicker({
-    element: litepickerRangePlugin,
-    startDate: new Date(),
-    endDate: new Date(),
-    singleMode: false,
-    numberOfMonths: 2,
-    numberOfColumns: 2,
-    format: 'MMM DD, YYYY',
-    plugins: ['ranges'],
-    // Ketika rentang tanggal dipilih
-    onSelect: function(start, end) {
-      // Mengubah format tanggal menjadi 'MM/DD/YYYY'
-      const formattedStartDate = start.format('MM/DD/YYYY');
-      const formattedEndDate = end.format('MM/DD/YYYY');
+  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+  if (litepickerRangePlugin) {
+    // Inisialisasi Litepicker
+    const picker = new Litepicker({
+      element: litepickerRangePlugin,
+      startDate: new Date(),
+      endDate: new Date(),
+      singleMode: false,
+      numberOfMonths: 2,
+      numberOfColumns: 2,
+      format: 'MMM DD, YYYY',
+      plugins: ['ranges'],
+      setup: (picker) => {
+        picker.on("selected", (date1, date2) => {
+          const start = date1 ? date1.format('MM/DD/YYYY') : null;
+          const end = date2 ? date2.format('MM/DD/YYYY') : null;
 
-      // Memproses data berdasarkan rentang tanggal yang dipilih
-      processDataBasedOnRange(formattedStartDate, formattedEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
-    }
-  });
+          if (start && end) {
+            processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
+          }
+        });
+      }
+    });
 
-  // Memproses data berdasarkan rentang tanggal default saat inisialisasi
-  const defaultStartDate = picker.getStartDate(); // Mendapatkan tanggal awal dari picker
-  const defaultEndDate = picker.getEndDate(); // Mendapatkan tanggal akhir dari picker
+    // Memproses data berdasarkan rentang tanggal default saat inisialisasi
+    const defaultStartDate = picker.getStartDate(); // Mendapatkan tanggal awal dari picker
+    const defaultEndDate = picker.getEndDate(); // Mendapatkan tanggal akhir dari picker
 
-  // Mengubah format tanggal menjadi 'MM/DD/YYYY'
-  const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
-  const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
+    // Mengubah format tanggal menjadi 'MM/DD/YYYY'
+    const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
+    const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
 
-  processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
-}
-
-
+    processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+  }
 }
 
 // Memulai proses
 initializeProcess();
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
