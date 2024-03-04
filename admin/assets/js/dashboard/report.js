@@ -411,31 +411,6 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
   };
 }
 
-
-// Function untuk memperbarui chart
-function updateCharts() {
-  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-  const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
-
-  // Update Location Bar Chart
-  horizontalBarChart.data.labels = combinedLocationData.labels;
-  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
-  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
-  horizontalBarChart.update();
-
-  // Update Area Bar Chart
-  horizontalBarChartForArea.data.labels = combinedAreaData.labels;
-  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
-  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
-  horizontalBarChartForArea.update();
-
-  // Update Type Dangerous Actions Pie Chart
-  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
-  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
-  pieChartForTypeDangerousActions.update();
-}
-
 // Deklarasi variabel global untuk grafik
 let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
 
