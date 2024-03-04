@@ -104,40 +104,6 @@ async function initializeProcess() {
 // Call the main function to start the process
 initializeProcess();
 
-
-function processDataBasedOnRange(startDate, endDate) {
-  // Pastikan data telah diterima dari server sebelum memprosesnya
-  if (unsafeDataResponse && unsafeDataResponse.data && compromisedDataResponse && compromisedDataResponse.data) {
-      // Filter data according to selected date range
-      const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
-          const reportDate = new Date(report.date);
-          return reportDate >= startDate && reportDate <= endDate;
-      });
-
-      const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
-          const reportDate = new Date(report.date);
-          return reportDate >= startDate && reportDate <= endDate;
-      });
-
-      // Pastikan data yang telah difilter memiliki panjang lebih dari 0
-      if (filteredUnsafeData.length > 0) {
-          console.log("Unsafe Data:", filteredUnsafeData);
-      } else {
-          console.log("Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih (Unsafe Data)");
-      }
-
-      if (filteredCompromisedData.length > 0) {
-          console.log("Compromised Data:", filteredCompromisedData);
-      } else {
-          console.log("Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih (Compromised Data)");
-      }
-  } else {
-      console.error("Data not available or invalid");
-  }
-}
-
-
-
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
 var multiAxisLineChart = new Chart(ctx, {
