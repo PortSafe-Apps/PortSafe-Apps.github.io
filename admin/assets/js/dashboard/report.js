@@ -1,5 +1,5 @@
 // Mendeklarasikan variabel secara global
-let unsafeDataResponse, compromisedDataResponse;
+let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
 
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
