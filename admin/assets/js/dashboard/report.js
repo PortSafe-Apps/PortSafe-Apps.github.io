@@ -32,35 +32,6 @@ function number_format(number) {
   return s.join(dec);
 }
 
-Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
-  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-  if (litepickerRangePlugin) {
-      const picker = new Litepicker({
-          element: litepickerRangePlugin,
-          startDate: new Date(),
-          endDate: new Date(),
-          singleMode: false,
-          numberOfMonths: 2,
-          numberOfColumns: 2,
-          format: 'MMM DD, YYYY',
-          plugins: ['ranges'],
-          onSelect: function(start, end) {
-              // Process data when date range is selected
-              const startDate = start instanceof Date ? start : new Date(start);
-              const endDate = end instanceof Date ? end : new Date(end);
-
-              // Process data based on selected date range
-              processDataBasedOnRange(startDate, endDate);
-          }
-      });
-
-      // Process data based on default date range
-      const startDate = picker.getStartDate();
-      const endDate = picker.getEndDate();
-      processDataBasedOnRange(startDate, endDate);
-  }
-});
-
 // Function to fetch data from the server (similar to your existing logic)
 async function fetchDataFromServer(url, category) {
   try {
@@ -124,6 +95,35 @@ const compromisedDataResponsePromise = fetchDataFromServer(
   "Compromised Action"
 ).then(response => {
   compromisedDataResponse = response;
+});
+
+Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
+  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+  if (litepickerRangePlugin) {
+      const picker = new Litepicker({
+          element: litepickerRangePlugin,
+          startDate: new Date(),
+          endDate: new Date(),
+          singleMode: false,
+          numberOfMonths: 2,
+          numberOfColumns: 2,
+          format: 'MMM DD, YYYY',
+          plugins: ['ranges'],
+          onSelect: function(start, end) {
+              // Process data when date range is selected
+              const startDate = start instanceof Date ? start : new Date(start);
+              const endDate = end instanceof Date ? end : new Date(end);
+
+              // Process data based on selected date range
+              processDataBasedOnRange(startDate, endDate);
+          }
+      });
+
+      // Process data based on default date range
+      const startDate = picker.getStartDate();
+      const endDate = picker.getEndDate();
+      processDataBasedOnRange(startDate, endDate);
+  }
 });
 
 function processDataBasedOnRange(startDate, endDate) {
