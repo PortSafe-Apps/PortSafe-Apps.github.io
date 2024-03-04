@@ -253,7 +253,6 @@ var multiAxisLineChart = new Chart(ctx, {
   },
 });
 
-
 const locationLabels = [
   "Kantor Pusat SPMT",
   "Branch Dumai",
@@ -717,20 +716,23 @@ function showDefaultSubtypePieChart() {
   createAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
 }
 
-// Event listener untuk pie chart tipe tindakan berbahaya
-pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
-  const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
-  if (activeElements.length > 0) {
-    const clickedIndex = activeElements[0]._index;
-    const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
+// Menambahkan event listener ke dalam blok DOMContentLoaded
+document.addEventListener('DOMContentLoaded', () => {
+  // Event listener untuk pie chart tipe tindakan berbahaya
+  pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
+    const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
+    if (activeElements.length > 0) {
+      const clickedIndex = activeElements[0]._index;
+      const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
 
-    // Mendapatkan data subtype untuk tipe yang diklik
-    const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, clickedType);
+      // Mendapatkan data subtype untuk tipe yang diklik
+      const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, clickedType);
 
-    // Memperbarui dan menampilkan pie chart subtype
-    updateAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
-  }
+      // Memperbarui dan menampilkan pie chart subtype
+      updateAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
+    }
+  });
+
+  // Membuat dan menampilkan chart setelah DOM selesai dimuat
+  initializeCharts();
 });
-
-// Membuat dan menampilkan chart
-initializeCharts();
