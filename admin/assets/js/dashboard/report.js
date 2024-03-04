@@ -643,7 +643,6 @@ function initializeCharts() {
   showDefaultSubtypePieChart();
 }
 
-// Function untuk memperbarui chart
 function updateCharts() {
   const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
@@ -653,17 +652,34 @@ function updateCharts() {
   horizontalBarChart.data.labels = combinedLocationData.labels;
   horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
   horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
-  horizontalBarChart.update();
 
   // Update Area Bar Chart
   horizontalBarChartForArea.data.labels = combinedAreaData.labels;
   horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
   horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
-  horizontalBarChartForArea.update();
 
   // Update Type Dangerous Actions Pie Chart
   pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
   pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
+
+  // Check if data from server is empty and update chart accordingly
+  if (filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+    // Set default data for charts when server data is empty
+    horizontalBarChart.data.labels = [];
+    horizontalBarChart.data.datasets[0].data = [];
+    horizontalBarChart.data.datasets[1].data = [];
+
+    horizontalBarChartForArea.data.labels = [];
+    horizontalBarChartForArea.data.datasets[0].data = [];
+    horizontalBarChartForArea.data.datasets[1].data = [];
+
+    pieChartForTypeDangerousActions.data.labels = [];
+    pieChartForTypeDangerousActions.data.datasets[0].data = [];
+  }
+
+  // Update all charts
+  horizontalBarChart.update();
+  horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
 
