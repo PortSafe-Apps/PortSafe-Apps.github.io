@@ -53,6 +53,7 @@ async function fetchDataFromServer(url, category, token) {
 
     // Mengambil data dari respons
     const data = await response.json();
+    console.log('Response data:', data); 
 
     // Memeriksa status data
     if (data.status === 200) {
