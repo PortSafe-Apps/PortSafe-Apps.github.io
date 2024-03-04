@@ -32,43 +32,24 @@ function number_format(number) {
   return s.join(dec);
 }
 
-// Function to fetch data from the server (similar to your existing logic)
+// Function to fetch data from the server
 async function fetchDataFromServer(url, category) {
   try {
-      const token = getTokenFromCookies("Login");
-
-      if (!token) {
-          // Handle authentication error if no token
-          Swal.fire({
-              icon: "warning",
-              title: "Authentication Error",
-              text: "You are not logged in!",
-          }).then(() => {
-              window.location.href = "https://portsafe-apps.github.io/";
-          });
-          return { category, data: [] };
-      }
-
-      const myHeaders = new Headers();
-      myHeaders.append("Login", token);
-
-      const requestOptions = {
-          method: "POST",
-          headers: myHeaders,
-          redirect: "follow",
-      };
-
-      const response = await fetch(url, requestOptions);
+      // Fetch data from server
+      const response = await fetch(url);
 
       if (!response.ok) {
           throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
       }
 
+      // Parse response data
       const data = await response.json();
+
       if (!data || !data.data || !Array.isArray(data.data)) {
           throw new Error("Invalid data format received from the server");
       }
 
+      // Return category and data
       return { category, data: data.data };
   } catch (error) {
       console.error("Error fetching data:", error);
@@ -76,34 +57,34 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-let unsafeDataResponse;
-let compromisedDataResponse;
+// Function to process data based on selected date range
+function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
+  // Filter data according to selected date range
+  const filteredUnsafeData = unsafeData.filter(report => {
+      const reportDate = new Date(report.date);
+      return reportDate >= startDate && reportDate <= endDate;
+  });
 
-// Unsafe Data Fetch
-const unsafeDataResponsePromise = fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
-  "Unsafe Action"
-).then(response => {
-  unsafeDataResponse = response;
-}).catch(error => {
-  console.error("Error fetching unsafe data:", error);
-});
+  const filteredCompromisedData = compromisedData.filter(report => {
+      const reportDate = new Date(report.date);
+      return reportDate >= startDate && reportDate <= endDate;
+  });
 
-// Compromised Data Fetch
-const compromisedDataResponsePromise = fetchDataFromServer(
-  "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
-  "Compromised Action"
-).then(response => {
-  compromisedDataResponse = response;
-}).catch(error => {
-  console.error("Error fetching compromised data:", error);
-});
+  // Output filtered data
+  console.log("Filtered Unsafe Data:", filteredUnsafeData);
+  console.log("Filtered Compromised Data:", filteredCompromisedData);
+}
 
-// Setelah Promise.all() menyelesaikan semua promise, maka data akan diproses
-Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
+// Main function to initialize the process
+async function initializeProcess() {
+  // Fetch unsafe data
+  const unsafeDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe", "Unsafe Action");
+  // Fetch compromised data
+  const compromisedDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
+
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
-      const picker = new Litepicker({
+      new Litepicker({
           element: litepickerRangePlugin,
           startDate: new Date(),
           endDate: new Date(),
@@ -113,16 +94,16 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(()
           format: 'MMM DD, YYYY',
           plugins: ['ranges'],
           onSelect: function(start, end) {
-              // Process data when date range is selected
-              const startDate = start instanceof Date ? start : new Date(start);
-              const endDate = end instanceof Date ? end : new Date(end);
-
               // Process data based on selected date range
-              processDataBasedOnRange(startDate, endDate);
+              processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
           }
       });
   }
-});
+}
+
+// Call the main function to start the process
+initializeProcess();
+
 
 function processDataBasedOnRange(startDate, endDate) {
   // Pastikan data telah diterima dari server sebelum memprosesnya
