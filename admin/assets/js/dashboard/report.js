@@ -103,12 +103,12 @@ async function initializeProcess() {
     // Memfilter data berdasarkan rentang tanggal yang dipilih
     const filteredUnsafeData = unsafeData.filter(report => {
       const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
     });
 
     const filteredCompromisedData = compromisedData.filter(report => {
       const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
     });
 
     // Menampilkan data setelah proses filter
@@ -117,35 +117,45 @@ async function initializeProcess() {
   }
 
   // Mendaftarkan elemen Litepicker
-  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-  if (litepickerRangePlugin) {
-    // Inisialisasi Litepicker
-    const picker = new Litepicker({
-      element: litepickerRangePlugin,
-      startDate: new Date(),
-      endDate: new Date(),
-      singleMode: false,
-      numberOfMonths: 2,
-      numberOfColumns: 2,
-      format: 'MMM DD, YYYY',
-      plugins: ['ranges'],
-      // Ketika rentang tanggal dipilih
-      onSelect: function(start, end) {
-        // Memproses data berdasarkan rentang tanggal yang dipilih
-        processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
-      }
-    });
+const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+if (litepickerRangePlugin) {
+  // Inisialisasi Litepicker
+  const picker = new Litepicker({
+    element: litepickerRangePlugin,
+    startDate: new Date(),
+    endDate: new Date(),
+    singleMode: false,
+    numberOfMonths: 2,
+    numberOfColumns: 2,
+    format: 'MMM DD, YYYY',
+    plugins: ['ranges'],
+    // Ketika rentang tanggal dipilih
+    onSelect: function(start, end) {
+      // Mengubah format tanggal menjadi 'MM/DD/YYYY'
+      const formattedStartDate = start.format('MM/DD/YYYY');
+      const formattedEndDate = end.format('MM/DD/YYYY');
 
-    // Memproses data berdasarkan rentang tanggal default saat inisialisasi
-    const defaultStartDate = picker.getDate('YYYY-MM-DD', 'start'); // Mendapatkan tanggal awal dari picker
-    const defaultEndDate = picker.getDate('YYYY-MM-DD', 'end'); // Mendapatkan tanggal akhir dari picker
-    processDataBasedOnRange(defaultStartDate, defaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
-  }
+      // Memproses data berdasarkan rentang tanggal yang dipilih
+      processDataBasedOnRange(formattedStartDate, formattedEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+    }
+  });
+
+  // Memproses data berdasarkan rentang tanggal default saat inisialisasi
+  const defaultStartDate = picker.getStartDate(); // Mendapatkan tanggal awal dari picker
+  const defaultEndDate = picker.getEndDate(); // Mendapatkan tanggal akhir dari picker
+
+  // Mengubah format tanggal menjadi 'MM/DD/YYYY'
+  const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
+  const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
+
+  processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+}
+
+
 }
 
 // Memulai proses
 initializeProcess();
-
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
