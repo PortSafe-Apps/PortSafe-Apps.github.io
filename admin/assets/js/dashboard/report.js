@@ -66,9 +66,6 @@ async function fetchDataFromServer(url, category, token) {
   }
 }
 
-let filteredUnsafeData = [];
-let filteredCompromisedData = [];
-
 // Function utama untuk memulai proses
 async function initializeProcess() {
   // Mendapatkan token dari cookie
@@ -91,18 +88,18 @@ async function initializeProcess() {
   const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
 
   // Mengambil data tidak aman dan terompah dari server
-  const unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
-  const compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+  unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
+  compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
   // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
   function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
     // Memfilter data berdasarkan rentang tanggal yang dipilih
-    const filteredUnsafeData = unsafeData.filter(report => {
+    filteredUnsafeData = unsafeData.filter(report => {
       const reportDate = new Date(report.date);
       return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
     });
 
-    const filteredCompromisedData = compromisedData.filter(report => {
+    filteredCompromisedData = compromisedData.filter(report => {
       const reportDate = new Date(report.date);
       return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
     });
@@ -110,6 +107,9 @@ async function initializeProcess() {
     // Menampilkan data setelah proses filter
     console.log("Filtered Unsafe Data:", filteredUnsafeData);
     console.log("Filtered Compromised Data:", filteredCompromisedData);
+
+    // Memanggil fungsi untuk memperbarui chart
+    updateCharts();
   }
 
   // Mendaftarkan elemen Litepicker
@@ -273,136 +273,6 @@ const locationLabels = [
   "Branch Gresik",
 ];
 
-// Process Data for Location Bar Chart and Sort
-function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
-  const locationCountsUnsafe = {};
-  const locationCountsCompromised = {};
-
-  // Process Unsafe Data
-  filteredUnsafeData.forEach((report) => {
-    const locationName = report.location
-      ? report.location.locationName
-      : "Unknown";
-    if (!locationCountsUnsafe[locationName]) {
-      locationCountsUnsafe[locationName] = 1;
-    } else {
-      locationCountsUnsafe[locationName]++;
-    }
-  });
-
-  // Process Compromised Data
-  filteredCompromisedData.forEach((report) => {
-    const locationName = report.location
-      ? report.location.locationName
-      : "Unknown";
-    if (!locationCountsCompromised[locationName]) {
-      locationCountsCompromised[locationName] = 1;
-    } else {
-      locationCountsCompromised[locationName]++;
-    }
-  });
-
-  // Combine labels and counts
-  const combinedLabels = locationLabels;
-  const combinedDataUnsafe = locationLabels.map(
-    (location) => locationCountsUnsafe[location] || 0
-  );
-  const combinedDataCompromised = locationLabels.map(
-    (location) => locationCountsCompromised[location] || 0
-  );
-
-  return {
-    labels: combinedLabels,
-    dataUnsafe: combinedDataUnsafe,
-    dataCompromised: combinedDataCompromised,
-  };
-}
-
-// Mendapatkan data yang sudah difilter
-const combinedData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-
-// Membuat chart menggunakan data yang sudah diproses
-var ctxLocation = document.getElementById("myHorizontalBarChart");
-var horizontalBarChart = new Chart(ctxLocation, {
-  type: "horizontalBar",
-  data: {
-    labels: combinedData.labels,
-    datasets: [
-      {
-        label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
-        borderColor: "rgba(255, 0, 0, 1)", // Merah
-        borderWidth: 1,
-        data: combinedData.dataUnsafe,
-      },
-      {
-        label: "Compromised",
-        backgroundColor: "rgba(255, 165, 0, 0.8)", // Oranye dengan transparansi 0.8
-        borderColor: "rgba(255, 165, 0, 1)", // Oranye
-        borderWidth: 1,
-        data: combinedData.dataCompromised,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            maxTicksLimit: locationLabels.length, // Menampilkan semua label
-            fontSize: 14,
-          },
-        },
-      ],
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      callbacks: {
-        label: function (tooltipItem, chart) {
-          var datasetLabel =
-            chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + tooltipItem.xLabel;
-        },
-      },
-    },
-  },
-});
-
-
 const areaLabels = [
   "Kantor",
   "Workshop",
@@ -412,131 +282,6 @@ const areaLabels = [
   "Area kerja lainnya",
 ];
 
-// Process Data for Area Bar Chart and Sort
-function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
-  const areaCountsUnsafe = {};
-  const areaCountsCompromised = {};
-
-  // Process Unsafe Data
-  filteredUnsafeData.forEach((report) => {
-    const areaName = report.area ? report.area.areaName : "Unknown";
-    if (!areaCountsUnsafe[areaName]) {
-      areaCountsUnsafe[areaName] = 1;
-    } else {
-      areaCountsUnsafe[areaName]++;
-    }
-  });
-
-  // Process Compromised Data
-  filteredCompromisedData.forEach((report) => {
-    const areaName = report.area ? report.area.areaName : "Unknown";
-    if (!areaCountsCompromised[areaName]) {
-      areaCountsCompromised[areaName] = 1;
-    } else {
-      areaCountsCompromised[areaName]++;
-    }
-  });
-
-  // Combine labels and counts
-  const combinedAreaLabels = areaLabels;
-  const combinedAreaDataUnsafe = areaLabels.map(
-    (area) => areaCountsUnsafe[area] || 0
-  );
-  const combinedAreaDataCompromised = areaLabels.map(
-    (area) => areaCountsCompromised[area] || 0
-  );
-
-  return {
-    labels: combinedAreaLabels,
-    dataUnsafe: combinedAreaDataUnsafe,
-    dataCompromised: combinedAreaDataCompromised,
-  };
-}
-
-// Mendapatkan data yang sudah difilter
-const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-
-// Membuat chart menggunakan data yang sudah diproses
-var ctxArea = document.getElementById("myHorizontalBarChartForArea");
-var horizontalBarChartForArea = new Chart(ctxArea, {
-  type: "horizontalBar",
-  data: {
-    labels: combinedAreaData.labels,
-    datasets: [
-      {
-        label: "Unsafe",
-        backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
-        borderColor: "rgba(255, 0, 0, 1)", // Merah
-        borderWidth: 1,
-        data: combinedAreaData.dataUnsafe,
-      },
-      {
-        label: "Compromised",
-        backgroundColor: "rgba(255, 165, 0, 0.8)", // Oranye dengan transparansi 0.8
-        borderColor: "rgba(255, 165, 0, 1)", // Oranye
-        borderWidth: 1,
-        data: combinedAreaData.dataCompromised,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    scales: {
-      xAxes: [
-        {
-          ticks: {
-            beginAtZero: true,
-            stepSize: 1,
-            fontSize: 14,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          ticks: {
-            maxTicksLimit: areaLabels.length, // Menampilkan semua label
-            fontSize: 14,
-          },
-        },
-      ],
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleMarginBottom: 10,
-      titleFontColor: "#6e707e",
-      titleFontSize: 14,
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      displayColors: false,
-      intersect: false,
-      mode: "index",
-      caretPadding: 10,
-      callbacks: {
-        label: function (tooltipItem, chart) {
-          var datasetLabel =
-            chart.datasets[tooltipItem.datasetIndex].label || "";
-          return datasetLabel + ": " + tooltipItem.xLabel;
-        },
-      },
-    },
-  },
-});
-
 const typeDangerousActionsLabels = [
   "REAKSI ORANG",
   "ALAT PELINDUNG DIRI",
@@ -545,7 +290,6 @@ const typeDangerousActionsLabels = [
   "PROSEDUR DAN CARA KERJA",
 ];
 
-// Define colors for both series
 const colors = [
   "rgba(255, 99, 132, 0.8)",
   "rgba(255, 206, 86, 0.8)",
@@ -554,49 +298,79 @@ const colors = [
   "rgba(153, 102, 255, 0.8)",
 ];
 
-// Declare variables here in the appropriate scope
-const typeDangerousActionsCountsUnsafe = {};
-const typeDangerousActionsCountsCompromised = {};
+let typeDangerousActionsCountsUnsafe = {};
+let typeDangerousActionsCountsCompromised = {};
 
-// Process Data for Type Dangerous Actions Pie Chart
-function processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData) {
-  // Process Unsafe Data
+function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
+  const locationCountsUnsafe = {};
+  const locationCountsCompromised = {};
+
   filteredUnsafeData.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (!typeDangerousActionsCountsUnsafe[typeName]) {
-      typeDangerousActionsCountsUnsafe[typeName] = 1;
-    } else {
-      typeDangerousActionsCountsUnsafe[typeName]++;
-    }
+    const locationName = report.location ? report.location.locationName : "Unknown";
+    locationCountsUnsafe[locationName] = (locationCountsUnsafe[locationName] || 0) + 1;
   });
 
-  // Process Compromised Data
   filteredCompromisedData.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (!typeDangerousActionsCountsCompromised[typeName]) {
-      typeDangerousActionsCountsCompromised[typeName] = 1;
-    } else {
-      typeDangerousActionsCountsCompromised[typeName]++;
-    }
+    const locationName = report.location ? report.location.locationName : "Unknown";
+    locationCountsCompromised[locationName] = (locationCountsCompromised[locationName] || 0) + 1;
   });
 
-  // Combine labels and counts
+  const combinedLabels = locationLabels;
+  const combinedDataUnsafe = locationLabels.map((location) => locationCountsUnsafe[location] || 0);
+  const combinedDataCompromised = locationLabels.map((location) => locationCountsCompromised[location] || 0);
+
+  return {
+    labels: combinedLabels,
+    dataUnsafe: combinedDataUnsafe,
+    dataCompromised: combinedDataCompromised,
+  };
+}
+
+function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
+  const areaCountsUnsafe = {};
+  const areaCountsCompromised = {};
+
+  filteredUnsafeData.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    areaCountsUnsafe[areaName] = (areaCountsUnsafe[areaName] || 0) + 1;
+  });
+
+  filteredCompromisedData.forEach((report) => {
+    const areaName = report.area ? report.area.areaName : "Unknown";
+    areaCountsCompromised[areaName] = (areaCountsCompromised[areaName] || 0) + 1;
+  });
+
+  const combinedLabels = [...new Set([...Object.keys(areaCountsUnsafe), ...Object.keys(areaCountsCompromised)])];
+  const combinedDataUnsafe = combinedLabels.map((area) => areaCountsUnsafe[area] || 0);
+  const combinedDataCompromised = combinedLabels.map((area) => areaCountsCompromised[area] || 0);
+
+  return {
+    labels: combinedLabels,
+    dataUnsafe: combinedDataUnsafe,
+    dataCompromised: combinedDataCompromised,
+  };
+}
+
+function processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData) {
+  typeDangerousActionsCountsUnsafe = {};
+  typeDangerousActionsCountsCompromised = {};
+
+  filteredUnsafeData.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions ? report.typeDangerousActions[0] : { typeName: "Unknown" };
+    typeDangerousActionsCountsUnsafe[typeDangerousAction.typeName] = (typeDangerousActionsCountsUnsafe[typeDangerousAction.typeName] || 0) + 1;
+  });
+
+  filteredCompromisedData.forEach((report) => {
+    const typeDangerousAction = report.typeDangerousActions ? report.typeDangerousActions[0] : { typeName: "Unknown" };
+    typeDangerousActionsCountsCompromised[typeDangerousAction.typeName] = (typeDangerousActionsCountsCompromised[typeDangerousAction.typeName] || 0) + 1;
+  });
+
   const combinedTypeDangerousActionsLabels = typeDangerousActionsLabels;
-  const combinedTypeDangerousActionsData = typeDangerousActionsLabels.map(
-    (type) => {
-      const unsafeCount = typeDangerousActionsCountsUnsafe[type] || 0;
-      const compromisedCount = typeDangerousActionsCountsCompromised[type] || 0;
-      return unsafeCount + compromisedCount;
-    }
-  );
+  const combinedTypeDangerousActionsData = typeDangerousActionsLabels.map((type) => {
+    const unsafeCount = typeDangerousActionsCountsUnsafe[type] || 0;
+    const compromisedCount = typeDangerousActionsCountsCompromised[type] || 0;
+    return unsafeCount + compromisedCount;
+  });
 
   return {
     labels: combinedTypeDangerousActionsLabels,
@@ -604,117 +378,25 @@ function processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filtered
   };
 }
 
-// Mendapatkan data yang sudah difilter
-const combinedTypeDangerousActionsData =
-  processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
-
-// Membuat chart menggunakan data yang sudah diproses
-var ctxTypeDangerousActions = document.getElementById(
-  "myPieChartForTypeDangerousActions"
-);
-const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
-  type: "pie",
-  data: {
-    labels: combinedTypeDangerousActionsData.labels,
-    datasets: [
-      {
-        data: combinedTypeDangerousActionsData.data,
-        backgroundColor: colors,
-      },
-    ],
-  },
-  options: {
-    maintainAspectRatio: false,
-    layout: {
-      padding: {
-        left: 10,
-        right: 10,
-        top: 0,
-        bottom: 0,
-      },
-    },
-    legend: {
-      display: true,
-      position: "top",
-    },
-    tooltips: {
-      backgroundColor: "rgb(255,255,255)",
-      bodyFontColor: "#858796",
-      titleFontColor: "#6e707e",
-      borderColor: "#dddfeb",
-      borderWidth: 1,
-      xPadding: 15,
-      yPadding: 15,
-      callbacks: {
-        label: function (tooltipItem, data) {
-          const datasetLabel = data.datasets[0].label || "";
-          const unsafeValue =
-            typeDangerousActionsCountsUnsafe[data.labels[tooltipItem.index]] ||
-            0;
-          const compromisedValue =
-            typeDangerousActionsCountsCompromised[
-            data.labels[tooltipItem.index]
-            ] || 0;
-          return `${datasetLabel}: Unsafe ${unsafeValue}, Compromised ${compromisedValue}`;
-        },
-        title: function (tooltipItem, data) {
-          return data.labels[tooltipItem[0].index];
-        },
-      },
-    },
-    plugins: {
-      datalabels: {
-        formatter: (value) => {
-          return `Total: ${value}`;
-        },
-        color: "#fff",
-        anchor: "end",
-        align: "start",
-      },
-    },
-  },
-});
-
-// Process Data for SubType Dangerous Actions Pie Chart
-function getSubtypesData(type) {
+function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, type) {
   const subtypesCounts = {};
 
   filteredUnsafeData.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
+    const typeDangerousAction = report.typeDangerousActions ? report.typeDangerousActions[0] : { typeName: "Unknown" };
+    if (typeDangerousAction.typeName === type && typeDangerousAction.subTypes) {
       typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = {
-            count: 1,
-            dataResponse: "Unsafe"
-          };
-        } else {
-          subtypesCounts[subtype].count++;
-        }
+        subtypesCounts[subtype] = subtypesCounts[subtype] || { count: 0, dataResponse: "Unsafe" };
+        subtypesCounts[subtype].count++;
       });
     }
   });
 
   filteredCompromisedData.forEach((report) => {
-    const typeDangerousAction = report.typeDangerousActions
-      ? report.typeDangerousActions[0]
-      : { typeName: "Unknown" };
-
-    const typeName = typeDangerousAction.typeName;
-    if (typeName === type && typeDangerousAction.subTypes) {
+    const typeDangerousAction = report.typeDangerousActions ? report.typeDangerousActions[0] : { typeName: "Unknown" };
+    if (typeDangerousAction.typeName === type && typeDangerousAction.subTypes) {
       typeDangerousAction.subTypes.forEach((subtype) => {
-        if (!subtypesCounts[subtype]) {
-          subtypesCounts[subtype] = {
-            count: 1,
-            dataResponse: "Compromised"
-          };
-        } else {
-          subtypesCounts[subtype].count++;
-        }
+        subtypesCounts[subtype] = subtypesCounts[subtype] || { count: 0, dataResponse: "Compromised" };
+        subtypesCounts[subtype].count++;
       });
     }
   });
@@ -725,20 +407,211 @@ function getSubtypesData(type) {
   return {
     labels: subtypesLabels,
     data: subtypesData,
-    dataResponse: subtypesCounts
+    dataResponse: subtypesCounts,
   };
 }
 
-// Function to create and display a pie chart for subtypes
-function createSubtypesPieChart(subtypesData) {
-  var ctxSubtypes = document.getElementById("myPieChartForSubtypes");
-  const pieChartForSubtypes = new Chart(ctxSubtypes, {
-    type: "pie",
+
+// Function untuk memperbarui chart
+function updateCharts() {
+  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
+
+  // Update Location Bar Chart
+  horizontalBarChart.data.labels = combinedLocationData.labels;
+  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
+  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
+  horizontalBarChart.update();
+
+  // Update Area Bar Chart
+  horizontalBarChartForArea.data.labels = combinedAreaData.labels;
+  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
+  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
+  horizontalBarChartForArea.update();
+
+  // Update Type Dangerous Actions Pie Chart
+  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
+  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
+  pieChartForTypeDangerousActions.update();
+}
+
+// Function untuk menginisialisasi chart awal
+function initializeCharts() {
+  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
+
+  // Location Bar Chart
+  horizontalBarChart = new Chart(ctxLocation, {
+    type: "horizontalBar",
     data: {
-      labels: subtypesData.labels,
+      labels: combinedLocationData.labels,
       datasets: [
         {
-          data: subtypesData.data,
+          label: "Unsafe",
+          backgroundColor: "rgba(255, 0, 0, 0.8)",
+          borderColor: "rgba(255, 0, 0, 1)",
+          borderWidth: 1,
+          data: combinedLocationData.dataUnsafe,
+        },
+        {
+          label: "Compromised",
+          backgroundColor: "rgba(255, 165, 0, 0.8)",
+          borderColor: "rgba(255, 165, 0, 1)",
+          borderWidth: 1,
+          data: combinedLocationData.dataCompromised,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              maxTicksLimit: locationLabels.length, // Menampilkan semua label
+              fontSize: 14,
+            },
+          },
+        ],
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: "#6e707e",
+        titleFontSize: 14,
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: "index",
+        caretPadding: 10,
+        callbacks: {
+          label: function (tooltipItem, chart) {
+            var datasetLabel =
+              chart.datasets[tooltipItem.datasetIndex].label || "";
+            return datasetLabel + ": " + tooltipItem.xLabel;
+          },
+        },
+      },
+    },
+  });
+
+  // Area Bar Chart
+  horizontalBarChartForArea = new Chart(ctxArea, {
+    type: "horizontalBar",
+    data: {
+      labels: combinedAreaData.labels,
+      datasets: [
+        {
+          label: "Unsafe",
+          backgroundColor: "rgba(255, 0, 0, 0.8)",
+          borderColor: "rgba(255, 0, 0, 1)",
+          borderWidth: 1,
+          data: combinedAreaData.dataUnsafe,
+        },
+        {
+          label: "Compromised",
+          backgroundColor: "rgba(255, 165, 0, 0.8)",
+          borderColor: "rgba(255, 165, 0, 1)",
+          borderWidth: 1,
+          data: combinedAreaData.dataCompromised,
+        },
+      ],
+    },
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0,
+        },
+      },
+      scales: {
+        xAxes: [
+          {
+            ticks: {
+              beginAtZero: true,
+              stepSize: 1,
+              fontSize: 14,
+            },
+          },
+        ],
+        yAxes: [
+          {
+            ticks: {
+              maxTicksLimit: areaLabels.length, // Menampilkan semua label
+              fontSize: 14,
+            },
+          },
+        ],
+      },
+      legend: {
+        display: true,
+        position: "top",
+      },
+      tooltips: {
+        backgroundColor: "rgb(255,255,255)",
+        bodyFontColor: "#858796",
+        titleMarginBottom: 10,
+        titleFontColor: "#6e707e",
+        titleFontSize: 14,
+        borderColor: "#dddfeb",
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        displayColors: false,
+        intersect: false,
+        mode: "index",
+        caretPadding: 10,
+        callbacks: {
+          label: function (tooltipItem, chart) {
+            var datasetLabel =
+              chart.datasets[tooltipItem.datasetIndex].label || "";
+            return datasetLabel + ": " + tooltipItem.xLabel;
+          },
+        },
+      },
+    },
+  });
+
+  // Fungsi untuk membuat dan menampilkan pie chart
+function createAndDisplayPieChart(elementId, labels, data) {
+  var ctx = document.getElementById(elementId);
+  const pieChart = new Chart(ctx, {
+    type: "pie",
+    data: {
+      labels: labels,
+      datasets: [
+        {
+          data: data,
           backgroundColor: colors,
         },
       ],
@@ -768,13 +641,10 @@ function createSubtypesPieChart(subtypesData) {
         callbacks: {
           label: function (tooltipItem, data) {
             const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]
-              }`;
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
           },
           title: function (tooltipItem, data) {
-            const subtypeLabel = data.labels[tooltipItem[0].index];
-            const dataResponse = subtypesData.dataResponse[subtypeLabel].dataResponse;
-            return `${dataResponse}`;
+            return data.labels[tooltipItem[0].index];
           },
         },
       },
@@ -792,28 +662,40 @@ function createSubtypesPieChart(subtypesData) {
   });
 }
 
-// Function to show default subtype pie chart with the highest type
+// Fungsi untuk memperbarui dan menampilkan pie chart
+function updateAndDisplayPieChart(elementId, labels, data) {
+  const chartInstance = Chart.getChart(elementId);
+  chartInstance.data.labels = labels;
+  chartInstance.data.datasets[0].data = data;
+  chartInstance.update();
+}
+
+// Menampilkan default pie chart subtype saat halaman dimuat
 function showDefaultSubtypePieChart() {
   const maxIndex = combinedTypeDangerousActionsData.data.indexOf(Math.max(...combinedTypeDangerousActionsData.data));
   const maxType = combinedTypeDangerousActionsData.labels[maxIndex];
-  const subtypesData = getSubtypesData(maxType);
-  createSubtypesPieChart(subtypesData);
+  const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, maxType);
+  createAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
 }
 
-// Show default subtype pie chart on page load
+// Memanggil fungsi untuk menampilkan default subtype pie chart saat halaman dimuat
 showDefaultSubtypePieChart();
 
-// Event listener for dangerous actions pie chart
+// Event listener untuk pie chart tipe tindakan berbahaya
 pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
   const activeElements = pieChartForTypeDangerousActions.getElementsAtEvent(event);
   if (activeElements.length > 0) {
     const clickedIndex = activeElements[0]._index;
     const clickedType = combinedTypeDangerousActionsData.labels[clickedIndex];
 
-    // Get subtypes data for the clicked type
-    const subtypesData = getSubtypesData(clickedType);
+    // Mendapatkan data subtype untuk tipe yang diklik
+    const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, clickedType);
 
-    // Create and display subtypes pie chart
-    createSubtypesPieChart(subtypesData);
+    // Memperbarui dan menampilkan pie chart subtype
+    updateAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
   }
 });
+}
+
+// Membuat dan menampilkan chart
+initializeCharts();
