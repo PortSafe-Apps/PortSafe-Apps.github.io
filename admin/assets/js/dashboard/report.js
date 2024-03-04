@@ -113,6 +113,10 @@ async function initializeProcess() {
   unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
   compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
+  // Memastikan data diterima dari server
+  console.log("Unsafe Data Response:", unsafeDataResponse);
+  console.log("Compromised Data Response:", compromisedDataResponse);
+
   // Mendaftarkan elemen Litepicker
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
