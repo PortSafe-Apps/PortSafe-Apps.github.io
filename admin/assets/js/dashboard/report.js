@@ -32,8 +32,34 @@ function number_format(number) {
   return s.join(dec);
 }
 
-let unsafeDataResponse;
-let compromisedDataResponse;
+Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
+  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+  if (litepickerRangePlugin) {
+      const picker = new Litepicker({
+          element: litepickerRangePlugin,
+          startDate: new Date(),
+          endDate: new Date(),
+          singleMode: false,
+          numberOfMonths: 2,
+          numberOfColumns: 2,
+          format: 'MMM DD, YYYY',
+          plugins: ['ranges'],
+          onSelect: function(start, end) {
+              // Process data when date range is selected
+              const startDate = start instanceof Date ? start : new Date(start);
+              const endDate = end instanceof Date ? end : new Date(end);
+
+              // Process data based on selected date range
+              processDataBasedOnRange(startDate, endDate);
+          }
+      });
+
+      // Process data based on default date range
+      const startDate = picker.getStartDate();
+      const endDate = picker.getEndDate();
+      processDataBasedOnRange(startDate, endDate);
+  }
+});
 
 // Function to fetch data from the server (similar to your existing logic)
 async function fetchDataFromServer(url, category) {
@@ -81,22 +107,8 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-function processDataBasedOnRange(startDate, endDate) {
-  // Filter data according to selected date range
-  const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
-      const reportDateTime = new Date(report.date + 'T' + report.time);
-      return reportDateTime >= startDate && reportDateTime <= endDate;
-  });
-
-  const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
-      const reportDateTime = new Date(report.date + 'T' + report.time);
-      return reportDateTime >= startDate && reportDateTime <= endDate;
-  });
-
-  // Do whatever you need to do with the filtered data
-  console.log("Unsafe Data:", filteredUnsafeData);
-  console.log("Compromised Data:", filteredCompromisedData);
-}
+let unsafeDataResponse;
+let compromisedDataResponse;
 
 // Unsafe Data Fetch
 const unsafeDataResponsePromise = fetchDataFromServer(
@@ -114,34 +126,24 @@ const compromisedDataResponsePromise = fetchDataFromServer(
   compromisedDataResponse = response;
 });
 
-Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
-  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-  if (litepickerRangePlugin) {
-      const picker = new Litepicker({
-          element: litepickerRangePlugin,
-          startDate: new Date(),
-          endDate: new Date(),
-          singleMode: false,
-          numberOfMonths: 2,
-          numberOfColumns: 2,
-          format: 'MMM DD, YYYY',
-          plugins: ['ranges'],
-          onSelect: function(start, end) {
-              // Process data when date range is selected
-              const startDate = start instanceof Date ? start : new Date(start);
-              const endDate = end instanceof Date ? end : new Date(end);
-
-              // Process data based on selected date range
-              processDataBasedOnRange(startDate, endDate);
-          }
+function processDataBasedOnRange(startDate, endDate) {
+  // Filter data according to selected date range
+  if (unsafeDataResponse && compromisedDataResponse) {
+      const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
+          const reportDateTime = new Date(report.date + 'T' + report.time);
+          return reportDateTime >= startDate && reportDateTime <= endDate;
       });
-      
-      // Process data based on default date range
-      const startDate = picker.getStartDate();
-      const endDate = picker.getEndDate();
-      processDataBasedOnRange(startDate, endDate);
+
+      const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
+          const reportDateTime = new Date(report.date + 'T' + report.time);
+          return reportDateTime >= startDate && reportDateTime <= endDate;
+      });
+
+      // Do whatever you need to do with the filtered data
+      console.log("Unsafe Data:", filteredUnsafeData);
+      console.log("Compromised Data:", filteredCompromisedData);
   }
-});
+}
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
