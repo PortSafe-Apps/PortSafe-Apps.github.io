@@ -129,8 +129,9 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(()
 });
 
 function processDataBasedOnRange(startDate, endDate) {
-  // Filter data according to selected date range
+  // Pastikan data telah diterima dari server sebelum memprosesnya
   if (unsafeDataResponse && unsafeDataResponse.data && compromisedDataResponse && compromisedDataResponse.data) {
+      // Filter data according to selected date range
       const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
           const reportDateTime = new Date(report.date + 'T' + report.time);
           return reportDateTime >= startDate && reportDateTime <= endDate;
@@ -141,13 +142,23 @@ function processDataBasedOnRange(startDate, endDate) {
           return reportDateTime >= startDate && reportDateTime <= endDate;
       });
 
-      // Do whatever you need to do with the filtered data
-      console.log("Unsafe Data:", filteredUnsafeData);
-      console.log("Compromised Data:", filteredCompromisedData);
+      // Pastikan data yang telah difilter memiliki panjang lebih dari 0
+      if (filteredUnsafeData.length > 0) {
+          console.log("Unsafe Data:", filteredUnsafeData);
+      } else {
+          console.log("Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih (Unsafe Data)");
+      }
+
+      if (filteredCompromisedData.length > 0) {
+          console.log("Compromised Data:", filteredCompromisedData);
+      } else {
+          console.log("Tidak ada data yang ditemukan untuk rentang tanggal yang dipilih (Compromised Data)");
+      }
   } else {
       console.error("Data not available or invalid");
   }
 }
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
