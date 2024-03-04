@@ -53,7 +53,6 @@ async function fetchDataFromServer(url, category, token) {
 
     // Mengambil data dari respons
     const data = await response.json();
-    console.log('Response data:', data); 
 
     // Memeriksa status data
     if (data.status === 200) {
@@ -72,6 +71,10 @@ function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData
   console.log("Start Date (selected):", startDate);
   console.log("End Date (selected):", endDate);
 
+  // Menampilkan data sebelum proses filter
+  console.log("Unsafe Data (before filter):", unsafeData);
+  console.log("Compromised Data (before filter):", compromisedData);
+
   // Memfilter data berdasarkan rentang tanggal yang dipilih
   const filteredUnsafeData = unsafeData.filter(report => {
     const reportDate = new Date(report.date);
@@ -83,7 +86,7 @@ function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData
     return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
   });
 
-  // Menampilkan data yang telah difilter
+  // Menampilkan data setelah proses filter
   console.log("Filtered Unsafe Data:", filteredUnsafeData);
   console.log("Filtered Compromised Data:", filteredCompromisedData);
 }
