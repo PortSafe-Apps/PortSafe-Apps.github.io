@@ -133,13 +133,13 @@ function processDataBasedOnRange(startDate, endDate) {
   if (unsafeDataResponse && unsafeDataResponse.data && compromisedDataResponse && compromisedDataResponse.data) {
       // Filter data according to selected date range
       const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
-          const reportDateTime = new Date(report.date + 'T' + report.time);
-          return reportDateTime >= startDate && reportDateTime <= endDate;
+          const reportDate = new Date(report.date);
+          return reportDate >= startDate && reportDate <= endDate;
       });
 
       const filteredCompromisedData = compromisedDataResponse.data.filter(report => {
-          const reportDateTime = new Date(report.date + 'T' + report.time);
-          return reportDateTime >= startDate && reportDateTime <= endDate;
+          const reportDate = new Date(report.date);
+          return reportDate >= startDate && reportDate <= endDate;
       });
 
       // Pastikan data yang telah difilter memiliki panjang lebih dari 0
