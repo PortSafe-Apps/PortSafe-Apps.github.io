@@ -35,29 +35,34 @@ function number_format(number) {
 let unsafeDataResponse, compromisedDataResponse; // Mendeklarasikan variabel secara global
 
 // Function to fetch data from the server
-async function fetchDataFromServer(url, category) {
+async function fetchDataFromServer(url, category, token) {
   try {
-      // Fetch data from server
-      const response = await fetch(url);
-      console.log('Response status:', response.status); // Tambahkan ini untuk memeriksa status respons
-
-      if (!response.ok) {
-          throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
+    // Fetch data from server
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Login": token
       }
+    });
 
-      // Parse response data
-      const data = await response.json();
-      console.log('Response data:', data); // Tambahkan ini untuk memeriksa respons data
+    console.log('Response status:', response.status); // Tambahkan ini untuk memeriksa status respons
 
-      if (!data || !data.data || !Array.isArray(data.data)) {
-          throw new Error("Invalid data format received from the server");
-      }
+    if (!response.ok) {
+      throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
+    }
 
-      // Return category and data
+    const data = await response.json();
+    console.log('Response data:', data); // Tambahkan ini untuk memeriksa respons data
+
+    if (data.status === 200) {
       return { category, data: data.data };
+    } else {
+      throw new Error(data.message);
+    }
   } catch (error) {
-      console.error("Error fetching data:", error);
-      return { category, data: [] };
+    console.error("Error fetching data:", error);
+    return { category, data: [] };
   }
 }
 
@@ -65,13 +70,13 @@ async function fetchDataFromServer(url, category) {
 function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
   // Filter data according to selected date range
   const filteredUnsafeData = unsafeData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+    const reportDate = new Date(report.date);
+    return reportDate >= startDate && reportDate <= endDate;
   });
 
   const filteredCompromisedData = compromisedData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+    const reportDate = new Date(report.date);
+    return reportDate >= startDate && reportDate <= endDate;
   });
 
   // Output filtered data
@@ -81,34 +86,48 @@ function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData
 
 // Main function to initialize the process
 async function initializeProcess() {
+  const token = getTokenFromCookies("Login");
+
+  if (!token) {
+    Swal.fire({
+      icon: "warning",
+      title: "Authentication Error",
+      text: "Kamu Belum Login!",
+    }).then(() => {
+      window.location.href = "https://portsafe-apps.github.io/";
+    });
+    return;
+  }
+
+  const targetURLUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
+  const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
+
   // Fetch unsafe data
-  unsafeDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe", "Unsafe Action");
+  unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
   // Fetch compromised data
-  compromisedDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
+  compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
-      new Litepicker({
-          element: litepickerRangePlugin,
-          startDate: new Date(),
-          endDate: new Date(),
-          singleMode: false,
-          numberOfMonths: 2,
-          numberOfColumns: 2,
-          format: 'MMM DD, YYYY',
-          plugins: ['ranges'],
-          onSelect: function(start, end) {
-              // Process data based on selected date range
-              processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
-          }
-      });
+    new Litepicker({
+      element: litepickerRangePlugin,
+      startDate: new Date(),
+      endDate: new Date(),
+      singleMode: false,
+      numberOfMonths: 2,
+      numberOfColumns: 2,
+      format: 'MMM DD, YYYY',
+      plugins: ['ranges'],
+      onSelect: function(start, end) {
+        // Process data based on selected date range
+        processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
+      }
+    });
   }
 }
 
 // Call the main function to start the process
 initializeProcess();
-
-
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
