@@ -32,6 +32,9 @@ function number_format(number) {
   return s.join(dec);
 }
 
+let unsafeDataResponse;
+let compromisedDataResponse;
+
 // Function to fetch data from the server (similar to your existing logic)
 async function fetchDataFromServer(url, category) {
   try {
@@ -78,7 +81,7 @@ async function fetchDataFromServer(url, category) {
   }
 }
 
-function processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse) {
+function processDataBasedOnRange(startDate, endDate) {
   // Filter data according to selected date range
   const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
       const reportDateTime = new Date(report.date + 'T' + report.time);
@@ -99,18 +102,19 @@ function processDataBasedOnRange(startDate, endDate, unsafeDataResponse, comprom
 const unsafeDataResponsePromise = fetchDataFromServer(
   "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe",
   "Unsafe Action"
-);
+).then(response => {
+  unsafeDataResponse = response;
+});
 
 // Compromised Data Fetch
 const compromisedDataResponsePromise = fetchDataFromServer(
   "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised",
   "Compromised Action"
-);
+).then(response => {
+  compromisedDataResponse = response;
+});
 
-Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(responses => {
-  const unsafeDataResponse = responses[0];
-  const compromisedDataResponse = responses[1];
-
+Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
       const picker = new Litepicker({
@@ -128,14 +132,14 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(re
               const endDate = end instanceof Date ? end : new Date(end);
 
               // Process data based on selected date range
-              processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse);
+              processDataBasedOnRange(startDate, endDate);
           }
       });
       
       // Process data based on default date range
       const startDate = picker.getStartDate();
       const endDate = picker.getEndDate();
-      processDataBasedOnRange(startDate, endDate, unsafeDataResponse, compromisedDataResponse);
+      processDataBasedOnRange(startDate, endDate);
   }
 });
 
