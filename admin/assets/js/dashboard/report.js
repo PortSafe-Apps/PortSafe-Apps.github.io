@@ -39,6 +39,7 @@ async function fetchDataFromServer(url, category) {
   try {
       // Fetch data from server
       const response = await fetch(url);
+      console.log('Response status:', response.status); // Tambahkan ini untuk memeriksa status respons
 
       if (!response.ok) {
           throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
@@ -46,6 +47,7 @@ async function fetchDataFromServer(url, category) {
 
       // Parse response data
       const data = await response.json();
+      console.log('Response data:', data); // Tambahkan ini untuk memeriksa respons data
 
       if (!data || !data.data || !Array.isArray(data.data)) {
           throw new Error("Invalid data format received from the server");
