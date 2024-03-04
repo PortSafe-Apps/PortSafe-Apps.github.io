@@ -32,12 +32,12 @@ function number_format(number) {
   return s.join(dec);
 }
 
-let unsafeDataResponse, compromisedDataResponse; // Mendeklarasikan variabel secara global
+// Mendeklarasikan variabel secara global
+let unsafeDataResponse, compromisedDataResponse;
 
-// Function to fetch data from the server
+// Function untuk mengambil data dari server
 async function fetchDataFromServer(url, category, token) {
   try {
-    // Fetch data from server
     const response = await fetch(url, {
       method: "POST",
       headers: {
@@ -46,15 +46,15 @@ async function fetchDataFromServer(url, category, token) {
       }
     });
 
-    console.log('Response status:', response.status); // Tambahkan ini untuk memeriksa status respons
-
+    // Memeriksa apakah respons dari server berhasil
     if (!response.ok) {
       throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
     }
 
+    // Mengambil data dari respons
     const data = await response.json();
-    console.log('Response data:', data); // Tambahkan ini untuk memeriksa respons data
 
+    // Memeriksa status data
     if (data.status === 200) {
       return { category, data: data.data };
     } else {
@@ -66,30 +66,33 @@ async function fetchDataFromServer(url, category, token) {
   }
 }
 
-// Function to process data based on selected date range
+// Function untuk memproses data berdasarkan rentang tanggal yang dipilih
 function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
   console.log("Start Date:", startDate);
   console.log("End Date:", endDate);
 
-  // Filter data according to selected date range
+  // Memfilter data berdasarkan rentang tanggal yang dipilih
   const filteredUnsafeData = unsafeData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+    const reportDate = new Date(report.date);
+    return reportDate >= startDate && reportDate <= endDate;
   });
 
   const filteredCompromisedData = compromisedData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= startDate && reportDate <= endDate;
+    const reportDate = new Date(report.date);
+    return reportDate >= startDate && reportDate <= endDate;
   });
 
+  // Menampilkan data yang telah difilter
   console.log("Filtered Unsafe Data:", filteredUnsafeData);
   console.log("Filtered Compromised Data:", filteredCompromisedData);
 }
 
-// Main function to initialize the process
+// Function utama untuk memulai proses
 async function initializeProcess() {
+  // Mendapatkan token dari cookie
   const token = getTokenFromCookies("Login");
 
+  // Memeriksa apakah token tersedia
   if (!token) {
     Swal.fire({
       icon: "warning",
@@ -101,16 +104,18 @@ async function initializeProcess() {
     return;
   }
 
+  // URL untuk mengambil data tidak aman dan terompah
   const targetURLUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
   const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
 
-  // Fetch unsafe data
+  // Mengambil data tidak aman dan terompah dari server
   unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
-  // Fetch compromised data
   compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
+  // Mendaftarkan elemen Litepicker
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
+    // Inisialisasi Litepicker
     new Litepicker({
       element: litepickerRangePlugin,
       startDate: new Date(),
@@ -120,16 +125,18 @@ async function initializeProcess() {
       numberOfColumns: 2,
       format: 'MMM DD, YYYY',
       plugins: ['ranges'],
+      // Ketika rentang tanggal dipilih
       onSelect: function(start, end) {
-        // Process data based on selected date range
+        // Memproses data berdasarkan rentang tanggal yang dipilih
         processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
       }
     });
   }
 }
 
-// Call the main function to start the process
+// Memulai proses
 initializeProcess();
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
