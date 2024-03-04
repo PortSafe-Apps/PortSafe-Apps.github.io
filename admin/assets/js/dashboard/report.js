@@ -91,10 +91,6 @@ async function initializeProcess() {
   unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
   compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
-  // Memastikan data diterima dari server
-  console.log("Unsafe Data Response:", unsafeDataResponse);
-  console.log("Compromised Data Response:", compromisedDataResponse);
-
   // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
   function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
     console.log("Start Date (selected):", startDate);
@@ -134,15 +130,18 @@ async function initializeProcess() {
       format: 'MMM DD, YYYY',
       plugins: ['ranges'],
       // Ketika rentang tanggal dipilih
-      onSelect: function(start, end) {
+      onSelect: function (start, end) {
         // Memproses data berdasarkan rentang tanggal yang dipilih
         processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
       }
     });
 
     // Memproses data berdasarkan rentang tanggal default saat inisialisasi
-    processDataBasedOnRange(picker.getDate('YYYY-MM-DD'), picker.getDate('YYYY-MM-DD'), unsafeDataResponse.data, compromisedDataResponse.data);
+    const defaultStartDate = picker.getDate('YYYY-MM-DD', 'start'); // Mendapatkan tanggal awal dari picker
+    const defaultEndDate = picker.getDate('YYYY-MM-DD', 'end'); // Mendapatkan tanggal akhir dari picker
+    processDataBasedOnRange(defaultStartDate, defaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
   }
+
 }
 
 // Memulai proses
@@ -340,7 +339,7 @@ var horizontalBarChart = new Chart(ctxLocation, {
         borderColor: "rgba(255, 165, 0, 1)", // Oranye
         borderWidth: 1,
         data: combinedData.dataCompromised,
-      },     
+      },
     ],
   },
   options: {
@@ -478,7 +477,7 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
         borderColor: "rgba(255, 165, 0, 1)", // Oranye
         borderWidth: 1,
         data: combinedData.dataCompromised,
-      },      
+      },
     ],
   },
   options: {
@@ -673,7 +672,7 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
             0;
           const compromisedValue =
             typeDangerousActionsCountsCompromised[
-              data.labels[tooltipItem.index]
+            data.labels[tooltipItem.index]
             ] || 0;
           return `${datasetLabel}: Unsafe ${unsafeValue}, Compromised ${compromisedValue}`;
         },
@@ -687,9 +686,9 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
         formatter: (value) => {
           return `Total: ${value}`;
         },
-        color: "#fff", 
-        anchor: "end", 
-        align: "start", 
+        color: "#fff",
+        anchor: "end",
+        align: "start",
       },
     },
   },
@@ -788,9 +787,8 @@ function createSubtypesPieChart(subtypesData) {
         callbacks: {
           label: function (tooltipItem, data) {
             const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${
-              data.datasets[0].data[tooltipItem.index]
-            }`;
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]
+              }`;
           },
           title: function (tooltipItem, data) {
             const subtypeLabel = data.labels[tooltipItem[0].index];
