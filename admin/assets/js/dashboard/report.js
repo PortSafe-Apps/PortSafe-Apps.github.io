@@ -32,9 +32,6 @@ function number_format(number) {
   return s.join(dec);
 }
 
-// Mendeklarasikan variabel secara global
-let unsafeDataResponse, compromisedDataResponse;
-
 // Function untuk mengambil data dari server
 async function fetchDataFromServer(url, category, token) {
   try {
@@ -66,31 +63,6 @@ async function fetchDataFromServer(url, category, token) {
   }
 }
 
-// Function untuk memproses data berdasarkan rentang tanggal yang dipilih
-function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
-  console.log("Start Date (selected):", startDate);
-  console.log("End Date (selected):", endDate);
-
-  // Menampilkan data sebelum proses filter
-  console.log("Unsafe Data (before filter):", unsafeData);
-  console.log("Compromised Data (before filter):", compromisedData);
-
-  // Memfilter data berdasarkan rentang tanggal yang dipilih
-  const filteredUnsafeData = unsafeData.filter(report => {
-    const reportDate = new Date(report.date);
-    return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
-  });
-
-  const filteredCompromisedData = compromisedData.filter(report => {
-    const reportDate = new Date(report.date);
-    return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
-  });
-
-  // Menampilkan data setelah proses filter
-  console.log("Filtered Unsafe Data:", filteredUnsafeData);
-  console.log("Filtered Compromised Data:", filteredCompromisedData);
-}
-
 // Function utama untuk memulai proses
 async function initializeProcess() {
   // Mendapatkan token dari cookie
@@ -120,11 +92,36 @@ async function initializeProcess() {
   console.log("Unsafe Data Response:", unsafeDataResponse);
   console.log("Compromised Data Response:", compromisedDataResponse);
 
+  // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
+  function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
+    console.log("Start Date (selected):", startDate);
+    console.log("End Date (selected):", endDate);
+
+    // Menampilkan data sebelum proses filter
+    console.log("Unsafe Data (before filter):", unsafeData);
+    console.log("Compromised Data (before filter):", compromisedData);
+
+    // Memfilter data berdasarkan rentang tanggal yang dipilih
+    const filteredUnsafeData = unsafeData.filter(report => {
+      const reportDate = new Date(report.date);
+      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
+    });
+
+    const filteredCompromisedData = compromisedData.filter(report => {
+      const reportDate = new Date(report.date);
+      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
+    });
+
+    // Menampilkan data setelah proses filter
+    console.log("Filtered Unsafe Data:", filteredUnsafeData);
+    console.log("Filtered Compromised Data:", filteredCompromisedData);
+  }
+
   // Mendaftarkan elemen Litepicker
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
     // Inisialisasi Litepicker
-    new Litepicker({
+    const picker = new Litepicker({
       element: litepickerRangePlugin,
       startDate: new Date(),
       endDate: new Date(),
@@ -139,6 +136,9 @@ async function initializeProcess() {
         processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
       }
     });
+
+    // Memproses data berdasarkan rentang tanggal default saat inisialisasi
+    processDataBasedOnRange(picker.getDate('YYYY-MM-DD'), picker.getDate('YYYY-MM-DD'), unsafeDataResponse.data, compromisedDataResponse.data);
   }
 }
 
