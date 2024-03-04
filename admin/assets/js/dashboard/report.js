@@ -32,6 +32,8 @@ function number_format(number) {
   return s.join(dec);
 }
 
+let unsafeDataResponse, compromisedDataResponse; // Mendeklarasikan variabel secara global
+
 // Function to fetch data from the server
 async function fetchDataFromServer(url, category) {
   try {
@@ -78,9 +80,9 @@ function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData
 // Main function to initialize the process
 async function initializeProcess() {
   // Fetch unsafe data
-  const unsafeDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe", "Unsafe Action");
+  unsafeDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe", "Unsafe Action");
   // Fetch compromised data
-  const compromisedDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
+  compromisedDataResponse = await fetchDataFromServer("https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised", "Compromised Action");
 
   const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
   if (litepickerRangePlugin) {
@@ -103,6 +105,8 @@ async function initializeProcess() {
 
 // Call the main function to start the process
 initializeProcess();
+
+
 
 // Inisialisasi Chart
 var ctx = document.getElementById("myMultiAxisLineChart");
