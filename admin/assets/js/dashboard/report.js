@@ -66,6 +66,9 @@ async function fetchDataFromServer(url, category, token) {
   }
 }
 
+let filteredUnsafeData = [];
+let filteredCompromisedData = [];
+
 // Function utama untuk memulai proses
 async function initializeProcess() {
   // Mendapatkan token dari cookie
@@ -93,13 +96,6 @@ async function initializeProcess() {
 
   // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
   function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
-    console.log("Start Date (selected):", startDate);
-    console.log("End Date (selected):", endDate);
-
-    // Menampilkan data sebelum proses filter
-    console.log("Unsafe Data (before filter):", unsafeData);
-    console.log("Compromised Data (before filter):", compromisedData);
-
     // Memfilter data berdasarkan rentang tanggal yang dipilih
     const filteredUnsafeData = unsafeData.filter(report => {
       const reportDate = new Date(report.date);
@@ -142,8 +138,8 @@ async function initializeProcess() {
     });
 
     // Memproses data berdasarkan rentang tanggal default saat inisialisasi
-    const defaultStartDate = picker.getStartDate(); // Mendapatkan tanggal awal dari picker
-    const defaultEndDate = picker.getEndDate(); // Mendapatkan tanggal akhir dari picker
+    const defaultStartDate = picker.getStartDate(); 
+    const defaultEndDate = picker.getEndDate(); 
 
     // Mengubah format tanggal menjadi 'MM/DD/YYYY'
     const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
@@ -278,15 +274,12 @@ const locationLabels = [
 ];
 
 // Process Data for Location Bar Chart and Sort
-function processDataForLocationBarChartAndSort(
-  unsafeDataResponse,
-  compromisedDataResponse
-) {
+function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
   const locationCountsUnsafe = {};
   const locationCountsCompromised = {};
 
   // Process Unsafe Data
-  unsafeDataResponse.data.forEach((report) => {
+  filteredUnsafeData.forEach((report) => {
     const locationName = report.location
       ? report.location.locationName
       : "Unknown";
@@ -298,7 +291,7 @@ function processDataForLocationBarChartAndSort(
   });
 
   // Process Compromised Data
-  compromisedDataResponse.data.forEach((report) => {
+  filteredCompromisedData.forEach((report) => {
     const locationName = report.location
       ? report.location.locationName
       : "Unknown";
@@ -325,11 +318,10 @@ function processDataForLocationBarChartAndSort(
   };
 }
 
-const combinedData = processDataForLocationBarChartAndSort(
-  unsafeDataResponse,
-  compromisedDataResponse
-);
+// Mendapatkan data yang sudah difilter
+const combinedData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
 
+// Membuat chart menggunakan data yang sudah diproses
 var ctxLocation = document.getElementById("myHorizontalBarChart");
 var horizontalBarChart = new Chart(ctxLocation, {
   type: "horizontalBar",
@@ -410,6 +402,7 @@ var horizontalBarChart = new Chart(ctxLocation, {
   },
 });
 
+
 const areaLabels = [
   "Kantor",
   "Workshop",
@@ -420,15 +413,12 @@ const areaLabels = [
 ];
 
 // Process Data for Area Bar Chart and Sort
-function processDataForAreaBarChartAndSort(
-  unsafeDataResponse,
-  compromisedDataResponse
-) {
+function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
   const areaCountsUnsafe = {};
   const areaCountsCompromised = {};
 
   // Process Unsafe Data
-  unsafeDataResponse.data.forEach((report) => {
+  filteredUnsafeData.forEach((report) => {
     const areaName = report.area ? report.area.areaName : "Unknown";
     if (!areaCountsUnsafe[areaName]) {
       areaCountsUnsafe[areaName] = 1;
@@ -438,7 +428,7 @@ function processDataForAreaBarChartAndSort(
   });
 
   // Process Compromised Data
-  compromisedDataResponse.data.forEach((report) => {
+  filteredCompromisedData.forEach((report) => {
     const areaName = report.area ? report.area.areaName : "Unknown";
     if (!areaCountsCompromised[areaName]) {
       areaCountsCompromised[areaName] = 1;
@@ -463,11 +453,10 @@ function processDataForAreaBarChartAndSort(
   };
 }
 
-const combinedAreaData = processDataForAreaBarChartAndSort(
-  unsafeDataResponse,
-  compromisedDataResponse
-);
+// Mendapatkan data yang sudah difilter
+const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
 
+// Membuat chart menggunakan data yang sudah diproses
 var ctxArea = document.getElementById("myHorizontalBarChartForArea");
 var horizontalBarChartForArea = new Chart(ctxArea, {
   type: "horizontalBar",
@@ -479,14 +468,14 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
         backgroundColor: "rgba(255, 0, 0, 0.8)", // Merah
         borderColor: "rgba(255, 0, 0, 1)", // Merah
         borderWidth: 1,
-        data: combinedData.dataUnsafe,
+        data: combinedAreaData.dataUnsafe,
       },
       {
         label: "Compromised",
         backgroundColor: "rgba(255, 165, 0, 0.8)", // Oranye dengan transparansi 0.8
         borderColor: "rgba(255, 165, 0, 1)", // Oranye
         borderWidth: 1,
-        data: combinedData.dataCompromised,
+        data: combinedAreaData.dataCompromised,
       },
     ],
   },
@@ -513,7 +502,7 @@ var horizontalBarChartForArea = new Chart(ctxArea, {
       yAxes: [
         {
           ticks: {
-            maxTicksLimit: areaLabels.length, // Display all labels
+            maxTicksLimit: areaLabels.length, // Menampilkan semua label
             fontSize: 14,
           },
         },
@@ -570,12 +559,9 @@ const typeDangerousActionsCountsUnsafe = {};
 const typeDangerousActionsCountsCompromised = {};
 
 // Process Data for Type Dangerous Actions Pie Chart
-function processDataForTypeDangerousActionsPieChart(
-  unsafeDataResponse,
-  compromisedDataResponse
-) {
+function processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData) {
   // Process Unsafe Data
-  unsafeDataResponse.data.forEach((report) => {
+  filteredUnsafeData.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
       ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
@@ -589,7 +575,7 @@ function processDataForTypeDangerousActionsPieChart(
   });
 
   // Process Compromised Data
-  compromisedDataResponse.data.forEach((report) => {
+  filteredCompromisedData.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
       ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
@@ -618,26 +604,11 @@ function processDataForTypeDangerousActionsPieChart(
   };
 }
 
+// Mendapatkan data yang sudah difilter
 const combinedTypeDangerousActionsData =
-  processDataForTypeDangerousActionsPieChart(
-    unsafeDataResponse,
-    compromisedDataResponse
-  );
+  processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
-// Function to find the maximum type from combined data
-function findMaxType(data) {
-  let maxType = '';
-  let maxCount = 0;
-
-  for (const type in data) {
-    if (data[type] > maxCount) {
-      maxCount = data[type];
-      maxType = type;
-    }
-  }
-
-  return maxType;
-}
+// Membuat chart menggunakan data yang sudah diproses
 var ctxTypeDangerousActions = document.getElementById(
   "myPieChartForTypeDangerousActions"
 );
@@ -708,7 +679,7 @@ const pieChartForTypeDangerousActions = new Chart(ctxTypeDangerousActions, {
 function getSubtypesData(type) {
   const subtypesCounts = {};
 
-  unsafeDataResponse.data.forEach((report) => {
+  filteredUnsafeData.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
       ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
@@ -728,7 +699,7 @@ function getSubtypesData(type) {
     }
   });
 
-  compromisedDataResponse.data.forEach((report) => {
+  filteredCompromisedData.forEach((report) => {
     const typeDangerousAction = report.typeDangerousActions
       ? report.typeDangerousActions[0]
       : { typeName: "Unknown" };
@@ -828,7 +799,6 @@ function showDefaultSubtypePieChart() {
   const subtypesData = getSubtypesData(maxType);
   createSubtypesPieChart(subtypesData);
 }
-
 
 // Show default subtype pie chart on page load
 showDefaultSubtypePieChart();
