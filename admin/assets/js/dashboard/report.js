@@ -60,18 +60,16 @@ async function fetchDataFromServer(url, category) {
 
       const response = await fetch(url, requestOptions);
 
-      // Add error logging to fetchDataFromServer function
       if (!response.ok) {
-          console.error(
-              "Server responded with an error:",
-              response.status,
-              response.statusText
-          );
-          return { category, data: [] };
+          throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
       }
 
       const data = await response.json();
-      return { category, data: data.data || [] };
+      if (!data || !data.data || !Array.isArray(data.data)) {
+          throw new Error("Invalid data format received from the server");
+      }
+
+      return { category, data: data.data };
   } catch (error) {
       console.error("Error fetching data:", error);
       return { category, data: [] };
@@ -87,6 +85,8 @@ const unsafeDataResponsePromise = fetchDataFromServer(
   "Unsafe Action"
 ).then(response => {
   unsafeDataResponse = response;
+}).catch(error => {
+  console.error("Error fetching unsafe data:", error);
 });
 
 // Compromised Data Fetch
@@ -95,6 +95,8 @@ const compromisedDataResponsePromise = fetchDataFromServer(
   "Compromised Action"
 ).then(response => {
   compromisedDataResponse = response;
+}).catch(error => {
+  console.error("Error fetching compromised data:", error);
 });
 
 Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(() => {
@@ -128,7 +130,7 @@ Promise.all([unsafeDataResponsePromise, compromisedDataResponsePromise]).then(()
 
 function processDataBasedOnRange(startDate, endDate) {
   // Filter data according to selected date range
-  if (unsafeDataResponse && compromisedDataResponse) {
+  if (unsafeDataResponse && unsafeDataResponse.data && compromisedDataResponse && compromisedDataResponse.data) {
       const filteredUnsafeData = unsafeDataResponse.data.filter(report => {
           const reportDateTime = new Date(report.date + 'T' + report.time);
           return reportDateTime >= startDate && reportDateTime <= endDate;
@@ -142,6 +144,8 @@ function processDataBasedOnRange(startDate, endDate) {
       // Do whatever you need to do with the filtered data
       console.log("Unsafe Data:", filteredUnsafeData);
       console.log("Compromised Data:", filteredCompromisedData);
+  } else {
+      console.error("Data not available or invalid");
   }
 }
 
