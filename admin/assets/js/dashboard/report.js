@@ -69,8 +69,8 @@ async function fetchDataFromServer(url, category, token) {
 
 // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
 function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
-  console.log("Start Date:", startDate);
-  console.log("End Date:", endDate);
+  console.log("Start Date (selected):", startDate);
+  console.log("End Date (selected):", endDate);
 
   // Memfilter data berdasarkan rentang tanggal yang dipilih
   const filteredUnsafeData = unsafeData.filter(report => {
