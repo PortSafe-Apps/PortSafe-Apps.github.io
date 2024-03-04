@@ -68,18 +68,20 @@ async function fetchDataFromServer(url, category, token) {
 
 // Function to process data based on selected date range
 function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
+  console.log("Start Date:", startDate);
+  console.log("End Date:", endDate);
+
   // Filter data according to selected date range
   const filteredUnsafeData = unsafeData.filter(report => {
-    const reportDate = new Date(report.date);
-    return reportDate >= startDate && reportDate <= endDate;
+      const reportDate = new Date(report.date);
+      return reportDate >= startDate && reportDate <= endDate;
   });
 
   const filteredCompromisedData = compromisedData.filter(report => {
-    const reportDate = new Date(report.date);
-    return reportDate >= startDate && reportDate <= endDate;
+      const reportDate = new Date(report.date);
+      return reportDate >= startDate && reportDate <= endDate;
   });
 
-  // Output filtered data
   console.log("Filtered Unsafe Data:", filteredUnsafeData);
   console.log("Filtered Compromised Data:", filteredCompromisedData);
 }
