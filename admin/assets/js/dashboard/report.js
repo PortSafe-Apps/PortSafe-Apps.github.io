@@ -32,7 +32,7 @@ function number_format(number) {
   return s.join(dec);
 }
 
-// Function untuk mengambil data dari server
+// Fetch data from server function
 async function fetchDataFromServer(url, category, token) {
   try {
     const response = await fetch(url, {
@@ -43,25 +43,26 @@ async function fetchDataFromServer(url, category, token) {
       }
     });
 
-    // Memeriksa apakah respons dari server berhasil
-    if (!response.ok) {
-      throw new Error(`Server responded with an error: ${response.status} ${response.statusText}`);
-    }
-
-    // Mengambil data dari respons
+    // Handle response data here
     const data = await response.json();
 
-    // Memeriksa status data
-    if (data.status === 200) {
-      return { category, data: data.data };
-    } else {
-      throw new Error(data.message);
+    // Update unsafeDataResponse or compromisedDataResponse accordingly
+    if (category === "Unsafe Action") {
+      unsafeDataResponse = data;
+    } else if (category === "Compromised Action") {
+      compromisedDataResponse = data;
     }
+
+    // Proceed with data processing
+    const filteredData = data.data || [];
+    return { category, data: filteredData };
+
   } catch (error) {
     console.error("Error fetching data:", error);
     return { category, data: [] };
   }
 }
+
 
 // Mendeklarasikan variabel secara global
 let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
@@ -335,13 +336,11 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
-  // Check if filteredUnsafeData or filteredCompromisedData is empty or undefined
   if (!filteredUnsafeData || !filteredCompromisedData) {
     // Handle the case where there's no data available
     console.log("No data available to update charts.");
     filteredUnsafeData = [];
     filteredCompromisedData = [];
-    return;
   }
 
   // Check if unsafeDataResponse or compromisedDataResponse is undefined
@@ -426,6 +425,7 @@ function initializeCharts() {
   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
     // Display a message or take appropriate action
     console.log("No data available to initialize charts.");
+    // Here, you can still initialize charts with default data or empty data
     return;
   }
 
