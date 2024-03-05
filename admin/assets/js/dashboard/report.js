@@ -336,15 +336,21 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
-  const startDate = document.getElementById("start_date").value;
-  const endDate = document.getElementById("end_date").value;
-  if (!startDate || !endDate) {
-    alert("Please select both start and end date.");
+  // Mendapatkan nilai tanggal dari elemen HTML
+  const startDateElement = document.getElementById("start_date");
+  const endDateElement = document.getElementById("end_date");
+  
+  // Memeriksa apakah elemen-elemen tersebut ada dan memiliki nilai
+  if (!startDateElement || !endDateElement || !startDateElement.value || !endDateElement.value) {
+    console.error("Start date or end date is not available.");
     return;
   }
 
+  const startDate = startDateElement.value;
+  const endDate = endDateElement.value;
+
   // Perbarui filteredUnsafeData dan filteredCompromisedData berdasarkan tanggal yang dipilih
-  processDataBasedOnRange(startDate, endDate);
+  processDataBasedOnRange(startDate, endDate, filteredUnsafeData, filteredCompromisedData);
 
   // Perbarui grafik berdasarkan data yang diperbarui
   // Jika tidak ada data yang tersedia, tampilkan pesan dan keluar dari fungsi
@@ -368,6 +374,7 @@ function updateCharts() {
   pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
   pieChartForTypeDangerousActions.update();
 }
+
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
