@@ -416,17 +416,18 @@ function showDefaultSubtypePieChart() {
 }
 
 function initializeCharts() {
-   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+  if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
     // Display a message or take appropriate action
     console.log("No data available to initialize charts.");
     // Here, you can still initialize charts with default data or empty data
     return;
   }
 
+  // Menyimpan data yang dihasilkan dari pemrosesan data berdasarkan rentang tanggal
   const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
-
+  
    // Location Bar Chart
    const ctxLocation = document.getElementById("myHorizontalBarChartForLocation");
    horizontalBarChart = new Chart(ctxLocation, {
