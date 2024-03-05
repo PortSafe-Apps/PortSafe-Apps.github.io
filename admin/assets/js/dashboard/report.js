@@ -336,13 +336,13 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
+  // Check if filteredUnsafeData or filteredCompromisedData is undefined or null
   if (!filteredUnsafeData || !filteredCompromisedData) {
-    // Handle the case where there's no data available
-    console.log("No data available to update charts.");
-    filteredUnsafeData = [];
-    filteredCompromisedData = [];
+    // Handle the case where data is not available
+    console.log("Data is not available.");
+    return;
   }
-  
+
   // Update Location Bar Chart
   document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
   horizontalBarChart.data.labels = combinedLocationData.labels;
