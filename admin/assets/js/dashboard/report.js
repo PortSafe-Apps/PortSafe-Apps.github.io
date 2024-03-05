@@ -90,12 +90,16 @@ async function initializeProcess() {
     const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
 
     // Mengambil data tidak aman dan terompah dari server
-    unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
-    compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+    const unsafeResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
+    const compromisedResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+
+    // Memeriksa apakah respons mengandung data
+    const unsafeData = unsafeResponse.data || [];
+    const compromisedData = compromisedResponse.data || [];
 
     // Set filteredUnsafeData and filteredCompromisedData to empty arrays if no data available
-    filteredUnsafeData = unsafeDataResponse.data || [];
-    filteredCompromisedData = compromisedDataResponse.data || [];
+    filteredUnsafeData = unsafeData;
+    filteredCompromisedData = compromisedData;
 
     // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
     function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
@@ -137,7 +141,7 @@ async function initializeProcess() {
             const end = date2 ? date2.format('MM/DD/YYYY') : null;
 
             if (start && end) {
-              processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
+              processDataBasedOnRange(start, end, unsafeData, compromisedData);
             }
           });
         }
@@ -151,12 +155,13 @@ async function initializeProcess() {
       const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
       const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
 
-      processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+      processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeData, compromisedData);
     }
   } catch (error) {
     console.error("Error initializing process:", error);
   }
 }
+
 
 const locationLabels = [
   "Kantor Pusat SPMT",
