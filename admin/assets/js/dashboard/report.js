@@ -1,8 +1,3 @@
-// Mendeklarasikan variabel secara global
-let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
-// Deklarasi variabel global untuk grafik
-let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
-
 // Fungsi untuk mendapatkan token dari cookie
 function getTokenFromCookies(cookieName) {
   const cookies = document.cookie.split(";");
@@ -67,6 +62,11 @@ async function fetchDataFromServer(url, category, token) {
     return { category, data: [] };
   }
 }
+
+// Mendeklarasikan variabel secara global
+let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
+// Deklarasi variabel global untuk grafik
+let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
 
 // Function utama untuk memulai proses
 async function initializeProcess() {
@@ -150,106 +150,6 @@ async function initializeProcess() {
     processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
   }
 }
-
-// Inisialisasi Chart
-var ctx = document.getElementById("myMultiAxisLineChart");
-var multiAxisLineChart = new Chart(ctx, {
-  type: "line",
-  data: {
-    labels: [],
-    datasets: [
-      {
-        label: "Unsafe",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(255, 0, 0, 0.05)",
-        borderColor: "rgba(255, 0, 0, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointBorderColor: "rgba(255, 0, 0, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(255, 0, 0, 1)",
-        pointHoverBorderColor: "rgba(255, 0, 0, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [],
-      },
-      {
-        label: "Compromised",
-        yAxisID: "y-axis-1",
-        lineTension: 0.3,
-        backgroundColor: "rgba(0, 0, 255, 0.05)",
-        borderColor: "rgba(0, 0, 255, 1)",
-        pointRadius: 3,
-        pointBackgroundColor: "rgba(0, 0, 255, 1)",
-        pointBorderColor: "rgba(0, 0, 255, 1)",
-        pointHoverRadius: 3,
-        pointHoverBackgroundColor: "rgba(0, 0, 255, 1)",
-        pointHoverBorderColor: "rgba(0, 0, 255, 1)",
-        pointHitRadius: 10,
-        pointBorderWidth: 2,
-        data: [],
-      },
-    ],
-  },
-  options: {
-    responsive: true,
-    maintainAspectRatio: false,
-    tooltips: {
-      mode: "index",
-      intersect: false,
-      callbacks: {
-        label: function (tooltipItem, data) {
-          var label = data.datasets[tooltipItem.datasetIndex].label || "";
-          if (label) {
-            label += ": ";
-          }
-          label += number_format(tooltipItem.yLabel);
-          return label;
-        },
-      },
-    },
-    hover: {
-      mode: "nearest",
-      intersect: true,
-    },
-    scales: {
-      xAxes: [
-        {
-          display: true,
-          scaleLabel: {
-            display: true,
-            labelString: "Date",
-          },
-          gridLines: {
-            display: false,
-          },
-          ticks: {
-            maxTicksLimit: 10,
-          },
-        },
-      ],
-      yAxes: [
-        {
-          type: "linear",
-          display: true,
-          position: "left",
-          id: "y-axis-1",
-          scaleLabel: {
-            display: true,
-            labelString: "Number of Reports",
-          },
-          ticks: {
-            beginAtZero: true,
-            callback: function (value, index, values) {
-              return number_format(value);
-            },
-          },
-        },
-      ],
-    },
-  },
-});
 
 const locationLabels = [
   "Kantor Pusat SPMT",
@@ -414,18 +314,36 @@ function updateCharts() {
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
   // Update Location Bar Chart
-  horizontalBarChart.data.labels = combinedLocationData.labels;
-  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
-  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
+  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
+    // Nonaktifkan tampilan chart jika data kosong
+    document.getElementById('myHorizontalBarChartForLocation').style.display = 'none';
+  } else {
+    document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
+    horizontalBarChart.data.labels = combinedLocationData.labels;
+    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
+    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
+  }
 
   // Update Area Bar Chart
-  horizontalBarChartForArea.data.labels = combinedAreaData.labels;
-  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
-  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
+  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
+    // Nonaktifkan tampilan chart jika data kosong
+    document.getElementById('myHorizontalBarChartForArea').style.display = 'none';
+  } else {
+    document.getElementById('myHorizontalBarChartForArea').style.display = 'block';
+    horizontalBarChartForArea.data.labels = combinedAreaData.labels;
+    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
+    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
+  }
 
   // Update Type Dangerous Actions Pie Chart
-  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
-  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
+  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
+    // Nonaktifkan tampilan chart jika data kosong
+    document.getElementById('myPieChartForTypeDangerousActions').style.display = 'none';
+  } else {
+    document.getElementById('myPieChartForTypeDangerousActions').style.display = 'block';
+    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
+    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
+  }
 
   // Check if data from server is empty and update chart accordingly
   if (filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
@@ -447,6 +365,7 @@ function updateCharts() {
   horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
+
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
