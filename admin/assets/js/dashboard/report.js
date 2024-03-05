@@ -342,13 +342,7 @@ function updateCharts() {
     filteredUnsafeData = [];
     filteredCompromisedData = [];
   }
-
-  // Check if unsafeDataResponse or compromisedDataResponse is undefined
-  if (!unsafeDataResponse || !compromisedDataResponse) {
-    console.log("Data responses are not available yet.");
-    return;
-  }
-
+  
   // Update Location Bar Chart
   document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
   horizontalBarChart.data.labels = combinedLocationData.labels;
@@ -422,7 +416,7 @@ function showDefaultSubtypePieChart() {
 }
 
 function initializeCharts() {
-  if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
     // Display a message or take appropriate action
     console.log("No data available to initialize charts.");
     // Here, you can still initialize charts with default data or empty data
