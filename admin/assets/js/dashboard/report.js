@@ -336,33 +336,36 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
-  // Check if filteredUnsafeData or filteredCompromisedData is undefined or null
-  if (!filteredUnsafeData || !filteredCompromisedData) {
-    // Handle the case where data is not available
-    console.log("Data is not available.");
+  const startDate = document.getElementById("start_date").value;
+  const endDate = document.getElementById("end_date").value;
+  if (!startDate || !endDate) {
+    alert("Please select both start and end date.");
     return;
   }
 
-  // Update Location Bar Chart
-  document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
+  // Perbarui filteredUnsafeData dan filteredCompromisedData berdasarkan tanggal yang dipilih
+  processDataBasedOnRange(startDate, endDate);
+
+  // Perbarui grafik berdasarkan data yang diperbarui
+  // Jika tidak ada data yang tersedia, tampilkan pesan dan keluar dari fungsi
+  if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+    console.log("Tidak ada data yang tersedia untuk memperbarui grafik.");
+    return;
+  }
+
+  // Update data dalam grafik
   horizontalBarChart.data.labels = combinedLocationData.labels;
   horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
   horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
+  horizontalBarChart.update();
 
-  // Update Area Bar Chart
-  document.getElementById('myHorizontalBarChartForArea').style.display = 'block';
   horizontalBarChartForArea.data.labels = combinedAreaData.labels;
   horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
   horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
+  horizontalBarChartForArea.update();
 
-  // Update Type Dangerous Actions Pie Chart
-  document.getElementById('myPieChartForTypeDangerousActions').style.display = 'block';
   pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
   pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
-
-  // Update all charts
-  horizontalBarChart.update();
-  horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
 
