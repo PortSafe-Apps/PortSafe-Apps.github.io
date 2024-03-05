@@ -69,91 +69,94 @@ let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCom
 let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
 
 async function initializeProcess() {
-  // Mendapatkan token dari cookie
-  const token = getTokenFromCookies("Login");
+  try {
+    // Mendapatkan token dari cookie
+    const token = getTokenFromCookies("Login");
 
-  // Memeriksa apakah token tersedia
-  if (!token) {
-    Swal.fire({
-      icon: "warning",
-      title: "Authentication Error",
-      text: "Kamu Belum Login!",
-    }).then(() => {
-      window.location.href = "https://portsafe-apps.github.io/";
-    });
-    return;
-  }
+    // Memeriksa apakah token tersedia
+    if (!token) {
+      Swal.fire({
+        icon: "warning",
+        title: "Authentication Error",
+        text: "Kamu Belum Login!",
+      }).then(() => {
+        window.location.href = "https://portsafe-apps.github.io/";
+      });
+      return;
+    }
 
-  // URL untuk mengambil data tidak aman dan terompah
-  const targetURLUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
-  const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
+    // URL untuk mengambil data tidak aman dan terompah
+    const targetURLUnsafe = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
+    const targetURLCompromised = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportCompromised";
 
-  // Mengambil data tidak aman dan terompah dari server
-  unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
-  compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+    // Mengambil data tidak aman dan terompah dari server
+    unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
+    compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
 
-  // Set filteredUnsafeData and filteredCompromisedData to empty arrays if no data available
-  filteredUnsafeData = unsafeDataResponse.data || [];
-  filteredCompromisedData = compromisedDataResponse.data || [];
+    // Set filteredUnsafeData and filteredCompromisedData to empty arrays if no data available
+    filteredUnsafeData = unsafeDataResponse.data || [];
+    filteredCompromisedData = compromisedDataResponse.data || [];
 
-  // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
-  function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
-    // Memfilter data berdasarkan rentang tanggal yang dipilih
-    filteredUnsafeData = unsafeData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
-    });
+    // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
+    function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
+      // Memfilter data berdasarkan rentang tanggal yang dipilih
+      filteredUnsafeData = unsafeData.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
+      });
 
-    filteredCompromisedData = compromisedData.filter(report => {
-      const reportDate = new Date(report.date);
-      return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
-    });
+      filteredCompromisedData = compromisedData.filter(report => {
+        const reportDate = new Date(report.date);
+        return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
+      });
 
-    // Menampilkan data setelah proses filter
-    console.log("Filtered Unsafe Data:", filteredUnsafeData);
-    console.log("Filtered Compromised Data:", filteredCompromisedData);
+      // Menampilkan data setelah proses filter
+      console.log("Filtered Unsafe Data:", filteredUnsafeData);
+      console.log("Filtered Compromised Data:", filteredCompromisedData);
 
-    // Memanggil fungsi untuk memperbarui chart
-    updateCharts();
-  }
+      // Memanggil fungsi untuk memperbarui chart
+      updateCharts();
+    }
 
-  // Mendaftarkan elemen Litepicker
-  const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
-  if (litepickerRangePlugin) {
-    // Inisialisasi Litepicker
-    const picker = new Litepicker({
-      element: litepickerRangePlugin,
-      startDate: new Date(),
-      endDate: new Date(),
-      singleMode: false,
-      numberOfMonths: 2,
-      numberOfColumns: 2,
-      format: 'MMM DD, YYYY',
-      plugins: ['ranges'],
-      setup: (picker) => {
-        picker.on("selected", (date1, date2) => {
-          const start = date1 ? date1.format('MM/DD/YYYY') : null;
-          const end = date2 ? date2.format('MM/DD/YYYY') : null;
+    // Mendaftarkan elemen Litepicker
+    const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
+    if (litepickerRangePlugin) {
+      // Inisialisasi Litepicker
+      const picker = new Litepicker({
+        element: litepickerRangePlugin,
+        startDate: new Date(),
+        endDate: new Date(),
+        singleMode: false,
+        numberOfMonths: 2,
+        numberOfColumns: 2,
+        format: 'MMM DD, YYYY',
+        plugins: ['ranges'],
+        setup: (picker) => {
+          picker.on("selected", (date1, date2) => {
+            const start = date1 ? date1.format('MM/DD/YYYY') : null;
+            const end = date2 ? date2.format('MM/DD/YYYY') : null;
 
-          if (start && end) {
-            processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
-          }
-        });
-      }
-    });
+            if (start && end) {
+              processDataBasedOnRange(start, end, unsafeDataResponse.data, compromisedDataResponse.data);
+            }
+          });
+        }
+      });
 
-    // Memproses data berdasarkan rentang tanggal default saat inisialisasi
-    const defaultStartDate = picker.getStartDate(); 
-    const defaultEndDate = picker.getEndDate(); 
+      // Memproses data berdasarkan rentang tanggal default saat inisialisasi
+      const defaultStartDate = picker.getStartDate(); 
+      const defaultEndDate = picker.getEndDate(); 
 
-    // Mengubah format tanggal menjadi 'MM/DD/YYYY'
-    const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
-    const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
+      // Mengubah format tanggal menjadi 'MM/DD/YYYY'
+      const formattedDefaultStartDate = defaultStartDate.format('MM/DD/YYYY');
+      const formattedDefaultEndDate = defaultEndDate.format('MM/DD/YYYY');
 
-    processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+      processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
+    }
+  } catch (error) {
+    console.error("Error initializing process:", error);
   }
 }
-
 
 const locationLabels = [
   "Kantor Pusat SPMT",
