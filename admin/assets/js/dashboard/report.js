@@ -203,13 +203,17 @@ function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompr
   const locationCountsCompromised = {};
 
   filteredUnsafeData.forEach((report) => {
-    const locationName = report.location ? report.location.locationName : "Unknown";
-    locationCountsUnsafe[locationName] = (locationCountsUnsafe[locationName] || 0) + 1;
+    if (report.location) {
+      const locationName = report.location.locationName || "Unknown";
+      locationCountsUnsafe[locationName] = (locationCountsUnsafe[locationName] || 0) + 1;
+    }
   });
 
   filteredCompromisedData.forEach((report) => {
-    const locationName = report.location ? report.location.locationName : "Unknown";
-    locationCountsCompromised[locationName] = (locationCountsCompromised[locationName] || 0) + 1;
+    if (report.location) {
+      const locationName = report.location.locationName || "Unknown";
+      locationCountsCompromised[locationName] = (locationCountsCompromised[locationName] || 0) + 1;
+    }
   });
 
   const combinedLabels = locationLabels;
@@ -222,6 +226,7 @@ function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompr
     dataCompromised: combinedDataCompromised,
   };
 }
+
 
 function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
   const areaCountsUnsafe = {};
@@ -309,6 +314,10 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
+  if (!filteredUnsafeData || !filteredCompromisedData) {
+    return; // Menghindari akses ke properti 'length' jika data tidak terdefinisi
+  }
+
   const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
@@ -365,7 +374,6 @@ function updateCharts() {
   horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
-
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
