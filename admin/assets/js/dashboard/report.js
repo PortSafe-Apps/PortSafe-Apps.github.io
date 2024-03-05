@@ -323,66 +323,37 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
+  // Check if filteredUnsafeData or filteredCompromisedData is empty or undefined
   if (!filteredUnsafeData || !filteredCompromisedData) {
-    return; // Menghindari akses ke properti 'length' jika data tidak terdefinisi
+    // Handle the case where there's no data available
+    console.log("No data available to update charts.");
+    filteredUnsafeData = [];
+    filteredCompromisedData = [];
   }
-
-  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-  const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
   // Update Location Bar Chart
-  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
-    // Nonaktifkan tampilan chart jika data kosong
-    document.getElementById('myHorizontalBarChartForLocation').style.display = 'none';
-  } else {
-    document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
-    horizontalBarChart.data.labels = combinedLocationData.labels;
-    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
-    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
-  }
+  document.getElementById('myHorizontalBarChartForLocation').style.display = 'block';
+  horizontalBarChart.data.labels = combinedLocationData.labels;
+  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
+  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised;
 
   // Update Area Bar Chart
-  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
-    // Nonaktifkan tampilan chart jika data kosong
-    document.getElementById('myHorizontalBarChartForArea').style.display = 'none';
-  } else {
-    document.getElementById('myHorizontalBarChartForArea').style.display = 'block';
-    horizontalBarChartForArea.data.labels = combinedAreaData.labels;
-    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
-    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
-  }
+  document.getElementById('myHorizontalBarChartForArea').style.display = 'block';
+  horizontalBarChartForArea.data.labels = combinedAreaData.labels;
+  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe;
+  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised;
 
   // Update Type Dangerous Actions Pie Chart
-  if (filteredUnsafeData.length === 0 && filteredCompromisedData.length === 0) {
-    // Nonaktifkan tampilan chart jika data kosong
-    document.getElementById('myPieChartForTypeDangerousActions').style.display = 'none';
-  } else {
-    document.getElementById('myPieChartForTypeDangerousActions').style.display = 'block';
-    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
-    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
-  }
-
-  // Check if data from server is empty and update chart accordingly
-  if (filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
-    // Set default data for charts when server data is empty
-    horizontalBarChart.data.labels = [];
-    horizontalBarChart.data.datasets[0].data = [];
-    horizontalBarChart.data.datasets[1].data = [];
-
-    horizontalBarChartForArea.data.labels = [];
-    horizontalBarChartForArea.data.datasets[0].data = [];
-    horizontalBarChartForArea.data.datasets[1].data = [];
-
-    pieChartForTypeDangerousActions.data.labels = [];
-    pieChartForTypeDangerousActions.data.datasets[0].data = [];
-  }
+  document.getElementById('myPieChartForTypeDangerousActions').style.display = 'block';
+  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
+  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
 
   // Update all charts
   horizontalBarChart.update();
   horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
+
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
