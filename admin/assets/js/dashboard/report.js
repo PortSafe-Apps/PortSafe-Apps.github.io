@@ -664,8 +664,9 @@ pieChartForTypeDangerousActions = new Chart(ctxPie, {
 // Membuat dan menampilkan chart setelah DOM selesai dimuat
 document.addEventListener('DOMContentLoaded', () => {
   // Memulai proses
-  initializeProcess();
-
-  // Membuat dan menampilkan chart
-  initializeCharts();
+  initializeProcess().then(() => {
+    // Memanggil fungsi untuk membuat dan menampilkan chart
+    initializeCharts();
+  });
 });
+
