@@ -333,6 +333,13 @@ function updateCharts() {
     console.log("No data available to update charts.");
     filteredUnsafeData = [];
     filteredCompromisedData = [];
+    return;
+  }
+
+  // Check if unsafeDataResponse or compromisedDataResponse is undefined
+  if (!unsafeDataResponse || !compromisedDataResponse) {
+    console.log("Data responses are not available yet.");
+    return;
   }
 
   // Update Location Bar Chart
@@ -357,7 +364,6 @@ function updateCharts() {
   horizontalBarChartForArea.update();
   pieChartForTypeDangerousActions.update();
 }
-
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
