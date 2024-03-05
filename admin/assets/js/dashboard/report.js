@@ -68,7 +68,6 @@ let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCom
 // Deklarasi variabel global untuk grafik
 let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
 
-// Function utama untuk memulai proses
 async function initializeProcess() {
   // Mendapatkan token dari cookie
   const token = getTokenFromCookies("Login");
@@ -92,6 +91,10 @@ async function initializeProcess() {
   // Mengambil data tidak aman dan terompah dari server
   unsafeDataResponse = await fetchDataFromServer(targetURLUnsafe, "Unsafe Action", token);
   compromisedDataResponse = await fetchDataFromServer(targetURLCompromised, "Compromised Action", token);
+
+  // Set filteredUnsafeData and filteredCompromisedData to empty arrays if no data available
+  filteredUnsafeData = unsafeDataResponse.data || [];
+  filteredCompromisedData = compromisedDataResponse.data || [];
 
   // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
   function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
@@ -150,6 +153,7 @@ async function initializeProcess() {
     processDataBasedOnRange(formattedDefaultStartDate, formattedDefaultEndDate, unsafeDataResponse.data, compromisedDataResponse.data);
   }
 }
+
 
 const locationLabels = [
   "Kantor Pusat SPMT",
