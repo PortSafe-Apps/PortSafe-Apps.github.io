@@ -433,93 +433,98 @@ function showDefaultSubtypePieChart() {
   createAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
 }
 
-
-// Function untuk menginisialisasi chart
 function initializeCharts() {
+  if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+    // Display a message or take appropriate action
+    console.log("No data available to initialize charts.");
+    return;
+  }
+
   const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
-  // Location Bar Chart
-  const ctxLocation = document.getElementById("myHorizontalBarChartForLocation");
-  horizontalBarChart = new Chart(ctxLocation, {
-    type: "horizontalBar",
-    data: {
-      labels: combinedLocationData.labels,
-      datasets: [
-        {
-          label: "Unsafe",
-          backgroundColor: "rgba(255, 0, 0, 0.8)",
-          borderColor: "rgba(255, 0, 0, 1)",
-          borderWidth: 1,
-          data: combinedLocationData.dataUnsafe,
-        },
-        {
-          label: "Compromised",
-          backgroundColor: "rgba(255, 165, 0, 0.8)",
-          borderColor: "rgba(255, 165, 0, 1)",
-          borderWidth: 1,
-          data: combinedLocationData.dataCompromised,
-        },
-      ],
-    },
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 10,
-          right: 10,
-          top: 0,
-          bottom: 0,
-        },
-      },
-      scales: {
-        xAxes: [
-          {
-            ticks: {
-              beginAtZero: true,
-              stepSize: 1,
-              fontSize: 14,
-            },
-          },
-        ],
-        yAxes: [
-          {
-            ticks: {
-              maxTicksLimit: locationLabels.length, // Menampilkan semua label
-              fontSize: 14,
-            },
-          },
-        ],
-      },
-      legend: {
-        display: true,
-        position: "top",
-      },
-      tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleMarginBottom: 10,
-        titleFontColor: "#6e707e",
-        titleFontSize: 14,
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        displayColors: false,
-        intersect: false,
-        mode: "index",
-        caretPadding: 10,
-        callbacks: {
-          label: function (tooltipItem, chart) {
-            var datasetLabel =
-              chart.datasets[tooltipItem.datasetIndex].label || "";
-            return datasetLabel + ": " + tooltipItem.xLabel;
-          },
-        },
-      },
-    },
-  });
+   // Location Bar Chart
+   const ctxLocation = document.getElementById("myHorizontalBarChartForLocation");
+   horizontalBarChart = new Chart(ctxLocation, {
+     type: "horizontalBar",
+     data: {
+       labels: combinedLocationData.labels,
+       datasets: [
+         {
+           label: "Unsafe",
+           backgroundColor: "rgba(255, 0, 0, 0.8)",
+           borderColor: "rgba(255, 0, 0, 1)",
+           borderWidth: 1,
+           data: combinedLocationData.dataUnsafe,
+         },
+         {
+           label: "Compromised",
+           backgroundColor: "rgba(255, 165, 0, 0.8)",
+           borderColor: "rgba(255, 165, 0, 1)",
+           borderWidth: 1,
+           data: combinedLocationData.dataCompromised,
+         },
+       ],
+     },
+     options: {
+       maintainAspectRatio: false,
+       layout: {
+         padding: {
+           left: 10,
+           right: 10,
+           top: 0,
+           bottom: 0,
+         },
+       },
+       scales: {
+         xAxes: [
+           {
+             ticks: {
+               beginAtZero: true,
+               stepSize: 1,
+               fontSize: 14,
+             },
+           },
+         ],
+         yAxes: [
+           {
+             ticks: {
+               maxTicksLimit: locationLabels.length, // Menampilkan semua label
+               fontSize: 14,
+             },
+           },
+         ],
+       },
+       legend: {
+         display: true,
+         position: "top",
+       },
+       tooltips: {
+         backgroundColor: "rgb(255,255,255)",
+         bodyFontColor: "#858796",
+         titleMarginBottom: 10,
+         titleFontColor: "#6e707e",
+         titleFontSize: 14,
+         borderColor: "#dddfeb",
+         borderWidth: 1,
+         xPadding: 15,
+         yPadding: 15,
+         displayColors: false,
+         intersect: false,
+         mode: "index",
+         caretPadding: 10,
+         callbacks: {
+           label: function (tooltipItem, chart) {
+             var datasetLabel =
+               chart.datasets[tooltipItem.datasetIndex].label || "";
+             return datasetLabel + ": " + tooltipItem.xLabel;
+           },
+         },
+       },
+     },
+   });
+ 
 
   // Area Bar Chart
   const ctxArea = document.getElementById("myHorizontalBarChartForArea");
@@ -602,63 +607,65 @@ function initializeCharts() {
     },
   });
 
-  // Type Dangerous Actions Pie Chart
-  const ctxPie = document.getElementById("myPieChartForTypeDangerousActions");
-  pieChartForTypeDangerousActions = new Chart(ctxPie, {
-    type: "pie",
-    data: {
-      labels: combinedTypeDangerousActionsData.labels,
-      datasets: [
-        {
-          data: combinedTypeDangerousActionsData.data,
-          backgroundColor: colors,
-        },
-      ],
+
+// Type Dangerous Actions Pie Chart
+const ctxPie = document.getElementById("myPieChartForTypeDangerousActions");
+pieChartForTypeDangerousActions = new Chart(ctxPie, {
+  type: "pie",
+  data: {
+    labels: combinedTypeDangerousActionsData.labels,
+    datasets: [
+      {
+        data: combinedTypeDangerousActionsData.data,
+        backgroundColor: colors,
+      },
+    ],
+  },
+  options: {
+    maintainAspectRatio: false,
+    layout: {
+      padding: {
+        left: 10,
+        right: 10,
+        top: 0,
+        bottom: 0,
+      },
     },
-    options: {
-      maintainAspectRatio: false,
-      layout: {
-        padding: {
-          left: 10,
-          right: 10,
-          top: 0,
-          bottom: 0,
+    legend: {
+      display: true,
+      position: "top",
+    },
+    tooltips: {
+      backgroundColor: "rgb(255,255,255)",
+      bodyFontColor: "#858796",
+      titleFontColor: "#6e707e",
+      borderColor: "#dddfeb",
+      borderWidth: 1,
+      xPadding: 15,
+      yPadding: 15,
+      callbacks: {
+        label: function (tooltipItem, data) {
+          const datasetLabel = data.datasets[0].label || "";
+          return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
         },
-      },
-      legend: {
-        display: true,
-        position: "top",
-      },
-      tooltips: {
-        backgroundColor: "rgb(255,255,255)",
-        bodyFontColor: "#858796",
-        titleFontColor: "#6e707e",
-        borderColor: "#dddfeb",
-        borderWidth: 1,
-        xPadding: 15,
-        yPadding: 15,
-        callbacks: {
-          label: function (tooltipItem, data) {
-            const datasetLabel = data.datasets[0].label || "";
-            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
-          },
-          title: function (tooltipItem, data) {
-            return data.labels[tooltipItem[0].index];
-          },
-        },
-      },
-      plugins: {
-        datalabels: {
-          formatter: (value) => {
-            return `Total: ${value}`;
-          },
-          color: "#fff",
-          anchor: "end",
-          align: "start",
+        title: function (tooltipItem, data) {
+          return data.labels[tooltipItem[0].index];
         },
       },
     },
-  });
+    plugins: {
+      datalabels: {
+        formatter: (value) => {
+          return `Total: ${value}`;
+        },
+        color: "#fff",
+        anchor: "end",
+        align: "start",
+      },
+    },
+  },
+});
+
 
   // Menampilkan default pie chart subtype saat halaman dimuat
   showDefaultSubtypePieChart();
