@@ -199,6 +199,14 @@ let typeDangerousActionsCountsUnsafe = {};
 let typeDangerousActionsCountsCompromised = {};
 
 function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
+  if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
+    return {
+      labels: [],
+      dataUnsafe: [],
+      dataCompromised: [],
+    };
+  }
+
   const locationCountsUnsafe = {};
   const locationCountsCompromised = {};
 
@@ -226,6 +234,7 @@ function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompr
     dataCompromised: combinedDataCompromised,
   };
 }
+
 
 
 function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
