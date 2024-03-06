@@ -167,8 +167,6 @@ async function initializeProcess() {
   }
 }
 
-initializeProcess();
-
 const locationLabels = [
   "Kantor Pusat SPMT",
   "Branch Dumai",
@@ -679,3 +677,4 @@ function initializeCharts() {
     }
   });
 }
+initializeProcess();
