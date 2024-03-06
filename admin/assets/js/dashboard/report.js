@@ -100,6 +100,8 @@ async function initializeProcess() {
     filteredUnsafeData = unsafeData;
     filteredCompromisedData = compromisedData;
 
+    initializeCharts();
+
     async function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
       // Memfilter data berdasarkan rentang tanggal yang dipilih
       filteredUnsafeData = unsafeData.filter(report => {
@@ -346,24 +348,24 @@ function updateCharts() {
   console.log("Combined Area Data:", combinedAreaData);
   console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
 
-    // Update Location Bar Chart data
-    horizontalBarChart.data.labels = combinedLocationData.labels || [];
-    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
-    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
+  // Update Location Bar Chart data
+  horizontalBarChart.data.labels = combinedLocationData.labels || [];
+  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
+  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
 
-    // Update Area Bar Chart data
-    C.data.labels = combinedAreaData.labels || [];
-    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
-    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
+  // Update Area Bar Chart data
+  horizontalBarChartForArea.data.labels = combinedAreaData.labels || [];
+  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
+  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
 
-    // Update Type Dangerous Actions Pie Chart data
-    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
-    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
+  // Update Type Dangerous Actions Pie Chart data
+  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
+  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
 
-    // Update charts
-    horizontalBarChart.update();
-    horizontalBarChartForArea.update();
-    pieChartForTypeDangerousActions.update();
+  // Update charts
+  horizontalBarChart.update();
+  horizontalBarChartForArea.update();
+  pieChartForTypeDangerousActions.update();
 }
 
 // Function untuk membuat dan menampilkan pie chart
@@ -422,8 +424,8 @@ function initializeCharts() {
   }
 
   // Menyimpan data yang dihasilkan dari pemrosesan data berdasarkan rentang tanggal
-  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
-  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  // const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  // const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
   // Location Bar Chart
@@ -431,7 +433,24 @@ function initializeCharts() {
   horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
-      labels: combinedLocationData.labels,
+      labels: [
+        "Kantor Pusat SPMT",
+        "Branch Dumai",
+        "Branch Belawan",
+        "Branch Tanjung Intan",
+        "Branch Bumiharjo - Bagendang",
+        "Branch Tanjung Wangi",
+        "Branch Makassar",
+        "Branch Balikpapan",
+        "Branch Trisakti - Mekar Putih",
+        "Branch Jamrud Nilam Mirah",
+        "Branch Lembar - Badas",
+        "Branch Tanjung Emas",
+        "Branch ParePare - Garongkong",
+        "Branch Lhokseumawe",
+        "Branch Malahayati",
+        "Branch Gresik",
+      ],
       datasets: [
         {
           label: "Unsafe",
@@ -472,7 +491,7 @@ function initializeCharts() {
         yAxes: [
           {
             ticks: {
-              maxTicksLimit: locationLabels.length, // Menampilkan semua label
+              maxTicksLimit: 16, // Menampilkan semua label
               fontSize: 14,
             },
           },
@@ -513,7 +532,14 @@ function initializeCharts() {
   horizontalBarChartForArea = new Chart(ctxArea, {
     type: "horizontalBar",
     data: {
-      labels: combinedAreaData.labels,
+      labels: [
+        "Kantor",
+        "Workshop",
+        "Gudang",
+        "Dermaga",
+        "Lapangan Penumpukan",
+        "Area kerja lainnya",
+      ],
       datasets: [
         {
           label: "Unsafe",
@@ -554,7 +580,7 @@ function initializeCharts() {
         yAxes: [
           {
             ticks: {
-              maxTicksLimit: areaLabels.length, // Menampilkan semua label
+              maxTicksLimit: 6, // Menampilkan semua label
               fontSize: 14,
             },
           },
@@ -595,7 +621,13 @@ function initializeCharts() {
   pieChartForTypeDangerousActions = new Chart(ctxPie, {
     type: "pie",
     data: {
-      labels: combinedTypeDangerousActionsData.labels,
+      labels: [
+        "REAKSI ORANG",
+        "ALAT PELINDUNG DIRI",
+        "POSISI ORANG",
+        "ALAT DAN PERLENGKAPAN",
+        "PROSEDUR DAN CARA KERJA",
+      ],
       datasets: [
         {
           data: [],
@@ -648,7 +680,6 @@ function initializeCharts() {
     },
   });
 
-
   // Menampilkan default pie chart subtype saat halaman dimuat
   showDefaultSubtypePieChart();
 
@@ -667,10 +698,4 @@ function initializeCharts() {
     }
   });
 }
-
-// Membuat dan menampilkan chart setelah DOM selesai dimuat
-document.addEventListener('DOMContentLoaded', () => {
-  initializeCharts();
-  initializeProcess();
-});
 
