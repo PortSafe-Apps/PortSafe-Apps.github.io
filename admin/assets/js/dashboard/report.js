@@ -342,6 +342,10 @@ function updateCharts() {
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
+  console.log("Combined Location Data:", combinedLocationData);
+  console.log("Combined Area Data:", combinedAreaData);
+  console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
+
   // Update Location Bar Chart data
   if (horizontalBarChart instanceof Chart) {
     if (combinedLocationData.labels.length > 0) {
@@ -349,6 +353,7 @@ function updateCharts() {
       horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
       horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
     } else {
+      console.log("Location data is empty.");
       horizontalBarChart.data.labels = ['No Data'];
       horizontalBarChart.data.datasets[0].data = [0];
       horizontalBarChart.data.datasets[1].data = [0];
@@ -363,6 +368,7 @@ function updateCharts() {
       horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
       horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
     } else {
+      console.log("Area data is empty.");
       horizontalBarChartForArea.data.labels = ['No Data'];
       horizontalBarChartForArea.data.datasets[0].data = [0];
       horizontalBarChartForArea.data.datasets[1].data = [0];
@@ -376,14 +382,13 @@ function updateCharts() {
       pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
       pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
     } else {
+      console.log("Type Dangerous Actions data is empty.");
       pieChartForTypeDangerousActions.data.labels = ['No Data'];
       pieChartForTypeDangerousActions.data.datasets[0].data = [0];
     }
     pieChartForTypeDangerousActions.update();
   }
 }
-
-
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
