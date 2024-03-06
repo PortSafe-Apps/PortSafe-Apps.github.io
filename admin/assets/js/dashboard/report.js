@@ -122,6 +122,7 @@ async function initializeProcess() {
       // Memanggil fungsi untuk memperbarui chart jika ada data yang tersedia
       if (filteredUnsafeData.length > 0 || filteredCompromisedData.length > 0) {
         // Setelah memproses data, inisialisasi grafik
+        initializeCharts();
         updateCharts();
       }
     }
@@ -165,6 +166,8 @@ async function initializeProcess() {
     console.error("Error initializing process:", error);
   }
 }
+
+initializeProcess();
 
 const locationLabels = [
   "Kantor Pusat SPMT",
