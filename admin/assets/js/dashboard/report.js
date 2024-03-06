@@ -347,24 +347,26 @@ function updateCharts() {
   console.log("Combined Area Data:", combinedAreaData);
   console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
 
-  // Update Location Bar Chart data
-  horizontalBarChart.data.labels = combinedLocationData.labels || [];
-  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
-  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
+  if (horizontalBarChart instanceof Chart && horizontalBarChart instanceof Chart && pieChartForTypeDangerousActions instanceof Chart) {
+    // Update Location Bar Chart data
+    horizontalBarChart.data.labels = combinedLocationData.labels || [];
+    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
+    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
 
-  // Update Area Bar Chart data
-  horizontalBarChartForArea.data.labels = combinedAreaData.labels || [];
-  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
-  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
+    // Update Area Bar Chart data
+    C.data.labels = combinedAreaData.labels || [];
+    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
+    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
 
-  // Update Type Dangerous Actions Pie Chart data
-  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
-  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
+    // Update Type Dangerous Actions Pie Chart data
+    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
+    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
 
-  // Update charts
-  horizontalBarChart.update();
-  horizontalBarChartForArea.update();
-  pieChartForTypeDangerousActions.update();
+    // Update charts
+    horizontalBarChart.update();
+    horizontalBarChartForArea.update();
+    pieChartForTypeDangerousActions.update();
+  }
 }
 
 
@@ -429,7 +431,8 @@ function initializeCharts() {
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
   // Location Bar Chart
-  horizontalBraChart = new Chart(ctxLocation, {
+  const ctxLocation = document.getElementById("myHorizontalBarChartForLocation");
+  horizontalBarChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
       labels: combinedLocationData.labels,
