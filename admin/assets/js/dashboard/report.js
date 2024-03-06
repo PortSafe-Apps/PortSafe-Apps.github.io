@@ -102,26 +102,28 @@ async function initializeProcess() {
     filteredUnsafeData = unsafeData;
     filteredCompromisedData = compromisedData;
 
-    // Function untuk memproses data berdasarkan rentang tanggal yang dipilih
-    function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
+    async function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
       // Memfilter data berdasarkan rentang tanggal yang dipilih
       filteredUnsafeData = unsafeData.filter(report => {
         const reportDate = new Date(report.date);
         return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
       });
-
+    
       filteredCompromisedData = compromisedData.filter(report => {
         const reportDate = new Date(report.date);
         return reportDate >= new Date(startDate) && reportDate <= new Date(endDate);
       });
-
+    
       // Menampilkan data setelah proses filter
       console.log("Filtered Unsafe Data:", filteredUnsafeData);
       console.log("Filtered Compromised Data:", filteredCompromisedData);
-
-      // Memanggil fungsi untuk memperbarui chart
-      updateCharts();
+    
+      // Memanggil fungsi untuk memperbarui chart jika ada data yang tersedia
+      if (filteredUnsafeData.length > 0 || filteredCompromisedData.length > 0) {
+        updateCharts();
+      }
     }
+    
 
     // Mendaftarkan elemen Litepicker
     const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
@@ -162,7 +164,6 @@ async function initializeProcess() {
     console.error("Error initializing process:", error);
   }
 }
-
 
 const locationLabels = [
   "Kantor Pusat SPMT",
@@ -247,8 +248,6 @@ function processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompr
     dataCompromised: combinedDataCompromised,
   };
 }
-
-
 
 function processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData) {
   const areaCountsUnsafe = {};
@@ -362,8 +361,6 @@ function updateCharts() {
   pieChartForTypeDangerousActions.update();
 }
 
-
-
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
   var ctx = document.getElementById(elementId);
@@ -415,9 +412,7 @@ function showDefaultSubtypePieChart() {
 
 function initializeCharts() {
   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
-    // Display a message or take appropriate action
     console.log("No data available to initialize charts.");
-    // Here, you can still initialize charts with default data or empty data
     return;
   }
 
