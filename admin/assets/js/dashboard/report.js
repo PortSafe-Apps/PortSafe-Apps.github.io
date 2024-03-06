@@ -121,9 +121,9 @@ async function initializeProcess() {
 
       // Memanggil fungsi untuk memperbarui chart jika ada data yang tersedia
       if (filteredUnsafeData.length > 0 || filteredCompromisedData.length > 0) {
-        updateCharts();
         // Setelah memproses data, inisialisasi grafik
         initializeCharts();
+        updateCharts();
       }
     }
 
@@ -416,8 +416,10 @@ function updateAndDisplayPieChart(elementId, labels, data) {
   chartInstance.update();
 }
 
+let combinedTypeDangerousActionsData;
+
 // Menampilkan default pie chart subtype saat halaman dimuat
-function showDefaultSubtypePieChart() {
+function showDefaultSubtypePieChart(combinedTypeDangerousActionsData) {
   const maxIndex = combinedTypeDangerousActionsData.data.indexOf(Math.max(...combinedTypeDangerousActionsData.data));
   const maxType = combinedTypeDangerousActionsData.labels[maxIndex];
   const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, maxType);
@@ -659,7 +661,7 @@ function initializeCharts() {
 
 
   // Menampilkan default pie chart subtype saat halaman dimuat
-  showDefaultSubtypePieChart();
+  showDefaultSubtypePieChart(combinedTypeDangerousActionsData);
 
   // Menambahkan event listener untuk pie chart tipe tindakan berbahaya
   pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
