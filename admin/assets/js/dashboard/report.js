@@ -101,8 +101,6 @@ async function initializeProcess() {
     filteredUnsafeData = unsafeData;
     filteredCompromisedData = compromisedData;
 
-    initializeCharts();
-
     async function processDataBasedOnRange(startDate, endDate, unsafeData, compromisedData) {
       // Memfilter data berdasarkan rentang tanggal yang dipilih
       filteredUnsafeData = unsafeData.filter(report => {
@@ -410,13 +408,16 @@ function updateAndDisplayPieChart(elementId, labels, data) {
   chartInstance.update();
 }
 
+let combinedTypeDangerousActionsData;
+
 // Menampilkan default pie chart subtype saat halaman dimuat
-function showDefaultSubtypePieChart() {
+function showDefaultSubtypePieChart(combinedTypeDangerousActionsData) {
   const maxIndex = combinedTypeDangerousActionsData.data.indexOf(Math.max(...combinedTypeDangerousActionsData.data));
   const maxType = combinedTypeDangerousActionsData.labels[maxIndex];
   const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, maxType);
   createAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
 }
+
 
 function initializeCharts() {
   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
@@ -650,8 +651,11 @@ function initializeCharts() {
   });
 
 
+  // Menyimpan data yang dihasilkan dari pemrosesan data berdasarkan rentang tanggal
+  combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData); // Simpan ke variabel global
+
   // Menampilkan default pie chart subtype saat halaman dimuat
-  showDefaultSubtypePieChart();
+  showDefaultSubtypePieChart(combinedTypeDangerousActionsData);
 
   // Menambahkan event listener untuk pie chart tipe tindakan berbahaya
   pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
