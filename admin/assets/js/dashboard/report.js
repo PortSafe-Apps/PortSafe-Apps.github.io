@@ -409,11 +409,63 @@ function createAndDisplayPieChart(elementId, labels, data) {
 
 // Function untuk memperbarui dan menampilkan pie chart
 function updateAndDisplayPieChart(elementId, labels, data) {
-  const chartInstance = Chart.getChart(elementId);
-  chartInstance.data.labels = labels;
-  chartInstance.data.datasets[0].data = data;
-  chartInstance.update();
+  const ctx = document.getElementById(elementId).getContext('2d');
+  const newData = {
+    labels: labels,
+    datasets: [{
+      data: data,
+      backgroundColor: colors
+    }]
+  };
+  new Chart(ctx, {
+    type: 'pie',
+    data: newData,
+    options: {
+      maintainAspectRatio: false,
+      layout: {
+        padding: {
+          left: 10,
+          right: 10,
+          top: 0,
+          bottom: 0
+        }
+      },
+      legend: {
+        display: true,
+        position: 'top'
+      },
+      tooltips: {
+        backgroundColor: 'rgb(255,255,255)',
+        bodyFontColor: '#858796',
+        titleFontColor: '#6e707e',
+        borderColor: '#dddfeb',
+        borderWidth: 1,
+        xPadding: 15,
+        yPadding: 15,
+        callbacks: {
+          label: function(tooltipItem, data) {
+            const datasetLabel = data.datasets[0].label || '';
+            return `${datasetLabel}: ${data.labels[tooltipItem.index]} - ${data.datasets[0].data[tooltipItem.index]}`;
+          },
+          title: function(tooltipItem, data) {
+            return data.labels[tooltipItem[0].index];
+          }
+        }
+      },
+      plugins: {
+        datalabels: {
+          formatter: (value) => {
+            return `Total: ${value}`;
+          },
+          color: '#fff',
+          anchor: 'end',
+          align: 'start'
+        }
+      }
+    }
+  });
 }
+
 
 let combinedTypeDangerousActionsData;
 
