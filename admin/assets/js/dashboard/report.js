@@ -66,7 +66,9 @@ async function fetchDataFromServer(url, category, token) {
 
 // Mendeklarasikan variabel secara global
 let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
-let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions 
+// Deklarasi variabel global untuk grafik
+let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions;
+
 
 async function initializeProcess() {
   try {
@@ -122,6 +124,7 @@ async function initializeProcess() {
         updateCharts();
       }
     }
+
 
     // Mendaftarkan elemen Litepicker
     const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
@@ -346,26 +349,29 @@ function updateCharts() {
   console.log("Combined Location Data:", combinedLocationData);
   console.log("Combined Area Data:", combinedAreaData);
   console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
-  
-    // Update Location Bar Chart data
-    horizontalBarChart.data.labels = combinedLocationData.labels || [];
-    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
-    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
 
-    // Update Area Bar Chart data
-    horizontalBarChartForArea.data.labels = combinedAreaData.labels || [];
-    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
-    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
+  if (horizontalBarChart instanceof Chart && horizontalBarChartForArea instanceof Chart && pieChartForTypeDangerousActions instanceof Chart) {
+      // Update Location Bar Chart data
+  horizontalBarChart.data.labels = combinedLocationData.labels || [];
+  horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
+  horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
 
-    // Update Type Dangerous Actions Pie Chart data
-    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
-    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
+  // Update Area Bar Chart data
+  horizontalBarChartForArea.data.labels = combinedAreaData.labels || [];
+  horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
+  horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
 
-    // Update charts
-    horizontalBarChart.update();
-    horizontalBarChartForArea.update();
-    pieChartForTypeDangerousActions.update();
+  // Update Type Dangerous Actions Pie Chart data
+  pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || [];
+  pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
+
+  // Update charts
+  horizontalBarChart.update();
+  horizontalBarChartForArea.update();
+  pieChartForTypeDangerousActions.update();
+  }
 }
+
 
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
@@ -408,16 +414,13 @@ function updateAndDisplayPieChart(elementId, labels, data) {
   chartInstance.update();
 }
 
-let combinedTypeDangerousActionsData;
-
 // Menampilkan default pie chart subtype saat halaman dimuat
-function showDefaultSubtypePieChart(combinedTypeDangerousActionsData) {
+function showDefaultSubtypePieChart() {
   const maxIndex = combinedTypeDangerousActionsData.data.indexOf(Math.max(...combinedTypeDangerousActionsData.data));
   const maxType = combinedTypeDangerousActionsData.labels[maxIndex];
   const subtypesData = processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData, maxType);
   createAndDisplayPieChart("myPieChartForSubtypes", subtypesData.labels, subtypesData.data);
 }
-
 
 function initializeCharts() {
   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
@@ -442,14 +445,14 @@ function initializeCharts() {
           backgroundColor: "rgba(255, 0, 0, 0.8)",
           borderColor: "rgba(255, 0, 0, 1)",
           borderWidth: 1,
-          data: [],
+          data: combinedLocationData.dataUnsafe,
         },
         {
           label: "Compromised",
           backgroundColor: "rgba(255, 165, 0, 0.8)",
           borderColor: "rgba(255, 165, 0, 1)",
           borderWidth: 1,
-          data: [],
+          data: combinedLocationData.dataCompromised,
         },
       ],
     },
@@ -511,6 +514,7 @@ function initializeCharts() {
     },
   });
 
+
   // Area Bar Chart
   const ctxArea = document.getElementById("myHorizontalBarChartForArea");
   horizontalBarChartForArea = new Chart(ctxArea, {
@@ -523,14 +527,14 @@ function initializeCharts() {
           backgroundColor: "rgba(255, 0, 0, 0.8)",
           borderColor: "rgba(255, 0, 0, 1)",
           borderWidth: 1,
-          data: [],
+          data: combinedAreaData.dataUnsafe,
         },
         {
           label: "Compromised",
           backgroundColor: "rgba(255, 165, 0, 0.8)",
           borderColor: "rgba(255, 165, 0, 1)",
           borderWidth: 1,
-          data: [],
+          data: combinedAreaData.dataCompromised,
         },
       ],
     },
@@ -592,6 +596,7 @@ function initializeCharts() {
     },
   });
 
+
   // Type Dangerous Actions Pie Chart
   const ctxPie = document.getElementById("myPieChartForTypeDangerousActions");
   pieChartForTypeDangerousActions = new Chart(ctxPie, {
@@ -600,7 +605,7 @@ function initializeCharts() {
       labels: combinedTypeDangerousActionsData.labels,
       datasets: [
         {
-          data: [],
+          data: combinedTypeDangerousActionsData.data,
           backgroundColor: colors,
         },
       ],
@@ -651,11 +656,8 @@ function initializeCharts() {
   });
 
 
-  // Menyimpan data yang dihasilkan dari pemrosesan data berdasarkan rentang tanggal
-  combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData); // Simpan ke variabel global
-
   // Menampilkan default pie chart subtype saat halaman dimuat
-  showDefaultSubtypePieChart(combinedTypeDangerousActionsData);
+  showDefaultSubtypePieChart();
 
   // Menambahkan event listener untuk pie chart tipe tindakan berbahaya
   pieChartForTypeDangerousActions.canvas.addEventListener('click', function (event) {
@@ -675,6 +677,10 @@ function initializeCharts() {
 
 // Membuat dan menampilkan chart setelah DOM selesai dimuat
 document.addEventListener('DOMContentLoaded', () => {
-  initializeProcess();
+  // Memulai proses
+  initializeProcess().then(() => {
+    // Memanggil fungsi untuk membuat dan menampilkan chart
+    initializeCharts();
+  });
 });
 
