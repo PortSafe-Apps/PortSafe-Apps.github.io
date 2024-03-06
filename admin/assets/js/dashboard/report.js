@@ -122,9 +122,10 @@ async function initializeProcess() {
       // Memanggil fungsi untuk memperbarui chart jika ada data yang tersedia
       if (filteredUnsafeData.length > 0 || filteredCompromisedData.length > 0) {
         updateCharts();
+        // Setelah memproses data, inisialisasi grafik
+        initializeCharts();
       }
     }
-
 
     // Mendaftarkan elemen Litepicker
     const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
@@ -165,6 +166,7 @@ async function initializeProcess() {
     console.error("Error initializing process:", error);
   }
 }
+
 
 const locationLabels = [
   "Kantor Pusat SPMT",
@@ -674,13 +676,3 @@ function initializeCharts() {
     }
   });
 }
-
-// Membuat dan menampilkan chart setelah DOM selesai dimuat
-document.addEventListener('DOMContentLoaded', () => {
-  // Memulai proses
-  initializeProcess().then(() => {
-    // Memanggil fungsi untuk membuat dan menampilkan chart
-    initializeCharts();
-  });
-});
-
