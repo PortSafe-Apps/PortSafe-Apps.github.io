@@ -345,6 +345,10 @@ function updateCharts() {
   const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
+  console.log("Combined Location Data:", combinedLocationData);
+  console.log("Combined Area Data:", combinedAreaData);
+  console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
+
   // Update Location Bar Chart data
   horizontalBarChart.data.labels = combinedLocationData.labels || [];
   horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
