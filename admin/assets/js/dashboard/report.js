@@ -66,35 +66,6 @@ async function fetchDataFromServer(url, category, token) {
 
 // Mendeklarasikan variabel secara global
 let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
-// Deklarasi variabel global untuk grafik
-let horizontalBarChart = {
-  data : {
-    datasets : [
-      {},
-      {}
-    ]
-  }
-};
-
-
-let horizontalBarChartForArea = {
-  data :  {
-    datasets : [
-      {},
-      {}
-    ]
-  }
-};
-
-let pieChartForTypeDangerousActions = {
-  data : {
-    datasets : [
-      {},
-      {}
-    ]
-  }
-};
-
 
 async function initializeProcess() {
   try {
@@ -458,8 +429,7 @@ function initializeCharts() {
   const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
 
   // Location Bar Chart
-  const ctxLocation = document.getElementById("myHorizontalBarChartForLocation");
-  horizontalBarChart = new Chart(ctxLocation, {
+  horizontalBraChart = new Chart(ctxLocation, {
     type: "horizontalBar",
     data: {
       labels: combinedLocationData.labels,
