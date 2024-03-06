@@ -122,7 +122,6 @@ async function initializeProcess() {
       }
     }
 
-
     // Mendaftarkan elemen Litepicker
     const litepickerRangePlugin = document.getElementById('litepickerRangePlugin');
     if (litepickerRangePlugin) {
@@ -369,7 +368,6 @@ function updateCharts() {
   }
 }
 
-
 // Function untuk membuat dan menampilkan pie chart
 function createAndDisplayPieChart(elementId, labels, data) {
   var ctx = document.getElementById(elementId);
@@ -442,14 +440,14 @@ function initializeCharts() {
           backgroundColor: "rgba(255, 0, 0, 0.8)",
           borderColor: "rgba(255, 0, 0, 1)",
           borderWidth: 1,
-          data: combinedLocationData.dataUnsafe,
+          data: [],
         },
         {
           label: "Compromised",
           backgroundColor: "rgba(255, 165, 0, 0.8)",
           borderColor: "rgba(255, 165, 0, 1)",
           borderWidth: 1,
-          data: combinedLocationData.dataCompromised,
+          data: [],
         },
       ],
     },
@@ -524,14 +522,14 @@ function initializeCharts() {
           backgroundColor: "rgba(255, 0, 0, 0.8)",
           borderColor: "rgba(255, 0, 0, 1)",
           borderWidth: 1,
-          data: combinedAreaData.dataUnsafe,
+          data: [],
         },
         {
           label: "Compromised",
           backgroundColor: "rgba(255, 165, 0, 0.8)",
           borderColor: "rgba(255, 165, 0, 1)",
           borderWidth: 1,
-          data: combinedAreaData.dataCompromised,
+          data: [],
         },
       ],
     },
@@ -602,7 +600,7 @@ function initializeCharts() {
       labels: combinedTypeDangerousActionsData.labels,
       datasets: [
         {
-          data: combinedTypeDangerousActionsData.data,
+          data: [],
           backgroundColor: colors,
         },
       ],
@@ -674,10 +672,7 @@ function initializeCharts() {
 
 // Membuat dan menampilkan chart setelah DOM selesai dimuat
 document.addEventListener('DOMContentLoaded', () => {
-  // Memulai proses
-  initializeProcess().then(() => {
-    // Memanggil fungsi untuk membuat dan menampilkan chart
-    initializeCharts();
-  });
+  initializeCharts();
+  initializeProcess();
 });
 
