@@ -346,7 +346,6 @@ function updateCharts() {
   console.log("Combined Area Data:", combinedAreaData);
   console.log("Combined Type Dangerous Actions Data:", combinedTypeDangerousActionsData);
 
-  if (horizontalBarChart instanceof Chart && horizontalBarChart instanceof Chart && pieChartForTypeDangerousActions instanceof Chart) {
     // Update Location Bar Chart data
     horizontalBarChart.data.labels = combinedLocationData.labels || [];
     horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
@@ -365,7 +364,6 @@ function updateCharts() {
     horizontalBarChart.update();
     horizontalBarChartForArea.update();
     pieChartForTypeDangerousActions.update();
-  }
 }
 
 // Function untuk membuat dan menampilkan pie chart
