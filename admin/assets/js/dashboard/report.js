@@ -348,44 +348,24 @@ function updateCharts() {
 
   // Update Location Bar Chart data
   if (horizontalBarChart instanceof Chart) {
-    if (combinedLocationData.labels.length > 0) {
-      horizontalBarChart.data.labels = combinedLocationData.labels;
-      horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [];
-      horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [];
-    } else {
-      console.log("Location data is empty.");
-      horizontalBarChart.data.labels = ['No Data'];
-      horizontalBarChart.data.datasets[0].data = [0];
-      horizontalBarChart.data.datasets[1].data = [0];
-    }
+    horizontalBarChart.data.labels = combinedLocationData.labels || ['No Data'];
+    horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe || [0];
+    horizontalBarChart.data.datasets[1].data = combinedLocationData.dataCompromised || [0];
     horizontalBarChart.update();
   }
 
   // Update Area Bar Chart data
   if (horizontalBarChartForArea instanceof Chart) {
-    if (combinedAreaData.labels.length > 0) {
-      horizontalBarChartForArea.data.labels = combinedAreaData.labels;
-      horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [];
-      horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [];
-    } else {
-      console.log("Area data is empty.");
-      horizontalBarChartForArea.data.labels = ['No Data'];
-      horizontalBarChartForArea.data.datasets[0].data = [0];
-      horizontalBarChartForArea.data.datasets[1].data = [0];
-    }
+    horizontalBarChartForArea.data.labels = combinedAreaData.labels || ['No Data'];
+    horizontalBarChartForArea.data.datasets[0].data = combinedAreaData.dataUnsafe || [0];
+    horizontalBarChartForArea.data.datasets[1].data = combinedAreaData.dataCompromised || [0];
     horizontalBarChartForArea.update();
   }
 
   // Update Type Dangerous Actions Pie Chart data
   if (pieChartForTypeDangerousActions instanceof Chart) {
-    if (combinedTypeDangerousActionsData.labels.length > 0) {
-      pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels;
-      pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [];
-    } else {
-      console.log("Type Dangerous Actions data is empty.");
-      pieChartForTypeDangerousActions.data.labels = ['No Data'];
-      pieChartForTypeDangerousActions.data.datasets[0].data = [0];
-    }
+    pieChartForTypeDangerousActions.data.labels = combinedTypeDangerousActionsData.labels || ['No Data'];
+    pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data || [0];
     pieChartForTypeDangerousActions.update();
   }
 }
