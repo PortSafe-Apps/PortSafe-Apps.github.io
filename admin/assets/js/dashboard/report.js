@@ -66,6 +66,7 @@ async function fetchDataFromServer(url, category, token) {
 
 // Mendeklarasikan variabel secara global
 let unsafeDataResponse, compromisedDataResponse, filteredUnsafeData, filteredCompromisedData;
+let horizontalBarChart, horizontalBarChartForArea, pieChartForTypeDangerousActions 
 
 async function initializeProcess() {
   try {
