@@ -336,29 +336,16 @@ function processDataForSubTypeDangerousActionsPieChart(filteredUnsafeData, filte
 }
 
 function updateCharts() {
-  // Mendapatkan nilai tanggal dari elemen HTML
-  const startDateElement = document.getElementById("start_date");
-  const endDateElement = document.getElementById("end_date");
-  
-  // Memeriksa apakah elemen-elemen tersebut ada dan memiliki nilai
-  if (!startDateElement || !endDateElement || !startDateElement.value || !endDateElement.value) {
-    console.error("Start date or end date is not available.");
-    return;
-  }
-
-  const startDate = startDateElement.value;
-  const endDate = endDateElement.value;
-
-  // Perbarui filteredUnsafeData dan filteredCompromisedData berdasarkan tanggal yang dipilih
-  processDataBasedOnRange(startDate, endDate, filteredUnsafeData, filteredCompromisedData);
-
-  // Perbarui grafik berdasarkan data yang diperbarui
-  // Jika tidak ada data yang tersedia, tampilkan pesan dan keluar dari fungsi
   if (!filteredUnsafeData || !filteredCompromisedData || filteredUnsafeData.length === 0 || filteredCompromisedData.length === 0) {
     console.log("Tidak ada data yang tersedia untuk memperbarui grafik.");
     return;
   }
 
+  // Menyimpan data yang dihasilkan dari pemrosesan data berdasarkan rentang tanggal
+  const combinedLocationData = processDataForLocationBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedAreaData = processDataForAreaBarChartAndSort(filteredUnsafeData, filteredCompromisedData);
+  const combinedTypeDangerousActionsData = processDataForTypeDangerousActionsPieChart(filteredUnsafeData, filteredCompromisedData);
+  
   // Update data dalam grafik
   horizontalBarChart.data.labels = combinedLocationData.labels;
   horizontalBarChart.data.datasets[0].data = combinedLocationData.dataUnsafe;
@@ -374,6 +361,7 @@ function updateCharts() {
   pieChartForTypeDangerousActions.data.datasets[0].data = combinedTypeDangerousActionsData.data;
   pieChartForTypeDangerousActions.update();
 }
+
 
 
 // Function untuk membuat dan menampilkan pie chart
