@@ -67,21 +67,64 @@
                             <div class="nav-link-icon"><i data-feather="activity"></i></div>
                             Dashboards
                         </a>
-                        <!-- Sidenav Accordion (Pages)-->
-                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse"
-                            data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                        <!-- Sidenav Accordion (Reporting)-->
+                        <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
                             <div class="nav-link-icon"><i data-feather="grid"></i></div>
                             Reporting
                             <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                         </a>
                         <div class="collapse" id="collapsePages" data-bs-parent="#accordionSidenav">
                             <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPagesMenu">
-                                <a class="nav-link" href="unsafereport.html">
+                                 <!-- Nested Sidenav Accordion (Pages -> Unsafe)-->
+                                 <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#pagesCollapseUnsafe" aria-expanded="false" aria-controls="pagesCollapseUnsafe">
                                     Unsafe Report
+                                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
-                                <a class="nav-link" href="compromisedreport.html">
+                                <div class="collapse" id="pagesCollapseUnsafe" data-bs-parent="#accordionSidenavPagesMenu">
+                                    <nav class="sidenav-menu-nested nav">
+                                        <a class="nav-link" href="unsafe/pusat.html" id="pusatLink">Kantor Pusat SPMT</a>
+                                        <a class="nav-link" href="unsafe/dumai.html" id="dumaiLink">Branch Dumai</a>
+                                        <a class="nav-link" href="unsafe/belawan.html" id="belawanLink">Branch Belawan</a>
+                                        <a class="nav-link" href="unsafe/tjintan.html" id="tjintanLink">Branch Tanjung Intan</a>
+                                        <a class="nav-link" href="unsafe/bumiharjo.html" id="bumiharjoLink">Branch Bumiharjo - Bagendang</a>
+                                        <a class="nav-link" href="unsafe/tjwangi.html" id="tjwangiLink">Branch Tanjung Wangi</a>
+                                        <a class="nav-link" href="unsafe/makassar.html" id="makassarLink">Branch Makassar</a>
+                                        <a class="nav-link" href="unsafe/balikpapan.html" id="balikpapanLink">Branch Balikpapan</a>
+                                        <a class="nav-link" href="unsafe/trisakti.html" id="trisaktiLink">Branch Trisakti - Mekar Putih</a>
+                                        <a class="nav-link" href="unsafe/jamirah.html" id="jamirahLink">Branch Jamrud Nilam Mirah</a>
+                                        <a class="nav-link" href="unsafe/lembarbds.html" id="lembarbdsLink">Branch Lembar - Badas</a>
+                                        <a class="nav-link" href="unsafe/tjemas.html" id="tjemasLink">Branch Tanjung Emas</a>
+                                        <a class="nav-link" href="unsafe/parong.html" id="parongLink">Branch ParePare - Garongkong</a>
+                                        <a class="nav-link" href="unsafe/lhokseumawe.html" id="lhokseumaweLink">Branch Lhokseumawe</a>
+                                        <a class="nav-link" href="unsafe/malahayati.html" id="malahayatiLink">Branch Malahayati</a>
+                                        <a class="nav-link" href="unsafe/gresik.html" id="gresikLink">Branch Gresik</a>
+                                    </nav>     
+                                </div>
+                                <!-- Nested Sidenav Accordion (Pages -> Compromised)-->
+                                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#pagesCollapseCompromised" aria-expanded="false" aria-controls="pagesCollapseCompromised">
                                     Compromised Report
+                                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
                                 </a>
+                                <div class="collapse" id="pagesCollapseCompromised" data-bs-parent="#accordionSidenavPagesMenu">
+                                    <nav class="sidenav-menu-nested nav">
+                                        <a class="nav-link" href="compromised/pusat.html">Kantor Pusat SPMT</a>
+                                        <a class="nav-link" href="compromised/dumai.html">Branch Dumai</a>
+                                        <a class="nav-link" href="compromised/belawan.html">Branch Belawan</a>
+                                        <a class="nav-link" href="compromised/tjintan.html">Branch Tanjung Intan</a>
+                                        <a class="nav-link" href="compromised/bumiharjo.html">Branch Bumiharjo - Bagendang</a>
+                                        <a class="nav-link" href="compromised/tjwangi.html">Branch Tanjung Wangi</a>
+                                        <a class="nav-link" href="compromised/makassar.html">Branch Makassar</a>
+                                        <a class="nav-link" href="compromised/balikpapan.html">Branch Balikpapan</a>
+                                        <a class="nav-link" href="compromised/trisakti.html">Branch Trisakti - Mekar Putih</a>
+                                        <a class="nav-link" href="compromised/jamirah.html">Branch Jamrud Nilam Mirah</a>
+                                        <a class="nav-link" href="compromised/lembarbds.html">Branch Lembar - Badas</a>
+                                        <a class="nav-link" href="compromised/tjemas.html">Branch Tanjung Emas</a>
+                                        <a class="nav-link" href="compromised/parong.html">Branch ParePare - Garongkong</a>
+                                        <a class="nav-link" href="compromised/lhokseumawe.html">Branch Lhokseumawe</a>
+                                        <a class="nav-link" href="compromised/malahayati.html">Branch Malahayati</a>
+                                        <a class="nav-link" href="compromised/gresik.html">Branch Gresik</a>
+                                    </nav>
+                                </div>
                             </nav>
                         </div>
                         <!-- Sidenav Accordion (User)-->
