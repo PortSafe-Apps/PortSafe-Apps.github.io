@@ -67,8 +67,9 @@ const getUnsafeReports = async () => {
             if (data && data.length > 0) {
                 data.forEach((report) => {
                     console.log(report); // Tambahkan log ini untuk memeriksa struktur objek report
-                    if (report.location && report.location.locationName === "Branch Dumai") {
+
                         const newRow = document.createElement("tr");
+                        
                         newRow.innerHTML = `
                             <td>${report.reportid}</td>
                             <td>${report.date}</td>
@@ -81,7 +82,7 @@ const getUnsafeReports = async () => {
                             </td>
                         `;
                         reportDataBody.appendChild(newRow);
-                    }
+                    
                 });
             } else {
                 const emptyRow = document.createElement("tr");
