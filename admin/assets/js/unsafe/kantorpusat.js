@@ -66,6 +66,7 @@ const getUnsafeReports = async () => {
 
             if (data && data.length > 0) {
                 data.forEach((report) => {
+                    console.log(report); // Tambahkan log ini untuk memeriksa struktur objek report
                     if (report.location && report.location.locationName === "Kantor Pusat SPMT") {
                         const newRow = document.createElement("tr");
                         newRow.innerHTML = `
@@ -94,3 +95,4 @@ const getUnsafeReports = async () => {
         console.error("Error:", error.message);
     }
 };
+
