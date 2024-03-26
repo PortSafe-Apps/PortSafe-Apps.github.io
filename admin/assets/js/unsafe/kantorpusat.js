@@ -59,13 +59,13 @@ const getUnsafeReports = async () => {
     }
   };
   
-  const displayReportData = (data, reportDataBody) => {
+  const displayReportData = (unsafedata, reportDataBody) => {
     try {
         if (reportDataBody) {
             reportDataBody.innerHTML = "";
 
-            if (data && data.length > 0) {
-                data.forEach((report) => {
+            if (unsafedata && unsafedata.length > 0) {
+              unsafedata.forEach((report) => {
                     console.log(report); // Tambahkan log ini untuk memeriksa struktur objek report
                     if (report.location && report.location.locationName === "Kantor Pusat SPMT") {
                         const newRow = document.createElement("tr");
