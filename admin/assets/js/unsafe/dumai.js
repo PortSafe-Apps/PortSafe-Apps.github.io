@@ -68,6 +68,7 @@ const getUnsafeReports = async () => {
                 data.forEach((report) => {
                     console.log(report); // Tambahkan log ini untuk memeriksa struktur objek report
 
+
                         const newRow = document.createElement("tr");
                         
                         newRow.innerHTML = `
