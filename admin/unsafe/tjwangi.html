@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="" />
+    <meta name="author" content="" />
+    <title>Admin PortSafe+ - PWA Mobile K3 observation reporting application</title>
+    <link href="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/style.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/litepicker/dist/css/litepicker.css" rel="stylesheet" />
+    <link href="/admin/assets/css/styles.css" rel="stylesheet" />
+    <link rel="icon" href="/admin/assets/img/favicon.ico">
+    <script data-search-pseudo-elements defer
+        src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.3.0/js/all.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/feather-icons/4.29.0/feather.min.js"
+        crossorigin="anonymous"></script>
+</head>
+
+<body class="nav-fixed">
+    <nav class="topnav navbar navbar-expand shadow justify-content-between justify-content-sm-start navbar-light bg-white"
+        id="sidenavAccordion">
+        <!-- Sidenav Toggle Button-->
+        <button class="btn btn-icon btn-transparent-dark order-1 order-lg-0 me-2 ms-lg-2 me-lg-0" id="sidebarToggle"><i
+                data-feather="menu"></i></button>
+        <!-- Navbar Brand-->
+        <!-- * * Tip * * You can use text or an image for your navbar brand.-->
+        <!-- * * * * * * When using an image, we recommend the SVG format.-->
+        <!-- * * * * * * Dimensions: Maximum height: 32px, maximum width: 240px-->
+        <a class="navbar-brand pe-3 ps-4 ps-lg-2" href="dashboard.html">PORTSAFE<sup>+</sup></a>
+
+        <!-- Navbar Items-->
+        <ul class="navbar-nav align-items-center ms-auto">
+            <!-- User Dropdown-->
+            <li class="nav-item dropdown no-caret dropdown-user me-3 me-lg-4">
+                <a class="btn btn-icon btn-transparent-dark dropdown-toggle" id="navbarDropdownUserImage"
+                    href="javascript:void(0);" role="button" data-bs-toggle="dropdown" aria-haspopup="true"
+                    aria-expanded="false"><img class="img-fluid"
+                        src="/admin/assets/img/illustrations/profiles/profile-1.png" /></a>
+                <div class="dropdown-menu dropdown-menu-end border-0 shadow animated--fade-in-up"
+                    aria-labelledby="navbarDropdownUserImage">
+                    <h6 class="dropdown-header d-flex align-items-center">
+                        <img class="dropdown-user-img" src="/admin/assets/img/illustrations/profiles/profile-1.png" />
+                        <div class="dropdown-user-details">
+                            <div class="dropdown-user-details-name" id="nama-profil"></div>
+                            <div class="dropdown-user-details-jabatan" id="Jabatan-profil"></div>
+                        </div>
+                    </h6>
+                    <div class="dropdown-divider"></div>
+                    <a class="dropdown-item" href="#!" id="logoutButton" onclick="logout()">
+                        <div class="dropdown-item-icon"><i data-feather="log-out"></i></div>
+                        Logout
+                    </a>
+                </div>
+            </li>
+        </ul>
+    </nav>
+    <div id="layoutSidenav">
+        <div id="layoutSidenav_nav">
+            <nav class="sidenav shadow-right sidenav-light">
+                <div class="sidenav-menu">
+                    <div class="nav accordion" id="accordionSidenav">
+                        <!-- Sidenav Menu Heading (Core)-->
+                        <div class="sidenav-menu-heading">Menu</div>
+                        <a class="nav-link" href="/admin/dashboard.html">
+                            <div class="nav-link-icon"><i data-feather="activity"></i></div>
+                            Dashboards
+                        </a>
+                          <!-- Sidenav Accordion (Reporting)-->
+                          <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#collapsePages" aria-expanded="false" aria-controls="collapsePages">
+                            <div class="nav-link-icon"><i data-feather="grid"></i></div>
+                            Reporting
+                            <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                        </a>
+                        <div class="collapse" id="collapsePages" data-bs-parent="#accordionSidenav">
+                            <nav class="sidenav-menu-nested nav accordion" id="accordionSidenavPagesMenu">
+                                 <!-- Nested Sidenav Accordion (Pages -> Unsafe)-->
+                                 <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#pagesCollapseUnsafe" aria-expanded="false" aria-controls="pagesCollapseUnsafe">
+                                    Unsafe Report
+                                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseUnsafe" data-bs-parent="#accordionSidenavPagesMenu">
+                                    <nav class="sidenav-menu-nested nav">
+                                        <a class="nav-link" href="pusat.html">Kantor Pusat SPMT</a>
+                                        <a class="nav-link" href="dumai.html">Branch Dumai</a>
+                                        <a class="nav-link" href="belawan.html">Branch Belawan</a>
+                                        <a class="nav-link" href="tjintan.html">Branch Tanjung Intan</a>
+                                        <a class="nav-link" href="bumiharjo.html">Branch Bumiharjo - Bagendang</a>
+                                        <a class="nav-link" href="tjwangi.html">Branch Tanjung Wangi</a>
+                                        <a class="nav-link" href="makassar.html">Branch Makassar</a>
+                                        <a class="nav-link" href="balikpapan.html">Branch Balikpapan</a>
+                                        <a class="nav-link" href="trisakti.html">Branch Trisakti - Mekar Putih</a>
+                                        <a class="nav-link" href="jamirah.html">Branch Jamrud Nilam Mirah</a>
+                                        <a class="nav-link" href="lembarbds.html">Branch Lembar - Badas</a>
+                                        <a class="nav-link" href="tjemas.html">Branch Tanjung Emas</a>
+                                        <a class="nav-link" href="parong.html">Branch ParePare - Garongkong</a>
+                                        <a class="nav-link" href="lhokseumawe.html">Branch Lhokseumawe</a>
+                                        <a class="nav-link" href="malahayati.html">Branch Malahayati</a>
+                                        <a class="nav-link" href="gresik.html">Branch Gresik</a>
+                                    </nav>     
+                                </div>
+                                <!-- Nested Sidenav Accordion (Pages -> Compromised)-->
+                                <a class="nav-link collapsed" href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#pagesCollapseCompromised" aria-expanded="false" aria-controls="pagesCollapseCompromised">
+                                    Compromised Report
+                                    <div class="sidenav-collapse-arrow"><i class="fas fa-angle-down"></i></div>
+                                </a>
+                                <div class="collapse" id="pagesCollapseCompromised" data-bs-parent="#accordionSidenavPagesMenu">
+                                    <nav class="sidenav-menu-nested nav">
+                                        <a class="nav-link" href="/admin/compromised/pusat.html">Kantor Pusat SPMT</a>
+                                        <a class="nav-link" href="/admin/compromised/dumai.html">Branch Dumai</a>
+                                        <a class="nav-link" href="/admin/compromised/belawan.html">Branch Belawan</a>
+                                        <a class="nav-link" href="/admin/compromised/tjintan.html">Branch Tanjung Intan</a>
+                                        <a class="nav-link" href="/admin/compromised/bumiharjo.html">Branch Bumiharjo - Bagendang</a>
+                                        <a class="nav-link" href="/admin/compromised/tjwangi.html">Branch Tanjung Wangi</a>
+                                        <a class="nav-link" href="/admin/compromised/makassar.html">Branch Makassar</a>
+                                        <a class="nav-link" href="/admin/compromised/balikpapan.html">Branch Balikpapan</a>
+                                        <a class="nav-link" href="/admin/compromised/trisakti.html">Branch Trisakti - Mekar Putih</a>
+                                        <a class="nav-link" href="/admin/compromised/jamirah.html">Branch Jamrud Nilam Mirah</a>
+                                        <a class="nav-link" href="/admin/compromised/lembarbds.html">Branch Lembar - Badas</a>
+                                        <a class="nav-link" href="/admin/compromised/tjemas.html">Branch Tanjung Emas</a>
+                                        <a class="nav-link" href="/admin/compromised/parong.html">Branch ParePare - Garongkong</a>
+                                        <a class="nav-link" href="/admin/compromised/lhokseumawe.html">Branch Lhokseumawe</a>
+                                        <a class="nav-link" href="/admin/compromised/malahayati.html">Branch Malahayati</a>
+                                        <a class="nav-link" href="/admin/compromised/gresik.html">Branch Gresik</a>
+                                    </nav>
+                                </div>
+                            </nav>
+                        </div>
+                        <!-- Sidenav Accordion (User)-->
+                        <a class="nav-link" href="/admin/user-management-list.html">
+                            <div class="nav-link-icon"><i data-feather="user"></i></div>
+                            User
+                        </a>
+
+                    </div>
+                </div>
+                <!-- Sidenav Footer-->
+                <div class="sidenav-footer">
+                    <div class="sidenav-footer-content">
+                        <div class="sidenav-footer-subtitle">Logged in as:</div>
+                        <div class="sidenav-footer-title" id="nama-profil2"></div>
+                    </div>
+                </div>
+            </nav>
+        </div>
+        <div id="layoutSidenav_content">
+            <main>
+                <header class="page-header page-header-dark bg-gradient-primary-to-secondary pb-10">
+                    <div class="container-xl px-4">
+                        <div class="page-header-content pt-4">
+                            <div class="row align-items-center justify-content-between">
+                                <div class="col-auto mt-4">
+                                    <h1 class="page-header-title">
+                                        <div class="page-header-icon"><i data-feather="clipboard"></i></div>
+                                        Reporting Management
+                                    </h1>
+                                    <div class="page-header-subtitle">List Data Unsafe Report</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </header>
+                <!-- Main page content-->
+                <div class="container-xl px-4 mt-n10">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="datatablesSimple">
+                                <thead>
+                                    <tr>
+                                        <th>No Pelaporan</th>
+                                        <th>Tanggal</th>
+                                        <th>Waktu</th>
+                                        <th>Area</th>
+                                        <th>Unit Kerja</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tfoot>
+                                    <tr>
+                                        <th>No Pelaporan</th>
+                                        <th>Tanggal</th>
+                                        <th>Waktu</th>   
+                                        <th>Area</th>
+                                        <th>Unit kerja</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </tfoot>
+                                <tbody>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </main>
+            <footer class="footer-admin mt-auto footer-light">
+                <div class="container-xl px-4">
+                    <div class="row">
+                        <div class="col-md-6 small">Copyright &copy; Your Website 2021</div>
+                        <div class="col-md-6 text-md-end small">
+                            <a href="#!">Privacy Policy</a>
+                            &middot;
+                            <a href="#!">Terms &amp; Conditions</a>
+                        </div>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
+        crossorigin="anonymous"></script>
+    <script src="/admin/assets/js/scripts.js"></script>
+    <script src="/admin/assets/js/acc.js" type="module"></script>
+    <script src="/admin/assets/js/unsafe/tjgwangi.js" type="module"></script>
+    <script src="https://cdn.jsdelivr.net/npm/simple-datatables@7.1.2/dist/umd/simple-datatables.min.js"
+        crossorigin="anonymous"></script>
+    <script src="/admin/assets/js/datatables/datatables-simple-demo.js"></script>
+    <!-- Logout Configuration -->
+    <script src="/user/assets/scripts/authorization/logout.js" type="module"></script>
+
+    <!-- Sweet Alert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.19/dist/sweetalert2.all.min.js"></script>
+
+    <!-- Modal -->
+    <script src="/user/assets/scripts/config/modal.js" type="module"></script>
+</body>
+
+</html>

@@ -66,7 +66,7 @@ const displayCompromisedData = (data, compromisedDataBody) => {
 
       if (data && data.length > 0) {
         data.forEach((compromised) => {
-          if (compromised.location && compromised.location.locationName === "Branch Balikpapan") {
+          if (compromised.location && compromised.location.locationName === "Branch Lembar - Badas") {
 
             const newRow = document.createElement("tr");
 

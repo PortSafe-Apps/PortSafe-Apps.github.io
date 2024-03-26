@@ -66,7 +66,7 @@ const getUnsafeReports = async () => {
   
         if (data && data.length > 0) {
           data.forEach((report) => {
-              if (report.location && report.location.locationName === "Kantor Pusat SPMT") {
+              if (report.location && report.location.locationName === "Branch Makassar") {
                   const newRow = document.createElement("tr");
                   newRow.innerHTML = `
                       <td>${report.reportid}</td>
