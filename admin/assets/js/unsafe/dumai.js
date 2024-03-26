@@ -20,34 +20,34 @@ const getTokenFromCookies = (cookieName) => {
 };
 
 const getUnsafeReports = async () => {
-    try {
-      const token = getTokenFromCookies("Login");
+  try {
+    const token = getTokenFromCookies("Login");
 
-      if (!token) {
-        Swal.fire({
-          icon: "warning",
-          title: "Authentication Error",
-          text: "Kamu Belum Login!",
-        }).then(() => {
-          window.location.href = "https://portsafe-apps.github.io/";
-        });
-        return;
-      }
+    if (!token) {
+      Swal.fire({
+          icon: 'warning',
+          title: 'Authentication Error',
+          text: 'Kamu Belum Login!',
+      }).then(() => {
+          window.location.href = 'https://portsafe-apps.github.io/';
+      });
+      return;
+  }
 
       const targetURL = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/GetAllReportUnsafe";
 
       const myHeaders = new Headers();
       myHeaders.append("Login", token);
-      myHeaders.append("Content-Type", "application/json");
-
+  
       const requestOptions = {
-        method: "POST",
+        method: "GET",
         headers: myHeaders,
         redirect: "follow",
       };
-
+  
       const response = await fetch(targetURL, requestOptions);
       const data = await response.json();
+  
 
       if (data.status === 200) {
         displayReportData(data.data, reportDataBody);
