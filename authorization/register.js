@@ -1,6 +1,6 @@
 import { postWithBearer } from "https://jscroot.github.io/api/croot.js";
 import {GetDataForm,  ResponsePost} from "../config/config.js";
-import { token, URLPost } from "../template/template.js";
+import { token, URLPost } from "../user/assets/scripts/template/template.js";
 
 
 document.addEventListener("DOMContentLoaded", function() {
