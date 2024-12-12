@@ -1,7 +1,7 @@
 import { postWithToken } from "https://jscroot.github.io/api/croot.js";
-import { PostLogin, ResponseLogin } from "../config/config.js";
-import { URLLogin } from "../template/template.js";
-import { token } from '../template/template.js';
+import { PostLogin, ResponseLogin } from "../authorization/config.js";
+import { URLLogin } from "../authorization/template.js";
+import { token } from '../authorization/template.js';
 
 document.addEventListener("DOMContentLoaded", function() {
   const form = document.getElementById("loginForm");
