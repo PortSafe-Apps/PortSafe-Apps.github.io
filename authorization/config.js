@@ -1,69 +1,110 @@
-// Fungsi untuk menyimpan cookie
-function setCookieWithExpireHour(cookieName, cookieValue, expireHours) {
-  const date = new Date();
-  date.setTime(date.getTime() + expireHours * 60 * 60 * 1000);
-  const expires = "expires=" + date.toUTCString();
-  document.cookie = cookieName + "=" + cookieValue + ";" + expires + ";path=/";
+import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.js';
+
+export function getTokenFromAPI() {
+  const tokenUrl = "https://asia-southeast2-amazing-thought-444506-m4.cloudfunctions.net/Login-1";
+  return fetch(tokenUrl)
+    .then(response => response.json())
+    .then(tokenData => {
+      if (tokenData.token) {
+        console.log('Token from API:', tokenData.token);
+        return tokenData.token;
+      } else {
+        throw new Error('Token not found in API response');
+      }
+    })
+    .catch(error => {
+      console.error('Failed to fetch token:', error);
+      throw error;
+    });
 }
 
-// Fungsi untuk menangani keberhasilan login
+export function GetDataForm() {
+  const nipp = document.querySelector("#nipp").value;
+  const nama = document.querySelector("#nama").value;
+  const jabatan = document.querySelector("#jabatan").value;
+  const location = document.querySelector("#autoCompleteLocation").value;
+  const password = document.querySelector("#password").value;
+
+  const role = "user"; // Set default role
+
+  const data = {
+    nipp: nipp,
+    nama: nama,
+    jabatan: jabatan,
+    Location: {
+      LocationName: location,
+    },
+    password: password,
+    role: role,
+  };
+  return data;
+}
+
+export function PostLogin() {
+  const nipp = document.getElementById("nipp").value;
+  const password = document.getElementById("password").value;
+
+  const data = {
+    nipp: nipp,
+    password: password,
+  };
+  return data;
+}
+
+function ResponsePostLogin(response) {
+  if (response && response.token) {
+    handleLoginSuccess(response.token, response.role);
+  } else {
+    handleLoginError('Invalid username, password, or role. Please try again.');
+  }
+}
+
 function handleLoginSuccess(token, userRole) {
-  setCookieWithExpireHour("Login", token, 2);
+  setCookieWithExpireHour('Login', token, 2);
 
   Swal.fire({
-    icon: "success",
-    title: "Login Successful",
-    text: "You have successfully logged in!",
+    icon: 'success',
+    title: 'Login Successful',
+    text: 'You have successfully logged in!',
   }).then(() => {
     const redirectURL = getRedirectURL(userRole);
     window.location.href = redirectURL;
   });
 }
 
-// Fungsi untuk mendapatkan URL pengalihan berdasarkan peran
 function getRedirectURL(userRole) {
   switch (userRole) {
-    case "user":
-      return "https://portsafe-apps.github.io/user/beranda.html";
-    case "admin":
-      return "https://portsafe-apps.github.io/admin/dashboard.html";
+    case 'user':
+      return 'https://portsafe-apps.github.io/user/beranda.html';
+    case 'admin':
+      return 'https://portsafe-apps.github.io/admin/dashboard.html';
     default:
-      return "https://portsafe-apps.github.io/"; // Default jika peran tidak diketahui
+      return 'https://portsafe-apps.github.io/'; // Default redirect if role is unknown
   }
 }
 
-// Event listener untuk menangani form login
-document.getElementById("loginForm").addEventListener("submit", async (event) => {
-  event.preventDefault(); // Mencegah refresh halaman
+function handleLoginError(errorMessage) {
+  Swal.fire({
+    icon: 'error',
+    title: 'Login Failed',
+    text: errorMessage,
+  });
+}
 
-  const nipp = document.getElementById("nipp").value;
-  const password = document.getElementById("password").value;
+export function AlertPost() {
+  Swal.fire({
+    icon: 'success',
+    title: 'Registration Successful',
+    text: 'You have successfully registered!',
+  }).then(() => {
+    window.location.href = "https://portsafe-apps.github.io/";
+  });
+}
 
-  try {
-    // Panggilan ke API login
-    const response = await fetch("/api/login", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ nipp, password }),
-    });
+export function ResponsePost(result) {
+  AlertPost(result);
+}
 
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Login Response:", data); // Debug log
-
-      // Pastikan API mengembalikan token dan userRole
-      if (data.token && data.userRole) {
-        handleLoginSuccess(data.token, data.userRole);
-      } else {
-        throw new Error("Invalid response structure");
-      }
-    } else {
-      Swal.fire("Login Failed", "Invalid NIPP or Password", "error");
-    }
-  } catch (error) {
-    console.error("Login Error:", error);
-    Swal.fire("Error", "Something went wrong. Please try again later.", "error");
-  }
-});
+export function ResponseLogin(result) {
+  ResponsePostLogin(result);
+}
