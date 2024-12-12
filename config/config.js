@@ -1,7 +1,7 @@
 import { setCookieWithExpireHour } from 'https://jscroot.github.io/cookie/croot.js';
 
 export function getTokenFromAPI() {
-  const tokenUrl = "https://asia-southeast2-ordinal-stone-389604.cloudfunctions.net/login-1";
+  const tokenUrl = "https://asia-southeast2-amazing-thought-444506-m4.cloudfunctions.net/Login-1";
   return fetch(tokenUrl)
     .then(response => response.json())
     .then(tokenData => {
